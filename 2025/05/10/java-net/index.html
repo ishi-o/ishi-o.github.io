@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Java: 网络编程基础">
+<meta property="og:url" content="https://ishi-o.github.io/2025/05/10/java-net/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-05-10T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T11:40:07.518Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="socket">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/05/10/java-net/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/05/10/java-net/","path":"2025/05/10/java-net/","title":"Java: 网络编程基础"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Java: 网络编程基础 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">网络编程基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tcp%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">1.1.</span> <span class="nav-text">TCP客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tcp%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-number">1.2.</span> <span class="nav-text">TCP服务端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#udp%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-number">1.3.</span> <span class="nav-text">UDP客户端与服务端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">1.4.</span> <span class="nav-text">HTTP客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B"><span class="nav-number">1.5.</span> <span class="nav-text">异步网络编程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3rmi"><span class="nav-number">1.6.</span> <span class="nav-text">了解RMI</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/16/java-mybatis/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-16</time>
+        <br>
+      Java: Mybatis
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/04/spring-core-resource/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-04</time>
+        <br>
+      Spring framework: Resource API
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/17/java-io/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-17</time>
+        <br>
+      Java: IO
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/06/02/java-jdbc/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-02</time>
+        <br>
+      Java: JDBC编程
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/05/10/java-net/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Java: 网络编程基础 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java: 网络编程基础
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-05-10 00:00:00" itemprop="dateCreated datePublished" datetime="2025-05-10T00:00:00+00:00">2025-05-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 11:40:07" itemprop="dateModified" datetime="2025-12-06T11:40:07+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Java/Java-SE/" itemprop="url" rel="index"><span itemprop="name">Java SE</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>5 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h2 id="网络编程基础">网络编程基础</h2>
+<h3 id="tcp客户端"><code>TCP</code>客户端</h3>
+<ul>
+<li><code>Java</code>在客户端提供的<code>TCP</code>套接字的类为<code>Socket</code>
+<code>Socket</code>构造方法：<code>Socket(String, int)</code>，和提供的服务器<code>IP</code>和端口号绑定</li>
+<li><code>Socket</code>常用实例方法：
+<ul>
+<li>如果不用构造方法，也可使用<code>connect()</code>发起<code>TCP</code>连接</li>
+<li><code>getInputStream()</code>和<code>getOutputStream()</code>：获取对应的输入流和输出流对象
+其中<code>OutputStream</code>对象应该及时<code>flush()</code>
+通常使用<code>InputStreamReader</code>和<code>OutputStreamWriter</code>将字节流转化为字符流并传递指定的字符集处理</li>
+</ul></li>
+</ul>
+<h3 id="tcp服务端"><code>TCP</code>服务端</h3>
+<ul>
+<li><code>Java</code>在服务端提供的<code>TCP</code>套接字的类为<code>ServerSocket</code>
+<code>ServerSocket</code>构造方法：<code>ServerSocket(int)</code>，和提供的端口号绑定</li>
+<li><code>ServerSocket</code>常用实例方法：
+<ul>
+<li><code>accept()</code>：<strong>阻塞</strong>式地等待请求，收到请求后返回<code>Socket</code>对象，它和客户端的<code>Socket</code>对象相关联
+建议使用<code>try-with-resources</code>语法块构造<code>ServerSocket</code>对象避免调用<code>close()</code></li>
+<li><code>getPort()</code>和<code>getInetAddress()</code>：返回服务器绑定的本地端口号、本地<code>IP</code>地址
+<code>getLocalSocketAddress()</code>：返回服务器绑定的<code>IP</code>地址与端口号组成的<code>SocketAddress</code>对象</li>
+</ul></li>
+</ul>
+<h3 id="udp客户端与服务端"><code>UDP</code>客户端与服务端</h3>
+<ul>
+<li><code>Java</code>在客户端和服务端提供的<code>UDP</code>套接字的类为<code>DatagramSocket</code>
+<code>DatagramSocket</code>的构造方法同<code>ServerSocket</code>，但是注意，由于<code>TCP</code>和<code>UDP</code>是两种不同的协议，不同协议使用的端口号是互不干扰的，它们的相同点在于使用<code>16</code>位的端口号</li>
+<li><code>DatagramPacket</code>：这个类对象作为数据报的抽象，是数据传输的中介
+<ul>
+<li>构造方法：<code>DatagramPacket(byte[], int, InetAddress, int)</code>
+和一个<code>byte[]</code>数组绑定，后两个参数可选，和待发送的<code>IP</code>与端口绑定</li>
+<li><code>getData()、getOffset()、getLength()</code>：获取数据、偏移、长度
+通常用<code>new String(packet.getData(), packet.getOffset(), packet.getLength(), Charset)</code>解析收到的数据报</li>
+<li><code>setData(byte[])</code>：设置存储的数据</li>
+</ul></li>
+<li><code>DatagramSocket</code>常用实例方法：
+<ul>
+<li><code>receive(DatagramPacket)</code>：收取一个<code>UDP</code>数据报赋值给提供的引用
+接收后，这个<code>DatagramPacket</code>对象的目标<code>IP</code>和端口会被替换为发送方的<code>IP</code>与端口</li>
+<li><code>send(DatagramPacket)</code>：发送该数据报到提供的数据报对象指向的<code>IP</code>与端口</li>
+<li><code>connect(InetAddress, int)</code>：使当前的套接字对象绑定一个默认的目标<code>IP</code>及端口，它并不像<code>TCP</code>那样会发起连接，而只是在本地进行记录
+连接后，<code>send()</code>发送的<code>DatagramPacket</code>不需要有绑定的目标<code>IP</code>，且接收时会过滤掉这个<code>IP</code>及端口以外的数据报
+为了方便，通常在客户端使用<code>connect()</code>过滤掉不需要的包
+而服务端自然不需要也不应该设置默认的目标<code>IP</code>，由<code>receive()</code>自动设置即可</li>
+<li><code>disconnect()</code>：删除本地的默认连接</li>
+</ul></li>
+</ul>
+<h3 id="http客户端"><code>HTTP</code>客户端</h3>
+<ul>
+<li>直接使用<code>TCP</code>和<code>UDP</code>套接字灵活性很强，但应用层协议需要自己制定，在安全性和性能上没有设计好的协议简易而安全，例如要开发一个网页客户端，使用<code>HTTP</code>协议是最好不过的
+但是处理<code>HTTP</code>报文需要检查和解析响应行、响应头、响应体，十分麻烦
+早期<code>JDK</code>通过<code>HttpURLConnection</code>访问<code>HTTP</code>，但是不好用，<code>Java 11</code>后提供<code>java.net.http</code>简化开发</li>
+<li><code>HttpClient</code>构造方法：建议通过静态方法创建
+<ul>
+<li><p><code>HttpClient.newHttpClient()</code>：使用默认配置构建</p></li>
+<li><p><code>HttpClient.newBuilder().build()</code>：使用<code>HttpClient.Builder</code>构建器构建
+这种方法是最常用的，可以在<code>build()</code>前链式调用一系列方法自定义配置，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">HttpClient</span> <span class="variable">client</span> <span class="operator">=</span> HttpClient.newBuilder()</span><br><span class="line">     .version(Version.HTTP_2)     <span class="comment">// HTTP版本</span></span><br><span class="line">     .followRedirects(Redirect.NORMAL)   <span class="comment">// 重定向策略</span></span><br><span class="line">     .connectTimeout(Duration.ofSeconds(<span class="number">20</span>)) <span class="comment">// 超时时长</span></span><br><span class="line">     .proxy(ProxySelector.of(<span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(<span class="string">&quot;proxy.example.com&quot;</span>, <span class="number">80</span>))) <span class="comment">// 正向代理</span></span><br><span class="line">     .authenticator(Authenticator.getDefault()) <span class="comment">// HTTP身份认证</span></span><br><span class="line">     .build(); <span class="comment">// 返回由该Builder构造的HttpClient对象</span></span><br></pre></td></tr></table></figure>
+<p>其中<code>Redirect</code>与<code>Authenticator</code>是<code>HttpClient</code>的内部枚举，包含一系列重定向策略与身份认证策略</p></li>
+</ul></li>
+<li>创建<code>HTTP</code>请求：一个<code>HttpRequest</code>对象代表一个请求报文，通过静态方法<code>HttpRequest.newBuilder()</code>创建构建器，这个构建器包含若干配置方法：
+<ul>
+<li><code>uri(URI)</code>：设置目标网络资源</li>
+<li><code>header(String, String)</code>：设置某个请求头的键值
+也可以通过<code>headers()</code>一次性设置多个请求头</li>
+<li><code>GET()</code>与<code>POST(BodyPublisher)</code>：设置请求方式，默认是<code>GET()</code>，因此前者通常会被省略
+<code>BodyPublishers</code>是工厂类，用于创建<code>BodyPublisher</code>对象，常用方法有<code>ofString()</code>等</li>
+</ul></li>
+<li>处理<code>HTTP</code>响应：一个<code>HttpResponse</code>对象代表一个响应报文，通过<code>HttpClient</code>对象的<code>send()</code>发送请求报文后阻塞式地(同步式地)获取<strong>最终</strong>响应报文
+<ul>
+<li>该类是泛型类，泛型类型表示响应体被解析而成的类型，由<code>send()</code>时提供的<code>BodyHandler</code>参数决定解析类型，例如：
+<code>HttpResponse&lt;String&gt; resp = client.send(req, BodyHandlers.ofString())</code></li>
+<li><code>statusCode()</code>获取响应码</li>
+<li><code>headers()</code>：获取只读的响应头集合<code>HttpHeaders</code></li>
+<li><code>previousResponse()</code>：获取前一次响应，用于回溯重定向链</li>
+<li><code>version()、uri()、request()</code>：更多获取信息的方法</li>
+</ul></li>
+</ul>
+<h3 id="异步网络编程">异步网络编程</h3>
+<h3 id="了解rmi">了解<code>RMI</code></h3>
+<ul>
+<li><p><code>RMI</code>(<code>Remote Method Invotation</code>，远程方法调用)是<code>java.rmi</code>提供的远程调用<code>API</code>，仅需了解即可
+远程调用十分常用，这使得客户端代码无需有接口的实现类，而只需要声明接口即可正常调用，实现类由服务端提供</p></li>
+<li><p>远程方法调用的服务接口(即服务器端)需要继承<code>Remote</code>空接口且所有方法需要抛出受检异常<code>RemoteException</code>，创建实例后，通过<code>UnicastRemoteObject</code>转化为<code>RMI</code>服务，通过<code>Registry</code>注册到本地的端口上
+而客户端需要通过<code>Registry</code>的<code>getRegistry(host, port)</code>和<code>lookup(serv_name)</code>获取服务以及服务接口</p></li>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 服务端: 包含RemoteDemo接口, RemoteDemoImpl实现类</span></span><br><span class="line"><span class="comment">// 在本地1999号端口上启动一个RMI注册表</span></span><br><span class="line"><span class="type">Registry</span> <span class="variable">registry</span> <span class="operator">=</span> LocalRegistry.createRegistry(<span class="number">1999</span>);</span><br><span class="line"><span class="comment">// 将普通接口转化为RMI服务接口</span></span><br><span class="line"><span class="type">RemoteDemo</span> <span class="variable">serv</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RemoteDemoImpl</span>();</span><br><span class="line"><span class="type">RemoteDemo</span> <span class="variable">serv_obj</span> <span class="operator">=</span> UnicastRemoteObject.exportObject(serv, <span class="number">0</span>);</span><br><span class="line"><span class="comment">// 将该RMI服务注册到注册表中</span></span><br><span class="line">registry.rebind(<span class="string">&quot;Serv_name&quot;</span>, serv_obj);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 客户端: 只包含RemoteDemo接口</span></span><br><span class="line"><span class="comment">// 获取目标IP及端口的注册表</span></span><br><span class="line"><span class="type">Registry</span> <span class="variable">registry</span> <span class="operator">=</span> LocalRegistry.getRegistry(<span class="string">&quot;localhost&quot;</span>, <span class="number">1999</span>);</span><br><span class="line"><span class="comment">// 获取服务, 需要强制转换</span></span><br><span class="line"><span class="type">RemoteDemo</span> <span class="variable">remoteDemo</span> <span class="operator">=</span> (RemoteDemo) registry.lookup(<span class="string">&quot;Serv_name&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/16/java-mybatis/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-16</time>
+        <br>
+      Java: Mybatis
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/04/spring-core-resource/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-04</time>
+        <br>
+      Spring framework: Resource API
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/17/java-io/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-17</time>
+        <br>
+      Java: IO
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/06/02/java-jdbc/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-02</time>
+        <br>
+      Java: JDBC编程
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/socket/" rel="tag"># socket</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/05/05/probability-rdnvar/" rel="prev" title="概率论与数理统计: 常见的随机变量汇总">
+                  <i class="fa fa-angle-left"></i> 概率论与数理统计: 常见的随机变量汇总
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/05/17/java-multithreading/" rel="next" title="Java: 多线程编程">
+                  Java: 多线程编程 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

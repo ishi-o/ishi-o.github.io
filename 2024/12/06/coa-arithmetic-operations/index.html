@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="计算机组成原理: 算术运算">
+<meta property="og:url" content="https://ishi-o.github.io/2024/12/06/coa-arithmetic-operations/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-12-06T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T11:40:07.514Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="COA">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/12/06/coa-arithmetic-operations/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/12/06/coa-arithmetic-operations/","path":"2024/12/06/coa-arithmetic-operations/","title":"计算机组成原理: 算术运算"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>计算机组成原理: 算术运算 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97"><span class="nav-number">1.</span> <span class="nav-text">计算机的算术运算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%9A%84%E8%A1%A8%E7%A4%BA%E4%B8%8E%E5%AD%98%E5%82%A8"><span class="nav-number">1.1.</span> <span class="nav-text">数据的表示与存储</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A0%81"><span class="nav-number">1.1.1.</span> <span class="nav-text">计算机码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E7%82%B9%E6%95%B0%E8%A1%A8%E7%A4%BA"><span class="nav-number">1.1.2.</span> <span class="nav-text">定点数表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0%E8%A1%A8%E7%A4%BA"><span class="nav-number">1.1.3.</span> <span class="nav-text">浮点数表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0ieee%E6%A0%87%E5%87%86"><span class="nav-number">1.1.4.</span> <span class="nav-text">浮点数IEEE标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%A1%E9%AA%8C%E7%A0%81"><span class="nav-number">1.1.5.</span> <span class="nav-text">校验码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97"><span class="nav-number">1.2.</span> <span class="nav-text">定点数运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%BB%E4%BD%8D"><span class="nav-number">1.2.1.</span> <span class="nav-text">移位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E4%BD%8D%E8%BF%90%E7%AE%97%E5%92%8C%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E5%8F%8A%E5%8A%A0%E5%87%8F%E6%B3%95"><span class="nav-number">1.2.2.</span> <span class="nav-text">按位运算和逻辑运算及加减法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B9%98%E6%B3%95"><span class="nav-number">1.2.3.</span> <span class="nav-text">乘法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%A4%E6%B3%95%E5%92%8C%E5%8F%96%E6%A8%A1"><span class="nav-number">1.2.4.</span> <span class="nav-text">除法和取模</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97%E6%80%BB%E7%BB%93"><span class="nav-number">1.2.5.</span> <span class="nav-text">定点数运算总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97"><span class="nav-number">1.3.</span> <span class="nav-text">浮点数运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#alu%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.4.</span> <span class="nav-text">ALU设计</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/01/concreteMath-special-coefficient/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-01</time>
+        <br>
+      具体数学: 特殊系数
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/16/concreteMath-rounding/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-16</time>
+        <br>
+      具体数学: 取整函数
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/11/linearAlgebra-matrix/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-11</time>
+        <br>
+      线性代数: 矩阵
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/14/linearAlgebra-determinant/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-14</time>
+        <br>
+      线性代数: 行列式
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/12/06/coa-arithmetic-operations/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="计算机组成原理: 算术运算 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机组成原理: 算术运算
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-12-06 00:00:00" itemprop="dateCreated datePublished" datetime="2024-12-06T00:00:00+00:00">2024-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 11:40:07" itemprop="dateModified" datetime="2025-12-06T11:40:07+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/" itemprop="url" rel="index"><span itemprop="name">SE Courses</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/COA/" itemprop="url" rel="index"><span itemprop="name">COA</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>4k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>15 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="计算机的算术运算">计算机的算术运算</h1>
+<h2 id="数据的表示与存储">数据的表示与存储</h2>
+<h3 id="计算机码">计算机码</h3>
+<ul>
+<li>真值：符合人类习惯的十进制数字；机器数：数字化后的以机器码存储的数字；常用<span
+class="math inline">$8421\ \rm BCD$</span>有权码</li>
+<li>其它编码：
+<ul>
+<li>余三码：在<span class="math inline">8421</span>基础上，添加<span
+class="math inline">011</span>的偏置量，是无权码</li>
+<li><span class="math inline">2421</span>：权值不同的有权码</li>
+<li><code>ASCII</code>：编码英文字符</li>
+</ul></li>
+<li><code>IEEE</code>标准规定计算机内的<strong>有符号定点数</strong>都以<strong>补码形式存储</strong>，且使用<span
+class="math inline">$8421\ \rm BCD$</span>码</li>
+</ul>
+<h3 id="定点数表示">定点数表示</h3>
+<ul>
+<li><p>仅有符号定点数有原、反、补码的定义</p></li>
+<li><p>有符号定点数视<strong>最高位为符号位</strong>，假设<span
+class="math inline"> − 2<sup><em>n</em></sup> ≤ <em>x</em> &lt; 2<sup><em>n</em></sup></span>(<span
+class="math inline"><em>n</em> ≥ 0</span>，即只表示纯整数或纯小数)：</p>
+<ul>
+<li><p>正数的原码、反码、补码相同：</p></li>
+<li><p>原码：由<strong>符号位</strong>和<strong>尾数</strong>组成，对人来说是<strong>最直观</strong>的机器数</p>
+<ul>
+<li>不需要记住原码的计算公式，只需记住<strong>原码无法表示最小值<span
+class="math inline"> − 2<sup><em>n</em></sup></span></strong>(<span
+class="math inline">0</span>有两个原码)</li>
+<li>数值部分位数恰好为<span class="math inline"><em>n</em></span></li>
+</ul></li>
+<li><p>反码：对原码的<strong>尾数按位取反</strong>后的码值(仍无法表示最小值)</p></li>
+<li><p>补码的定义：</p>
+<ul>
+<li><p>计算公式(负数)：<span
+class="math inline">[<em>x</em>]<sub><em>补</em></sub> = 2<sup><em>n</em> + 1</sup> + <em>x</em></span>，当要通过补码计算原值时，<span
+class="math inline"><em>n</em></span>恰为数值部分位数</p></li>
+<li><p>简单理解：可看作相同位数无符号定点数中<strong>最高位的权值改为<span
+class="math inline"> − 2<sup><em>n</em></sup></span></strong>，使相同位数无符号定点数表示范围<span
+class="math inline">0 ≤ <em>x</em> &lt; 2<sup><em>n</em> + 1</sup></span>中<span
+class="math inline"> ≥ 2<sup><em>n</em></sup></span>的部分能一一映射到负数集合里(最高位权值由<span
+class="math inline">2<sup><em>n</em></sup></span>变为<span
+class="math inline"> − 2<sup><em>n</em></sup></span>，即这部分定点数均减去<span
+class="math inline">2<sup><em>n</em> + 1</sup></span>来对应负数)</p>
+<p>不难理解为何正数的补码为其本身，实际上真正的计算公式中加上<span
+class="math inline">2<sup><em>n</em> + 1</sup></span>后需要模<span
+class="math inline">2<sup><em>n</em> + 1</sup></span>，这个公式是正负数补码通用的，化简模运算后得到正负数补码不同的计算方式</p>
+<p>由于一个数加一个负数<span
+class="math inline"><em>x</em></span>等价于加其补码后模<span
+class="math inline">2<sup><em>n</em> + 1</sup></span>，故设计运算时只需自然舍去最高位进位即可统一加减法</p>
+<ul>
+<li>证明：<span
+class="math inline"><em>A</em> + <em>x</em> = (<em>A</em>+2<sup><em>n</em> + 1</sup>+<em>x</em>) mod  2<sup><em>n</em> + 1</sup> = (<em>A</em>+[<em>x</em>]<sub><em>补</em></sub>)<sub><em>取</em><em>n</em> + 1<em>位</em></sub></span></li>
+</ul></li>
+<li><p>当补码符号位为<span
+class="math inline">1</span>，数值部分全为<span
+class="math inline">0</span>时，达到能表示的最小值<span
+class="math inline"> − 2<sup><em>n</em></sup></span>，此时原码不存在</p></li>
+</ul></li>
+<li><p>补码的快捷计算(<strong>原码存在时</strong>)：<strong>反码加<span
+class="math inline">1</span></strong>，最高位自然舍去</p></li>
+</ul></li>
+<li><p>移码：定义为在补码的基础上，符号位翻转一次；其意义为偏移了<span
+class="math inline">2<sup><em>n</em></sup></span>，使比较正负数补码的大小时符合直观判断；可在浮点数中判机器零</p></li>
+</ul>
+<h3 id="浮点数表示">浮点数表示</h3>
+<ul>
+<li>可将任意分子为纯整数、分母为<span
+class="math inline">2</span>的次幂的有理数<span
+class="math inline">$\begin{align}\frac{x}{2^y}\end{align}$</span>表示小数为<span
+class="math inline">2<sup>−<em>y</em></sup> × (<em>x</em>)<sub>2</sub></span>；称<span
+class="math inline"> − <em>y</em></span>为阶码(含阶符)、纯整数<span
+class="math inline"><em>x</em></span>为尾数(含数符)，就是一般的浮点数表示形式</li>
+<li>规格化： 使整数<span
+class="math inline"><em>x</em></span>变为纯小数，且使其大于<span
+class="math inline">2<sup>−<em>k</em></sup></span>(按<span
+class="math inline">2<sup><em>k</em></sup></span>规格化)，尾数左移阶码减一，反之加一</li>
+<li>机器零：当阶码小于等于其能表示的最小值、或尾数为零时，将该数当作零(而实际不是)</li>
+</ul>
+<h3 id="浮点数ieee标准">浮点数<code>IEEE</code>标准</h3>
+<ul>
+<li><p><code>IEEE</code>浮点数：阶码、尾数均为补码，数符在最前，阶码添加偏移量，规格化使尾数为<span
+class="math inline">1 ∼ 2</span>间的小数且整数部分省略(隐藏位)，如下：</p>
+<p><span
+class="math inline"><em>数</em><em>符</em>  <em>阶</em><em>码</em>(<em>含</em><em>阶</em><em>符</em>)  <em>尾</em><em>数</em>(<em>省</em><em>略</em><em>最</em><em>高</em><em>位</em><em>的</em>1)</span></p></li>
+<li><p>有如下类型及其对应位数，其中临时实数不使用隐藏位：</p>
+<p><span
+class="math inline">$\begin{matrix}&amp;数符&amp;阶码&amp;尾数&amp;总位数&amp;阶码偏移量\\短实数&amp;1&amp;8&amp;23&amp;32&amp;\rm
+7FH\\长实数&amp;1&amp;11&amp;52&amp;64&amp;\rm
+3FFH\\临时实数&amp;1&amp;15&amp;64&amp;80&amp;\rm
+3FFFH\end{matrix}$</span></p></li>
+</ul>
+<h3 id="校验码">校验码</h3>
+<ul>
+<li>奇偶校验码：给有效信息额外添加<span
+class="math inline">1</span>位校验码，使整体<span
+class="math inline">1</span>的个数为奇数(奇校验)或偶数(偶校验)
+<ul>
+<li>求<strong>偶校验位</strong>值的过程就是让<strong>所有有效信息位进行异或</strong></li>
+<li><strong>偶校验信息</strong>的过程就是让<strong>整条信息的各位异或</strong>，此时正确信息中<strong>各位的异或结果为<span
+class="math inline">0</span></strong></li>
+<li>检错能力为<span class="math inline">1</span>位，没有纠错能力</li>
+</ul></li>
+<li>海明校验码：检错能力为<span
+class="math inline">2</span>位，纠错能力为<span
+class="math inline">1</span>位
+<ul>
+<li>使用多个校验位，并采用<strong>偶校验</strong>，每个校验位被分配到不同组，分组进行偶校验，按顺序排列为整数<span
+class="math inline"><em>k</em></span>，则<span
+class="math inline">$\begin{cases}k=0&amp;无错\\k\ne0&amp;出错,且该值指明了出错的位置序号\end{cases}$</span></li>
+<li>各校验位的位置为<span
+class="math inline"><em>P</em><sub><em>i</em></sub> = 2<sup><em>i</em> − 1</sup></span>处，信息位<span
+class="math inline"><em>D</em><sub><em>i</em></sub></span>按顺序排放在其余位置，位置序号为<span
+class="math inline"><em>p</em></span></li>
+<li>分组：将所有<span
+class="math inline"><em>p</em></span>用二进制数表示，则校验位<span
+class="math inline"><em>P</em><sub><em>i</em></sub></span>将和<strong>所有第<span
+class="math inline"><em>i</em></span>位为<span
+class="math inline">1</span>的<span
+class="math inline"><em>p</em></span>所指向的信息位</strong>分为一组，例如<span
+class="math inline"><em>P</em><sub>1</sub></span>将和<span
+class="math inline"><em>p</em> = 3(011)、5(101)、7(111)⋯</span>上的信息位分为一组</li>
+<li>检错：再添加一位<strong>全校验位</strong>，对整体进行偶校验，可判断<span
+class="math inline">1</span>位错或<span
+class="math inline">2</span>位错：<span
+class="math inline">$全校验位=\begin{cases}\times&amp;其它校验位全为0时,无错\\1&amp;1位出错\\0&amp;2位出错\end{cases}$</span></li>
+<li>纠错：若<span class="math inline">2</span>位出错，需重传；若<span
+class="math inline">1</span>位出错，则对第<span
+class="math inline"><em>k</em></span>位取反即可</li>
+</ul></li>
+</ul>
+<h2 id="定点数运算">定点数运算</h2>
+<h3 id="移位">移位</h3>
+<p>最快的运算</p>
+<ul>
+<li><p>针对无符号定点数，采用<strong>逻辑移位</strong>，即在缺失位处补<span
+class="math inline">0</span>，所有位均参与移位</p></li>
+<li><p>针对有符号补码，采用<strong>算术移位</strong>：符号位不参与移位，在缺失位处补<strong>原符号位</strong></p></li>
+<li><p>乘以<span
+class="math inline">2<sup><em>n</em></sup></span>幂：<code>C++</code>编译器将采用左移运算符而不是乘号</p></li>
+<li><p>除以<span
+class="math inline">2<sup><em>n</em></sup></span>幂：<code>C++</code>编译器将采用右移运算符而不是除号</p>
+<ul>
+<li><p>对<strong>无符号整数</strong>，均直接<strong>逻辑右移</strong>，结果均为<strong>向下舍入</strong>(即向更小的数字舍入)</p>
+<ul>
+<li>向下舍入原因：二进制串的最低位会被覆盖，右移时最低位的产生的正小数部分丢失</li>
+</ul></li>
+<li><p>对<strong>有符号负数</strong>，需要进行<strong>偏置</strong>：</p>
+<ul>
+<li><p>向下舍入的特性会导致负数舍入后离<span
+class="math inline">0</span>更远，而我们希望除法后的舍入应该离<span
+class="math inline">0</span>更近，例如<span
+class="math inline"> − 3/2 =  − 1</span>而不是<span
+class="math inline"> − 2</span>，这种舍入是不合适的</p></li>
+<li><p>最简单的想法是先转化为正数，再右移，再转化为负数：<span
+class="math inline">⌈<em>x</em>/2<sup><em>k</em></sup>⌉ =  − ((−<em>x</em>)&gt;&gt;<em>k</em>)</span></p></li>
+<li><p>通过<strong>偏置进行向上舍入</strong>是最常用的办法，即在右移之前加上偏置量<span
+class="math inline">(1&lt;&lt;<em>k</em>) − 1</span></p>
+<p>偏置量证明：假设需要右移<span
+class="math inline"><em>k</em></span>位，那么容易得到<span
+class="math inline">$\begin{cases}前k位为0,&amp;不需要舍入\\前k位大于0,&amp;需要舍入\end{cases}$</span></p>
+<p>若增加该偏置量，在不需要舍入的情况下，<strong>不改变结果</strong></p>
+<p>在需要舍入的情况下，添加后将进位，使<strong>结果加<span
+class="math inline">1</span></strong>，即<span
+class="math inline">⌈<em>x</em>/2<sup><em>k</em></sup>⌉ = ⌊<em>x</em>/2<sup><em>k</em></sup>⌋ + 1</span></p></li>
+</ul></li>
+<li><p>由于向下舍入是更简单的方式，一些语言不采用向零舍入</p></li>
+</ul></li>
+</ul>
+<h3 id="按位运算和逻辑运算及加减法">按位运算和逻辑运算及加减法</h3>
+<p><strong>按位与</strong>运算可用于截取前<span
+class="math inline"><em>k</em></span>位二进制串</p>
+<p>加减法稍慢，减法需要先将后者的补码算术取反</p>
+<ul>
+<li><p>采用高速并行加法器，也称超前进位加法器(<code>CLA</code>)：</p>
+<ul>
+<li><p>回顾一位加法器的最少逻辑门实现：<span
+class="math inline">$\begin{matrix}{\rm S_i}=A\oplus B\oplus
+C_{i-1}\\{\rm C_i}=(A\oplus
+B)C_{i-1}+AB\end{matrix}$</span>，即最低位的进位有<span
+class="math inline">5<em>T</em></span>的时延</p></li>
+<li><p>串行加法器：由于来自低位的进位参与高位进位的计算时不用通过异或门，故每个高位进位又有<span
+class="math inline">2<em>T</em></span>的时延，综合下来一个串行加法器的时延与位数<span
+class="math inline"><em>n</em></span>线性正相关</p></li>
+<li><p><code>CLA</code>的思路就是，首先一次性、同时计算出各位的进位，由于<span
+class="math inline">${\rm C_i}=AB+(A+B)C_{i-1}$</span>，将<span
+class="math inline"><em>C</em><sub><em>i</em> − 1</sub></span>展开即可得到<span
+class="math inline">$\begin{cases}G_i=A_iB_i\\P_i=A_i+B_i\\\rm
+{C_i}=G_i+P_iG_{i-1}+P_iP_{i-1}G_{i-1}+\cdots+(P_iP_{i-1}···P_1G_0)+(P_iP_{i-1}···P_0C_0)\end{cases}$</span></p>
+<pre><code>所有进位的时延都为$3T$</code></pre></li>
+<li><p><code>CLA</code>的问题在于，位数越高所需逻辑电路越复杂，因此通常采用<span
+class="math inline">8</span>位<code>CLA</code>串行连接产生非完全超前进位的更高位加法器</p></li>
+</ul></li>
+<li><p>有符号整数的<strong>算术取反</strong>(取相反数)为<strong>整体按位取反后末位加<span
+class="math inline">1</span></strong>：</p>
+<ul>
+<li><span
+class="math inline">$\begin{align}&amp;设有n+1位以补码存储的二进制有符号正数\\&amp;证明正\rightarrow负:最高位表示0,其余位最多表示2^n-1,当前数值为A\\&amp;整体取反后,最高位表示-2^n,其余位变为2^n-1-A,加一后等于2^{n-1}-A\\&amp;易得0+A=-(-2^n+2^n-A)\\&amp;反之同理\end{align}$</span></li>
+</ul></li>
+<li><p>加减法溢出位判断：当且仅当两操作数符号相同时可能溢出</p>
+<ul>
+<li><p>一位判断：结果符号位和原符号位不同时溢出</p></li>
+<li><p>二位判断：结果的两个符号位不同时溢出</p></li>
+<li><p>证明两个负数补码的数值部分相加后，若不溢出，最高位一定有进位：</p>
+<p><span
+class="math inline">$\begin{align}&amp;证:设两负数原值为x、y,[x]_{补}=1,X、[y]_{补}=1,Y;其中X、Y都为n位\\&amp;由[x]_{补}=x+2^{n+1}、[y]_{补}=y+2^{n+1}\\&amp;若x+y不溢出,即x+y\ge-2^n\\&amp;\Rightarrow[x]_{补}+[y]_{补}-2^{n+2}\ge-2^n\\&amp;\Rightarrow[x]_{补}+[y]_{补}=X+Y+2^{n+1}\ge3·2^n\\&amp;\Rightarrow
+X+Y\ge2^n\Rightarrow X+Y最高位一定有进位\end{align}$</span></p></li>
+</ul></li>
+</ul>
+<h3 id="乘法">乘法</h3>
+<p>比加法更慢</p>
+<ul>
+<li><p>原码一位乘：因计算机是定长机，因此将笔算乘法中被乘数左移转换成部分积右移，并使其高位和被乘数相加(因乘数最低位可舍去，因此同时右移即可)；假设两个数值为<span
+class="math inline"><em>n</em></span>位的数相乘：</p>
+<ul>
+<li>符号位单独处理得到，乘法过程为绝对值相乘</li>
+<li>注意使用<strong>逻辑右移</strong>，因为最高位本质上是数值位，总共需要移<span
+class="math inline"><em>n</em></span>位</li>
+<li>部分积寄存器<span
+class="math inline"><em>n</em> + 1</span>位，多出的一位存假溢出</li>
+</ul></li>
+<li><p>原码两位乘：将两次一位乘化为一次两位乘，其有五种情况</p>
+<ul>
+<li><p><span class="math inline">00</span>：直接右移两位</p>
+<p><span class="math inline">01</span>：加一次被乘数后右移两位</p>
+<p><span
+class="math inline">10</span>：加两倍的被乘数(左移一次)后右移两位</p>
+<p><span
+class="math inline">11</span>：因很难计算三倍，故先减一倍被乘数后<strong>记账一次</strong>(在右移两位后高位加一倍等价于移位前加四倍)</p>
+<p>​ 借位初始为<span class="math inline">0</span>，每次都需要参与运算</p>
+<p><span
+class="math inline">100</span>：因有借位的参与，此时直接加四倍的被乘数(左移两次)后右移两位</p></li>
+<li><p>因涉及到减法，故需要真符号位，又被乘数最多可能左移两位，因此需要在<strong>被乘数前补三位</strong></p>
+<p>并采用<strong>算术右移</strong></p></li>
+<li><p>因涉及到借位，为防止最后借位仍为<span
+class="math inline">1</span>，需在<strong>乘数前补位</strong>(偶补两位、奇补一位，由于是绝对值，补的是<span
+class="math inline">0</span>，因此奇数位只需补<span
+class="math inline">1</span>位而最后不会出现<span
+class="math inline">11 1</span>的情况)，用于处理该借位</p></li>
+<li><p>总共需要右移<span
+class="math inline">$\begin{align}\left\lfloor\frac{乘数}2\right\rfloor\end{align}$</span>次两位，若乘数位数为奇数最终需再移一位</p></li>
+</ul></li>
+<li><p>补码一位乘(校正法)：被乘数符号任意、乘数取绝对值后，进行原码一位乘的过程，最后进行校正</p>
+<ul>
+<li><p>由于是补码，采用<strong>算术右移</strong>，且部分积寄存器需补一位真符号位</p></li>
+<li><p>若乘数本身为负数，需在移位完成后<strong>减去一倍的乘数</strong>，减后不需要移位</p></li>
+</ul></li>
+<li><p>补码一位乘(比较法/<code>Booth</code>算法)：在对校正法公式整理后，依据最后两位(需补附加位)有四种情况(后一位减前一位有三种情况)：</p>
+<ul>
+<li><p><span class="math inline">00/11</span>：直接右移一位</p>
+<p><span class="math inline">01</span>：加一倍乘数后右移一位</p>
+<p><span class="math inline">10</span>：减一倍乘数后右移一位</p></li>
+<li><p>乘数寄存器需补附加位(初始为零)</p></li>
+<li><p><strong>注意最后一次比较后不移位</strong>，总共只移<span
+class="math inline"><em>n</em></span>位</p></li>
+</ul></li>
+<li><p>补码两位乘：将两次<code>Booth</code>乘法步骤合为一次，有八种情况：</p>
+<ul>
+<li><p><span class="math inline">000</span>：直接算术右移两位</p>
+<p><span class="math inline">001</span>：加一倍乘数后右移两位</p>
+<p><span
+class="math inline">010</span>：减一倍右移再加一倍右移，整理得<strong>加一倍后右移两位</strong></p>
+<p><span class="math inline">011</span>：加两倍后右移两位</p>
+<p><span class="math inline">100</span>：减两倍后右移两位</p>
+<p><span
+class="math inline">101</span>：加一倍右移再减一倍右移，整理得<strong>减一倍后右移两位</strong></p>
+<p><span class="math inline">110</span>：减一倍后右移两位</p>
+<p><span class="math inline">111</span>：直接右移两位</p></li>
+<li><p>因此部分积需补三位、乘数需补一位附加位</p></li>
+<li><p>此外，乘数算上附加位需补成奇数位，且最后一次比较后不移位</p></li>
+</ul></li>
+<li><p>快速幂算法：</p>
+<ul>
+<li><p><span
+class="math inline"><em>N</em> = (<em>a</em><sub><em>n</em></sub>,<em>a</em><sub><em>n</em> − 1</sub>,⋯,<em>a</em><sub>0</sub>)<sub>2</sub></span>，计算<span
+class="math inline"><em>b</em><sup><em>a</em><sub><em>n</em></sub>2<sup><em>n</em></sup></sup> · ... · <em>b</em><sup><em>a</em><sub>0</sub> · 1</sup></span>即可</p></li>
+<li><p>或者，当<span
+class="math inline"><em>N</em></span>为偶数时使其自乘，为奇数时记录多余的<span
+class="math inline"><em>b</em></span>，在最后相乘：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">quick_power</span><span class="params">(<span class="type">int</span> b, <span class="type">int</span> N)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> ans = b, tmp = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (N) &#123;</span><br><span class="line">        <span class="keyword">if</span> (N &amp; <span class="number">1</span>) &#123; <span class="comment">// 奇数时抽出一份 b, 记录在 tmp 中.</span></span><br><span class="line">   tmp *= b;</span><br><span class="line">            --N;  <span class="comment">// 幂数减1.</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;   <span class="comment">// 偶数时自乘, 幂数减半.</span></span><br><span class="line">            ans *= ans;</span><br><span class="line">            N &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans * tmp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul></li>
+</ul>
+<h3 id="除法和取模">除法和取模</h3>
+<p>极慢，取模和除法是同时进行，同时完成的</p>
+<ul>
+<li><p>恢复余数法：因定长机，将笔算过程中除数右移改为使余数和商左移，根据余数和除数的大小来上商</p>
+<ul>
+<li>预处理：被除数和除数先转换成其<strong>绝对值</strong>，计算结果的符号位需单独处理</li>
+<li>若减除数后，新余数为负数，则要恢复余数，即加上除数，并在商的末位商<span
+class="math inline">0</span></li>
+<li>否则直接在商的末位商<span class="math inline">1</span></li>
+<li>两种情况均需使余数和商同时<strong>逻辑左移</strong></li>
+</ul></li>
+<li><p>原码的加减交替法(不恢复余数法)：</p>
+<ul>
+<li><p>每次减除数后，根据余数：<span
+class="math inline">$\begin{cases}正数商1左移减\\负数商0左移加\end{cases}$</span></p></li>
+<li><p>共移<span
+class="math inline"><em>n</em></span>次，最后一次移位后仍需继续运算一次</p></li>
+</ul></li>
+<li><p>补码的加减交替法：</p>
+<ul>
+<li><p>取两位符号位，每次运算前比较余数和除数的符号位：<span
+class="math inline">$\begin{cases}同号商1减除数\\异号商0加除数\end{cases}$</span></p></li>
+<li><p>共移<span
+class="math inline"><em>n</em></span>次，最后一次移位后恒商<span
+class="math inline">1</span>，因此会导致些许误差</p></li>
+</ul></li>
+<li><p>快速模幂算法：为了减小因幂运算导致的数字极大，产生额外空间、时间消耗，故通过以下定理将其变为<strong>模数相乘再取模</strong>，数字会小很多</p>
+<ul>
+<li><p>前置定理：<span class="math inline">$(a_1·a_2){\rm mod}\
+n=((a_1{\rm mod}\ n)·(a_2{\rm mod}\ n)){\rm mod}\ n$</span></p></li>
+<li><p>推论：<span class="math inline">$a^N{\rm mod}\ n=(a{\rm\ mod}\
+n)^N{\rm mod}\ n$</span></p></li>
+<li><p>假设计算<span class="math inline">$b^N{\rm mod}\
+n$</span>，为快速计算幂，这里复用<strong>快速幂</strong>算法，将<span
+class="math inline"><em>N</em></span>化为二进制<span
+class="math inline">(<em>a</em><sub><em>n</em></sub>,<em>a</em><sub><em>n</em> − 1</sub>,⋯,<em>a</em><sub>0</sub>)<sub>2</sub></span>，按权值展开后，<span
+class="math inline"><em>b</em><sup><em>N</em></sup> = <em>b</em><sup><em>a</em><sub><em>n</em></sub>2<sup><em>n</em></sup> + ⋯ + <em>a</em><sub>0</sub> · 1</sup> = <em>b</em><sup><em>a</em><sub><em>n</em></sub>2<sup><em>n</em></sup></sup> · ... · <em>b</em><sup><em>a</em><sub>0</sub> · 1</sup></span></p></li>
+<li><p><span
+class="math inline"><em>b</em><sup>2<sup><em>n</em></sup></sup></span>虽然比<span
+class="math inline"><em>b</em><sup><em>N</em></sup></span>小，但还是较大，因此要证明每次迭代时，取模不影响结果，递归套用推论易证：<span
+class="math inline">$b^{2^n}{\rm mod}\ n=(b^{2^{n-1}}·b^{2^{n-1}}){\rm
+mod}\ n=(b^{2^{n-1}}{\rm mod}\ n)^2{\rm mod}\ n$</span></p>
+<p>所以计算<span
+class="math inline"><em>n</em></span>次幂的模时，可计算<span
+class="math inline"><em>n</em> − 1</span>次幂的模的平方的模</p></li>
+<li><p>```c++ int quick_power_mod(int b_mod_n, int N, int n) { int ans =
+1; b_mod_n %= n; // 预处理, (b^N)%n = ((b%n)^N)%n. while (N) { //
+取N的二进制表示中的第一位,如果为1,则计算 (ans<em>(b^{权值}%n)) mod n. if
+(N &amp; 1) { // 为保证数字始终较小,迭代 ans 时要再mod n. ans = (ans
+</em> b_mod_n) % n; } // 为保证数字始终较小,迭代 b的幂 时要再mod n,
+使数字&lt;n^2. b_mod_n = (b_mod_n * b_mod_n) % n; N &gt;&gt;= 1; }
+return ans; } <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 模数为$2$的$n$次幂($n&gt;1$)：直接用位运算**截取前$n-1$位**即可</span><br><span class="line"></span><br><span class="line">  - ```c++</span><br><span class="line">    int mod_2_power(int b, int n) &#123;</span><br><span class="line">        // 若n为2^k,则二进制表示为00...010...00, 唯一的1在第k+1位上.</span><br><span class="line">        // 则n-1为00...01...11, 最高位的1在第k位上.</span><br><span class="line">        // 故 b % n = b &amp; (n-1);</span><br><span class="line">        return b &amp; (n - 1);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p></li>
+</ul></li>
+</ul>
+<h3 id="定点数运算总结">定点数运算总结</h3>
+<h2 id="浮点数运算">浮点数运算</h2>
+<h2 id="alu设计"><code>ALU</code>设计</h2>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/01/concreteMath-special-coefficient/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-01</time>
+        <br>
+      具体数学: 特殊系数
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/16/concreteMath-rounding/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-16</time>
+        <br>
+      具体数学: 取整函数
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/11/linearAlgebra-matrix/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-11</time>
+        <br>
+      线性代数: 矩阵
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/14/linearAlgebra-determinant/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-14</time>
+        <br>
+      线性代数: 行列式
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/COA/" rel="tag"># COA</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/11/26/algo-trick-offline-query/" rel="prev" title="算法竞赛: 离线查询">
+                  <i class="fa fa-angle-left"></i> 算法竞赛: 离线查询
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/12/09/algo-graph-minimum-spanning-tree/" rel="next" title="图的算法: 最小生成树">
+                  图的算法: 最小生成树 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="微积分: 不定积分">
+<meta property="og:url" content="https://ishi-o.github.io/2023/11/12/calculus-indefinite-int/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="d:\Picture\Screenshots\%E6%88%AA%E5%9B%BE[%E5%B7%A5%E6%95%B0%E4%B8%8A]\1.jpg">
+<meta property="article:published_time" content="2023-11-12T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T11:40:07.514Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="math">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="d:\Picture\Screenshots\%E6%88%AA%E5%9B%BE[%E5%B7%A5%E6%95%B0%E4%B8%8A]\1.jpg">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2023/11/12/calculus-indefinite-int/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2023/11/12/calculus-indefinite-int/","path":"2023/11/12/calculus-indefinite-int/","title":"微积分: 不定积分"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>微积分: 不定积分 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8D%E5%AE%9A%E7%A7%AF%E5%88%86"><span class="nav-number">1.</span> <span class="nav-text">不定积分</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">公式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%85%AC%E5%BC%8F"><span class="nav-number">1.1.1.</span> <span class="nav-text">基本公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E5%85%AC%E5%BC%8F%E9%9C%80%E8%A6%81%E7%86%9F%E6%82%89%E6%8E%A8%E5%AF%BC%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.2.</span> <span class="nav-text">拓展公式(需要熟悉推导过程)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E5%87%91%E5%BE%AE%E5%88%86"><span class="nav-number">1.1.3.</span> <span class="nav-text">常凑微分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%83%A8%E7%A7%AF%E5%88%86"><span class="nav-number">1.1.4.</span> <span class="nav-text">分部积分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B1%82%E4%B8%8D%E5%AE%9A%E7%A7%AF%E5%88%86%E7%9A%84%E6%8A%80%E5%B7%A7"><span class="nav-number">1.2.</span> <span class="nav-text">求不定积分的技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%BC%8F"><span class="nav-number">1.2.1.</span> <span class="nav-text">分式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%81%87%E5%88%86%E5%BC%8F%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%88%86%E5%BC%8F%E5%88%86%E5%AD%90%E6%9C%80%E9%AB%98%E6%AC%A1%E5%B9%82%E5%A4%A7%E4%BA%8E%E7%AD%89%E4%BA%8E%E5%88%86%E6%AF%8D%E6%9C%80%E9%AB%98%E6%AC%A1%E5%B9%82"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">假分式化为真分式(分子最高次幂大于等于分母最高次幂)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9C%9F%E5%88%86%E5%BC%8F%E5%8C%96%E4%B8%BA%E5%9B%9B%E7%A7%8D%E5%88%86%E5%BC%8F"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">真分式化为四种分式</span></a></li></ol></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/30/calculus-limitation/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-30</time>
+        <br>
+      微积分: 关于极限
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/20/calculus-diff-equation/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-20</time>
+        <br>
+      微积分: 常微分方程
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/28/calculus-definite-int/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-28</time>
+        <br>
+      微积分: 定积分
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/05/probability-rdnvar/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-05</time>
+        <br>
+      概率论与数理统计: 常见的随机变量汇总
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2023/11/12/calculus-indefinite-int/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="微积分: 不定积分 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          微积分: 不定积分
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-11-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-11-12T00:00:00+00:00">2023-11-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 11:40:07" itemprop="dateModified" datetime="2025-12-06T11:40:07+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/" itemprop="url" rel="index"><span itemprop="name">SE Courses</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/Calculus/" itemprop="url" rel="index"><span itemprop="name">Calculus</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>772</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>3 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="不定积分">不定积分</h1>
+<h2 id="公式">公式</h2>
+<h3 id="基本公式">基本公式</h3>
+<p><span class="math inline">$\begin{align} &amp;\int kdx=kx+C,\ \int
+kx^\alpha dx=\frac{k}{\alpha+1}x^{\alpha+1}+C(\alpha\neq -1)\\&amp; \int
+\frac{dx}{x}=ln|x|+C, \int e^{kx}dx=\frac{1}{k}e^{kx}+C\\&amp; \int \sin
+xdx=-\cos x+C, \int \cos xdx=\sin x+C, \int \sec^2xdx=\tan x+C\\&amp;
+\int\csc^2xdx=\int\frac{dx}{\sin^2x}=-\cot x+C\\&amp; \int\sec x\tan
+xdx=\sec x+C, \int\csc x\cot xdx=\int\frac{\cos x}{\sin^2x}dx=-\csc
+x+C\\&amp; \int \frac{1}{1+x^2}dx=\arctan
+x+C,\int\frac{dx}{\sqrt{1-x^2}}=\arcsin x+C \end{align}$</span></p>
+<h3 id="拓展公式需要熟悉推导过程">拓展公式(需要熟悉推导过程)</h3>
+<p><span class="math inline">$\begin{align}&amp; \int\tan
+xdx=\int\frac{\sin xdx}{\cos x}=-\ln|\cos x|+C\\&amp; \int\cot
+xdx=\int\frac{\cos xdx}{\sin x}=ln|\sin x|+C\\&amp; \int\sec
+xdx=\int\frac{dx}{\cos x}=\int\frac{\cos xdx}{\cos^2x}=\int\frac{d(\sin
+x)}{1-\sin^2x}=\frac{1}{2}ln|\frac{1+\sin x}{1-\sin x}|+C\\&amp;
+\int\csc xdx=\int\frac{\sin xdx}{\sin^2x}=-\int\frac{d(\cos
+x)}{1-\cos^2x}=-\frac{1}{2}ln|\frac{1+\cos x}{1-\cos x}|+C\\\\\\&amp;
+对于\sin^nx与\cos^nx，n较小时\\&amp; 若n为偶数:\\&amp;
+直接通过cos2x=1-2sin^2x=2cos^2x-1降次\\&amp; 若n为奇数:\\&amp;
+将一个抽取出来凑微分，剩下的部分通过sin^2x+cos^2x=1进行替换\\\\&amp;
+若n较大:记公式(没必要)\int\sin^nxdx=-\frac{1}{n}sin^{n-1}xcosx+\int\frac{n-1}{n}sin^{n-2}xdx
+\end{align}$</span></p>
+<h3 id="常凑微分">常凑微分</h3>
+<p><span class="math inline">$\begin{align}&amp; (凑常数):\int
+f(ax+b)dx=\frac{1}{a}\int f(ax+b)d(ax+b)=\frac{1}{a}\int
+f(t)dt\Big\vert_{t=ax+b}\\&amp;
+(凑x^\alpha):x^{\alpha}dx=\frac{1}{\alpha+1}dx^{\alpha+1}\\&amp;
+(凑\frac{1}{x}):\frac{1}{x}dx=d(\ln x)\\&amp; (凑\sec^2 x):\sec^2
+xdx=d(\tan x)\\&amp; (凑\csc^2 x):\csc^2 xdx=-d(\cot x)\\&amp;(凑\sqrt
+x):\frac{dx}{\sqrt x}=2d(\sqrt
+x)\\&amp;(凑\frac{dx}{\sqrt{二次项式}}):将分母凑配方，得到\sqrt{1-Ax^2}的形式\\&amp;(凑1\pm\frac{1}{x^2}):(1\pm\frac{1}{x^2})dx=d(x\mp\frac{1}{x}),而(x\mp\frac{1}{x})^2=(x^2+\frac{1}{x^2})\pm
+2\\&amp;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \
+即通过倒代换凑出\end{align}$</span></p>
+<h3 id="分部积分">分部积分</h3>
+<p><span class="math inline">$\begin{align}\int
+f(x)g'(x)dx=\Big(f(x)·g(x)\Big)'-\int f'(x)·g(x)\end{align}$</span></p>
+<h2 id="求不定积分的技巧">求不定积分的技巧</h2>
+<h3 id="分式">分式</h3>
+<h4
+id="假分式化为真分式分子最高次幂大于等于分母最高次幂">假分式化为真分式(分子最高次幂大于等于分母最高次幂)</h4>
+<p>exp1:</p>
+<p><span
+class="math inline">$\begin{align}&amp;求\int\frac{x^3}{x+3}dx\\&amp;解:\\&amp;原式=\int\frac{(x+3)(x^2-3x+9)-27}{x+3}dx=\frac{1}{3}x^3-\frac{3}{2}x^2+9x-27ln|x+3|+C\end{align}$</span></p>
+<p>具体方法:</p>
+<p><img src="D:\Picture\Screenshots\截图[工数上]\1.jpg" style="zoom: 25%;" /></p>
+<h4 id="真分式化为四种分式">真分式化为四种分式</h4>
+<p><span class="math inline">$\begin{align}&amp;1.\int\frac{A}{x-a}dx\ \
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ Aln|x-a|\\&amp;2.\int\frac{A}{(x-a)^n}dx\ \
+\ \ \ \ \ \ \ \ \
+A\frac{1}{1-n}(x-a)^{1-n}\\&amp;3.\int\frac{Mx+N}{x^2+px+q}dx\ \ \ \ \
+将分母配方为(x-a)^2+b的形式即可\\&amp;4.\int\frac{Mx+N}{(x^2+px+q)^n}dx\end{align}$</span></p>
+<p>怎么拆开? 假设我们有:</p>
+<p><span
+class="math inline">$\begin{align}&amp;1.\frac{分子}{(x+a)^p(x+b)^q},则应拆成:\\&amp;\frac{A_1}{(x+a)^p}+\frac{A_2}{(x+a)^{p-1}}+\frac{A_3}{(x+a)^{p-2}}+...+\frac{B_1}{(x+a)^{q-1}}+\frac{B_2}{(x+a)^{q-2}}+...\\\\&amp;2.\frac{分子}{(x^2+px+q)(其它分母)},则应拆成:\\&amp;\frac{Ax+B}{x^2+px+q}+...\end{align}$</span></p>
+<p>然后得到:</p>
+<p><span
+class="math inline">$\begin{align}分子=分式1分子+分式2分子+...\end{align}$</span></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/30/calculus-limitation/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-30</time>
+        <br>
+      微积分: 关于极限
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/20/calculus-diff-equation/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-20</time>
+        <br>
+      微积分: 常微分方程
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/28/calculus-definite-int/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-28</time>
+        <br>
+      微积分: 定积分
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/05/probability-rdnvar/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-05</time>
+        <br>
+      概率论与数理统计: 常见的随机变量汇总
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/math/" rel="tag"># math</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/11/05/calculus-limit-exercise/" rel="prev" title="微积分: 极限练习题">
+                  <i class="fa fa-angle-left"></i> 微积分: 极限练习题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/11/28/calculus-definite-int/" rel="next" title="微积分: 定积分">
+                  微积分: 定积分 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Spring framework: MVC">
+<meta property="og:url" content="https://ishi-o.github.io/2025/07/12/spring-mvc/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-07-12T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T11:40:07.520Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="MVC">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="webapp">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/07/12/spring-mvc/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/07/12/spring-mvc/","path":"2025/07/12/spring-mvc/","title":"Spring framework: MVC"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Spring framework: MVC | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#spring-web-mvc"><span class="nav-number">1.</span> <span class="nav-text">Spring Web MVC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#mvc%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%89%8D%E7%AB%AF%E6%8E%A7%E5%88%B6%E5%99%A8%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">MVC架构模式与前端控制器设计模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%9B%B8%E5%85%B3"><span class="nav-number">1.2.</span> <span class="nav-text">配置相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dispatcherservlet%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.1.</span> <span class="nav-text">DispatcherServlet的配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%A6%E6%88%AA%E9%93%BE"><span class="nav-number">1.2.2.</span> <span class="nav-text">拦截链</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E4%B8%8E%E8%A7%86%E5%9B%BE"><span class="nav-number">1.3.</span> <span class="nav-text">模型与视图</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#model%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.3.1.</span> <span class="nav-text">Model接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#modelandview%E7%B1%BB"><span class="nav-number">1.3.2.</span> <span class="nav-text">ModelAndView类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E5%BC%8F%E5%A3%B0%E6%98%8E"><span class="nav-number">1.4.</span> <span class="nav-text">注解式声明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#controller%E5%A3%B0%E6%98%8E"><span class="nav-number">1.4.1.</span> <span class="nav-text">Controller声明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#url%E6%98%A0%E5%B0%84"><span class="nav-number">1.4.2.</span> <span class="nav-text">URL映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%81%E8%AE%B8%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%85%A5%E7%9A%84%E6%96%B9%E6%B3%95%E5%8F%82%E6%95%B0"><span class="nav-number">1.4.3.</span> <span class="nav-text">允许自动注入的方法参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.4.4.</span> <span class="nav-text">返回值类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">1.4.5.</span> <span class="nav-text">异常处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="nav-number">1.5.</span> <span class="nav-text">其它工具类</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/05/java-servlet/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-05</time>
+        <br>
+      Java EE: Servlet API
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/14/spring-validation/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-14</time>
+        <br>
+      Spring framework: Validation API
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/08/java-tomcat/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-08</time>
+        <br>
+      Java EE: Tomcat
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/03/spring-core-IoC/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-03</time>
+        <br>
+      Spring framework: IoC容器
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/07/12/spring-mvc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Spring framework: MVC | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring framework: MVC
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-07-12 00:00:00" itemprop="dateCreated datePublished" datetime="2025-07-12T00:00:00+00:00">2025-07-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 11:40:07" itemprop="dateModified" datetime="2025-12-06T11:40:07+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Java/Spring-framework/" itemprop="url" rel="index"><span itemprop="name">Spring framework</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>3.7k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>14 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="spring-web-mvc"><code>Spring Web MVC</code></h1>
+<h2
+id="mvc架构模式与前端控制器设计模式"><code>MVC</code>架构模式与前端控制器设计模式</h2>
+<ul>
+<li><code>MVC</code>(<code>Model-View-Controller</code>，模型-视图-控制器)是网页应用中最常见的架构
+<ul>
+<li>模型用于存储数据与负责业务逻辑</li>
+<li>视图用于显示与渲染数据</li>
+<li>控制器是模型与视图的中介，用于接收并过滤来自视图的输入、格式化并输出来自模型的数据</li>
+</ul></li>
+<li>在传统的应用中，视图渲染同时也在服务器端进行，即是一个前后端不分离的应用，此时控制器处理请求的返回值是一个视图，在<code>Spring</code>中由<code>ViewResolver</code>解析器保证开发者只需要返回<code>String</code>而不是具体的<code>View</code></li>
+<li>在前后端分离的现代<code>Web</code>应用中，前端交给一个前端框架开发，也许你已经听说过，此时后端应该提供<code>RESTful</code>的<code>API</code>，控制器返回的不再是<code>View</code>，而是数据</li>
+<li>前端控制器设计模式旨在将<code>Controller</code>部分再次拆分，用一个单一的处理程序(前端控制器)来处理所有的请求，包括过滤、认证与授权、处理、记录日志等
+这个<strong>前端控制器</strong>可以根据请求的类型不同，通过一个调度器/<strong>分发器</strong>，将请求分发到下属的<strong>不同的处理程序</strong>
+不同的处理程序会有对应的响应数据，<strong>视图</strong>用于呈现这些响应数据</li>
+<li>传统的<code>Servlet</code>开发有如下问题：
+<ul>
+<li><code>Servlet</code>的单个<code>doXxx()</code>处理多个不同<code>URL</code>的请求，管理映射困难，需要用分支判断
+而如果对每一个<code>URL</code>都写一个单独的<code>Servlet</code>服务，虽然能解决上述问题，但相似业务逻辑的代码就会被分散在不同的文件中</li>
+<li>需要手动地通过分支判断决定重定向以及内部转发，视图和服务紧耦合，难以扩展</li>
+<li>需要通过<code>getParameter()</code>获取参数以及手动类型转换和校验</li>
+</ul></li>
+<li><code>Spring Web MVC</code>是基于<code>Jakarta EE Servlet API</code>的<code>Web</code>框架，通常简称<code>Spring MVC</code></li>
+</ul>
+<h2 id="配置相关">配置相关</h2>
+<h3
+id="dispatcherservlet的配置"><code>DispatcherServlet</code>的配置</h3>
+<ul>
+<li><p><code>Spring MVC</code>提供了大部分实现，以使开发者只需要专心于编写控制器或处理器程序，然而稍微了解其内部构造仍是有用的</p></li>
+<li><p><code>DispatcherServlet</code>是一个前端控制器，它实现了<code>jakarta.servlet.http.HttpServlet</code>
+它的作用就是识别项目里被<code>@Controller</code>等注解的处理器以及内部的方法映射，将来自不同<code>URL</code>的请求分发给它们</p></li>
+<li><p>这个前端控制器同时应该作为一个<code>Bean</code>被纳入<code>IoC</code>容器管理，而作为一个<code>Servlet</code>应用，应用启动的流程是：由<code>Servlet</code>容器创建并注册所有的<code>Servlet</code>服务类，然后启动，最后创建<code>ApplicationContext</code>实例，因此无法使用自动注入</p></li>
+<li><p>为了解决这个问题，<code>DispatcherServlet</code>的构造方法有两种：默认构造方法会查询<code>ServletConfig</code>的<code>InitParameter</code>，使用<code>contextConfigLocation</code>配置；另一个构造方法要求一个<code>WebApplicationContext</code>参数，从而引导<code>Servlet</code>容器去创建<code>IoC</code>容器的上下文
+这两种方法对应两种配置：
+使用<code>web.xml</code>以及<code>IoC</code>容器所需的<code>XML</code>文件注册，部署在外部<code>Servlet</code>容器中
+<code>Servlet</code>容器在创建<code>DispatcherServlet</code>时，检测到<code>&lt;init-param/&gt;</code>标签，转而读取对应的<code>IoC</code>容器的<code>XML</code>文件，在创建<code>DispatcherServlet</code>之前创建<code>ClassPathXmlWebApplication</code>实例</p>
+<p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- web.xml --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>dispatcher<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 参数名需要记 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>/WEB-INF/applicationContext.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>dispatcher<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/ctx_path<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- applicationContext.xml --&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- IoC容器的XML配置 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">...</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>使用<code>WebApplicationInitializer</code>接口，覆写<code>onStartup(ServletContext)</code>方法来编程式地创建<code>DispatcherServlet</code>，实际上等价于用<code>Java</code>代码替代<code>XML</code>配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 基于注解</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyWebApplicationInitializer</span> <span class="keyword">implements</span> <span class="title class_">WebApplicationInitializer</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onStartup</span><span class="params">(ServletContext servletContext)</span> &#123;</span><br><span class="line">        <span class="type">WebApplicationContext</span> <span class="variable">ctx</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AnnotationConfigWebApplicationContext</span>(...);</span><br><span class="line">    </span><br><span class="line">        <span class="type">DispatcherServlet</span> <span class="variable">dispatcher</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DispatcherServlet</span>(ctx);</span><br><span class="line">        <span class="type">var</span> <span class="variable">registration</span> <span class="operator">=</span> servletContext.addServlet(<span class="string">&quot;dispatcher&quot;</span>, dispatcher);</span><br><span class="line">        registration.addMapping(<span class="string">&quot;/api/*&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>如果使用基于<code>Java</code>的注解，更建议继承<code>AbstractAnnotationConfigDispatcherServletInitializer</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyWebAppInitializer</span> <span class="keyword">extends</span> <span class="title class_">AbstractAnnotationConfigDispatcherServletInitializer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt;[] getRootConfigClasses() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Class</span>&lt;?&gt;[] &#123; RootConfig.class &#125;; <span class="comment">// 返回null可能不是最佳实践</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Class&lt;?&gt;[] getServletConfigClasses() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Class</span>&lt;?&gt;[] &#123; MyWebConfig.class &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> String[] getServletMappings() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>[] &#123; <span class="string">&quot;/api/**&quot;</span> &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul></li>
+<li><p><code>DispatcherServlet</code>默认有若干内置的对象，重要的接口如下：</p>
+<ul>
+<li><code>HandlerMapping</code>接口：将处理器对应的类映射到某个具体的<code>URL</code>上
+不需要调用或实现它，它的默认实现是<code>RequestMappingHandlerMapping</code>，它会自动解析<code>@RequestMapping</code>、<code>@GetMapping</code>等注解映射</li>
+<li><code>HandlerAdapter</code>接口：(适配器)将处理器的不同方法统一为一个方法，使前端控制器不需要关注其细节
+不需要调用或实现它，它的默认实现是<code>ResquestMappingHandlerAdapter</code>，它替代前端控制器来执行<code>HandlerMapping</code>找到的方法</li>
+<li><code>HandlerExceptionResolver</code>接口：将不同地方的各种异常映射到统一的异常处理器类上
+不需要调用或实现它，它有若干实现类用于处理不同类别的异常源</li>
+<li><code>ViewResolver</code>接口：负责解析后端处理器返回的字符串，变为<code>View</code>对象，如<code>JSP</code>或<code>Thymeleaf</code>模板
+不需要调用或实现它，它的默认实现是<code>InternalResourceViewResolver</code>
+因为现代<code>Web</code>应用一般使用前后端分离，所以<code>ViewResolver</code>也不常用了</li>
+<li><code>LocaleResolver</code>接口：负责<code>i18n</code>
+不需要调用或实现它，它有若干实现类</li>
+<li><code>ThemeResolver</code>接口：负责解析<code>UI</code>主题，即前端的工作
+前端的工作一般不用<code>Java</code>来做，所以一般不需要使用它</li>
+<li><code>MultipartResolver</code>接口：负责解析<code>multipart</code>类型的数据
+没有默认配置，需要自己配置，有现成的实现类</li>
+</ul></li>
+</ul>
+<h3 id="拦截链">拦截链</h3>
+<ul>
+<li><p>就像<code>Jakarta EE</code>的<code>Filter</code>那样，<code>DispatcherServlet</code>在找到对应的处理器后，调用之前会先调用拦截器链</p></li>
+<li><p>拦截器需要实现<code>HandlerInterceptor</code>接口，包含三个方法，它们会作为回调函数被观察者调用</p>
+<ul>
+<li><code>preHandle(HttpServletRequest req, HttpServletResponse resp, Object handler)</code>：调用处理器之前的拦截点，通常进行日志记录、身份验证</li>
+<li><code>postHandle(HttpServletRequest req, HttpServletResponse resp, Object handler, ModelAndView modelAndView)</code>：成功调用处理器之后，视图渲染之前的拦截点，通常用于添加视图的全局配置</li>
+<li><code>afterCompletion(HttpServletRequest req, HttpServletResponse resp, Object handler, Exception ex))</code>：完成整个请求后的回调，通常用于资源关闭、性能统计等，就像<code>finally</code>块那样，即使之前的处理链有异常发生，也会调用该方法</li>
+</ul></li>
+<li><p>注册拦截器：</p>
+<ul>
+<li><p>基于<code>Java</code>的配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 需实现WebMvcConfigurer接口(全部都有default实现, 因此可按需实现)</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableWebMvc</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebMvcConfig</span> <span class="keyword">implements</span> <span class="title class_">WebMvcConfigurer</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> MyHandlerInterceptor interceptor;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">WebMvcConfig</span><span class="params">(MyHandlerInterceptor interceptor)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.interceptor = interceptor;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addInterceptors</span><span class="params">(InterceptorRegistry registry)</span> &#123;</span><br><span class="line">        <span class="comment">// 注册interceptor, 作用于/api/**, 忽略/api/noIntercept</span></span><br><span class="line">        <span class="comment">// 执行顺序为最高(0为最高优先级)</span></span><br><span class="line">        <span class="comment">// addInterceptor()返回InterceptorRegistration, 然后允许链式调用配置方法</span></span><br><span class="line">        registry.addInterceptor(interceptor)</span><br><span class="line">                .addPathPatterns(<span class="string">&quot;/api/**&quot;</span>)</span><br><span class="line">                .exludePathPatterns(<span class="string">&quot;/api/noIntercept&quot;</span>)</span><br><span class="line">                .order(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>基于<code>XML</code>配置：待补</p></li>
+</ul></li>
+<li><p><code>CORS</code>配置：<code>Spring MVC</code>的默认<code>CORS</code>策略是同源策略，即默认情况下，不允许被不同域访问(包括<code>localhost</code>的不同端口)，浏览器确认的具体做法是先发送预请求获取对方的<code>CORS</code>配置，然后限定只能发送或不能发送特定的请求</p></li>
+<li><p><code>@CrossOrigin</code>类/方法级注解就是用于配置<code>CORS</code>的，针对一个类，它会作用于该类的所有方法</p>
+<ul>
+<li><code>origin</code>属性包括它允许的来源域</li>
+<li><code>originPatterns</code>属性包括它允许被获取的<code>URI</code></li>
+<li><code>methods</code>属性包括它允许的请求方法</li>
+<li><code>allowedHeaders</code>和<code>exposedHeaders</code>：允许/不允许请求所包含的请求头</li>
+<li><code>maxAge</code>：秒为单位的<code>CORS</code>配置有效时间</li>
+</ul></li>
+<li><p>除了注解配置，还可以基于<code>Java</code>配置，仍然是<code>WebMvcConfigurer</code>的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableWebMvc</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebMvcConfig</span> <span class="keyword">implements</span> <span class="title class_">WebMvcConfigurer</span> &#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addCorsMappings</span><span class="params">(CorsRegistry registry)</span> &#123;</span><br><span class="line">      registry.allowedOrigins(<span class="string">&quot;localhost&quot;</span>)</span><br><span class="line">              .addMappings(<span class="string">&quot;/api/**&quot;</span>)</span><br><span class="line">              .allowedMethods(<span class="string">&quot;GET&quot;</span>, <span class="string">&quot;POST&quot;</span>)</span><br><span class="line">              .allowedHeaders(HttpHeaders.LOCATION)</span><br><span class="line">              .exposedHeaders(HttpHeaders.ACCEPT)</span><br><span class="line">              .maxAge(<span class="number">3600</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="模型与视图">模型与视图</h2>
+<h3 id="model接口"><code>Model</code>接口</h3>
+<ul>
+<li><code>Model</code>类似<code>ServletRequest</code>的属性在<code>Servlet</code>应用中的作用，用于管理单个请求范围内的由后端程序设置的属性</li>
+<li><code>Model</code>提供<code>addAttribute(String, Object)</code>和<code>getAttribute(String, Object)</code>和<code>containsAttribute(String)</code>三个常用的属性相关方法
+它不像<code>ServletRequest</code>那样提供删除属性的方法，因为<code>Model</code>的生命周期较短，设计者认为不需要删除属性</li>
+<li><code>Model</code>实例通常不需要开发者自己创建，而是由<code>Spring</code>容器自动创建并注入为参数</li>
+</ul>
+<h3 id="modelandview类"><code>ModelAndView</code>类</h3>
+<ul>
+<li><code>ModelAndView</code>类通常作为一个返回视图的方法的返回值，需要开发者自己创建，是<code>Model</code>结合返回值<code>String</code>的一个替代选择，它包揽了<code>Model</code>以及返回视图的功能，算是一种风格上的不同
+即使在前后端结合的应用中，它也不常用，因为它不止返回视图，还返回其中添加的属性</li>
+<li>它提供<code>addObject(String, Object)</code>、<code>setViewName(String)</code></li>
+</ul>
+<h2 id="注解式声明">注解式声明</h2>
+<h3 id="controller声明"><code>Controller</code>声明</h3>
+<ul>
+<li><code>@ResponseBody</code>类/方法级注解，注解类时表示该类的所有方法的返回值不应经过<code>ViewResolver</code>，而是作为响应体返回；注解方法时只表示该特定方法的返回值不经过<code>ViewResolver</code></li>
+<li><code>@Controller</code>类级注解：标识该类是传统的控制器类，通常作为页面控制器而存在，虽然返回值允许多个类型，但期望返回<code>String</code>，表示视图类型，然后<code>ViewResolver</code>会解析它为视图</li>
+<li><code>@RestController</code>类级注解：标识该类是现代的前后端分离的控制器类，通常作为数据接口，即<code>API</code>控制器而存在，期望返回<code>ResponseEntity&lt;T&gt;</code>或其它类型，表示数据
+<code>@RestController</code>本质是<code>@Controller</code>加上<code>@ResponseBody</code>注解，后者表示该类的方法返回的是数据本身而不是一个视图，不应经过<code>ViewResolver</code>解析</li>
+<li><code>@ControllerAdvice</code>类级注解：表示该类中定义的<code>ExceptionHandler</code>方法会应用于全局的<code>Controller</code>类</li>
+<li><code>@RestControllerAdvice</code>类级注解：等价于<code>@ControllerAdvice</code>加上<code>@ResponseBody</code>注解</li>
+</ul>
+<h3 id="url映射"><code>URL</code>映射</h3>
+<ul>
+<li><p><code>@RequestMapping</code>：通常作为类级注解，<code>value</code>表示映射到的<code>URL</code>路径，<code>method</code>表示请求方法</p></li>
+<li><p>针对方法，在<code>@RequestMapping</code>的基础上有若干的扩展注解，即<code>@GetMapping</code>、<code>@PostMapping</code>、<code>@PutMapping</code>等，它们规定了<code>@RequestMapping</code>的<code>method</code>属性，会继承来自类级<code>@RequestMapping</code>的映射路径，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/api&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ApiController</span> &#123;</span><br><span class="line">  <span class="comment">// 访问/api/obj时会重定向到此</span></span><br><span class="line">  <span class="meta">@GetMapping(&quot;/obj&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">getObj</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="string">&quot;index&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>@RequestMapping</code>除<code>value</code>(<code>URL</code>路径)以外，还有若干属性用于缩小一个方法对应的<code>URL</code>范围</p>
+<ul>
+<li><code>consumes</code>属性：指定该方法能处理的请求的数据类型，例如<code>consumes={"application/json"}</code>，它会自动解析<code>Content-Type</code>请求头</li>
+<li><code>produces</code>属性：指定该方法响应的数据类型，例如<code>produces={"application/json"}</code>，它会自动解析<code>Accept</code>请求头</li>
+<li><code>params</code>属性：限定该方法接受请求所带的参数，例如<code>params={"a", "!a", "a=b"}</code>，<code>"a"</code>表示检测请求是否带<code>a</code>参数，<code>!a</code>表示检测请求是否不带<code>a</code>参数，<code>a=b</code>表示检测请求里的<code>a</code>参数是否等于<code>b</code></li>
+<li><code>headers</code>属性：限定该方法接受请求所带的请求头，格式和<code>params</code>类似</li>
+</ul></li>
+<li><p>除了<code>*</code>以及<code>**</code>通配符以外，<code>Spring</code>提供<code>?</code>以及<code>{}</code>捕获功能</p>
+<ul>
+<li><code>?</code>匹配任意单个字符</li>
+<li><code>{variable}</code>：将该部分路径信息捕获，赋给<code>variable</code>模板参数，可以通过<code>@PathVariable</code>获取</li>
+<li><code>{variable:regex}</code>：仅将能成功匹配<code>regex</code>正则表达式的<code>URL</code>交给该方法处理，并将该部分路径赋给<code>variable</code>
+因为在<code>java</code>中，使用<code>regex</code>与<code>PCRE</code>不同，例如<code>\</code>需要<code>\\</code>转义</li>
+<li>类型转换由<code>Spring</code>提供，需要目标参数的类型能通过单个<code>String</code>对象构造</li>
+</ul></li>
+</ul>
+<h3 id="允许自动注入的方法参数">允许自动注入的方法参数</h3>
+<ul>
+<li>虽然允许直接注入<code>ServletRequest</code>、<code>ServletResponse</code>等<code>Servlet API</code>，但通常没有必要</li>
+<li><code>InputStream</code>、<code>Reader</code>、<code>OutputStream</code>、<code>Writer</code>：从<code>Servlet API</code>获取的流对象</li>
+<li><code>Model</code>：获取当前请求的整个模型实例</li>
+<li><code>Spring</code>核心提供的类型转换十分强大，以下注解获取的数据只要能进行转换(包括<code>json</code>数据)，就能自动注入为各种非<code>String</code>类型的参数值
+甚至可以自定义<code>Converter</code>并注册，以实现自定义转换的功能</li>
+<li><strong><code>@PathVariable</code></strong>：获取对应的从<code>URL</code>中捕获的参数</li>
+<li><code>@MatrixVariable</code>：获取从<code>URL</code>最后由<code>;</code>分割的名值对
+例如<code>/api/a;name1=value1,value2;name2=value3</code>，不同名值对由<code>;</code>分割、同一名值对的多个值由<code>,</code>分割</li>
+<li><strong><code>@RequestParam("paramName")</code></strong>：获取对应的请求参数，若为<code>POST</code>则只能获取表单或<code>multipart</code>参数</li>
+<li><strong><code>@RequestHeader("headerName")</code></strong>：获取对应的请求头的值</li>
+<li><strong><code>@CookieValue("cookieName")</code></strong>：获取对应的<code>Cookie</code>值</li>
+<li><strong><code>@RequestBody</code></strong>：获取对应的请求体</li>
+<li><code>@RequestPart</code>：获取<code>multipart</code>请求体的一个<code>part</code></li>
+<li><strong><code>@ModelAttribute("attr")</code></strong>：获取模型中，属性名为<code>attr</code>的值</li>
+<li><code>@SessionAttribute("attr")</code>：获取当前会话的属性<code>attr</code>的值</li>
+<li><code>@RequestAttribute("attr")</code>：获取当前请求中存的属性<code>attr</code>的值</li>
+<li>其它方法参数，若不带任意注解且不是上述的任意类型，若为简单类型则解析为<code>@RequestParam</code>，否则解析为<code>@ModelAttribute</code></li>
+</ul>
+<h3 id="返回值类型">返回值类型</h3>
+<ul>
+<li><code>ResponseEntity&lt;T&gt;</code>：完整的由开发者决定的响应体
+<ul>
+<li>调用一个指定了状态码的静态方法，创建一个<code>ResponseEntity.BodyBuilder</code>或<code>ResponseEntity.HeadersBuilder</code>创建者：
+<code>status(HttpStatusCode)</code>：指定任意状态码，创建一个响应报文
+<code>ok()</code>：等价于<code>status(200)</code>，服务器成功返回网页
+<code>accept()</code>：等价于<code>status(202)</code>，服务器接受但尚未处理
+<code>basRequest()</code>：等价于<code>status(400)</code>
+<code>notFound()</code>：创建一个仅含响应头的响应报文<code>Builder</code>
+<code>internalServerError()</code>：等价于<code>status(500)</code></li>
+<li><code>HeadersBuilder</code>接口包含以下方法：
+<code>build()</code>：创建<code>ResponseEntity</code>
+<code>header(String, String)</code>以及<code>headers(HttpHeaders)</code>：添加响应头</li>
+<li><code>BodyBuilder</code>继承<code>HeaderBuilder</code>接口，此外包含以下方法：
+<code>contentType(String)</code>：设置响应体数据类型
+<code>contentLength(long)</code>：设置响应体大小
+<code>body(T)</code>：设置响应体，会自动由<code>Converter</code>序列化</li>
+</ul></li>
+<li><code>void</code>：方法参数必须包含输出流或<code>ServletResponse</code>，此时表示<code>Spring</code>认为请求在该方法内部完成了处理，返回值为<code>void</code></li>
+<li><code>@ModelAttribute</code>：它在修饰参数时表示获取，而在修饰方法时表示方法的返回值会添加到该请求的<code>Model</code>里而不是返回</li>
+<li><code>String</code>、<code>View</code>、<code>ModelAndView</code>：返回字符串表示的视图、自己创建的视图、绑定了一些属性的视图</li>
+</ul>
+<h3 id="异常处理">异常处理</h3>
+<ul>
+<li>由<code>@ExceptionHandler</code>注解修饰的方法用于处理来自<code>Controller</code>类的异常，它不需要<code>@RequestMapping</code></li>
+<li>其接受的方法参数在大多数情况应该是某一个异常类型</li>
+<li>其方法的返回值类型规则与一般的<code>@RequestMapping</code>方法一致</li>
+<li><code>@ExceptionHandler</code>允许设置一系列异常类的<code>class</code>属性，表示只会接受这些类型的异常</li>
+<li>在<code>@Controller</code>类、<code>@RestController</code>类中定义的异常处理器只作用于其所在类的其它方法抛出的异常</li>
+<li>在<code>@ControllerAdvice</code>类、<code>@RestControllerAdvice</code>类中定义的异常处理器作用于所有的<code>Controller</code>类</li>
+</ul>
+<h2 id="其它工具类">其它工具类</h2>
+<ul>
+<li><code>org.springframework.http.HttpStatus</code>：包含一系列状态码的枚举</li>
+<li><code>org.springframework.http.MediaType</code>：包含一系列数据类型常量，包括可以用<code>parseMediaType(String)</code>将其中没有提供的数据类型显式转换为<code>MediaType</code></li>
+<li><code>org.springframework.http.HttpHeaders</code>：包含一系列请求头、响应头的常量以及设置方法</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/05/java-servlet/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-05</time>
+        <br>
+      Java EE: Servlet API
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/14/spring-validation/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-14</time>
+        <br>
+      Spring framework: Validation API
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/08/java-tomcat/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-08</time>
+        <br>
+      Java EE: Tomcat
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/03/spring-core-IoC/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-03</time>
+        <br>
+      Spring framework: IoC容器
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/webapp/" rel="tag"># webapp</a>
+              <a href="/tags/Spring/" rel="tag"># Spring</a>
+              <a href="/tags/MVC/" rel="tag"># MVC</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/07/11/java-bean-validation/" rel="prev" title="Java EE: Bean Validation">
+                  <i class="fa fa-angle-left"></i> Java EE: Bean Validation
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/14/spring-security/" rel="next" title="Spring framework: Security">
+                  Spring framework: Security <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

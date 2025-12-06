@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="离散数学: 图论基础">
+<meta property="og:url" content="https://ishi-o.github.io/2024/04/29/discreteMath-graph/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-04-29T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T11:40:07.516Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="graph">
+<meta property="article:tag" content="math">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/04/29/discreteMath-graph/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/04/29/discreteMath-graph/","path":"2024/04/29/discreteMath-graph/","title":"离散数学: 图论基础"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>离散数学: 图论基础 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">图的基本概念</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/20/algo-math-ext-euler-theorem/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-20</time>
+        <br>
+      数论: 扩展欧拉定理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/30/calculus-limitation/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-30</time>
+        <br>
+      微积分: 关于极限
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/19/discreteMath-mathamatic-logic/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-19</time>
+        <br>
+      离散数学: 数理逻辑
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/05/calculus-limit-exercise/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-05</time>
+        <br>
+      微积分: 极限练习题
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/04/29/discreteMath-graph/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="离散数学: 图论基础 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          离散数学: 图论基础
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-04-29 00:00:00" itemprop="dateCreated datePublished" datetime="2024-04-29T00:00:00+00:00">2024-04-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 11:40:07" itemprop="dateModified" datetime="2025-12-06T11:40:07+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/" itemprop="url" rel="index"><span itemprop="name">SE Courses</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/Discrete-Math/" itemprop="url" rel="index"><span itemprop="name">Discrete Math</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>933</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>3 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="图">图</h1>
+<h2 id="图的基本概念">图的基本概念</h2>
+<ul>
+<li>图由结点集合<span class="math inline"><em>V</em></span>，边集合<span
+class="math inline"><em>E</em></span>，映射关系<span
+class="math inline"><em>φ</em></span>构成，其中<span
+class="math inline"><em>φ</em> : <em>E</em> → <em>V</em> × <em>V</em>/{<em>V</em>, <em>V</em>}</span>为由边到结点序偶/两元素集合的函数</li>
+<li>当<span
+class="math inline"><em>φ</em></span>映射到序偶时，称为有向图，反之为无向图</li>
+<li>每条边关联的两个点相互点邻接，同一结点上的各条边相互边邻接</li>
+<li>若<span
+class="math inline"><em>e</em></span>关联的两点是同一结点，称为自回路/环</li>
+<li>若<span
+class="math inline"><em>φ</em>(<em>e</em><sub>1</sub>) = <em>φ</em>(<em>e</em><sub>2</sub>)</span>，称这两条边互为平行边，在有向图中需注意方向</li>
+<li>图的分类(侧重点不同的领域定义可能有所不同)：
+<ul>
+<li>简单图：既没有自回路也没有平行边</li>
+<li>多重边图：没有自回路，有平行边</li>
+<li>伪图：有自回路和平行边</li>
+</ul></li>
+<li>图的同构：含双射函数<span
+class="math inline"><em>f</em> : <em>V</em> → <em>V</em>′, <em>g</em> : <em>E</em> → <em>E</em>′</span>，新的映射关系<span
+class="math inline"><em>φ</em>′</span>，满足<span
+class="math inline"><em>φ</em>(<em>e</em>) = {<em>v</em><sub>1</sub>, <em>v</em><sub>2</sub>} → <em>φ</em>′(<em>g</em>(<em>e</em>)) = {<em>f</em>(<em>v</em><sub>1</sub>), <em>f</em>(<em>v</em><sub>2</sub>)}</span></li>
+<li>结点的度数及相关结论：
+<ul>
+<li>所有结点度数之和<span
+class="math inline"><em>d</em>(<em>G</em>)</span>等于两倍的边数</li>
+<li>一定含偶数个奇度节点</li>
+</ul></li>
+<li><span
+class="math inline"><em>d</em></span>度正则图：所有结点度数为<span
+class="math inline"><em>d</em></span>度，若结点数为<span
+class="math inline"><em>d</em> + 1</span>，则称其为<strong><span
+class="math inline"><em>d</em> + 1</span>阶完全无向图</strong>，记为<span
+class="math inline"><em>k</em><sub><em>d</em> + 1</sub></span>
+<ul>
+<li><span
+class="math inline"><em>k</em><sub><em>n</em></sub></span>为同阶图中边数最多的图，且<span
+class="math inline">$\begin{align}|E|=\frac{n(n-1)}2=C_n^2\end{align}$</span></li>
+</ul></li>
+<li>子图的定义：
+<ul>
+<li>若子图的三个构成部分都包含于母图，称为子图</li>
+<li>在子图基础上，若边、映射关系真包含于母图，称为真子图</li>
+<li>在子图基础上，若结点集合和母图一致，称为<strong>生成子图</strong>，即对母图只删除边(或不删除)</li>
+<li>导出子图：分为由边导出和由结点导出</li>
+</ul></li>
+<li>路径、回路：
+<ul>
+<li>路径由若干结点及连接它们的边组成，若起点和终点重合，称其为回路</li>
+<li>若一条路径/回路中边互不相同，称为简单路径/回路</li>
+<li>若一条路径结点互不相同/回路除起点外结点互不相同，称为基本路径/回路(圈)</li>
+<li>若简单回路包含图中所有边，称为欧拉回路；若基本回路包含图中所有点，称为哈密尔顿回路</li>
+<li>基本路径一定是简单路径，反之不成立；基本回路也不一定是简单回路</li>
+<li><span
+class="math inline"><em>n</em></span>阶图中，基本路径长度小于等于<span
+class="math inline"><em>n</em> − 1</span></li>
+</ul></li>
+<li>连通性：
+<ul>
+<li>若两结点间有路径，则称它们可达，称最短路径为测地线</li>
+<li>定义图的直径为最长路径的长度</li>
+<li>无向图：若任意两结点可达，称<span
+class="math inline"><em>G</em></span>是连通的</li>
+<li>有向图：
+<ul>
+<li>若其对应的无向图(也叫基础图)连通，称为弱连通</li>
+<li>若任意两结点有单向路径，称为单向连通</li>
+<li>若任意两结点互相可达，称为强连通</li>
+</ul></li>
+<li>无向图连通分支：由可达关系(是一个等价类)划分出的等价类导出的子图为连通分支</li>
+<li>每个连通分支都是一个连通子图</li>
+<li>若通过删去边/点能使一个连通分支变为两个或以上，称其为割边/割点</li>
+<li><span
+class="math inline"><em>e</em><em>是</em><em>割</em><em>边</em> ⇔ <em>e</em><em>不</em><em>在</em><em>任</em><em>何</em><em>简</em><em>单</em><em>回</em><em>路</em><em>上</em></span></li>
+</ul></li>
+<li>邻接矩阵：注意结点没有自回路，结点和自身不可达</li>
+<li>邻接矩阵的转置：表示其逆图，所有边反向</li>
+<li>邻接矩阵的幂<span
+class="math inline"><em>A</em><sup><em>n</em></sup></span>：<span
+class="math inline"><em>a</em><sub><em>i</em><em>j</em></sub></span>表示由<span
+class="math inline"><em>i</em></span>到<span
+class="math inline"><em>j</em></span>的<span
+class="math inline"><em>n</em></span>度路径长度</li>
+<li>可达性矩阵<span
+class="math inline"><em>P</em></span>：是布尔矩阵，表示可达性</li>
+<li><span
+class="math inline"><em>A</em><em>A</em><sup><em>T</em></sup></span>：<span
+class="math inline"><em>a</em><sub><em>i</em><em>j</em></sub></span>表示以<span
+class="math inline"><em>i</em>/<em>j</em></span>为起点，共同终于某些结点的边的个数</li>
+<li><span
+class="math inline"><em>A</em><sup><em>T</em></sup><em>A</em></span>：<span
+class="math inline"><em>a</em><sub><em>i</em><em>j</em></sub></span>表示以某些结点为起点，终于<span
+class="math inline"><em>i</em>/<em>j</em></span>的边的个数</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/20/algo-math-ext-euler-theorem/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-20</time>
+        <br>
+      数论: 扩展欧拉定理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/30/calculus-limitation/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-30</time>
+        <br>
+      微积分: 关于极限
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/19/discreteMath-mathamatic-logic/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-19</time>
+        <br>
+      离散数学: 数理逻辑
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/05/calculus-limit-exercise/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-05</time>
+        <br>
+      微积分: 极限练习题
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/graph/" rel="tag"># graph</a>
+              <a href="/tags/math/" rel="tag"># math</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/23/calculus-multivar-diff/" rel="prev" title="微积分: 多元函数微分">
+                  <i class="fa fa-angle-left"></i> 微积分: 多元函数微分
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/05/03/games-TuringComplete/" rel="next" title="Turing Complete: 图灵完备，一款数电小游戏">
+                  Turing Complete: 图灵完备，一款数电小游戏 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

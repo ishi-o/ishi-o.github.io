@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="离散数学: 数理逻辑">
+<meta property="og:url" content="https://ishi-o.github.io/2024/04/19/discreteMath-mathamatic-logic/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-04-19T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T11:40:07.517Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="math">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/04/19/discreteMath-mathamatic-logic/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/04/19/discreteMath-mathamatic-logic/","path":"2024/04/19/discreteMath-mathamatic-logic/","title":"离散数学: 数理逻辑"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>离散数学: 数理逻辑 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E7%90%86%E9%80%BB%E8%BE%91"><span class="nav-number">1.</span> <span class="nav-text">数理逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E9%A2%98%E9%80%BB%E8%BE%91"><span class="nav-number">1.1.</span> <span class="nav-text">命题逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8E%E5%85%B6%E5%AE%83%E9%80%BB%E8%BE%91%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AF%B9%E5%BA%94"><span class="nav-number">1.1.2.</span> <span class="nav-text">与其它逻辑系统的对应</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%AD%89%E4%BB%B7%E5%85%AC%E5%BC%8F"><span class="nav-number">1.1.3.</span> <span class="nav-text">基本等价公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%91%BD%E9%A2%98%E7%9A%84%E7%AD%89%E4%BB%B7"><span class="nav-number">1.1.4.</span> <span class="nav-text">条件命题的等价</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">逻辑函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E5%81%B6%E8%A7%84%E5%88%99"><span class="nav-number">1.2.1.</span> <span class="nav-text">对偶规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E6%BC%94%E8%A7%84%E5%88%99"><span class="nav-number">1.2.2.</span> <span class="nav-text">反演规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%93%E8%AF%8D%E9%80%BB%E8%BE%91"><span class="nav-number">1.3.</span> <span class="nav-text">谓词逻辑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E9%A2%98%E9%80%BB%E8%BE%91%E7%9A%84%E5%B1%80%E9%99%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">命题逻辑的局限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%93%E8%AF%8D%E4%B8%8E%E9%87%8F%E8%AF%8D"><span class="nav-number">1.3.2.</span> <span class="nav-text">谓词与量词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%93%E8%AF%8D%E9%80%BB%E8%BE%91%E5%85%AC%E5%BC%8F"><span class="nav-number">1.3.3.</span> <span class="nav-text">谓词逻辑公式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E9%87%8F%E8%AF%8D"><span class="nav-number">1.3.4.</span> <span class="nav-text">嵌套量词</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E7%90%86%E8%A7%84%E5%88%99"><span class="nav-number">1.4.</span> <span class="nav-text">推理规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%BD%E9%A2%98%E9%80%BB%E8%BE%91%E8%A7%84%E5%88%99"><span class="nav-number">1.4.1.</span> <span class="nav-text">命题逻辑规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%93%E8%AF%8D%E9%80%BB%E8%BE%91%E8%A7%84%E5%88%99"><span class="nav-number">1.4.2.</span> <span class="nav-text">谓词逻辑规则</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/20/algo-math-ext-euler-theorem/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-20</time>
+        <br>
+      数论: 扩展欧拉定理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/08/07/discreteMath-algebra-system/" rel="bookmark">
+        <time class="popular-posts-time">2024-08-07</time>
+        <br>
+      离散数学: 代数系统
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/22/discreteMath-set/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-22</time>
+        <br>
+      离散数学: 集合论
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/09/27/discreteMath-abstract-algebra/" rel="bookmark">
+        <time class="popular-posts-time">2024-09-27</time>
+        <br>
+      离散数学: 近世代数（群、环、域）
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/04/19/discreteMath-mathamatic-logic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="离散数学: 数理逻辑 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          离散数学: 数理逻辑
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-04-19 00:00:00" itemprop="dateCreated datePublished" datetime="2024-04-19T00:00:00+00:00">2024-04-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 11:40:07" itemprop="dateModified" datetime="2025-12-06T11:40:07+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/" itemprop="url" rel="index"><span itemprop="name">SE Courses</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/Discrete-Math/" itemprop="url" rel="index"><span itemprop="name">Discrete Math</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>7 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="数理逻辑">数理逻辑</h1>
+<h2 id="命题逻辑">命题逻辑</h2>
+<h3 id="基本概念">基本概念</h3>
+<ul>
+<li>命题：只有真、假两种状态的陈述语句，在命题逻辑里，原子命题不提供任何除真假以外的信息，这也导致命题逻辑的局限性</li>
+<li>逻辑等价(<span
+class="math inline"><em>p</em> ≡ <em>q</em></span>)：表示<strong><span
+class="math inline"><em>p</em></span>等价于<span
+class="math inline"><em>q</em></span></strong>，即有相同的真值表</li>
+<li>否定(<span
+class="math inline">¬<em>p</em></span>)：表示<strong><span
+class="math inline"><em>p</em></span>的否定</strong></li>
+<li>析取(<span
+class="math inline"><em>p</em> ∨ <em>q</em></span>)：表示<strong><span
+class="math inline"><em>p</em></span>或者<span
+class="math inline"><em>q</em></span></strong></li>
+<li>合取(<span
+class="math inline"><em>p</em> ∧ <em>q</em></span>)：表示<strong><span
+class="math inline"><em>p</em></span>并且<span
+class="math inline"><em>q</em></span></strong></li>
+<li>异或(<span
+class="math inline"><em>p</em> ⊕ <em>q</em></span>)：表示<strong><span
+class="math inline"><em>p</em></span>异或<span
+class="math inline"><em>q</em></span></strong></li>
+<li>条件(<span
+class="math inline"><em>p</em> → <em>q</em></span>)：表示<strong>若<span
+class="math inline"><em>p</em></span>，则<span
+class="math inline"><em>q</em></span></strong>
+<ul>
+<li>从定义上看，只有当<span
+class="math inline"><em>p</em> = <em>T</em> ∧ <em>q</em> = <em>F</em></span>时违反了语句，故其它情况均<strong>人为定义为<span
+class="math inline"><em>T</em></span></strong></li>
+</ul></li>
+<li>双条件(<span
+class="math inline"><em>p</em> ↔︎ <em>q</em></span>)：表示<strong><span
+class="math inline"><em>p</em></span>当且仅当<span
+class="math inline"><em>q</em></span></strong>，与<span
+class="math inline"><em>p</em> ⊙ <em>q</em></span>等价
+<ul>
+<li>若<span
+class="math inline"><em>p</em> ↔︎ <em>q</em></span>为<strong>永真式</strong>，称<span
+class="math inline"><em>p</em> ≡ <em>q</em></span>或<span
+class="math inline"><em>p</em> ⇔ <em>q</em></span></li>
+</ul></li>
+<li>对条件语句<span class="math inline"><em>p</em> → <em>q</em></span>：
+<ul>
+<li><strong>反命题</strong>：<span
+class="math inline">¬<em>p</em> → ¬<em>q</em></span>，即对输入取反，真值表上下颠倒</li>
+<li><strong>逆命题</strong>：<span
+class="math inline"><em>q</em> → <em>p</em></span>，真值表上下颠倒</li>
+<li><strong>逆否命题</strong>：<span
+class="math inline">¬<em>q</em> → ¬<em>p</em></span>，和原命题<strong>等价</strong></li>
+</ul></li>
+<li>优先级：<span
+class="math inline">¬ &gt;  ∧  &gt;  ∨  &gt;  →  &gt; ↔︎</span></li>
+</ul>
+<h3 id="与其它逻辑系统的对应">与其它逻辑系统的对应</h3>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 10%" />
+<col style="width: 12%" />
+<col style="width: 32%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">命题逻辑</th>
+<th style="text-align: center;">逻辑代数</th>
+<th style="text-align: center;">位运算符</th>
+<th style="text-align: center;">集合论</th>
+<th style="text-align: center;">自然语言描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span
+class="math inline">¬<em>p</em></span></td>
+<td style="text-align: center;"><span
+class="math inline"><em>p̄</em></span></td>
+<td style="text-align: center;"><span class="math inline">$\rm
+NOT$</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">否定/取反</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">∨</span></td>
+<td style="text-align: center;"><span class="math inline">+</span></td>
+<td style="text-align: center;"><span class="math inline">$\rm
+OR$</span></td>
+<td style="text-align: center;"><span class="math inline">∪</span></td>
+<td style="text-align: center;">析取/或/逻辑和/并</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">∧</span></td>
+<td style="text-align: center;"><span class="math inline">·</span></td>
+<td style="text-align: center;"><span class="math inline">$\rm
+AND$</span></td>
+<td style="text-align: center;"><span class="math inline">∩</span></td>
+<td style="text-align: center;">合取/与/逻辑积/交</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span
+class="math inline"><em>p</em> → <em>q</em></span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span
+class="math inline"><em>p</em></span>蕴涵<span
+class="math inline"><em>q</em></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span
+class="math inline"><em>p</em> ⇒ <em>q</em></span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span
+class="math inline"><em>p</em></span>永真蕴涵<span
+class="math inline"><em>q</em></span>/<span
+class="math inline"><em>p</em></span>是<span
+class="math inline"><em>q</em></span>的充分条件</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span
+class="math inline"><em>p</em> ↔︎ <em>q</em></span></td>
+<td style="text-align: center;"><span class="math inline">⊙</span></td>
+<td style="text-align: center;"><span class="math inline">$\rm
+XNOR$</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span
+class="math inline"><em>p</em></span>当且仅当<span
+class="math inline"><em>q</em></span>/<span
+class="math inline"><em>p</em></span>同或<span
+class="math inline"><em>q</em></span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span
+class="math inline"><em>p</em> ⇔ <em>q</em></span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span
+class="math inline"><em>p</em></span>是<span
+class="math inline"><em>q</em></span>的充要条件</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span class="math inline">|</span></td>
+<td style="text-align: center;"><span class="math inline">$\rm
+NAND$</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">与非</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"></td>
+<td style="text-align: center;"><span class="math inline">↓</span></td>
+<td style="text-align: center;"><span class="math inline">$\rm
+NOR$</span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">或非</td>
+</tr>
+</tbody>
+</table>
+<h3 id="基本等价公式">基本等价公式</h3>
+<ul>
+<li>满足交换律、结合律、分配律</li>
+<li><strong>德<span class="math inline">⋅</span>摩根律</strong>：
+<ul>
+<li><span
+class="math inline">¬(<em>p</em>∧<em>q</em>) ≡ ¬<em>p</em> ∨ ¬<em>q</em></span></li>
+<li><span
+class="math inline">¬(<em>p</em>∨<em>q</em>) ≡ ¬<em>p</em> ∧ ¬<em>q</em></span></li>
+</ul></li>
+<li>支配律：<span
+class="math inline"><em>p</em> ∨ <em>T</em> ≡ <em>T</em>、<em>p</em> ∧ <em>F</em> ≡ <em>F</em></span></li>
+<li>自等律：<span
+class="math inline"><em>p</em> ∨ <em>p</em> ≡ <em>p</em>、<em>p</em> ∧ <em>p</em> ≡ <em>p</em></span></li>
+<li>恒等律：<span
+class="math inline"><em>p</em> ∨ <em>F</em> ≡ <em>p</em>、<em>p</em> ∧ <em>T</em> ≡ <em>p</em></span></li>
+<li>否定律：<span
+class="math inline"><em>p</em> ∨ ¬<em>p</em> ≡ <em>T</em>、<em>p</em> ∧ ¬<em>p</em> ≡ <em>F</em></span></li>
+<li><strong>吸收律</strong>：
+<ul>
+<li><span
+class="math inline"><em>p</em> ∨ (<em>p</em>∧<em>q</em>) ≡ <em>p</em></span></li>
+<li>由分配律，<span
+class="math inline"><em>p</em> ∧ (<em>p</em>∨<em>q</em>) ≡ <em>p</em></span>，也即上式的对偶</li>
+</ul></li>
+<li><strong>消解律</strong>：
+<ul>
+<li><span
+class="math inline">(<em>p</em>∧<em>q</em>) ∨ (¬<em>p</em>∧<em>r</em>) ≡ <em>q</em> ∧ <em>r</em></span></li>
+<li>取对偶，<span
+class="math inline">(<em>p</em>∨<em>q</em>) ∧ (<em>p</em>∨<em>r</em>) ≡ <em>q</em> ∨ <em>r</em></span></li>
+</ul></li>
+</ul>
+<h3 id="条件命题的等价">条件命题的等价</h3>
+<ul>
+<li><span
+class="math inline"><em>p</em> → <em>q</em> ≡ ¬<em>q</em> → ¬<em>p</em> ≡ ¬<em>p</em> ∨ <em>q</em></span></li>
+<li><span
+class="math inline">(<em>p</em>→<em>q</em>) ∧ (<em>p</em>→<em>r</em>) ≡ <em>p</em> → (<em>q</em>∧<em>r</em>)</span></li>
+<li><span
+class="math inline">(<em>p</em>→<em>r</em>) ∧ (<em>q</em>→<em>r</em>) ≡ (<em>p</em>∨<em>q</em>) → <em>r</em></span></li>
+<li><span
+class="math inline">(<em>p</em>→<em>q</em>) ∨ (<em>p</em>→<em>r</em>) ≡ <em>p</em> → (<em>q</em>∨<em>r</em>)</span></li>
+<li><span
+class="math inline">(<em>p</em>→<em>r</em>) ∨ (<em>q</em>→<em>r</em>) ≡ (<em>p</em>∧<em>q</em>) → <em>r</em></span></li>
+</ul>
+<h2 id="逻辑函数">逻辑函数</h2>
+<h3 id="对偶规则">对偶规则</h3>
+<ul>
+<li>恒等式通常成对出现，称其为对偶，以<span
+class="math inline"><em>F</em><sup><em>d</em></sup></span>表示<span
+class="math inline"><em>F</em></span>的对偶函数，对一个恒等式两边取对偶不影响恒等性</li>
+<li><span
+class="math inline"><em>F</em><sup><em>d</em></sup> ≢ <em>F</em>(<em>一</em><em>般</em>)、(<em>F</em><sup><em>d</em></sup>)<sup><em>d</em></sup> ≡ <em>F</em></span></li>
+<li>对偶函数由原函数<strong>交换逻辑与、逻辑或，交换<span
+class="math inline">0</span>和<span
+class="math inline">1</span>得到</strong></li>
+</ul>
+<h3 id="反演规则">反演规则</h3>
+<ul>
+<li>一个函数的反函数可以由原函数<strong>交换逻辑与、逻辑或，交换<span
+class="math inline">0</span>和<span
+class="math inline">1</span>，同时原变量变反变量、反变量变原变量</strong>而得，其中反变量特指单个变量上的非号，跨两个及以上变量的非号不能动</li>
+<li>同样可借<span class="math inline"><em>F̄</em></span>来求<span
+class="math inline"><em>F</em></span></li>
+</ul>
+<h2 id="谓词逻辑">谓词逻辑</h2>
+<h3 id="命题逻辑的局限">命题逻辑的局限</h3>
+<p>命题逻辑的最小单元是命题，所以命题逻辑无法表示那些不真不假的语句，因为它们没有指定变量的值</p>
+<p>因此也无法从若干简单命题中得到新命题，例如亚里士多德三段论：</p>
+<ul>
+<li>三个原子命题：<span
+class="math inline"><em>p</em>:</span>所有人都要死、<span
+class="math inline"><em>q</em>:</span>苏格拉底是人、<span
+class="math inline"><em>r</em>:</span>所以苏格拉底要死</li>
+<li>根据逻辑推理，由<span class="math inline"><em>p</em></span>且<span
+class="math inline"><em>q</em></span>一定可以得到<span
+class="math inline"><em>r</em></span>，即要证明<span
+class="math inline">(<em>p</em>∧<em>q</em>) ⇒ <em>r</em></span></li>
+<li>尽管<span
+class="math inline"><em>p</em> ∧ <em>q</em> = <em>T</em></span>，在命题逻辑的系统里，仍然可以把<span
+class="math inline"><em>F</em></span><strong>指派</strong>给<span
+class="math inline"><em>r</em></span></li>
+<li>换句话说就是，给命题赋予真值的同时，也<strong>掩盖掉了具体的信息</strong>，你只知道<span
+class="math inline"><em>p</em></span>是对的，<span
+class="math inline"><em>q</em></span>是对的，然后无法得知任何其它信息，也就无法得知<span
+class="math inline"><em>r</em></span>的真值</li>
+<li>如果能变成假言三段论的形式，是可以通过命题逻辑表示的，但原子命题已经是最小的命题了</li>
+</ul>
+<p>谓词逻辑解决这样的事情：提取出命题中的信息，并提供一套符号用于产生新的、适用更广的命题</p>
+<h3 id="谓词与量词">谓词与量词</h3>
+<p>通过谓词可以从这些语句中生成命题，谓词逻辑允许对命题进行更细的划分</p>
+<ul>
+<li>个体：命题所描述的对象，约定用小写字母表示</li>
+<li>谓词：命题赋予主体的属性或动作，约定用大写字母<span
+class="math inline"><em>P</em>、<em>Q</em>、<em>R</em></span>表示</li>
+<li>命题的谓词形式：由<strong>谓词</strong>和若干<strong>个体常元</strong>组合成<span
+class="math inline"><em>P</em>(<em>a</em><sub>1</sub>,<em>a</em><sub>2</sub>,⋯,<em>a</em><sub><em>n</em></sub>)</span>的形式
+<ul>
+<li>称<span
+class="math inline"><em>P</em>(<em>x</em><sub>1</sub>,<em>x</em><sub>2</sub>,⋯,<em>x</em><sub><em>n</em></sub>)</span>为一个<span
+class="math inline"><em>n</em></span>元谓词，其中<span
+class="math inline"><em>x</em></span>为个体变元，称它能够表示的所有个体的集合为它的个体域</li>
+</ul></li>
+<li>量词：通过量词来限定个体域在谓词中的不确定性，例如<strong><em>所有、至少</em></strong>等
+<ul>
+<li>全称量词<span
+class="math inline">(∀<em>x</em>)</span>：表达<strong>所有</strong></li>
+<li>存在量词<span class="math inline">$(\exist
+x)$</span>：表达<strong>存在</strong></li>
+<li>存在唯一量词<span class="math inline">$(\exist\ !\
+x)$</span>：表达<strong>存在唯一</strong></li>
+<li>后接谓词<span
+class="math inline"><em>P</em>(<em>x</em>)</span>表示该量词的辖域</li>
+</ul></li>
+</ul>
+<h3 id="谓词逻辑公式">谓词逻辑公式</h3>
+<ul>
+<li>德<span class="math inline">·</span>摩根律：
+<ul>
+<li><span class="math inline">$\neg(\exist x)P(x)\equiv (\forall x)\neg
+P(x)$</span></li>
+<li><span class="math inline">$\neg (\forall x)P(x)\equiv(\exist x)\neg
+P(x)$</span></li>
+</ul></li>
+<li>量词的辖域扩张：
+<ul>
+<li><span
+class="math inline">(∀<em>x</em>)<em>P</em>(<em>x</em>) ∨ <em>Q</em> ≡ (∀<em>x</em>)(<em>P</em>(<em>x</em>)∨<em>Q</em>)</span>，其中<span
+class="math inline"><em>Q</em></span><strong>不含变元</strong></li>
+<li>同理，将析取换为合取、将全称量词换位存在量词也成立</li>
+<li><span class="math inline">$(\forall x)(P(x)\rightarrow
+Q)\equiv(\exist x)P(x)\rightarrow Q$</span>，将<span
+class="math inline">∀</span>和<span
+class="math inline">$\exist$</span>互换同理
+<ul>
+<li>证明：左式<span class="math inline">$=(\forall x)(\neg P(x)\vee
+Q)=(\forall x)\neg P(x)\vee Q=\neg(\exist x)P(x)\vee Q=$</span>右式</li>
+</ul></li>
+<li><span
+class="math inline">(∀<em>x</em>)(<em>Q</em>→<em>P</em>(<em>x</em>)) ≡ <em>Q</em> → (∀<em>x</em>)<em>P</em>(<em>x</em>)</span>，将<span
+class="math inline">∀</span>换成<span
+class="math inline">$\exist$</span>同理</li>
+</ul></li>
+<li>量词的分配律：
+<ul>
+<li><span class="math inline">∀<em>x</em></span>对<span
+class="math inline">∧</span>、<span class="math inline">$\exist
+x$</span>对<span class="math inline">∨</span>满足分配律</li>
+<li><span class="math inline">∀<em>x</em></span>对<span
+class="math inline">∨</span>、<span class="math inline">$\exist
+x$</span>对<span
+class="math inline">∧</span><strong>不满足</strong>分配律，只满足<span
+class="math inline">$(\forall x)P(x)\vee (\forall
+x)Q(x)\Rightarrow(\forall x)(P(x)\vee Q(x))\\(\exist x)(P(x)\wedge
+Q(x))\Rightarrow(\exist x)P(x)\wedge (\exist x)Q(x)$</span></li>
+</ul></li>
+<li>永真蕴涵式：<span class="math inline">$(\exist
+x)P(x)\rightarrow(\forall x)Q(x)\Rightarrow(\forall x)(P(x)\rightarrow
+Q(x))\Rightarrow (\forall x)P(x)\rightarrow(\forall x)Q(x)$</span></li>
+</ul>
+<h3 id="嵌套量词">嵌套量词</h3>
+<ul>
+<li>嵌套量词的顺序：
+<ul>
+<li><span class="math inline">$(\forall x)(\forall y)\equiv (\forall
+y)(\forall x)\\(\exist x)(\exist y)\equiv (\exist y)(\exist
+x)$</span></li>
+<li><span class="math inline">$(\forall x)(\forall y)\Rightarrow(\exist
+x)(\forall y)\Rightarrow(\forall y)(\exist x)\Rightarrow(\exist
+x)(\exist y)\\(\forall x)(\forall y)\Rightarrow(\exist y)(\forall
+x)\Rightarrow(\forall x)(\exist y)\Rightarrow(\exist x)(\exist
+y)$</span></li>
+</ul></li>
+<li>嵌套量词的否定：
+<ul>
+<li>层层套用德<span class="math inline">·</span>摩根律，结果为<span
+class="math inline">∀</span>和<span
+class="math inline">$\exist$</span>互换，非号在最里层，例如：</li>
+<li><span class="math inline">$\neg(\forall x)(\exist
+y)P(x,y)\equiv(\exist x)(\forall y)\neg P(x,y)$</span></li>
+</ul></li>
+</ul>
+<h2 id="推理规则">推理规则</h2>
+<h3 id="命题逻辑规则">命题逻辑规则</h3>
+<ul>
+<li><span class="math inline"><em>P</em></span>：引入一个前件</li>
+<li><span class="math inline"><em>T</em></span>：引用公式<span
+class="math inline"><em>S</em></span></li>
+<li><span class="math inline"><em>C</em><em>P</em></span>：<span
+class="math inline"><em>P</em> ∧ <em>Q</em> → <em>R</em> ≡ <em>P</em> → (<em>Q</em>→<em>R</em>)</span></li>
+<li>假言推理：表示为永真式<span
+class="math inline">(<em>p</em>∧(<em>p</em>→<em>q</em>)) → <em>q</em></span></li>
+<li>假言三段论：由一个大条件和一个小条件可得出，表示为永真式<span
+class="math inline">((<em>p</em>→<em>q</em>)∧(<em>q</em>→<em>r</em>)) → (<em>p</em>→<em>r</em>)</span></li>
+<li>利用永真式化简命题，其实就是在使用规则<span
+class="math inline"><em>T</em></span></li>
+</ul>
+<h3 id="谓词逻辑规则">谓词逻辑规则</h3>
+<ul>
+<li>谓词逻辑是命题逻辑的推广，同样可使用命题逻辑的推理规则</li>
+<li>全称特指<span class="math inline">$(\rm US)$</span>：<span
+class="math inline">(∀<em>x</em>)<em>P</em>(<em>x</em>) ⇒ <em>P</em>(<em>y</em>)</span></li>
+<li>存在特指<span class="math inline">$(\rm ES)$</span>：<span
+class="math inline">$(\exist x)P(x)\Rightarrow P(a)$</span></li>
+<li>存在推广<span class="math inline">$(\rm EG)$</span>：<span
+class="math inline">$P(y)\Rightarrow(\exist x)P(x)$</span>，<span
+class="math inline"><em>y</em></span>属于<span
+class="math inline"><em>x</em></span>的个体域</li>
+<li>全称推广<span class="math inline">$(\rm UG)$</span>：<span
+class="math inline"><em>P</em>(<em>y</em>) ⇒ (∀<em>x</em>)<em>P</em>(<em>x</em>)</span>，<span
+class="math inline"><em>x</em></span>属于<span
+class="math inline"><em>y</em></span>的个体域</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/20/algo-math-ext-euler-theorem/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-20</time>
+        <br>
+      数论: 扩展欧拉定理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/08/07/discreteMath-algebra-system/" rel="bookmark">
+        <time class="popular-posts-time">2024-08-07</time>
+        <br>
+      离散数学: 代数系统
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/22/discreteMath-set/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-22</time>
+        <br>
+      离散数学: 集合论
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/09/27/discreteMath-abstract-algebra/" rel="bookmark">
+        <time class="popular-posts-time">2024-09-27</time>
+        <br>
+      离散数学: 近世代数（群、环、域）
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/math/" rel="tag"># math</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/17/calculus-series-exercise/" rel="prev" title="微积分: 级数练习题">
+                  <i class="fa fa-angle-left"></i> 微积分: 级数练习题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/04/20/calculus-diff-equation/" rel="next" title="微积分: 常微分方程">
+                  微积分: 常微分方程 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

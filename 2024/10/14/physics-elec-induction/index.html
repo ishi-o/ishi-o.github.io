@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="大学物理: 电磁感应">
+<meta property="og:url" content="https://ishi-o.github.io/2024/10/14/physics-elec-induction/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-14T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T11:40:07.519Z">
+<meta property="article:author" content="ishio">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/10/14/physics-elec-induction/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/10/14/physics-elec-induction/","path":"2024/10/14/physics-elec-induction/","title":"大学物理: 电磁感应"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>大学物理: 电磁感应 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E7%A3%81%E6%84%9F%E5%BA%94"><span class="nav-number">1.</span> <span class="nav-text">电磁感应</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E5%8A%A8%E5%8A%BF"><span class="nav-number">1.1.</span> <span class="nav-text">电动势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E6%84%9F%E5%92%8C%E4%BA%92%E6%84%9F%E5%92%8C%E7%A3%81%E8%83%BD"><span class="nav-number">1.2.</span> <span class="nav-text">自感和互感和磁能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BA%A6%E5%85%8B%E6%96%AF%E9%9F%A6%E6%96%B9%E7%A8%8B%E7%BB%84"><span class="nav-number">1.3.</span> <span class="nav-text">麦克斯韦方程组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B5%E7%A3%81%E6%B3%A2"><span class="nav-number">1.4.</span> <span class="nav-text">电磁波</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/03/physics-classic-force/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-03</time>
+        <br>
+      大学物理: 经典力学
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/11/physics-magnetic-field/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-11</time>
+        <br>
+      大学物理: 恒定磁场
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/15/deeplearning-fclayer/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-15</time>
+        <br>
+      机器学习: 全连接层
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/06/physics-electrostatic-field/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-06</time>
+        <br>
+      大学物理: 静电场
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/10/14/physics-elec-induction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="大学物理: 电磁感应 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          大学物理: 电磁感应
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-10-14 00:00:00" itemprop="dateCreated datePublished" datetime="2024-10-14T00:00:00+00:00">2024-10-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 11:40:07" itemprop="dateModified" datetime="2025-12-06T11:40:07+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/" itemprop="url" rel="index"><span itemprop="name">SE Courses</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/Physics/" itemprop="url" rel="index"><span itemprop="name">Physics</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>5 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h2 id="电磁感应">电磁感应</h2>
+<h3 id="电动势">电动势</h3>
+<ul>
+<li><p>电磁感应现象的本质是产生电动势来阻止磁通量的变化，若形成闭合回路，则表现出感应电流</p></li>
+<li><p>电动势定义：</p>
+<ul>
+<li>把单位正电荷从负极板移至正极板，<strong>非静电力</strong>所做的功，是标量</li>
+<li>非静电性场的场强沿从负极板到正极板的直线路径的线积分，即<span
+class="math inline">$\begin{align}\mathscr E=\int_-^+\boldsymbol
+E_k\boldsymbol ·\mathrm d\boldsymbol l\end{align}$</span></li>
+<li>和电势差的意义完全不一样，电动势始终<strong>指向电势升高</strong>的方向</li>
+<li>展开后可得，<span class="math inline">$\begin{align}\mathscr
+E=-\frac{\mathrm d\left(\iint\boldsymbol {B·}\mathrm d\boldsymbol
+S\right)}{\mathrm dt}\end{align}$</span></li>
+</ul></li>
+<li><p>法拉第电磁感应定律：<span
+class="math inline">$\begin{align}\mathscr E=-\frac{\mathrm
+d\phi_m}{\mathrm dt}\end{align}$</span></p>
+<ul>
+<li><p>感应电动势的方向和感应电流的流向相同，且总是阻碍引起感应电流的原因</p>
+<p>判断时，可先判断感应电流磁场的方向，再得到感应电流的方向</p></li>
+<li><p>多匝线圈的磁通量称为全磁通，若每匝磁通相同，也称磁通链数</p></li>
+<li><p>其符号表示<strong>参考方向和实际方向的区别</strong>，实际方向以楞次定律判断后，若求出负值，说明参考方向和实际方向相反；以电磁感应定律求出的电动势的参考方向和原磁场方向呈右螺旋关系</p></li>
+</ul></li>
+<li><p>动生电动势：<span class="math inline">$\begin{align}\mathscr
+E=\int_a^b(\boldsymbol{v\times B})\boldsymbol ·\mathrm d\boldsymbol
+l\end{align}$</span>，由洛伦兹力充当非静电力，由<span
+class="math inline"><strong>v</strong> <strong>×</strong> <strong>B</strong></span>充当非静电性场</p>
+<ul>
+<li>动生电动势公式在参考方向和实际方向的区别体现在线积分的方向，若线积分方向与实际方向相反，则求出的电动势为负值</li>
+<li>可由<span
+class="math inline"><strong>v</strong> <strong>×</strong> <strong>B</strong></span>求出电动势方向</li>
+</ul></li>
+<li><p>感生电动势：<span class="math inline">$\begin{align}\mathscr
+E=\oint_L\boldsymbol{E_k·}\mathrm d\boldsymbol
+l=-\iint_S\frac{\part\boldsymbol B}{\part t}\boldsymbol ·\mathrm
+d\boldsymbol
+S\end{align}$</span>，其中闭合回路方向和磁场呈右螺旋关系</p>
+<ul>
+<li>感生电场由变化的磁场产生，是无源有旋场，因参考方向取上述方向，故根据电磁感应定律在前面有负号</li>
+</ul></li>
+</ul>
+<h3 id="自感和互感和磁能">自感和互感和磁能</h3>
+<ul>
+<li><p>磁通量出发，将所有与线圈本身有关的物理量合并成<strong>自感系数</strong><span
+class="math inline">$\begin{align}L=\frac{\phi_m}{I}\end{align}$</span></p></li>
+<li><p>由法拉第电磁感应定律，自感电动势<span
+class="math inline">$\begin{align}\mathscr E=-L\frac{\mathrm dI}{\mathrm
+dt}\end{align}$</span></p></li>
+<li><p>自感系数的一种求法：假设通有电流<span
+class="math inline"><em>I</em></span>，求出其磁通量；例如长直螺绕管的自感系数<span
+class="math inline">$\begin{align}L=\mu n^2V\end{align}$</span></p></li>
+<li><p>自感系数的三层含义：</p>
+<ul>
+<li>线圈自感效应大小的量度</li>
+<li>线圈电磁惯性大小的量度</li>
+<li>线圈储存磁能本领的量度</li>
+</ul></li>
+<li><p>互感系数<span
+class="math inline"><em>M</em></span>比自感系数多出一种影响因素，即有效占据面积，当两线圈所围平面同轴平行时，磁通量最大</p>
+<p>两线圈组成的系统中，互感系数相等</p>
+<p>计算<span class="math inline">1</span>对<span
+class="math inline">2</span>的互感系数时，需使用<span
+class="math inline">1</span>的<span
+class="math inline"><em>n</em></span>，<span
+class="math inline">2</span>的<span
+class="math inline"><em>I</em></span>，面积取<strong>有效占据面积</strong></p></li>
+<li><p>线圈的磁能：<span
+class="math inline">$\begin{align}W_m=\frac{LI^2}{2}\end{align}$</span></p></li>
+<li><p>磁场任意点的磁能密度：<span
+class="math inline">$\begin{align}w_m=\frac{BH}{2}=\frac{\mu
+H^2}{2}=\frac{B^2}{2\mu}\end{align}$</span></p></li>
+</ul>
+<h3 id="麦克斯韦方程组">麦克斯韦方程组</h3>
+<ul>
+<li><p>位移电流：(关于电流的连续性)变化的电场在周围激发的磁场等效于电流，其定量描述为：</p>
+<p>全电流安培环路定理：<span
+class="math inline">$\begin{align}\oint_L\boldsymbol{H·}\mathrm
+d\boldsymbol l=I_c+\iint\limits_S\frac{\part\boldsymbol D}{\part
+t}\boldsymbol{·}\mathrm d\boldsymbol S\end{align}$</span>，其中<span
+class="math inline"><em>I</em><sub><em>c</em></sub></span>为传导电流</p>
+<ul>
+<li>由平行板电容器引出，电位移通量与极板上积聚的电荷相同，且电位移通量对时间的偏导在数值上等于传导电流、方向上与其一致</li>
+</ul></li>
+<li><p>磁通连续定理：<span
+class="math inline">$\begin{align}\int\kern{-8pt}\int_\limits
+S\kern{-23mu}\bigcirc\boldsymbol{B·}\mathrm d\boldsymbol
+S\equiv0\end{align}$</span></p></li>
+<li><p>电场的高斯定理：<span
+class="math inline">$\begin{align}\int\kern{-8pt}\int_\limits
+S\kern{-23mu}\bigcirc\boldsymbol{D·}\mathrm d\boldsymbol S=\sum
+q_{自由电荷}=\iiint\limits_V\rho\ \mathrm dV\end{align}$</span></p></li>
+<li><p>电场的环路定理：<span
+class="math inline">$\begin{align}\oint_L\boldsymbol{D·}\mathrm
+d\boldsymbol l=-\iint\limits_S\frac{\part\boldsymbol H}{\part
+t}\boldsymbol ·\mathrm d\boldsymbol S\end{align}$</span></p></li>
+</ul>
+<h3 id="电磁波">电磁波</h3>
+<ul>
+<li>波动方程：由麦克斯韦方程组导出，<span
+class="math inline">$\begin{cases}\left(\grad^2-\varepsilon\mu\large\frac{\part^2}{\part
+t^2}\right)\boldsymbol
+E=0\\\left(\grad^2-\varepsilon\mu\large\frac{\part^2}{\part
+t^2}\right)\boldsymbol
+H=0\end{cases}$</span>的解即波动的定义，其中哈密顿算子为矢量三个二阶偏导之和</li>
+<li>若以电磁波方向为<span
+class="math inline"><em>x</em></span>轴正向，可以解得<span
+class="math inline">$\begin{cases}\boldsymbol E=\boldsymbol
+jE_0\cos(\omega t\pm\omega{\large\frac{x}{c}}+\varphi)\\\boldsymbol
+H=\boldsymbol kH_0\cos(\omega
+t\pm\omega{\large\frac{x}{c}}+\varphi)\end{cases}$</span>，其中<span
+class="math inline">$\begin{align}\pm\omega\frac{x/y/z}{c/u}\end{align}$</span>为传播项，分子定义传播方向，分母定义波速(真空/介质中)，负号为正向传播，正号反之</li>
+<li>电磁波的性质：
+<ul>
+<li>是横波，传播方向由传播项体现，且满足<span
+class="math inline"><strong>e</strong><sub><strong>E</strong></sub> <strong>×</strong> <strong>e</strong><sub><strong>B</strong></sub> = <strong>e</strong><sub><strong>u</strong></sub></span></li>
+<li>是偏振波，且<span
+class="math inline"><strong>E</strong>、<strong>H</strong></span>同相，即<span
+class="math inline">cos ()</span>内部完全一致</li>
+<li>满足<span class="math inline">$\sqrt\varepsilon E=\sqrt\mu
+H$</span>，波速<span
+class="math inline">$\begin{align}u=\sqrt{\frac1{\varepsilon\mu}}\end{align}$</span></li>
+</ul></li>
+<li>在<span
+class="math inline"><em>L</em><em>C</em></span>振荡电路中，由<span
+class="math inline">$\begin{align}u=\frac qC=\mathscr E=-L\frac{\mathrm
+dI}{\mathrm dt}=-L\frac{\mathrm d^2q}{\mathrm
+dt^2}\end{align}$</span>，得出简谐运动方程<span
+class="math inline">$\begin{align}\frac{\mathrm d^2q}{\mathrm
+dt^2}+\frac1{LC}q=0\end{align}$</span>
+<ul>
+<li>当二阶常系数线性齐次微分方程中，若“常系数”为只与自身因素有关的正的常数，则称其为简谐运动</li>
+<li>振荡角频率<span
+class="math inline">$\begin{align}\omega=\sqrt\frac1{LC}\end{align}$</span></li>
+</ul></li>
+<li>电磁辐射能：电能和磁能之和</li>
+<li>能流密度/辐射强度/坡印廷矢量：<span
+class="math inline"><strong>S</strong> = (<em>ω</em><sub><em>c</em></sub>+<em>ω</em><sub><em>m</em></sub>)<strong>u</strong></span></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/03/physics-classic-force/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-03</time>
+        <br>
+      大学物理: 经典力学
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/11/physics-magnetic-field/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-11</time>
+        <br>
+      大学物理: 恒定磁场
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/15/deeplearning-fclayer/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-15</time>
+        <br>
+      机器学习: 全连接层
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/06/physics-electrostatic-field/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-06</time>
+        <br>
+      大学物理: 静电场
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/10/11/physics-magnetic-field/" rel="prev" title="大学物理: 恒定磁场">
+                  <i class="fa fa-angle-left"></i> 大学物理: 恒定磁场
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/10/16/concreteMath-rounding/" rel="next" title="具体数学: 取整函数">
+                  具体数学: 取整函数 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

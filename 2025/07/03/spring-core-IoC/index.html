@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Spring framework: IoC容器">
+<meta property="og:url" content="https://ishi-o.github.io/2025/07/03/spring-core-IoC/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-07-03T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T11:40:07.520Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="IoC">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Spring">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/07/03/spring-core-IoC/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/07/03/spring-core-IoC/","path":"2025/07/03/spring-core-IoC/","title":"Spring framework: IoC容器"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Spring framework: IoC容器 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ioc%E5%AE%B9%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">IoC容器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%83%E6%95%B0%E6%8D%AE%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">元数据配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">1.2.1.</span> <span class="nav-text">上下文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bean%E7%9A%84xml%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.2.</span> <span class="nav-text">Bean的XML配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bean%E7%9A%84java%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.3.</span> <span class="nav-text">Bean的Java配置</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/14/spring-validation/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-14</time>
+        <br>
+      Spring framework: Validation API
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/06/02/java-jdbc/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-02</time>
+        <br>
+      Java: JDBC编程
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/04/spring-core-resource/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-04</time>
+        <br>
+      Spring framework: Resource API
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/12/spring-mvc/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-12</time>
+        <br>
+      Spring framework: MVC
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/07/03/spring-core-IoC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Spring framework: IoC容器 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring framework: IoC容器
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-07-03 00:00:00" itemprop="dateCreated datePublished" datetime="2025-07-03T00:00:00+00:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 11:40:07" itemprop="dateModified" datetime="2025-12-06T11:40:07+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Java/Spring-framework/" itemprop="url" rel="index"><span itemprop="name">Spring framework</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>2.5k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>9 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="ioc容器"><code>IoC</code>容器</h1>
+<h2 id="简介">简介</h2>
+<ul>
+<li><p><code>IoC</code>(<code>Inversion of Control</code>，控制反转)容器的原则是使原本有相互依赖的各个部分解耦，实现松耦合地运作
+在传统的组合中，上层的模块在内部定义某些对象的类型，控制权在上层的模块中，如果需要修改内部的业务逻辑则会违反开闭原则
+而<code>IoC</code>的思想则是使上层的模块将控制权“反转”给一个第三方，例如开发者自己或者一个<code>IoC</code>容器，由外部来控制并决定向上层模块提供什么样的实现类</p></li>
+<li><p><code>IoC</code>容器的常见的实现方法是<code>DI</code>(<code>Dependency Injection</code>，依赖注入)，即上层模块所依赖的其它对象仅通过<strong>构造方法</strong>或<strong>工厂方法</strong>或<strong><code>setter</code></strong>方法暴露注入入口，容器在创建对象时控制注入对象的实现类</p></li>
+<li><p>当我们用到<code>IoC</code>容器时，说明一个类的实例往往是全局单例的，只要明白这个点，就能理解为什么会发生注入冲突
+但同样可以实现非单例的实例化</p></li>
+<li><p>例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Eye</span> <span class="variable">e</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BlackEye</span>(); <span class="comment">// 在后续改动时违反开闭原则</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Eye e;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Person</span><span class="params">(Eye e)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.e = e;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">Person = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="keyword">new</span> <span class="title class_">BlackEye</span>()); <span class="comment">// 在外部注入</span></span><br></pre></td></tr></table></figure></li>
+<li><p>而在<code>Spring</code>框架中，这个“外部注入”不需要由开发者手动地注入，而是通过声明式注解由<code>Spring</code>内置的<code>IoC</code>容器<strong>自动注入</strong></p></li>
+<li><p><code>org.springframework.beans</code>与<code>org.springframework.context</code>是<code>IoC</code>容器的核心</p></li>
+<li><p>依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-context<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>7.0.0-M9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="元数据配置">元数据配置</h2>
+<h3 id="上下文">上下文</h3>
+<ul>
+<li><p><code>Spring</code>的<code>IoC</code>容器通过解析元数据来管理<code>Bean</code></p>
+<p>元数据通常包括以下内容：</p>
+<ul>
+<li><code>Bean</code>的类型</li>
+<li><code>Bean</code>的<code>id</code></li>
+<li><code>Bean</code>的依赖注入</li>
+<li><code>Bean</code>的作用域</li>
+<li><code>Bean</code>的生命周期行为(以回调形式存在)</li>
+<li><code>Bean</code>的懒加载、协作者等其它元数据</li>
+</ul></li>
+<li><p><code>ApplicationContext</code>：应用上下文接口的实例表示一个<code>IoC</code>容器，它会自动创建、配置、组装所有的<code>Bean</code></p>
+<ul>
+<li>继承<code>BeanFactory</code>接口：该接口提供一系列和<code>Bean</code>有关的方法
+<code>T getBean(String name, Class&lt;T&gt; clazz)</code>：获取它管理的类型为<code>T</code>、名字为<code>name</code>的<code>Bean</code></li>
+<li>继承<code>MessageSource</code>接口：该接口提供国际化处理信息的能力
+<code>String getMessage(String msg, Object[] args, Locale locale)</code>：根据<code>locale</code>以及可选的选项<code>args</code>解析<code>msg</code></li>
+</ul></li>
+<li><p>创建一个<code>ApplicationContext</code>实例：
+创建<code>ApplicationContext</code>实例同时意味着许多配置，在<strong>不依靠外部框架</strong>(如<code>Spring Boot</code>和<code>Tomcat</code>)的情况下，<code>ApplicationContext</code>只能通过<code>new</code>创建
+<code>Spring</code>提供了两种构造<code>ApplicationContext</code>实例的方式，分别为基于<code>XML</code>的配置、基于<code>Java</code>的配置
+基于<code>XML</code>的配置：实现类为<code>ClassPathXmlApplicationContext</code>，构造方法需要的参数是<code>String...</code>，即一系列<strong><code>xml</code>配置文件的路径</strong>
+基于<code>Java</code>的配置：实现类为<code>AnnotationConfigApplicationContext</code>，构造方法需要的参数是<code>Class&lt;?&gt;...</code>，即一系列<strong>由<code>@Configuration</code>注解的配置类</strong></p></li>
+<li><p>基于<code>XML</code>、基于注解、基于<code>Java</code>的关系</p>
+<ul>
+<li>三种方式都由<code>Spring</code>控制实例的注入</li>
+<li><code>XML</code>是最早的<code>Spring</code>提供的配置方式，它是外部的、支持非侵入式地修改元数据配置</li>
+<li><code>Spring 2.0</code>开始逐步地提供一系列注解来方便分散化、简洁化配置，提供了基于注解的配置，位于<code>org.springframework.stereotype</code>和<code>org.springframework.beans.factory.annotations</code>包中
+在基于注解的配置里，开发者对实例的创建和注入的控制方式和<code>XML</code>形式类似，只是停留在<strong>声明<code>Bean</code></strong>上，目的是简化配置代码书写并提供编译时的类型检查
+例如<code>stereotype</code>包中的<code>@Service</code>、<code>@Repository</code>、<code>@Component</code>，它们的修饰表示<strong>声明这个类属于某种<code>Bean</code></strong>，即配置<strong>是什么</strong>的元数据
+例如<code>beans.factory.annotations</code>包中的<code>@Autowired</code>和<code>@Qualifier</code>，它们修饰表示指示如何创建<code>Bean</code>
+这种方式的配置需要在<code>XML</code>或<code>Java</code>中启用组件扫描来纳入管理</li>
+<li><code>Spring 3.0</code>开始，提供<code>org.springframework.context.annotations</code>来替代整个<code>XML</code>形式的配置，并提供了新的<code>ApplicationContext</code>的实现类，例如<code>@Configuration</code>与<code>@Bean</code>
+尽管注入仍由<code>Spring</code>框架管理，但这种方式允许开发者十分灵活地决定如何创建一个实例，允许使用<code>Java</code>代码进行带有分支判断地创建实例</li>
+<li>第二种方式和另外两种方式并不是互斥的，第一种方式和第三种方式对应着两种不同的实现类，而第二种方式则是作为一种方便的声明式<code>API</code>存在，适用于结构简单的<code>Bean</code>的声明
+现代应用中常使用第二种与第三种方式混合的配置方案，但并不意味着<code>XML</code>配置完全无用，它的外部、非侵入性正是它的特点</li>
+</ul></li>
+</ul>
+<h3 id="bean的xml配置"><code>Bean</code>的<code>XML</code>配置</h3>
+<ul>
+<li><p><code>&lt;bean/&gt;</code>的<code>id</code>、<code>name</code>属性或<code>&lt;alias/&gt;</code>：它们都是可选项，默认由<code>Spring</code>生成一个唯一的<code>id</code></p>
+<ul>
+<li><code>id</code>是唯一标识，若自定义，则必须是唯一的，不允许使用特殊字符，通常使用驼峰命名法</li>
+<li><code>name</code>是别名集合(字符串表示)，不同别名用<code>,</code>或<code>;</code>隔开，允许重复、允许使用类似<code>/</code>的特殊字符</li>
+<li>若使用引用，则查找<code>id</code>是否含有匹配项、然后查找<code>name</code>是否含有匹配项、然后查找类型是否匹配，若有二义性则报错</li>
+<li><code>&lt;alias name="" alias=""/&gt;</code>：在定义<code>bean</code>标签以外的地方定义它的别名</li>
+</ul></li>
+<li><p>选择<code>bean</code>的构造器：</p>
+<ul>
+<li><code>class</code>属性：用于指定该<code>bean</code>所使用的构造器的来源，并不一定是<code>class</code>类型的</li>
+<li>若不提供任何构造方法，则自动根据提供的参数匹配合适的构造方法</li>
+<li>使用静态工厂方法：指定<code>factory-method</code>属性，会调用指定<code>class</code>属性这个类内部的<code>factory-method</code>静态方法</li>
+<li>使用工厂类实例的工厂方法：不能指定<code>class</code>属性，而是指定<code>factory-bean</code>属性，它是另一个类型为某个工厂类的<code>bean</code></li>
+<li><code>primary</code>布尔属性：标识该<code>&lt;bean/&gt;</code>对应的构造器为默认的创建方法</li>
+</ul></li>
+<li><p>提供构造参数(依赖注入)来消除同名构造器的二义性：</p>
+<ul>
+<li>基于构造器的注入：<code>&lt;constructor-arg/&gt;</code>：作为<code>&lt;bean/&gt;</code>的子标签，表示传递给构造器的参数，为了消除二义性，它有若干属性，不必全部指定而只需要保证不存在歧义即可：
+<code>name</code>属性表示参数的名称
+<code>index</code>属性表示参数的索引(<code>0-idx</code>)
+<code>type</code>属性表示参数的类型
+<code>value</code>属性表示参数的字面值
+<code>ref</code>属性表示使用其它<code>bean</code>作为参数</li>
+<li>基于<code>setter</code>的注入：要求该<code>bean</code>对应的<code>class</code>含有指定属性的<code>setter</code>方法，则可使用<code>&lt;property/&gt;</code>传递用<code>setter</code>设置的参数
+其属性与<code>&lt;constructor-arg/&gt;</code>一致</li>
+<li>一般来说，<code>&lt;constructor-arg/&gt;</code>会严格匹配构造器，因此会更安全(不会出现<code>null</code>)
+<code>&lt;property/&gt;</code>则是在构造后通过调用<code>setter</code>方法进行配置的方案，可能导致某些属性没被注意而为<code>null</code>
+前者若想达到可选参数的效果，也可使构造器参数为<code>Optional&lt;T&gt;</code>或使用<code>@Nullable</code>注解</li>
+</ul></li>
+<li><p>启用组件扫描：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">beans</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">&quot;包名&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>例子：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- primary标识首选 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;userBean&quot;</span> <span class="attr">class</span>=<span class="string">&quot;demo.beans.UserBean&quot;</span> <span class="attr">primary</span>=<span class="string">&quot;true&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 根据构造参数唯一确定构造器 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">index</span>=<span class="string">&quot;0&quot;</span> <span class="attr">type</span>=<span class="string">&quot;int&quot;</span> <span class="attr">value</span>=<span class="string">&quot;10&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">index</span>=<span class="string">&quot;1&quot;</span> <span class="attr">name</span>=<span class="string">&quot;otherBean&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;otherBean&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">index</span>=<span class="string">&quot;2&quot;</span> <span class="attr">type</span>=<span class="string">&quot;java.lang.String&quot;</span> <span class="attr">value</span>=<span class="string">&quot;str&quot;</span>/&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 后续的setter配置 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;optionalArg&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 不带任何参数表示选择默认构造方法, 但这是在primary之后的选择 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;userBean&quot;</span> <span class="attr">class</span>=<span class="string">&quot;demo.beans.UserBean&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 在外部起别名 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">alias</span> <span class="attr">name</span>=<span class="string">&quot;userBean&quot;</span> <span class="attr">alias</span>=<span class="string">&quot;uB&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="bean的java配置"><code>Bean</code>的<code>Java</code>配置</h3>
+<ul>
+<li><p>声明为具有某种功能的<code>bean</code>(类级修饰)：</p>
+<ul>
+<li><code>@Component(value="")</code>：声明为一般的<code>bean</code>，<code>value</code>可选，表示该<code>bean</code>的名称，默认为类名的驼峰命名</li>
+<li><code>@Service</code>：声明为服务类，<code>@Component</code>的一种</li>
+<li><code>@Repository</code>：声明为持久化类，<code>@Component</code>的一种</li>
+<li><code>@Controller</code>：声明为控制器类，<code>@Component</code>的一种</li>
+<li>需要用<code>@ComponentScan(basePackages="")</code>启动扫描</li>
+</ul></li>
+<li><p>依赖注入：</p>
+<ul>
+<li><code>@Autowired(required=true)</code>：修饰方法或属性，表示自动注入，修饰方法时若修饰构造器或<code>setter</code>则对应构造器注入或<code>setter</code>注入、修饰一般方法则会使<code>bean</code>在初始化完成后调用该方法，(不推荐)修饰属性时表示直接注入
+默认强制要求注入，可使<code>required=false</code>或使用<code>Optional&lt;T&gt;</code>或使用<code>@Nullable</code>表示可选
+如果含有多个构造方法，基于注解的配置要求至少有一个<code>@Autowired</code></li>
+<li><code>@Qualifier(value="")</code>：修饰类或<code>@Bean</code>方法时给该<code>bean</code>起限定符，修饰属性或形参时表示指定使用<code>value</code>对应的<code>bean</code>注入该属性</li>
+<li><code>@Value(value="")</code>：注入简单字面值，<strong>可以修饰形参</strong></li>
+<li><code>@Primary</code>：标识某个类时表示当某个接口或某个抽象类存在多个实现类时，选择该类作为首选的实现
+标识某个<code>@Bean</code>方法时表示当存在多个返回同一类型的方法时首选该方法</li>
+</ul></li>
+<li><p>基于<code>Java</code>的配置：</p>
+<ul>
+<li><code>@Configuration</code>：标识某个类为配置类<code>bean</code>，它也是一个<code>@Component</code></li>
+<li><code>@Bean</code>：标识某个方法为创建某个类型<code>bean</code>的方法，配合<code>@Primary</code>决定首选方法
+其<code>name</code>属性表示这个<code>bean</code>的名字，它可以同<code>@Qualifier</code>的<code>value</code>属性一样被绑定然后用<code>@Qualifier</code>指定注入
+因为一般<code>name</code>的命名有一定风格(通常是类名的驼峰命名)，而如果需要用含特殊语义的命名，<code>@Qualifier</code>的<code>value</code>属性是一种选择</li>
+</ul></li>
+<li><p>例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> demo.config;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ComponentScan(&quot;demo.service&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BeansConfiguration</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 默认用方法名作为@Bean的name</span></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="keyword">public</span> User <span class="title function_">user</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="meta">@Primary</span></span><br><span class="line">  <span class="keyword">public</span> User <span class="title function_">user</span><span class="params">(<span class="type">int</span> type)</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">User</span>(type);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> demo.service;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> UserRepository userRepo;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="title function_">UserService</span><span class="params">()</span> &#123;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  <span class="keyword">public</span> <span class="title function_">UserService</span><span class="params">(UserRepository userRepo, <span class="meta">@Value(&quot;0&quot;)</span> <span class="type">int</span> type)</span> &#123;</span><br><span class="line">      <span class="built_in">this</span>.userRepo = userRepo;</span><br><span class="line">  &#125;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> demo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">      <span class="type">ApplicationContext</span> <span class="variable">ctx</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AnnotationConfigApplicationContext</span>(demo.config.BeansConfiguration);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/14/spring-validation/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-14</time>
+        <br>
+      Spring framework: Validation API
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/06/02/java-jdbc/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-02</time>
+        <br>
+      Java: JDBC编程
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/04/spring-core-resource/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-04</time>
+        <br>
+      Spring framework: Resource API
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/12/spring-mvc/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-12</time>
+        <br>
+      Spring framework: MVC
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/Spring/" rel="tag"># Spring</a>
+              <a href="/tags/IoC/" rel="tag"># IoC</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/18/db-review/" rel="prev" title="数据库: 期末复习">
+                  <i class="fa fa-angle-left"></i> 数据库: 期末复习
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/04/spring-core-resource/" rel="next" title="Spring framework: Resource API">
+                  Spring framework: Resource API <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

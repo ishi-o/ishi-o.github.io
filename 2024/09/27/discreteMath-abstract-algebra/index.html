@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="离散数学: 近世代数（群、环、域）">
+<meta property="og:url" content="https://ishi-o.github.io/2024/09/27/discreteMath-abstract-algebra/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-09-27T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T11:40:07.516Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="math">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/09/27/discreteMath-abstract-algebra/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/09/27/discreteMath-abstract-algebra/","path":"2024/09/27/discreteMath-abstract-algebra/","title":"离散数学: 近世代数（群、环、域）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>离散数学: 近世代数（群、环、域） | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%91%E4%B8%96%E4%BB%A3%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">近世代数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BE%A4"><span class="nav-number">1.1.</span> <span class="nav-text">群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8A%E7%BE%A4%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">半群定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BE%A4%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">1.1.2.</span> <span class="nav-text">群的性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E7%BE%A4"><span class="nav-number">1.1.3.</span> <span class="nav-text">子群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E7%BE%A4"><span class="nav-number">1.1.4.</span> <span class="nav-text">循环群</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%9F%9F%E6%A0%BC"><span class="nav-number">1.2.</span> <span class="nav-text">环、域、格</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%8E%AF"><span class="nav-number">1.2.1.</span> <span class="nav-text">环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%9F"><span class="nav-number">1.2.2.</span> <span class="nav-text">域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%BC"><span class="nav-number">1.2.3.</span> <span class="nav-text">格</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/19/discreteMath-mathamatic-logic/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-19</time>
+        <br>
+      离散数学: 数理逻辑
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/08/07/discreteMath-algebra-system/" rel="bookmark">
+        <time class="popular-posts-time">2024-08-07</time>
+        <br>
+      离散数学: 代数系统
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/22/discreteMath-set/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-22</time>
+        <br>
+      离散数学: 集合论
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/31/linearAlgebra-rank/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-31</time>
+        <br>
+      线性代数: 矩阵的秩
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/09/27/discreteMath-abstract-algebra/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="离散数学: 近世代数（群、环、域） | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          离散数学: 近世代数（群、环、域）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-09-27 00:00:00" itemprop="dateCreated datePublished" datetime="2024-09-27T00:00:00+00:00">2024-09-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 11:40:07" itemprop="dateModified" datetime="2025-12-06T11:40:07+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/" itemprop="url" rel="index"><span itemprop="name">SE Courses</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/Discrete-Math/" itemprop="url" rel="index"><span itemprop="name">Discrete Math</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>6 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="近世代数">近世代数</h1>
+<h2 id="群">群</h2>
+<h3 id="半群定义">半群定义</h3>
+<ul>
+<li>群和半群是特殊的代数，都只含一个非空集合和一个二元运算，因此元素运算时可省略运算符号
+给定代数<span
+class="math inline"> &lt; <em>S</em>,  ∘ &gt;</span>：</li>
+<li>半群：若<span
+class="math inline">∘</span>可结合，称该代数为半群</li>
+<li>可交换半群：在半群基础上，<span
+class="math inline">∘</span>可交换</li>
+<li>独异点/含幺半群/拟半群：在半群基础上，<span
+class="math inline">∘</span>有幺元</li>
+<li>子半群：半群的所有子代数都是半群，称为前者的子半群</li>
+<li>循环半群：给定半群<span
+class="math inline"><em>M</em>, ∘</span>，元素<span
+class="math inline"><em>a</em> ∈ <em>M</em></span>，由<span
+class="math inline"><em>a</em></span>自身进行<span
+class="math inline"><em>n</em></span>次运算得到的集合为<span
+class="math inline"><em>S</em> : {<em>a</em><sup><em>k</em></sup>|<em>k</em> ∈ <em>Z</em>}</span>，称：
+<ul>
+<li><span class="math inline"><em>a</em></span>生成了循环半群<span
+class="math inline"> &lt; <em>S</em>,  ∘ &gt;</span>，<span
+class="math inline"><em>a</em></span>为生成元</li>
+<li><span class="math inline"> &lt; <em>S</em>,  ∘ &gt;</span>为<span
+class="math inline"> &lt; <em>M</em>,  ∘ &gt;</span>的循环子半群</li>
+</ul></li>
+<li>生成集：给定集合<span
+class="math inline"><em>G</em> ⊆ <em>S</em></span>，若所有<span
+class="math inline"><em>S</em></span>的元素可由<span
+class="math inline"><em>G</em></span>中元素及其相互运算后得到，则称<span
+class="math inline"><em>G</em></span>为生成集</li>
+<li>积半群：两个半群的积代数为积半群</li>
+</ul>
+<h3 id="群的性质">群的性质</h3>
+<ul>
+<li>群：若<strong>独异点</strong>中的每个元素<strong>都有逆元</strong>，称该独异点为群</li>
+<li>基本性质：
+<ul>
+<li>封闭性：群作为一个代数拥有的性质</li>
+<li>结合律：群作为一个半群拥有的性质</li>
+<li>存在单位元：群作为一个独异点拥有的性质</li>
+<li>所有元素作为逆元：群拥有的性质</li>
+</ul></li>
+<li>幂运算规则：
+<ul>
+<li><span
+class="math inline">$a^n=\begin{cases}e,&amp;n=0\\aa^{n-1},&amp;n&gt;0\\(a^{-1})^{-n},&amp;n&lt;0\end{cases}$</span></li>
+<li><span
+class="math inline">(<em>a</em><em>b</em>)<sup>−1</sup> = <em>b</em><sup>−1</sup><em>a</em><sup>−1</sup></span>，利用可约律证</li>
+</ul></li>
+<li>每个非零元素都是可约元，因此方程有唯一解</li>
+<li>元素的阶：
+<ul>
+<li>使<span
+class="math inline"><em>a</em><sup><em>r</em></sup> = <em>e</em></span>的最小的正整数<span
+class="math inline"><em>r</em></span>，记为<span
+class="math inline">|<em>a</em>| = <em>r</em></span></li>
+<li>若存在<span
+class="math inline"><em>a</em><sup><em>k</em></sup> = <em>e</em></span>，则必有<span
+class="math inline">$k\equiv0(\rm{mod}\ r)$</span></li>
+<li><span
+class="math inline">|<em>a</em><sup>−1</sup>| = |<em>a</em>|</span></li>
+</ul></li>
+<li><span class="math inline">$\rm Abel$</span>群：即可交换群，满足<span
+class="math inline">(<em>a</em><em>b</em>)<sup><em>n</em></sup> = <em>a</em><sup><em>n</em></sup><em>b</em><sup><em>n</em></sup></span>；证明一个群为可交换群最简单的方法为证明<span
+class="math inline"><em>a</em><em>b</em><em>a</em><em>b</em> = <em>a</em><sup>2</sup><em>b</em><sup>2</sup></span></li>
+</ul>
+<h3 id="子群">子群</h3>
+<ul>
+<li>若群<span class="math inline"><em>G</em></span>的非空子集<span
+class="math inline"><em>H</em></span>关于<span
+class="math inline"><em>G</em></span>的运算构成群，称其为子群，根据集合关系有真子群之分，通过<span
+class="math inline">≤</span>、<span
+class="math inline">&lt;</span>说明其关系</li>
+<li>判定方法：
+<ul>
+<li><span
+class="math inline">∀<em>a</em>∀<em>b</em>(<em>a</em>,<em>b</em>∈<em>H</em>→<em>a</em><em>b</em>∈<em>H</em>∧<em>a</em><sup>−1</sup>∈<em>H</em>)</span>，即同时满足子代数、所有元素有逆元的性质
+<ul>
+<li>只需证明含幺元，<span
+class="math inline"><em>a</em><em>a</em><sup>−1</sup> = <em>e</em> ∈ <em>H</em></span></li>
+</ul></li>
+<li><span
+class="math inline">∀<em>a</em>∀<em>b</em>(<em>a</em>,<em>b</em>∈<em>H</em>→<em>a</em><em>b</em><sup>−1</sup>∈<em>H</em>)</span>
+<ul>
+<li><span class="math inline">$\begin{align}(a,b\in H\rightarrow
+ab^{-1}\in H)\Rightarrow(a,a)\rightarrow e\in H\Rightarrow
+(e,a)\rightarrow a^{-1}\Rightarrow(a,b^{-1})\rightarrow ab\in
+H\end{align}$</span></li>
+</ul></li>
+<li><span
+class="math inline"><em>H</em></span><strong>有穷</strong>，且<span
+class="math inline">∀<em>a</em>∀<em>b</em>(<em>a</em>,<em>b</em>∈<em>H</em>→<em>a</em><em>b</em>∈<em>H</em>)</span>
+<ul>
+<li><span class="math inline">$\begin{align}有穷\Rightarrow(\exist
+k)a^k=e\in H\wedge aa^{k-1}=e\in H\Rightarrow a^{-1}=a^{k-1}\in
+H\end{align}$</span></li>
+</ul></li>
+</ul></li>
+<li>生成的子群：设<span
+class="math inline"><em>a</em> ∈ <em>G</em></span>，则由<span
+class="math inline"><em>a</em></span>生成的群<span
+class="math inline">{<em>a</em><sup><em>k</em></sup>|<em>k</em> ∈ <em>Z</em>}</span>是<span
+class="math inline"><em>G</em></span>的子群，记作<span
+class="math inline"> &lt; <em>a</em>&gt;</span></li>
+<li>中心子群：称<span
+class="math inline">{<em>a</em> ∈ <em>G</em> | ∀<em>x</em>(<em>x</em>∈<em>G</em>∧<em>a</em><em>x</em>=<em>x</em><em>a</em>)}</span>为<span
+class="math inline"><em>G</em></span>的中心</li>
+<li>子群的并和交：若<span
+class="math inline"><em>H</em>, <em>K</em> ≤ <em>G</em></span>
+<ul>
+<li><span
+class="math inline"><em>H</em> ∩ <em>K</em> ≤ <em>G</em></span></li>
+<li><span
+class="math inline"><em>H</em> ∪ <em>K</em> ⇔ (<em>H</em>⊆<em>K</em>) ∨ (<em>K</em>⊆<em>H</em>)</span></li>
+</ul></li>
+<li>子群格：偏序集<span
+class="math inline"> &lt; {<em>H</em> | <em>H</em> ≤ <em>G</em>},  ⊆ &gt;</span>为<span
+class="math inline"><em>G</em></span>的子群格</li>
+<li>陪集：<span class="math inline"><em>H</em></span>为<span
+class="math inline"><em>G</em></span>的子群，左陪集定义为<span
+class="math inline"><em>a</em><em>H</em> = {<em>a</em> ∘ <em>h</em> | <em>h</em> ∈ <em>H</em>}</span>，其中<span
+class="math inline"><em>a</em> ∈ <em>G</em></span>
+<ul>
+<li>陪集相当于<span class="math inline"><em>H</em></span>在<span
+class="math inline"><em>G</em></span>中的扩充，陪集通常<strong>不一定是<span
+class="math inline"><em>G</em></span>的子群</strong></li>
+<li>存在陪集<span
+class="math inline"><em>e</em><em>H</em> = <em>H</em></span></li>
+<li>所有陪集的阶相等，等于<span
+class="math inline">|<em>H</em>|</span></li>
+<li>若左陪集和右陪集总相等，称该子群为正规子群</li>
+</ul></li>
+<li>左陪集关系：<span
+class="math inline"><em>C</em><sub><em>H</em></sub> = { &lt; <em>a</em>, <em>b</em>&gt; | <em>a</em>, <em>b</em> ∈ <em>G</em> ∧ <em>b</em><sup>−1</sup><em>a</em> ∈ <em>H</em>}</span>
+<ul>
+<li><p>陪集关系是一种等价关系</p></li>
+<li><p><span
+class="math inline"><em>a</em><em>H</em> = [<em>a</em>]<sub><em>C</em><sub><em>H</em></sub></sub></span>，即<span
+class="math inline"><em>G</em></span>中任意元素在<span
+class="math inline"><em>H</em></span>上的陪集等于该元素所属的等价类</p>
+<ul>
+<li><span class="math inline">$\begin{align}&amp;充分性:\forall h\in
+H,a、ah\in aH;令b=ah,即h=ba^{-1}\Rightarrow a,b\in G\wedge ba^{-1}\in
+H\\&amp;必要性:a,b\in G\wedge ba^{-1}=h\in H\Rightarrow b=ah\in
+aH\end{align}$</span></li>
+</ul></li>
+<li><p>意义：在找出任意一个子群后，可通过陪集(扩充)来找到其余的所有陪集，而由陪集关系导出的等价类和陪集的对应关系，可得<strong><span
+class="math inline"><em>H</em></span>的不相同陪集个数等于总等价类个数</strong></p></li>
+<li><p>所有陪集的并集等于<span
+class="math inline"><em>G</em></span>，任意两个不相等陪集完全不相交</p></li>
+</ul></li>
+<li>拉格朗日定理：<strong>有限群</strong>的阶一定能被任意子群<span
+class="math inline"><em>H</em></span>的阶整除，且商等于等价类的个数
+<ul>
+<li><span
+class="math inline"><em>存</em><em>在</em><em>a</em><em>是</em><em>k</em><em>阶</em><em>元</em> ⇔ <em>k</em><em>整</em><em>除</em>|<em>G</em>|</span></li>
+</ul></li>
+</ul>
+<h3 id="循环群">循环群</h3>
+<ul>
+<li>若<span class="math inline"><em>G</em></span>中任意元素能由<span
+class="math inline"><em>a</em> ∈ <em>G</em></span>的任意次幂表示，则称<span
+class="math inline"><em>G</em> =  &lt; <em>a</em>&gt;</span>，<span
+class="math inline"><em>a</em></span>为生成元</li>
+<li>找出循环群<span class="math inline"><em>G</em></span>的生成元：
+<ul>
+<li>若<span
+class="math inline"><em>G</em></span>为无限循环群，则只有<span
+class="math inline"><em>a</em>, <em>a</em><sup>−1</sup></span>是生成元</li>
+<li>若<span class="math inline"><em>G</em></span>为<span
+class="math inline"><em>n</em></span>阶循环群，则<span
+class="math inline"><em>a</em><sup><em>k</em></sup></span>是生成元，其中<span
+class="math inline"><em>k</em></span>小于<span
+class="math inline"><em>n</em></span>且与<span
+class="math inline"><em>n</em></span>互素，因此共有<span
+class="math inline"><em>φ</em>(<em>n</em>)</span>个生成元</li>
+</ul></li>
+<li>循环群的子群仍是循环群，无限循环群的子群除平凡群外都是无限循环群</li>
+<li><span class="math inline"><em>n</em></span>阶循环群<span
+class="math inline"><em>G</em> =  &lt; <em>a</em>&gt;</span>的子群：若<span
+class="math inline"><em>n</em></span>有<span
+class="math inline"><em>k</em></span>个正因子，则恰有<span
+class="math inline"><em>k</em></span>个子群，每个正因子<span
+class="math inline"><em>d</em></span>唯一对应一个<span
+class="math inline"><em>d</em></span>阶子群，且<span
+class="math inline">$\begin{align}a^{\large\frac{|G|}{d}}\end{align}$</span>为该子群的生成元</li>
+</ul>
+<h2 id="环域格">环、域、格</h2>
+<h3 id="环">环</h3>
+<ul>
+<li>具有两个二元运算的群，通常定义为<span
+class="math inline"> &lt; <em>R</em>, +, × &gt;</span>，其中：
+<ul>
+<li><span class="math inline"> &lt; <em>R</em>,  + &gt;</span>构成<span
+class="math inline">$\rm Abel$</span>群</li>
+<li><span
+class="math inline"> &lt; <em>R</em>,  × &gt;</span>构成乘法半群</li>
+<li><span class="math inline">×</span>对<span
+class="math inline">+</span>满足分配律</li>
+<li>称<strong>加法幺元</strong>为<strong>环的零元</strong></li>
+</ul></li>
+<li>可交换环、含幺环、无零因子环：乘法半群满足交换律、含幺元、若两数乘积为零元则必有一项为零元</li>
+<li>布尔环：乘法半群满足等幂律</li>
+<li>整环：同时满足可交换环、含幺环、无零因子环的性质</li>
+</ul>
+<h3 id="域">域</h3>
+<ul>
+<li>域的定义：
+<ul>
+<li><span
+class="math inline"><em>R</em></span>是整环的基础上，乘法群中任意元素有其逆元</li>
+<li><span
+class="math inline"><em>R</em></span>是环的基础上，乘法群是<span
+class="math inline">$\rm Able$</span>群</li>
+</ul></li>
+</ul>
+<h3 id="格">格</h3>
+<ul>
+<li>偏序格：任意有两元素的子集都在整个集合中存在最小上界和最大下界的偏序集</li>
+<li>代数格：代数<span
+class="math inline"> &lt; <em>L</em>, ∘, × &gt;</span>，且<span
+class="math inline">∘,×</span>满足交换律、结合律、等幂律、吸收律
+<ul>
+<li>其中，定义每个元素的<span
+class="math inline">∘</span>运算为其最大下界，<span
+class="math inline">×</span>运算为其最小上界</li>
+</ul></li>
+<li>偏序格和代数格等价</li>
+<li>完全格：每个非空子集均有上下确界</li>
+<li>有界格：有上下确界，完全格一定是有界格</li>
+<li>分配格：两运算满足分配律</li>
+<li>有补格(有余格)：对任意两元素的最小上界等于整个格的上确界，最大下界等于整个格的下确界</li>
+</ul>
+<p><a
+target="_blank" rel="noopener" href="https://www.cnblogs.com/gonghr/p/15474256.html#偏序格">离散数学（格与布尔代数）
+- gonghr - 博客园 (cnblogs.com)</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/19/discreteMath-mathamatic-logic/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-19</time>
+        <br>
+      离散数学: 数理逻辑
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/08/07/discreteMath-algebra-system/" rel="bookmark">
+        <time class="popular-posts-time">2024-08-07</time>
+        <br>
+      离散数学: 代数系统
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/22/discreteMath-set/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-22</time>
+        <br>
+      离散数学: 集合论
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/31/linearAlgebra-rank/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-31</time>
+        <br>
+      线性代数: 矩阵的秩
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/math/" rel="tag"># math</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/21/concreteMath-recursion/" rel="prev" title="具体数学: 递归">
+                  <i class="fa fa-angle-left"></i> 具体数学: 递归
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/10/02/concreteMath-summation/" rel="next" title="具体数学: 和式">
+                  具体数学: 和式 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

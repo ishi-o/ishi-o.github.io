@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="数据结构: 哈希表">
+<meta property="og:url" content="https://ishi-o.github.io/2024/11/16/algo-hashmap/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-11-16T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T11:40:07.513Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="algorithm">
+<meta property="article:tag" content="data structure">
+<meta property="article:tag" content="hash">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/11/16/algo-hashmap/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/11/16/algo-hashmap/","path":"2024/11/16/algo-hashmap/","title":"数据结构: 哈希表"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>数据结构: 哈希表 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8"><span class="nav-number">1.</span> <span class="nav-text">哈希表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">实现哈希算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99"><span class="nav-number">1.2.1.</span> <span class="nav-text">设计原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E5%88%86%E7%B1%BB"><span class="nav-number">1.2.2.</span> <span class="nav-text">算法分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E9%94%AE"><span class="nav-number">1.2.3.</span> <span class="nav-text">整数键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%94%AE"><span class="nav-number">1.2.4.</span> <span class="nav-text">字符串键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%AE%E7%82%B9%E6%95%B0%E9%94%AE"><span class="nav-number">1.2.5.</span> <span class="nav-text">浮点数键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%94%AE"><span class="nav-number">1.2.6.</span> <span class="nav-text">自定义键</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%84%E7%90%86%E5%93%88%E5%B8%8C%E5%86%B2%E7%AA%81"><span class="nav-number">1.3.</span> <span class="nav-text">处理哈希冲突</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/02/algo-ufs/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-02</time>
+        <br>
+      数据结构: 并查集
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/30/algo-descartes-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-30</time>
+        <br>
+      数据结构: 笛卡尔树
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/19/algo-fenwick-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-19</time>
+        <br>
+      数据结构: 树状数组
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/10/algo-linked-forward-star/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-10</time>
+        <br>
+      图的遍历: 链式前向星
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/11/16/algo-hashmap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="数据结构: 哈希表 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构: 哈希表
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-11-16 00:00:00" itemprop="dateCreated datePublished" datetime="2024-11-16T00:00:00+00:00">2024-11-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 11:40:07" itemprop="dateModified" datetime="2025-12-06T11:40:07+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/Data-Structure/" itemprop="url" rel="index"><span itemprop="name">Data Structure</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>5 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="哈希表">哈希表</h1>
+<h2 id="概述">概述</h2>
+<p>在<code>FTP</code>与<code>HTTPS</code>中，粗略介绍了哈希算法加密数据的概念；它用哈希算法将无限的数据转换成唯一的、用数字描述的值；对一个合格的哈希函数而言：</p>
+<ul>
+<li>哈希函数尽可能是单射，但哈希冲突不可避免</li>
+<li>哈希函数不能是双射，即不可逆</li>
+</ul>
+<p>在哈希表这种数据结构中，利用了哈希函数的转换，使传入的每一个键都对应一个<strong>唯一的值</strong>，便可以通过键快速地查找到数组中的存储的数据，它的应用场景很多：</p>
+<ul>
+<li>检索：键可以是多样的，例如纯数字的学号、纯字符串的姓名等，在开发中不能让用户通过数组下标来访问数据，就需要哈希表；在程序上的哈希表结构使用的算法一般较简单，不追求加密功能</li>
+<li>文件加密：目前有特定的哈希算法，例如<code>MD5,SHA-256</code>等，算法复杂，但能生成更具有唯一性的摘要</li>
+</ul>
+<p>它的特点有：</p>
+<ul>
+<li>哈希表的优势在于，只要不发生哈希冲突，就可以靠快速的哈希函数，取得映射的下标，直接访问地址，达到查找、插入、删除的复杂度都为<code>O(1)</code></li>
+<li>然而任何哈希函数都可能造成哈希冲突，即传入不同数据却生成相同的值</li>
+<li>哈希表是通过数组实现的，因此需要大容量的数组，且数据量大于数组容量后，效率急速下降</li>
+<li>通常需要将大范围的键值缩小映射到小范围内</li>
+</ul>
+<h2 id="实现哈希算法">实现哈希算法</h2>
+<p>对键进行<code>hash</code>的过程，相当于给数组的整型索引添加更高级的信息，使索引不再是单纯的数字</p>
+<h3 id="设计原则">设计原则</h3>
+<ul>
+<li>唯一性：不同的键映射后的值尽可能不同</li>
+<li>简单性：计算过程应尽可能简单</li>
+<li>均匀性：不同的键映射后的值应均匀分布在数组中</li>
+</ul>
+<h3 id="算法分类">算法分类</h3>
+<p>哈希算法需要对输入数据有足够的敏感度，在许多做法中，通常会选择将输入的所有数据进行充分混合</p>
+<p>一般来说，哈希算法有以下类型的实现：</p>
+<ul>
+<li>位运算(常用移位和异或，用于混合整数的部分信息)</li>
+<li>加法、乘法、除法(通常选择一个素数，例如<code>(prime * x)%size</code>对<code>x</code>进行哈希)</li>
+<li>取模(通常是必要的)</li>
+</ul>
+<h3 id="整数键">整数键</h3>
+<p>这种情况很少，也较为简单，通常为了节省空间，不会采用直接取址，而是混合位运算、乘法、素数、模运算来实现，例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">size_t</span> <span class="title">hash</span><span class="params">(<span class="type">int</span> _val, <span class="type">size_t</span> _scope)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (((<span class="built_in">size_t</span>(_val) &gt;&gt; <span class="number">16</span>) ^ _val) * <span class="number">0x5F58E29</span>) % _scope;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中，<code>0x5f58e29</code>是任取的素数，<code>_scope</code>是映射的范围</p>
+<p>位运算的选择(右移和异或搭配)原理：</p>
+<ul>
+<li>一般来说，预设的存储空间相对于无穷的数据来说，是较小的一方；因此在直接取模法中，高位的信息将丢失，哈希结果出现聚集现象(例如存储空间为<code>5</code>，<code>11%5=21%5=1</code>，十位的数据未参与哈希运算)</li>
+<li>为了使高位信息参与运算，采用右移运算符</li>
+<li>异或运算的结果集中，<code>1</code>和<code>0</code>是平均分配的(分别占一半)，比其它位运算更能保证高低位信息均匀混合</li>
+</ul>
+<p>指针类型的数据实际上以十六进制整数存储，可以通过整数的逻辑设计哈希函数，只需要在计算时通过<code>reinterpret_cast&lt;size_t&gt;</code>(重新解释转换，较底层，有风险)强制类型转换即可</p>
+<h3 id="字符串键">字符串键</h3>
+<p>字符串所带信息更多，例如长度、下标、字符本身，每个字符都是一个整数</p>
+<p>最简单的字符串哈希：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">size_t</span> <span class="title">hash</span><span class="params">(<span class="type">char</span>* _val, <span class="type">size_t</span> _scope)</span> </span>&#123;</span><br><span class="line">    <span class="type">size_t</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(_val); ++i) &#123;</span><br><span class="line">        ans += (i + <span class="number">1</span>) * _scope[i]; <span class="comment">// 混合了下标和字符.</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans % _scope;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>经典的字符串哈希算法：</p>
+<ul>
+<li><p><code>BKDR Hash</code>(<code>Java</code>采用)：将字符串视为<code>P</code>进制数，转换成十进制后取模即可</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> P = <span class="number">131</span>; <span class="comment">// 通常取13/31/131/13131..., 实验证明它们最合适.</span></span><br><span class="line"><span class="function"><span class="type">size_t</span> <span class="title">hash</span><span class="params">(<span class="type">char</span>* _val, <span class="type">size_t</span> _scope)</span> </span>&#123;</span><br><span class="line">    <span class="type">size_t</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">strlen</span>(_val); ++i) &#123;</span><br><span class="line">        <span class="comment">// 采用从高位到低位的转换方式, 运算更快.</span></span><br><span class="line">        ans = ans * P + _val[i]; <span class="comment">// 隐含自然溢出,即超出ull范围后自动取模</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans % _scope;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>通过位运算进行哈希：<code>RS、AP、FNV</code>等算法</p></li>
+<li><p>在算法竞赛中，单哈希也许是不够的，常见的解决办法是进行双哈希(分别有不同的<code>P</code>和模数)，组成序偶</p></li>
+</ul>
+<p><code>BKDR</code>算法还能快速地得到子串的哈希值(需要存储每一步的计算结果)：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">size_t</span> <span class="title">hash</span><span class="params">(<span class="type">char</span>* _val, <span class="type">size_t</span> _scope, <span class="type">size_t</span> _left, <span class="type">size_t</span> _right)</span> </span>&#123;</span><br><span class="line"> <span class="type">size_t</span> hashCode[_right + <span class="number">1</span>] &#123;<span class="number">0</span>&#125;;</span><br><span class="line"> <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; _right + <span class="number">1</span>; ++i) &#123;</span><br><span class="line">        hashCode[i] = hashCode[i - <span class="number">1</span>] * P + _val[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 相减后可能是负数, 加上一周进行补偿.</span></span><br><span class="line">    <span class="keyword">return</span> (hashCode[_right] - hashCode[_left - <span class="number">1</span>] * <span class="built_in">power</span>(P, _right - _left + <span class="number">1</span>) + _scope) % _scope;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="浮点数键">浮点数键</h3>
+<h3 id="自定义键">自定义键</h3>
+<p>在<code>C++</code>中，默认提供的哈希函数只有以上几种，如果希望能在<code>unordered_map</code>等<code>std</code>的哈希结构中使用自定义类型，那么该类型应满足：</p>
+<ul>
+<li>实现哈希函数<code>hash()</code></li>
+<li>实现重载运算符<code>==</code>(便于处理哈希冲突)</li>
+</ul>
+<p>实现哈希函数并不难，通常使能进行哈希运算的成员数据的哈希结果互相进行位运算而得，依靠<code>std</code>中的哈希结构解决哈希冲突</p>
+<h2 id="处理哈希冲突">处理哈希冲突</h2>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/02/algo-ufs/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-02</time>
+        <br>
+      数据结构: 并查集
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/30/algo-descartes-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-30</time>
+        <br>
+      数据结构: 笛卡尔树
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/19/algo-fenwick-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-19</time>
+        <br>
+      数据结构: 树状数组
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/10/algo-linked-forward-star/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-10</time>
+        <br>
+      图的遍历: 链式前向星
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/algorithm/" rel="tag"># algorithm</a>
+              <a href="/tags/data-structure/" rel="tag"># data structure</a>
+              <a href="/tags/hash/" rel="tag"># hash</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/11/15/physics-quantum/" rel="prev" title="大学物理: 量子力学">
+                  <i class="fa fa-angle-left"></i> 大学物理: 量子力学
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/11/26/algo-trick-offline-query/" rel="next" title="算法竞赛: 离线查询">
+                  算法竞赛: 离线查询 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

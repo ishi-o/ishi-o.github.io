@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="VS Code: 较为轻量的IDE">
+<meta property="og:url" content="https://ishi-o.github.io/2023/12/08/vscode/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-12-08T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T11:40:07.521Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="beginner">
+<meta property="article:tag" content="plugins">
+<meta property="article:tag" content="vscode">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2023/12/08/vscode/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2023/12/08/vscode/","path":"2023/12/08/vscode/","title":"VS Code: 较为轻量的IDE"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>VS Code: 较为轻量的IDE | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vs-code"><span class="nav-number">1.</span> <span class="nav-text">VS Code</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">基本功能介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">基本的配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E6%8F%92%E4%BB%B6"><span class="nav-number">1.3.</span> <span class="nav-text">推荐插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E6%96%87%E4%B8%8E%E9%A2%9C%E8%89%B2%E4%B8%BB%E9%A2%98"><span class="nav-number">1.3.1.</span> <span class="nav-text">中文与颜色主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#markdown"><span class="nav-number">1.3.2.</span> <span class="nav-text">Markdown</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cc"><span class="nav-number">1.3.3.</span> <span class="nav-text">C&#x2F;C++</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java"><span class="nav-number">1.3.4.</span> <span class="nav-text">Java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.3.5.</span> <span class="nav-text">远程连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="nav-number">1.3.6.</span> <span class="nav-text">数据库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vim"><span class="nav-number">1.3.7.</span> <span class="nav-text">Vim</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#latex"><span class="nav-number">1.3.8.</span> <span class="nav-text">LaTeX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vue"><span class="nav-number">1.3.9.</span> <span class="nav-text">Vue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python"><span class="nav-number">1.3.10.</span> <span class="nav-text">Python</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rust"><span class="nav-number">1.3.11.</span> <span class="nav-text">Rust</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83%E6%8F%92%E4%BB%B6"><span class="nav-number">1.3.12.</span> <span class="nav-text">其它插件</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/03/markdown-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-03</time>
+        <br>
+      Markdown: 简单易学的笔记语言
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/19/WSL/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-19</time>
+        <br>
+      WSL2: Windows下极其轻量的Linux虚拟机
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/06/12/git/" rel="bookmark">
+        <time class="popular-posts-time">2024-06-12</time>
+        <br>
+      Git: 使用git进行版本管理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/09/07/vim/" rel="bookmark">
+        <time class="popular-posts-time">2024-09-07</time>
+        <br>
+      Vim: 极其高效的编辑器
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2023/12/08/vscode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="VS Code: 较为轻量的IDE | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          VS Code: 较为轻量的IDE
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-12-08 00:00:00" itemprop="dateCreated datePublished" datetime="2023-12-08T00:00:00+00:00">2023-12-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 11:40:07" itemprop="dateModified" datetime="2025-12-06T11:40:07+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tools-Utilities/" itemprop="url" rel="index"><span itemprop="name">Tools & Utilities</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tools-Utilities/editor/" itemprop="url" rel="index"><span itemprop="name">editor</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tools-Utilities/editor/vscode/" itemprop="url" rel="index"><span itemprop="name">vscode</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>5 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="vs-code"><code>VS Code</code></h1>
+<h2 id="基本功能介绍">基本功能介绍</h2>
+<ul>
+<li><code>VS Code</code>是微软开发的开源的代码编辑器，支持<code>Windows</code>、<code>MacOS</code>、<code>Linux</code>等操作系统
+其最显著的优点是<strong>轻量</strong>且<strong>快速</strong>，且得益于活跃的插件生态而<strong>支持多种编程语言</strong>
+高度灵活的自定义配置也是其吸引我的一点</li>
+<li>左侧一栏为快捷的插件打开方式，包括资源管理器、项目管理器、扩展市场等
+<ul>
+<li>资源管理器：与其他<code>IDE</code>类似，<code>VS Code</code>将一个项目当作一个工作区来管理，提供的快捷方式包括打开文件夹等
+其它更多有关文件管理的功能在顶栏的“文件”中</li>
+<li>项目管理器是图标为分叉的一项，它允许将项目绑定一个版本控制管理器，例如<code>Git</code>或<code>SVN</code>，同时也支持绑定<code>Github</code>或其它远程仓库托管网站的账号</li>
+<li>扩展市场：这是体现<code>VS Code</code>丰富生态的地方</li>
+</ul></li>
+<li>顶上一个搜索栏可以最重要的作用是通过键入一个<code>&gt;</code>，以快速搜索并调用插件的功能，之前所说的功能均可由搜索栏搜索得到</li>
+<li>以上<code>UI</code>的布局均可随意拖动，以及可以在右上方调整布局</li>
+<li>配置：<code>VS Code</code>将配置分为三级，默认配置、用户配置、工作区配置，默认配置存储于<code>defaultSettings.json</code>中，另外两者存储在同名文件<code>settings.json</code>中，所有均在<strong><code>首选项:打开XX配置(JSON)</code></strong>中，<code>VS Code</code>提供了<code>UI</code>界面帮助修改，但建议直接编辑<code>json</code>文件
+<ul>
+<li>默认配置：<code>VS Code</code>本身及其插件会提供一系列的配置项，插件维护者需要为每一个配置项提供默认值，用户下载该插件后则会登记在默认配置中
+该文件是只读文件，无需在意</li>
+<li>用户配置：用户配置是<strong>用户自定义的全局的配置</strong>，存放在本机用户家目录下，是最常改的配置文件，在用户定义后，它会覆盖默认配置，否则使用默认配置</li>
+<li>工作区配置：存放在工作文件夹下自动生成的<code>./vscode/settings.json</code>，它会覆盖所有上级配置，未定义的配置项使用用户配置</li>
+</ul></li>
+</ul>
+<h2 id="基本的配置">基本的配置</h2>
+<ul>
+<li><p>编辑器的基本配置(仅包括影响较大的可设置为非默认值的配置)：</p>
+<ul>
+<li><p>区分内联建议与快速建议：快速建议指的是由字典服务提供的键入值后在光标右侧显示的提示，内联建议指由内置<code>AI</code>智能生成的代码补全
+不建议使用内联建议</p></li>
+<li><p>不在提交字符时接受建议(建议即快速提示)：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;editor.acceptSuggestionOnCommitCharacter&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br></pre></td></tr></table></figure></li>
+<li><p>不在按下<code>Enter</code>时接受建议：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;editor.acceptSuggestionOnEnter&quot;</span><span class="punctuation">:</span> <span class="string">&quot;off&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>设置在保存代码时进行的动作：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;editor.codeActionsOnSave&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">// 在显示保存时自动import所需包</span></span><br><span class="line">    <span class="attr">&quot;source.organizeImports&quot;</span><span class="punctuation">:</span> <span class="string">&quot;explicit&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="comment">// 有其它source动作</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>设置打开文件时不检测<code>tabSize</code>与<code>insertSpaces</code>，即编辑器无法改变预设<code>tab</code>的空格数以及预设的是否用空格代替<code>tab</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;editor.detectIndentation&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br></pre></td></tr></table></figure></li>
+<li><p>设置保存文件时自动格式化(格式化程序需可用，通常分别设置格式化程序而在全局设置一次以下属性)：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;editor.formatOnSave&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br></pre></td></tr></table></figure></li>
+<li><p>设置键入<code>Tab</code>键时写入<code>\t</code>而不是空格：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;editor.insertSpaces&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br></pre></td></tr></table></figure>
+<p>此外，如果要设置一个<code>\t</code>的空格数以及一个缩进的空格数，可以设置<code>editor.tabSize</code>以及<code>editor.indentSize</code></p></li>
+<li><p>设置接受快速建议时，替换右侧的代码：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;editor.suggest.insertMode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;replace&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>设置在宽度不足时换行显示：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;editor.wordWrap&quot;</span><span class="punctuation">:</span> <span class="string">&quot;on&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ul></li>
+<li><p>通过设置<code>"[xxx]"</code>字典，可以设置专门适用于某种文件的配置，例如：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;[java]&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;editor.defaultFormatter&quot;</span><span class="punctuation">:</span> <span class="string">&quot;redhat.java&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>很常用的是对不同的文件配置不同的默认格式化程序</p></li>
+</ul>
+<h2 id="推荐插件">推荐插件</h2>
+<h3 id="中文与颜色主题">中文与颜色主题</h3>
+<ul>
+<li><code>Chinese (Simplified) (简体中文) Language Pack for Visual Studio Code</code>：简体中文插件</li>
+<li>设置颜色主题：在左下齿轮图标中设置<code>主题&gt;颜色主题</code>，或通过搜索栏搜索<code>&gt;首选项: 颜色主题</code>，第一项可以搜索查找本机没有的主体并自动下载对应的插件</li>
+<li>推荐的主题(浅色党)，安装对应的浅色主题插件后会有对应的暗色主题
+<ul>
+<li><code>Default Light Modern</code>：<code>VS Code</code>的内置浅色主题</li>
+<li><code>Github Light</code>：类<code>Github</code>风格</li>
+<li><code>Monokai Pro Light</code>：偏灰色主题</li>
+<li><code>Falcon Light</code>：比较护眼的主题，有青、绿、灰、粉、黄色</li>
+<li><code>Trae Light</code>、<code>Pure White</code>、<code>Solarized Light</code>也是不错的主题</li>
+<li>其它主题可在<a target="_blank" rel="noopener" href="https://vscodethemes.com/"
+class="uri">https://vscodethemes.com/</a>快速预览</li>
+</ul></li>
+</ul>
+<h3 id="markdown"><code>Markdown</code></h3>
+<ul>
+<li><p><code>Markdown PDF</code>：支持导出为<code>PDF</code>、<code>HTML</code>、图片、<code>json</code>等</p></li>
+<li><p><code>markdownlint</code>：语法高亮与风格检测，同时提供更好用的格式化程序，通过以下配置来设置格式化程序、忽略部分警告：</p>
+<p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;[markdown]&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;editor.defaultFormatter&quot;</span><span class="punctuation">:</span> <span class="string">&quot;DavidAnson.vscode-markdownlint&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;markdownlint.config&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="comment">// 警告与错误提示</span></span><br><span class="line">    <span class="attr">&quot;default&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;MD033&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><code>Markdown Preview Enhanced</code>：提供更好的预览，通过以下配置来支持行内<code>LaTeX</code>公式渲染：</p>
+<p><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;markdown-preview-enhanced.mathRenderingOption&quot;</span><span class="punctuation">:</span> <span class="string">&quot;MathJax&quot;</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><code>Markdown Preview Mermaid Support</code>：提供<code>mermaid</code>代码块的渲染</p></li>
+<li><p><code>GitHub Markdown Preview</code>：使用<code>Github</code>的预览风格</p></li>
+</ul>
+<h3 id="cc"><code>C/C++</code></h3>
+<ul>
+<li><p><code>C/C++</code>：</p></li>
+<li><p><code>C/C++ Runner</code>：支持运行<code>C/Cpp</code>代码，包含以下配置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 额外包含的路径</span></span><br><span class="line"><span class="attr">&quot;C_Cpp_Runner.includePaths&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line"><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line"><span class="comment">// C/Cpp标准</span></span><br><span class="line"><span class="attr">&quot;C_Cpp_Runner.cStandard&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c17&quot;</span></span><br><span class="line"><span class="attr">&quot;C_Cpp_Runner.cppStandard&quot;</span><span class="punctuation">:</span> <span class="string">&quot;c++17&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>clangd</code></p></li>
+<li><p><code>CMake</code>与<code>CMake Tools</code></p></li>
+</ul>
+<h3 id="java"><code>Java</code></h3>
+<ul>
+<li><code>Extension Pack for Java</code></li>
+<li>?<code>Java Language Support</code></li>
+<li><code>Spring Boot Extension Pack</code></li>
+</ul>
+<h3 id="远程连接">远程连接</h3>
+<ul>
+<li><code>Remote Development</code></li>
+</ul>
+<h3 id="数据库">数据库</h3>
+<ul>
+<li><code>Database Client</code></li>
+</ul>
+<h3 id="vim"><code>Vim</code></h3>
+<ul>
+<li><code>Vim</code></li>
+<li><code>settings.json</code>代替了<code>vimrc</code>配置：
+<ul>
+<li><p>配置插入模式的快捷键，建议绑定<code>esc</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;vim.insertModeKeyBindings&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;before&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="string">&quot;j&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;j&quot;</span></span><br><span class="line">        <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;after&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="string">&quot;&lt;esc&gt;&quot;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+<p>在插入模式下键入两次<code>j</code>等价于键入<code>esc</code></p></li>
+<li><p>配置在正常模式下的快捷键(例如将保存文件设置为<code>&lt;leader&gt;+s</code>)：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;vim.normalModeKeyBindingsNonRecursive&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;before&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="string">&quot;&lt;leader&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;s&quot;</span></span><br><span class="line">        <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;commands&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="string">&quot;:w!&quot;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;before&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="string">&quot;&lt;leader&gt;&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;q&quot;</span></span><br><span class="line">        <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;commands&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="string">&quot;:q!&quot;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure></li>
+<li><p>配置<code>leader</code>键为空格(默认为<code>\</code>)：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;vim.leader&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&lt;space&gt;&quot;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure></li>
+</ul></li>
+</ul>
+<h3 id="latex"><code>LaTeX</code></h3>
+<ul>
+<li><code>LaTeX</code></li>
+</ul>
+<h3 id="vue"><code>Vue</code></h3>
+<ul>
+<li><code>Vue (Official)</code></li>
+<li><code>Vetur</code></li>
+</ul>
+<h3 id="python"><code>Python</code></h3>
+<ul>
+<li><code>Python Extension Pack</code></li>
+<li><code>Black Formatter</code></li>
+<li><code>Flake8</code></li>
+<li><code>Jupyter</code></li>
+</ul>
+<h3 id="rust"><code>Rust</code></h3>
+<h3 id="其它插件">其它插件</h3>
+<ul>
+<li><code>GitHub Pull Requests</code>：支持在<code>VS Code</code>中提<code>PR</code>与讨论<code>Issue</code></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/03/markdown-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-03</time>
+        <br>
+      Markdown: 简单易学的笔记语言
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/19/WSL/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-19</time>
+        <br>
+      WSL2: Windows下极其轻量的Linux虚拟机
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/06/12/git/" rel="bookmark">
+        <time class="popular-posts-time">2024-06-12</time>
+        <br>
+      Git: 使用git进行版本管理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/09/07/vim/" rel="bookmark">
+        <time class="popular-posts-time">2024-09-07</time>
+        <br>
+      Vim: 极其高效的编辑器
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/beginner/" rel="tag"># beginner</a>
+              <a href="/tags/vscode/" rel="tag"># vscode</a>
+              <a href="/tags/plugins/" rel="tag"># plugins</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/12/03/calculus-improper-int/" rel="prev" title="微积分: 反常积分">
+                  <i class="fa fa-angle-left"></i> 微积分: 反常积分
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/12/09/javascript-beginner/" rel="next" title="JavaScript: 基本使用">
+                  JavaScript: 基本使用 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
