@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Java: 数据结构与算法">
+<meta property="og:url" content="https://ishi-o.github.io/2025/04/10/java-collection/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-04-10T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.168Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="algorithm">
+<meta property="article:tag" content="data structure">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/04/10/java-collection/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/04/10/java-collection/","path":"2025/04/10/java-collection/","title":"Java: 数据结构与算法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Java: 数据结构与算法 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#java%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">Java数据结构与算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E8%A3%85%E7%B1%BB"><span class="nav-number">1.1.</span> <span class="nav-text">包装类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#number%E5%8F%8A%E5%85%B6%E5%AD%90%E7%B1%BB"><span class="nav-number">1.1.2.</span> <span class="nav-text">Number及其子类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E7%BB%84"><span class="nav-number">1.2.</span> <span class="nav-text">数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E7%B3%96"><span class="nav-number">1.2.1.</span> <span class="nav-text">[]语法糖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#array"><span class="nav-number">1.2.2.</span> <span class="nav-text">Array</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.3.</span> <span class="nav-text">字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#charsequence"><span class="nav-number">1.3.1.</span> <span class="nav-text">CharSequence</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#string"><span class="nav-number">1.3.2.</span> <span class="nav-text">String</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stringbuilder"><span class="nav-number">1.3.3.</span> <span class="nav-text">StringBuilder</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6"><span class="nav-number">1.4.</span> <span class="nav-text">集合框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#iterablee%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.4.1.</span> <span class="nav-text">Iterable&lt;E&gt;接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#collectione%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.4.2.</span> <span class="nav-text">Collection&lt;E&gt;接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#liste%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.4.3.</span> <span class="nav-text">List&lt;E&gt;接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sete%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.4.4.</span> <span class="nav-text">Set&lt;E&gt;接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#queuee%E5%92%8Cdequee%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.4.5.</span> <span class="nav-text">Queue&lt;E&gt;和Deque&lt;E&gt;接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mapk-v%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.4.6.</span> <span class="nav-text">Map&lt;K, V&gt;接口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E7%BD%AE%E7%AE%97%E6%B3%95"><span class="nav-number">1.5.</span> <span class="nav-text">内置算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#math"><span class="nav-number">1.5.1.</span> <span class="nav-text">Math</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arrays"><span class="nav-number">1.5.2.</span> <span class="nav-text">Arrays</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#collections"><span class="nav-number">1.5.3.</span> <span class="nav-text">Collections</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/04/java-base/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-04</time>
+        <br>
+      Java: 基本语法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/04/java-exception/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-04</time>
+        <br>
+      Java: 异常处理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/18/java-generics/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-18</time>
+        <br>
+      Java: 泛型编程
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/17/java-io/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-17</time>
+        <br>
+      Java: IO
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/04/10/java-collection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Java: 数据结构与算法 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java: 数据结构与算法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-04-10 00:00:00" itemprop="dateCreated datePublished" datetime="2025-04-10T00:00:00+00:00">2025-04-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Java/Java-SE/" itemprop="url" rel="index"><span itemprop="name">Java SE</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>2.9k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>10 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="java数据结构与算法"><code>Java</code>数据结构与算法</h1>
+<h2 id="包装类">包装类</h2>
+<h3 id="概念">概念</h3>
+<ul>
+<li><p><code>java</code>中只有八种基础数据类型，都是全小写的，出于一切皆对象的理念和泛型参数对引用类型的需求，<code>java</code>提供了八个包装类</p></li>
+<li><p>其中，<code>Number</code>是所有数值类型<code>Byte、Short、Integer、Long、Float、Double</code>的基类</p></li>
+<li><p><code>Character</code>和<code>Boolean</code>对应<code>char</code>和<code>boolean</code></p></li>
+<li><p>虽说包装类是引用类型，但它们的<strong>构造方法已经被弃用</strong>，取而代之的是自动装箱机制：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Integer</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>;                <span class="comment">// 自动装箱, 不需要new</span></span><br><span class="line"><span class="type">Integer</span> <span class="variable">i</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Integer</span>(<span class="number">1</span>);   <span class="comment">// 已被弃用</span></span><br></pre></td></tr></table></figure></li>
+<li><p>包装类的存储位置：</p>
+<ul>
+<li><p>当数值是一个整型且范围为<code>-128~127</code>时，<code>JVM</code>会使用<strong>缓存池</strong>中的数值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Integer</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="type">Integer</span> <span class="variable">i2</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">i == i2;            <span class="comment">// 将返回true, 虽然i和i2都是引用, 但由于使用的是缓存池中的值, 所以i和i2指向同一份内存</span></span><br></pre></td></tr></table></figure></li>
+<li><p>其余情况，每次声明包装类的对象并初始化时，<code>JVM</code>均会在堆中创建新对象</p></li>
+</ul></li>
+<li><p>关于常量池的细节：要求这个类实现<code>Constable</code>接口，则<code>JVM</code>会将这个类的对象存储在常量池</p>
+<p>例如包装类、<code>String</code>、<code>Enum</code>等都实现了该接口</p></li>
+</ul>
+<h3 id="number及其子类"><code>Number</code>及其子类</h3>
+<ul>
+<li><code>Number</code>是一个<strong>抽象类</strong>，在<code>java.lang</code>包下，常用实例方法如下：
+<ul>
+<li><code>typeValue()</code>：将对象转化为类型为<code>type</code>的值，例如<code>byteValue()</code>等</li>
+</ul></li>
+<li>整型包装类，<code>Integer、Short、Byte、Long</code>，以<code>Integer</code>为例：
+<ul>
+<li>构造器：<code>Integer(String)</code>和<code>Integer(int)</code></li>
+<li>常用静态成员：<code>MAX_VALUE</code>和<code>MIN_VALUE</code></li>
+<li>常用实例方法：
+<ul>
+<li><code>boolean compareTo()</code>：实现了<code>Comparable</code>接口</li>
+<li><code>String toString()</code>：实现了转字符串方法</li>
+</ul></li>
+<li>常用静态方法：
+<ul>
+<li><code>int bitCount(int)</code>：返回二进制表示中<code>1</code>的个数</li>
+<li><code>int parseInt(String, int)</code>：将字符串解析为整数，第二个参数可选，表示基数</li>
+<li><code>Integer valueOf(String, int)</code>：同上，但是返回引用对象</li>
+<li><code>int signum(int)</code>：返回符号函数值</li>
+<li><code>String toString(int)</code>：将一个基础数据类型的整型转化为字符串</li>
+<li><code>String toHexString(int)</code>：转十六进制字符串，其它进制如<code>toBinaryString()、toOctalString()</code></li>
+</ul></li>
+</ul></li>
+<li>浮点数包装类，<code>Double、Float</code>，以<code>Double</code>为例：
+<ul>
+<li>构造器类似整型类</li>
+<li>常用静态成员：
+<ul>
+<li><code>MAX_VALUE</code>和<code>MIN_VALUE</code></li>
+<li><code>NaN</code>：不是一个数</li>
+<li><code>POSITIVE_INFINITY</code>和<code>NEGETIVE_INFINITY</code>：正负无穷</li>
+</ul></li>
+<li>常用实例方法：
+<ul>
+<li><code>boolean isInfinite()</code>：是否为无穷</li>
+<li><code>boolean isNaN()</code>：是否为<code>NaN</code></li>
+<li><code>String toStirng()</code>：转字符串</li>
+</ul></li>
+<li>常用静态方法：
+<ul>
+<li>同样有<code>parseDouble()、toString()、valueOf()</code>系列方法</li>
+<li>还有<code>isFinite()、isInfinite()、isNaN()</code>等判断方法</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="数组">数组</h2>
+<h3 id="语法糖"><code>[]</code>语法糖</h3>
+<ul>
+<li><p>通过<code>type[]</code>可声明一个类型为<code>type</code>的数组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] arr1 = <span class="keyword">new</span> <span class="title class_">int</span>[] &#123;&#125;;</span><br><span class="line"><span class="type">int</span>[] arr2 = <span class="keyword">new</span> <span class="title class_">int</span>[N];     <span class="comment">// 允许N是变量, 即允许动态绑定</span></span><br></pre></td></tr></table></figure></li>
+<li><p>只能通过初始化设定数组具体的值，编译器自动解析数组的长度</p></li>
+<li><p><code>length</code>是静态数组最重要的属性，用于获取其长度</p></li>
+<li><p>由于静态数组本质是一个引用类型，一个引用可以随时更换其指向，因此二维数组每一行的元素个数可以不同：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[][] a = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">8</span>][];    <span class="comment">// 声明一个长度为8的二维数组, 每一行的元素个数未知(为null)</span></span><br><span class="line">a[<span class="number">0</span>] = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">3</span>];           <span class="comment">// 将int[3]赋给a[0]</span></span><br><span class="line"><span class="type">int</span>[][] a = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">8</span>][<span class="number">9</span>];   <span class="comment">// 声明一个长度为8的二维数组, 每一行都是int[9]对象</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="array"><code>Array</code></h3>
+<ul>
+<li><code>java</code>的数组实际上是<code>java.lang.reflect.Array</code>类的对象，其构造方法是私有的</li>
+<li><code>Array</code>本身并不提供更多的方法，而是归纳于集合框架里的<code>Arrays</code>类和<code>Collections</code>类</li>
+</ul>
+<h2 id="字符串">字符串</h2>
+<h3 id="charsequence"><code>CharSequence</code></h3>
+<ul>
+<li><code>CharSequence</code>(字符序列)是一个接口，字符串类均实现了该接口</li>
+<li>该接口的常用方法包括：
+<ul>
+<li><code>char charAt(int)</code>：<code>0-idx</code>地获取字符串的字符</li>
+<li><code>boolean isEmpty()</code>：判空</li>
+<li><code>int length()</code>：返回长度</li>
+<li><code>String toString()</code>：返回<code>String</code>对象</li>
+</ul></li>
+</ul>
+<h3 id="string"><code>String</code></h3>
+<ul>
+<li><p><code>String</code>是一个<strong>不可变类</strong>，其所有属性都被<code>final</code>修饰</p></li>
+<li><p>和包装类的整型常量池同样道理，字符串常用所以不应该经常在堆中创建，希望它能够成为一个封装好的字面量，因此<code>String</code>变量同样有两种初始化方式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">s</span> <span class="operator">=</span> <span class="string">&quot;123&quot;</span>;     <span class="comment">// 在字符串常量池中检索, 若没有则创建, 若有则指向它</span></span><br><span class="line"><span class="type">String</span> <span class="variable">s2</span> <span class="operator">=</span> <span class="string">&quot;123&quot;</span>;    <span class="comment">// s == s2 将返回 true</span></span><br><span class="line"><span class="type">String</span> <span class="variable">s3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(<span class="string">&quot;123&quot;</span>);    <span class="comment">// 单独在堆中创建, 其内容是&quot;123&quot;的副本, 因此 s2 == s3 将返回 false</span></span><br></pre></td></tr></table></figure>
+<p>如果你尝试使用<code>String(String)</code>构造器而不是<code>String(StringBuilder)</code>或其它构造器，你会受到警告<code>Unless an explicit copy of original is needed, use of this constructor is unnecessary since Strings are immutable.</code>，即除非真的需要原字符串的副本，否则使用这样的构造器是不必要的，因为<code>String</code>对象是不可变的</p>
+<p>重新复习一下不可变对象：其属性全都被<code>final</code>修饰，只能通过用<code>=</code>赋值修改变量的指向，而不能通过该对象的方法修改其指向的值</p></li>
+<li><p><code>String</code>实现了<code>CharSequence</code>接口的方法，除此之外还包括以下常用方法：</p>
+<ul>
+<li>构造器：接受<code>byte[]</code>或<code>char[]</code>或<code>StringBuilder</code>或<code>StringBuffer</code>或<code>String</code>参数</li>
+<li>常用实例方法：
+<ul>
+<li><code>String concat(String)</code>：返回拼接后的字符串，和<code>+</code>语法糖效果一致</li>
+<li><code>boolean contains(CharSequence)</code>：判断是否包含目标字符序列，可以是任何实现了该接口的类</li>
+<li><code>boolean contentEquals(CharSequence)</code>：因为不止含<code>String</code>一个字符串类，<code>StringBuilder</code>等不是<code>String</code>的子类，通过<code>contentEquals()</code>可以快速判断两个类型不同的字符串是否内容相等，用<code>s.equals(sb.toString())</code>也可</li>
+<li><code>boolean equalsIgnoreCase(String)</code>：忽略大小写地判断两个<code>String</code>是否相等</li>
+<li><code>byte[] getBytes()</code>：以默认编码转换为<code>byte[]</code>，<code>JVM</code>默认编码为操作系统的编码集
+可以传递字符集参数例如<code>getBytes("GBK")</code>或<code>getBytes("UTF-8")</code>解析为对应编码的字节数组，再用<code>new String(byte[], String charset)</code>转化为<code>String</code>对象</li>
+<li><code>int indexOf(s)</code>：找到字符或子串<code>s</code>的起始位置，找不到返回<code>-1</code>，诸如<code>indexOf(char)</code>或<code>indexOf(String)</code>，还可以加上<code>fromIndex</code>和<code>endIndex</code>参数
+需要注意的是<code>java</code>没有正整数一说，若找不到，返回<code>-1</code>，是不会像<code>cpp</code>一样等同于无穷大的</li>
+<li><code>int lastIndexOf()</code>：和<code>indexOf()</code>的区别是，从右开始找</li>
+<li><code>int length()</code>：返回长度</li>
+<li><code>boolean matches(String regex)</code>：判断字符串是否匹配正则表达式<code>regex</code></li>
+<li><code>String replace(char, char)</code>：将所有的前者字符改为后者字符，该方法还有一个字符串替换成字符串的重载版本</li>
+<li><code>String[] split(String regex)</code>：根据正则表达式<code>regex</code>匹配字符串，并以匹配成功的子串为分隔，分割字符串</li>
+<li><code>String toUpperCase()</code>和<code>String toLowerCase()</code></li>
+<li><code>String trim()</code>：去除前后空白(包括空格、制表符)</li>
+<li><code>String substring(int begin, int offset)</code>：获取子串<code>[begin, begin + offset)</code></li>
+</ul></li>
+</ul></li>
+</ul>
+<h3 id="stringbuilder"><code>StringBuilder</code></h3>
+<ul>
+<li>先讲一下<code>StringBuffer</code>类，这是十分古老的<code>java</code>提供的可变字符串类，是线程安全的
+但就算是线程安全的，也不能完全保证拼接的逻辑正确，反而因为加锁导致开销极大，因此基本没有适用场景</li>
+<li>因此，<code>StringBuilder</code>类应运而生，它实现了<code>CharSequence</code>接口和<code>Appendable</code>接口，提供以下方法：
+<ul>
+<li><code>indexOf()</code>系列</li>
+<li><code>append()</code>系列</li>
+<li><code>delete()</code>系列</li>
+<li><code>insert()</code>系列</li>
+<li><code>StringBuilder reverse()</code>：使该对象逆序，然后返回它自己</li>
+<li><code>void setCharAt(int, char)</code>：将前者指向的字符改为后者</li>
+</ul></li>
+</ul>
+<h2 id="集合框架">集合框架</h2>
+<h3 id="iterablee接口"><code>Iterable&lt;E&gt;</code>接口</h3>
+<ul>
+<li><p><code>Iterable&lt;E&gt;</code>是所有元素集合都实现了的接口</p></li>
+<li><p><code>Iterator&lt;E&gt; iterator()</code>：获取一个迭代器</p></li>
+<li><p><code>void forEach(Consumer&lt;? super E&gt;)</code>：为集合的每一个元素都执行一遍你提供的<code>lambda</code>表达式</p></li>
+<li><p>所有实现了<code>Iterable</code>接口的类均可使用语法糖<code>for (type e : c)</code>，其中<code>e</code>是临时变量，是集合对象<code>c</code>中的元素</p></li>
+<li><p><code>Iterator&lt;E&gt;</code>接口包含以下方法：</p>
+<ul>
+<li><code>boolean hasNext()</code>：判断是否有下一个元素</li>
+<li><code>E next()</code>：返回下一个元素，若没有则抛出<code>NoSuchElementException</code>异常</li>
+<li><code>void remove()</code>：用于安全地删除当前元素
+在使用迭代器遍历时，一旦通过对象进行增删行为，调用迭代器的方法将抛出异常
+因此应该使用迭代器的<code>remove()</code>删除当前指向的元素
+当当前迭代器从未使用过<code>next()</code>或已经使用过<code>remove()</code>时，调用<code>remove()</code>将抛出<code>IllegalStateException</code>异常</li>
+</ul></li>
+<li><p><code>Iterator</code>以及集合框架是随着泛型的实现而出现的，传统的枚举器是<code>Enumeration</code>接口，现在已经很少使用</p></li>
+<li><p>通过非语法糖的方式遍历集合的方法如下(如果需要在遍历过程中删除元素)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list;</span><br><span class="line"><span class="type">var</span> <span class="variable">it</span> <span class="operator">=</span> list.iterator();</span><br><span class="line"><span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">  <span class="type">var</span> <span class="variable">e</span> <span class="operator">=</span> it.next();</span><br><span class="line">  <span class="keyword">if</span> (e == <span class="number">1</span>) &#123;</span><br><span class="line">    it.remove();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>为什么<code>Iterator</code>是一个接口，在文档中也找不到实现它的类，为什么能获取到一个实例化的对象？</p>
+<p>因为实现这个接口的是在各个容器内部定义的私有内部类</p></li>
+</ul>
+<h3 id="collectione接口"><code>Collection&lt;E&gt;</code>接口</h3>
+<ul>
+<li><code>Collection&lt;E&gt;</code>接口继承自<code>Iterable</code>接口，所有元素集合都实现了该接口</li>
+<li>定义的方法如下，实现它的类可以有不同的实现，但语义满足：
+<ul>
+<li><code>boolean add(E)</code>：调用后，集合中应能够找到该元素</li>
+<li><code>void clear()</code>：调用后，集合应没有元素</li>
+<li><code>boolean contains(Object)</code>：若集合存在该对象应返回<code>true</code></li>
+<li><code>boolean isEmpty()</code>：若集合为空应返回<code>true</code></li>
+<li><code>boolean remove(Object)</code>：若该对象存在于集合中，调用该方法后应保证删除它</li>
+<li><code>int size()</code>：应返回集合的长度</li>
+<li><code>Object[] toArray()</code>：应返回由集合中元素构成的静态数组</li>
+</ul></li>
+</ul>
+<h3 id="liste接口"><code>List&lt;E&gt;</code>接口</h3>
+<ul>
+<li><code>List</code>接口继承自<code>Collection</code>接口，所有有序集合(列表)都实现了该接口</li>
+<li>该接口额外包含以下常用方法：
+<ul>
+<li><code>void add(int idx, E)</code>：向第<code>idx</code>位置插入元素，<code>0-idx</code></li>
+<li><code>void set(int idx, E)</code>：设置第<code>idx</code>位置的元素</li>
+<li><code>E get(int)</code>：获取指定位置的元素</li>
+<li><code>E getFirst()</code>和<code>E getLast()</code></li>
+<li><code>void remove(int)、E removeFirst()、E removeLast()</code></li>
+<li><code>List&lt;E&gt; subList(int, int)</code>：获取子列表，以视图形式存在(没有在堆中新分配内存)</li>
+</ul></li>
+<li>实现<code>List</code>接口的常用类有<code>ArrayList、LinkedList、Vector、Stack</code>，分别是数组实现、链表实现、线程安全列表、线程安全栈，其中<code>LinkedList</code>类还实现了<code>Deque</code>接口</li>
+</ul>
+<h3 id="sete接口"><code>Set&lt;E&gt;</code>接口</h3>
+<ul>
+<li><code>Set</code>接口同样继承自<code>Collection</code>接口，所有唯一性集合都实现了该接口</li>
+<li><code>Set</code>本身没有提供更多的方法，实现它的常用类有<code>HashSet、TreeSet、LinkedHashSet</code>，分别是哈希表实现(乱序)、红黑树实现(键有序)、哈希表实现(插入顺序排序)</li>
+</ul>
+<h3
+id="queuee和dequee接口"><code>Queue&lt;E&gt;</code>和<code>Deque&lt;E&gt;</code>接口</h3>
+<ul>
+<li><code>Queue</code>接口同样继承自<code>Collection</code>接口，所有只操作端元素的集合都实现了该接口</li>
+<li><code>Queue</code>接口提供了额外的方法，它们的功能和<code>Collection</code>接口定义的方法有对应关系，但<code>Queue</code>新增的方法在操作失败时会返回特殊值，而<code>Collection</code>的方法会抛出异常
+<ul>
+<li><code>offer()</code>和<code>add()</code></li>
+<li><code>peek()</code>和<code>element()</code></li>
+<li><code>poll()</code>和<code>remove()</code></li>
+</ul></li>
+<li><code>Deque</code>接口猜都能猜到，在方法名后加<code>First</code>和<code>Last</code></li>
+<li>实现了<code>Queue</code>的常用类有<code>PriorityQueue</code>(优先队列)和<code>ArrayDeque</code>(数组实现的双端队列)</li>
+</ul>
+<h3 id="mapk-v接口"><code>Map&lt;K, V&gt;</code>接口</h3>
+<ul>
+<li><code>Map</code>接口并不继承<code>Iterable</code>和<code>Collection</code>，所有映射集合都实现了该接口</li>
+<li><code>Map</code>提供的常用方法有：
+<ul>
+<li><code>clear()</code></li>
+<li><code>containsKey()</code>和<code>containsValue()</code></li>
+<li><code>V get(K)</code></li>
+<li><code>put(K, V)</code></li>
+<li><code>remove(Object)</code></li>
+</ul></li>
+<li>含有公有内部类<code>Entry&lt;K, V&gt;</code></li>
+<li>实现了<code>Map</code>接口的常用类有<code>HashMap、TreeMap、HashTable、WeakHashMap、LinkedMap</code>，分别是哈希表实现、红黑树实现、线程安全的哈希表实现、基于弱引用的哈希表实现、哈希表实现(插入顺序排序)</li>
+</ul>
+<h2 id="内置算法">内置算法</h2>
+<h3 id="math"><code>Math</code></h3>
+<h3 id="arrays"><code>Arrays</code></h3>
+<h3 id="collections"><code>Collections</code></h3>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/04/java-base/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-04</time>
+        <br>
+      Java: 基本语法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/04/java-exception/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-04</time>
+        <br>
+      Java: 异常处理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/18/java-generics/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-18</time>
+        <br>
+      Java: 泛型编程
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/17/java-io/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-17</time>
+        <br>
+      Java: IO
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/algorithm/" rel="tag"># algorithm</a>
+              <a href="/tags/data-structure/" rel="tag"># data structure</a>
+              <a href="/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/04/07/algo-fastio/" rel="prev" title="算法竞赛: 常数优化之快读快写">
+                  <i class="fa fa-angle-left"></i> 算法竞赛: 常数优化之快读快写
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/04/10/algo-recursive-segment-tree/" rel="next" title="数据结构: 递归式线段树">
+                  数据结构: 递归式线段树 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

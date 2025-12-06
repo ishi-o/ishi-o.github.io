@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="具体数学: 和式">
+<meta property="og:url" content="https://ishi-o.github.io/2024/10/02/concreteMath-summation/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-02T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.166Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="math">
+<meta property="article:tag" content="summation">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/10/02/concreteMath-summation/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/10/02/concreteMath-summation/","path":"2024/10/02/concreteMath-summation/","title":"具体数学: 和式"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>具体数学: 和式 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%92%8C%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">和式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">表达方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%82%E8%A7%A3%E5%92%8C%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">求解和式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E9%87%8D%E5%92%8C%E5%BC%8F"><span class="nav-number">1.3.</span> <span class="nav-text">多重和式</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/12/calculus-indefinite-int/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-12</time>
+        <br>
+      微积分: 不定积分
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/01/concreteMath-special-coefficient/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-01</time>
+        <br>
+      具体数学: 特殊系数
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/05/probability-rdnvar/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-05</time>
+        <br>
+      概率论与数理统计: 常见的随机变量汇总
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/28/calculus-definite-int/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-28</time>
+        <br>
+      微积分: 定积分
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/10/02/concreteMath-summation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="具体数学: 和式 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          具体数学: 和式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-10-02 00:00:00" itemprop="dateCreated datePublished" datetime="2024-10-02T00:00:00+00:00">2024-10-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/" itemprop="url" rel="index"><span itemprop="name">SE Courses</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/Concrete-Math/" itemprop="url" rel="index"><span itemprop="name">Concrete Math</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>4 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h2 id="和式">和式</h2>
+<h3 id="表达方式">表达方式</h3>
+<ul>
+<li>一般形式：<span
+class="math inline">$\begin{align}\sum_{\rho(k)}a_k\end{align}$</span>，用于简略描述和式，方便推导和理解</li>
+<li>定界形式：<span
+class="math inline">$\begin{align}\sum_{k=lower}^{upper}a_k\end{align}$</span>，用于表示最终结果</li>
+<li><span class="math inline">$\rm Iverson$</span>约定：<span
+class="math inline">$\begin{align}\sum_{k}a_{k}·[\rho(k)]\end{align}$</span>，即遍历<span
+class="math inline"><em>k</em></span>，若满足命题<span
+class="math inline"><em>ρ</em>(<em>k</em>)</span>则加和，否则不加</li>
+</ul>
+<h3 id="求解和式">求解和式</h3>
+<ul>
+<li><p>清单法：因和式能很简单地写成递推式<span
+class="math inline">$\begin{cases}S_0=0\\S_n=S_{n-1}+a_n\end{cases}$</span>，因此可使用清单法</p></li>
+<li><p>求和因子法：适用于求解形如<span
+class="math inline">$\begin{cases}S_0\\a_nS_n=b_nS_{n-1}+c_n\end{cases}$</span>的递推式</p>
+<ul>
+<li><p><span
+class="math inline">$\begin{align}&amp;两边乘s_n,得s_na_nS_n=s_nb_nS_{n-1}+s_nc_n\\&amp;其中s_n满足s_nb_n=s_{n-1}a_{n-1}&amp;(1)\\&amp;因此T_n=s_na_nS_n=T_{n-1}+s_nc_n\Rightarrow
+T_n=s_0a_0S_0+\sum_{k=1}^ns_kc_k\\&amp;其中s_0a_0只是为了满足(1)式假想的,故S_n=\frac1{s_na_n}\left(s_1b_1S_0+\sum_{k=1}^ns_kc_k\right)\\&amp;因为求和式中只用到s(1\sim
+n),现根据(1)式求出s_n,不难得到s_n=\frac{a_{n-1}\cdots a_1}{b_n\cdots
+b_2}s_1\\&amp;为方便求解,一般令s_1=1\\&amp;观察式子可知a_n和b_n不允许有零项\end{align}$</span></p></li>
+<li><p>当<span
+class="math inline"><em>s</em><sub><em>n</em></sub><em>c</em><sub><em>n</em></sub></span>是较好求的式子时，可用求和因子法</p>
+<p>事实上求和因子法大多数情况下无法求给定数列的和，只能解上述<span
+class="math inline"><em>a</em><sub><em>n</em></sub></span>和<span
+class="math inline"><em>b</em><sub><em>n</em></sub></span>满足特定性质的递推式</p>
+<p>因为给定数列<span
+class="math inline"><em>a</em><sub><em>n</em></sub></span>，写成和式的递推式<span
+class="math inline"><em>S</em><sub><em>n</em></sub> = <em>S</em><sub><em>n</em> − 1</sub> + <em>a</em><sub><em>n</em></sub></span>，会发现<span
+class="math inline"><em>s</em><sub><em>n</em></sub> = <em>s</em><sub>1</sub></span>，最终仍无法求<span
+class="math inline"><em>a</em><sub><em>n</em></sub></span>的和</p></li>
+</ul></li>
+<li><p>扰动法：取出首项或尾项，构造出一个等式，并使两部分的和式都和<span
+class="math inline"><em>S</em><sub><em>n</em></sub></span>套上关系即可</p>
+<ul>
+<li><p>例如给定数列<span
+class="math inline"><em>a</em><sub><em>n</em></sub></span>，有<span
+class="math inline">$\begin{align}S_{n+1}=S_n+a_n=a_1+\sum_{k=2}^{n+1}a_k\end{align}$</span></p>
+<p>扰动法的目的是将<span
+class="math inline">$\begin{align}\sum_{k=2}^{n+1}a_k=\sum_{k=1}^na_{k+1}\end{align}$</span>分解为<span
+class="math inline"><em>S</em><sub><em>n</em></sub></span>和一个相对好求的和式</p></li>
+<li><p>例求<span
+class="math inline">$\begin{align}\sum_{k=0}^nkx^k\end{align}$</span>：</p>
+<p><span
+class="math inline">$\begin{align}&amp;解:S_{n+1}=S_n+(n+1)x^{n+1}=0+\sum_{k=1}^{n+1}kx^k\\&amp;=xS_n+\sum_{k=0}^nx^{k+1}=xS_n+\frac{x^{n+1}-x}{x-1}\\&amp;\Rightarrow
+S_n=\frac{(n+1)x^{n+1}(x-1)-x-x^{n+1}}{(x-1)^2}\end{align}$</span></p></li>
+</ul></li>
+<li><p>例如快速排序的平均比较次数(具体数学上和数据结构里不同，这里以具体数学为例)：</p>
+<p><span
+class="math inline">$C_n=\begin{cases}0,&amp;n=0\\n+1+\frac2n\sum_\limits{i=0}^{n-1}C_i,&amp;n&gt;0\end{cases}$</span></p>
+<p><span
+class="math inline">$\begin{align}&amp;即nC_n=2\sum_{i=0}^{n-1}C_i+n^2+n\\&amp;(n-1)C_{n-1}=2\sum_{i=0}^{n-2}C_i+(n-1)^2+n-1\\&amp;得nC_n-(n-1)C_{n-1}=2C_{n-1}+2n\\&amp;即nC_n=(n+1)C_{n-1}+2n\end{align}$</span></p>
+<p><span
+class="math inline">$\begin{align}&amp;求和因子为s_n=\frac{a_{n-1}\cdots
+a_1}{b_n\cdots
+b_2}s_1=\frac{(n-1)!}{(n+1)\cdots3}s_1=\frac{2}{(n+1)n},(令s_1=1)\\&amp;s_nnC_n=s_n(n+1)C_{n-1}+2ns_n=s_{n-1}(n-1)C_{n-1}+\frac4{n+1}\\&amp;因此s_nnC_n=s_1b_1C_0+4\sum_{i=1}^{n}\frac1{i+1}=4(H_{n+1}-1)\\&amp;C_n=2(n+1)(H_{n+1}-1)=2(n+1)(H_n+\frac1{n+1}-1)=2(n+1)H_n-2n\end{align}$</span></p></li>
+</ul>
+<h3 id="多重和式">多重和式</h3>
+<ul>
+<li><span
+class="math inline">[1≤<em>i</em>&lt;<em>j</em>≤<em>n</em>] + [1≤<em>k</em>&lt;<em>j</em>≤<em>n</em>] = [1≤<em>j</em>,<em>k</em>≤<em>n</em>] − [1≤<em>i</em>=<em>j</em>≤<em>n</em>]</span></li>
+<li>切比雪夫单调不等式：若两序列是单调的：<span
+class="math inline">$\begin{align}\begin{cases}单调性相同,&amp;\left(\sum_\limits{k=1}^na_k\right)\left(\sum_\limits{k=1}^nb_k\right)\le
+n\sum_\limits{k=1}^n
+a_kb_k\\单调性不同,&amp;上式为大于等于\end{cases}\end{align}$</span></li>
+<li>应用于<span
+class="math inline"><em>n</em><sup><em>k</em></sup></span>前<span
+class="math inline"><em>n</em></span>项和公式：
+<ul>
+<li>摄动求和：应对<span
+class="math inline"><em>n</em><sup><em>k</em> + 1</sup></span>摄动</li>
+<li>清单求和：令<span
+class="math inline"><em>R</em><sub><em>n</em></sub> = 1, <em>n</em>, <em>n</em><sup>2</sup>, ⋯, <em>n</em><sup><em>k</em> + 1</sup></span></li>
+<li>积分替换：求积分和求和的误差，并通过其递推式求解误差</li>
+</ul></li>
+<li><strong>下阶幂定义</strong>(<span
+class="math inline"><em>x</em></span>为实数，<span
+class="math inline"><em>m</em></span>为整数)：<span
+class="math inline">$x^{\underline
+m}=\begin{cases}x(x-1)\cdots(x-m+1),&amp;m&gt;0\\1,&amp;m=0\\\frac1{(x+1)\cdots(x-m)},&amp;m&lt;0\end{cases}$</span></li>
+<li><strong>下阶幂的差分</strong>：<span
+class="math inline">$\Delta(x^{\underline
+m})=(x+1)^{\underline{m}}-x^{\underline
+m}=mx^{\underline{m-1}}$</span></li>
+<li>定和分：<span class="math inline">$\begin{align}\sum_a^bg(x)\delta
+x=\sum_{k=a}^{b-1}g(k)=f(x)\Bigg|_a^b,其中g(x)=\Delta
+f(x)\end{align}$</span></li>
+<li>下阶幂的定和分可配合第二类斯特林数的原始定义，求解<span
+class="math inline"><em>x</em><sup><em>k</em></sup></span>的和(<span
+class="math inline"><em>k</em></span>为常数)</li>
+<li>指数函数的差分：<span
+class="math inline"><em>Δ</em>(<em>c</em><sup><em>x</em></sup>) = <em>c</em><sup><em>x</em> + 1</sup> − <em>c</em><sup><em>x</em></sup> = (<em>c</em>−1)<em>c</em><sup><em>x</em></sup></span>，因此<strong><span
+class="math inline">2<sup><em>x</em></sup></span>的差分等于其自身</strong></li>
+<li>和分求指数函数和：<span
+class="math inline">$\begin{align}\sum_{k=0}^nc^k=\sum_{0}^{n+1}c^x\delta
+x=\frac{c^{n+1}-1}{c-1}\end{align}$</span></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/12/calculus-indefinite-int/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-12</time>
+        <br>
+      微积分: 不定积分
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/01/concreteMath-special-coefficient/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-01</time>
+        <br>
+      具体数学: 特殊系数
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/05/probability-rdnvar/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-05</time>
+        <br>
+      概率论与数理统计: 常见的随机变量汇总
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/28/calculus-definite-int/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-28</time>
+        <br>
+      微积分: 定积分
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/math/" rel="tag"># math</a>
+              <a href="/tags/summation/" rel="tag"># summation</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/27/discreteMath-abstract-algebra/" rel="prev" title="离散数学: 近世代数（群、环、域）">
+                  <i class="fa fa-angle-left"></i> 离散数学: 近世代数（群、环、域）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/10/02/algo-ufs/" rel="next" title="数据结构: 并查集">
+                  数据结构: 并查集 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

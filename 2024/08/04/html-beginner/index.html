@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="HTML: 基本语法">
+<meta property="og:url" content="https://ishi-o.github.io/2024/08/04/html-beginner/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-08-04T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.168Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="HTML">
+<meta property="article:tag" content="beginner">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/08/04/html-beginner/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/08/04/html-beginner/","path":"2024/08/04/html-beginner/","title":"HTML: 基本语法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>HTML: 基本语法 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#html"><span class="nav-number">1.</span> <span class="nav-text">HTML</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E8%AE%B0%E8%AF%AD%E8%A8%80"><span class="nav-number">1.1.1.</span> <span class="nav-text">标记语言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8C%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.2.</span> <span class="nav-text">和编程语言的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%86%85%E5%AE%B9"><span class="nav-number">1.2.</span> <span class="nav-text">基本内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E6%A0%87%E7%AD%BE"><span class="nav-number">1.2.1.</span> <span class="nav-text">输出标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E6%A0%87%E7%AD%BE"><span class="nav-number">1.2.2.</span> <span class="nav-text">输入标签</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E7%9A%84%E5%80%BC"><span class="nav-number">1.2.3.</span> <span class="nav-text">属性的值</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/03/markdown-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-03</time>
+        <br>
+      Markdown: 简单易学的笔记语言
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/20/sql-std/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-20</time>
+        <br>
+      SQL: 基本用法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/09/c-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-09</time>
+        <br>
+      C: 基本语法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/11/java-bean-validation/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-11</time>
+        <br>
+      Java EE: Bean Validation
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/08/04/html-beginner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="HTML: 基本语法 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HTML: 基本语法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-08-04 00:00:00" itemprop="dateCreated datePublished" datetime="2024-08-04T00:00:00+00:00">2024-08-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Markup-Languages/" itemprop="url" rel="index"><span itemprop="name">Markup Languages</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>2.2k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>8 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="html"><code>HTML</code></h1>
+<h2 id="简介">简介</h2>
+<h3 id="标记语言">标记语言</h3>
+<p><code>HTML</code>(超文本标记语言)，它不是一种编程语言，而是使用一个个标签来构建一个网页的框架，一个<code>HTML</code>文档就是一个<code>WEB</code>网页(而浏览器内含解析其内容的解析器)；<code>CSS</code>负责网页的美化，<code>JS</code>负责网页的动态交互，而它负责网页的架构，<code>CSS</code>以及脚本都要在这个框架里定义</p>
+<h3 id="和编程语言的区别">和编程语言的区别</h3>
+<p><code>Markdown</code>就是一种标记语言，它们只是把一份文档通过标记来增加一些细节，然后展示出来，因此没有复杂的语法，只是定义了一个文档的结构、排布等。文档本身并没有实现部分，需要<strong>由解释器渲染</strong>才能有效展示。只有<code>HTML</code>代码的文档就是一静态网页，不会因为用户输入而发生实时变化(但可以将输入信息传输给服务器，及时更换一个新的网页，达到实时的效果)</p>
+<p>而编程语言有更复杂的语法来实现更高效、多样的逻辑与功能，例如最基本的输入输出、计算、内存管理等。源文件本身包含许多底层的实现，经过翻译后可<strong>由系统执行</strong></p>
+<h2 id="基本内容">基本内容</h2>
+<h3 id="输出标签">输出标签</h3>
+<p><code>HTML</code><strong>不区分大小写</strong>，使用一条条元素来构建网页，每条元素一般由一对标签作为头尾，标签夹着的文本为内容，而标签内部的参数对为属性(其值一般不会显示)，解释器通过标签及其属性来展现不同样式的内容；很多属性都与样式有关，这里尽量只介绍框架有关的属性。以下是常用标签：</p>
+<ul>
+<li><strong><code>&lt;!DOCTYPE html&gt;</code></strong>：这是一条声明，用于告诉浏览器使用特定的<code>HTML</code>版本解释器，这一条声明的是<code>html5</code></li>
+<li><code>&lt;!-- message --&gt;</code>：用于注释，<code>message</code>只会在源代码中被看见</li>
+<li><code>&lt;html&gt;&lt;/html&gt;</code>：这是一份<code>html</code>文档的开头与结尾，定义了一整个<code>html</code>文档</li>
+<li><code>&lt;head&gt;&lt;/head&gt;</code>：定义文档的头部内容，包括编码方式(<code>meta</code>)、文档标题(<code>title</code>)、插入脚本(<code>scripts</code>块，可以在<code>&lt;body&gt;</code>中定义，但习惯在<code>&lt;head&gt;</code>中)、文档样式等，它们不呈现在网页主体中，而会被解释器接受。以下是常用的只在<code>&lt;head&gt;</code>中定义的元素
+<ul>
+<li><code>&lt;title&gt;&lt;/title&gt;</code>：定义了在浏览器顶部的网页名称</li>
+<li><strong><code>&lt;meta&gt;</code></strong>：定义了文档信息的信息(即元数据)，例如属性<code>charset</code>指定了浏览器的编码方式，常见<code>&lt;meta charset="UTF-8"&gt;</code>指定编码方式保证中文不会出现乱码</li>
+<li><strong><code>&lt;base&gt;</code></strong>：定义基准链接，即其它所有使用相对链接的元素都会相对基准链接，只能定义一次</li>
+<li><code>&lt;link&gt;</code>：定义文档与外部资源的联系，例如链接外部<code>CSS</code></li>
+</ul></li>
+<li><code>&lt;body&gt;&lt;/body&gt;</code>：定义网页主体，其中内容将会展现给用户
+<ul>
+<li><code>&lt;header&gt;&lt;/header&gt;</code>：定义文档简介</li>
+<li><strong><code>&lt;h&gt;&lt;/h&gt;</code></strong>：定义一行标题，从<code>&lt;h1&gt;</code>到<code>&lt;h6&gt;</code>标题等级递减，体现在文字加粗放大以及目录索引上</li>
+<li><code>&lt;p&gt;&lt;/p&gt;</code>：定义一片段落文字，前后会添加换行</li>
+<li><strong><code>&lt;a&gt;&lt;/a&gt;</code></strong>：定义一个链接，<code>href</code>属性指示链接地址<a target="_blank" rel="noopener" href="https://www.baidu.com">链接</a>
+<ul>
+<li>链接可以是一个网页、锚点、本地文件、图片等，锚点链接即’#’开头的一串标记，类似于<code>Markdown</code>，这个标记可以是<code>id</code>或<code>name</code>属性的值</li>
+</ul></li>
+<li><strong><code>&lt;img&gt;&lt;/img&gt;</code></strong>：定义一张图片，<code>src</code>属性指示图片地址，<code>alt</code>属性指示当图片无法显示时的可作替换的文本内容</li>
+<li><strong><code>&lt;table&gt;&lt;/table&gt;</code></strong>：定义一个表格，<code>border</code>属性指示其边框样式
+<ul>
+<li><code>&lt;tr&gt;&lt;/tr&gt;</code>：定义表格的一行(table row)
+<ul>
+<li><code>&lt;th&gt;&lt;/th&gt;</code>：定义表格的表头单元格(table
+header)</li>
+<li><code>&lt;td&gt;&lt;/td&gt;</code>：定义表格一般数据的单元格(table
+data)</li>
+</ul></li>
+</ul></li>
+<li><strong><code>&lt;ul&gt;&lt;/ul&gt;、&lt;ol&gt;&lt;/ol&gt;、&lt;dl&gt;&lt;/dl&gt;</code></strong>：定义无序(unordered)、有序(ordered)、自定义列表(definition)
+<ul>
+<li><code>&lt;li&gt;&lt;/li&gt;</code>：定义列表中的一项()</li>
+<li><code>&lt;dt&gt;&lt;/dt&gt;</code>：定义自定义列表中的一项(definition
+term)</li>
+<li><code>&lt;dd&gt;&lt;/dd&gt;</code>：定义列表上一项的注释(definition
+description)</li>
+</ul></li>
+<li>文本格式化的常用标签有如下：
+<ul>
+<li><code>&lt;br&gt;</code>：定义一次换行，可在<code>&lt;p&gt;</code>等内容中使用</li>
+<li><code>&lt;hr&gt;</code>：定义一条水平分割线</li>
+<li><code>&lt;b&gt;&lt;/b&gt;</code>与<code>&lt;i&gt;&lt;/i&gt;</code>：定义文字的<strong>粗体</strong>与<em>斜体</em>，它们是样式标签，属于无意义的文字加粗与倾斜，两者应作为最后的选择</li>
+<li><strong><code>&lt;strong&gt;&lt;/strong&gt;</code>与<code>&lt;em&gt;&lt;/em&gt;</code></strong>：语义化标签，分别为<strong>特别强调</strong>与<em>一般强调</em>，可以做到<code>&lt;b&gt;</code>与<code>&lt;i&gt;</code>的效果，且在非视觉上(例如大声朗读)也有强调效果，这两者更常用</li>
+<li><code>&lt;mark&gt;&lt;/mark&gt;</code>：定义<mark>高亮强调</mark>文字</li>
+<li><code>&lt;small&gt;&lt;/small&gt;</code>：定义<small>小号</small>字体</li>
+<li><code>&lt;sub&gt;&lt;/sub&gt;</code>与<code>&lt;sup&gt;&lt;/sup&gt;</code>：定义<sub>下标</sub>与<sup>上标</sup>字体</li>
+<li><code>&lt;del&gt;&lt;/del&gt;</code>：定义<del>划线字</del></li>
+</ul></li>
+<li>其它类型字体渲染如下：
+<ul>
+<li><code>&lt;pre&gt;&lt;/pre&gt;</code>与<code>&lt;code&gt;&lt;/code&gt;</code>：定义<code>代码</code>字体，前者不会忽视制表符和回车</li>
+<li><code>&lt;abbr&gt;&lt;/abbr&gt;</code>：定义缩略词，赋予<code>title</code>属性后当光标悬浮其上时将会显示出来<abbr title="缩略词">abbr</abbr></li>
+<li><code>&lt;address&gt;&lt;/address&gt;</code>：其中应包含文档作者的相关信息如联系方式等，通常表现为斜体</li>
+<li><code>&lt;blockquote&gt;&lt;/blockquote&gt;、&lt;q&gt;&lt;/q&gt;、&lt;cite&gt;&lt;/cite&gt;</code>：分别定义长(一个段落)、短(一句话)引用内容、引用来源。<q>&lt;q&gt;</q>、<cite>&lt;cite&gt;</cite>，前两种标签含<code>cite</code>属性，用于指示引用来源(链接)</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>早期<code>html</code>标准存在一些无需加上关闭标签的元素，这在之后的<code>XHTML</code>标准(参考<code>XML</code>)中变为例如<code>&lt;br /&gt;</code>的自我封闭元素，而<code>HTML5</code>对<code>XHTML</code>兼容，所以<code>&lt;br&gt;、&lt;br/&gt;</code>都可以使用</p>
+<p>这些元素可以被分为<strong>区块元素</strong>与<strong>内联元素</strong>，前者与后者相比，会在内容开头加上换行符表示这是新的区块；为了更好地排版和优化框架，有如下标签：</p>
+<ul>
+<li><strong><code>&lt;div&gt;&lt;/div&gt;</code></strong>：定义一块元素，即将其中的所有内容归纳为一个区块来管理，可以配合样式表进行整块的修饰</li>
+<li><strong><code>&lt;span&gt;&lt;/span&gt;</code></strong>：定义一个内联元素，即将其中的所有内容归纳为一个内联元素来管理，样式由内容决定</li>
+</ul>
+<h3 id="输入标签">输入标签</h3>
+<p><code>html</code>用表单来收集用户输入的信息，需要注意的是，<code>html</code>文档和解释器并不会处理这些信息，而是发送给服务器处理，处理后服务器会发送一个<strong>新的<code>html</code>文档</strong>给浏览器</p>
+<ul>
+<li><strong><code>&lt;form&gt;&lt;/form&gt;</code></strong>：定义一个收集信息的区域，含有些许控件用于检测事件后传输收集到的表单，<code>action</code>属性指定<strong>目标地址</strong>，<code>method</code>属性指定传输的方法
+<ul>
+<li><code>&lt;fieldset&gt;&lt;/fieldset&gt;</code>：定义表单的边框
+<ul>
+<li><code>&lt;legend&gt;&lt;/legend&gt;</code>：定义边框的标题</li>
+</ul></li>
+<li><strong><code>&lt;input&gt;</code></strong>：定义一个<strong>输入控件</strong>，<code>type</code>属性指定其类型，<code>id</code>属性指定其关联的<code>label</code>元素，<code>name</code>属性指定这个表单项的名字，<code>value</code>指定这个选项的内容</li>
+<li><code>&lt;label&gt;&lt;/label&gt;</code>：定义一个表单项的标签，<code>for</code>属性指定这个表单项的<code>id</code></li>
+<li><code>&lt;select&gt;&lt;/select&gt;</code>：定义一个<strong>可下拉选项</strong>，<code>name</code>属性指定这个表单项的名字
+<ul>
+<li><code>&lt;option&gt;&lt;/option&gt;</code>：定义一个选项，<code>value</code>属性指定这个选项的内容，<code>selected</code>属性指定这个下拉选项的预先选好的选项(否则为第一个<code>option</code>元素)</li>
+</ul></li>
+<li><code>&lt;textarea&gt;&lt;/textarea&gt;</code>：定义一个用于输入多行文本的控件，<code>cols</code>和<code>rows</code>分别定义其宽高</li>
+</ul></li>
+</ul>
+<p><code>html5</code>提供的一些新控件如下：</p>
+<ul>
+<li><code>&lt;button&gt;&lt;/button&gt;</code>：定义一个按钮控件，其与<code>&lt;input type="button"&gt;</code>的区别为支持更丰富的内容(例如图像)。不要随意将<code>button</code>元素放在表单里，因为它相当于<code>&lt;input type="submit"&gt;</code>(提交按钮)</li>
+</ul>
+<h3 id="属性的值">属性的值</h3>
+<ul>
+<li><strong><code>id</code></strong>：每个<code>html</code>元素只有唯一的<code>id</code>，因此这个属性用于查找唯一值、设置锚点等</li>
+<li><strong><code>name</code></strong>：<code>name</code>属性的一个值可以复用到多个<code>html</code>元素上，且会将它们绑定为一个整体传输数据；例如，单选框的所有选项的<code>name</code>属性应当一致，才能达到单选的效果。<code>name</code>属性是输入控件必不可少的一项，提交数据时只会提交含有<code>name</code>选项的元素</li>
+<li><strong><code>value</code></strong>：指定该元素的内容，方便传输数据，有时可以改变；一些控件会显示它的值</li>
+<li><code>&lt;option&gt;</code>的属性位：有<strong><code>selected</code></strong>(默认选中)、<code>disabled</code>(无法选中)、<code>hidden</code>(不显示该选项)</li>
+<li><code>&lt;input&gt;</code>的<code>type</code>：其值有<code>text</code>(一般文本)、<code>submit</code>(提交按钮)、<code>radio</code>(单选框)、<code>checkbox</code>(复选框)、<code>reset</code>(重置按钮)、<code>button</code>(一般按钮)、<code>password</code>(密码文本，即隐藏文本)</li>
+<li><code>&lt;input&gt;</code>的<code>checked</code>位：置位表示选中</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/03/markdown-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-03</time>
+        <br>
+      Markdown: 简单易学的笔记语言
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/20/sql-std/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-20</time>
+        <br>
+      SQL: 基本用法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/09/c-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-09</time>
+        <br>
+      C: 基本语法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/11/java-bean-validation/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-11</time>
+        <br>
+      Java EE: Bean Validation
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/beginner/" rel="tag"># beginner</a>
+              <a href="/tags/HTML/" rel="tag"># HTML</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/07/15/cpp-effective-moderncpp-reaction/" rel="prev" title="Cpp: Effective Modern C++阅读笔记">
+                  <i class="fa fa-angle-left"></i> Cpp: Effective Modern C++阅读笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/08/04/deeplearning-beginner/" rel="next" title="机器学习: 基本概念">
+                  机器学习: 基本概念 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

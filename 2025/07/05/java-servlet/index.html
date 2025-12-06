@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Java EE: Servlet API">
+<meta property="og:url" content="https://ishi-o.github.io/2025/07/05/java-servlet/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-07-05T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.169Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Servlet">
+<meta property="article:tag" content="webapp">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/07/05/java-servlet/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/07/05/java-servlet/","path":"2025/07/05/java-servlet/","title":"Java EE: Servlet API"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Java EE: Servlet API | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#javax.servlet"><span class="nav-number">1.</span> <span class="nav-text">javax.servlet</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#java-ee%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.1.</span> <span class="nav-text">Java EE介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#servlet%E4%BE%9D%E8%B5%96"><span class="nav-number">1.2.</span> <span class="nav-text">servlet依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#servlet%E6%8E%A5%E5%8F%A3%E4%B8%8Ehttpservlet%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="nav-number">1.3.</span> <span class="nav-text">Servlet接口与HttpServlet实现类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#session%E4%B8%8Ecookie"><span class="nav-number">1.4.</span> <span class="nav-text">Session与Cookie</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#servletcontext"><span class="nav-number">1.5.</span> <span class="nav-text">ServletContext</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#servletconfig"><span class="nav-number">1.6.</span> <span class="nav-text">ServletConfig</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jsp%E6%8A%80%E6%9C%AF"><span class="nav-number">1.7.</span> <span class="nav-text">JSP技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#filter"><span class="nav-number">1.8.</span> <span class="nav-text">Filter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#listener"><span class="nav-number">1.9.</span> <span class="nav-text">Listener</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/08/java-tomcat/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-08</time>
+        <br>
+      Java EE: Tomcat
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/12/spring-mvc/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-12</time>
+        <br>
+      Spring framework: MVC
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/14/spring-validation/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-14</time>
+        <br>
+      Spring framework: Validation API
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/03/14/cpp-string/" rel="bookmark">
+        <time class="popular-posts-time">2024-03-14</time>
+        <br>
+      Cpp STL: std::string
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/07/05/java-servlet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Java EE: Servlet API | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java EE: Servlet API
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-07-05 00:00:00" itemprop="dateCreated datePublished" datetime="2025-07-05T00:00:00+00:00">2025-07-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Java/Java-EE/" itemprop="url" rel="index"><span itemprop="name">Java EE</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>2.2k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>8 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h2 id="javax.servlet"><code>javax.servlet</code></h2>
+<h3 id="java-ee介绍"><code>Java EE</code>介绍</h3>
+<ul>
+<li><p>在<code>Java EE 8</code>及之前，这个企业版是由<code>Oracle</code>开发的闭源项目，包括一系列大型或中小型的商业软件包，但由于<code>Spring</code>等框架的流行，<code>Java EE</code>开始力不从心</p>
+<p>于是在之后，<code>Oracle</code>将整个<code>Java EE</code>移交给<code>Eclipse</code>开源基金会维护，并强制要求<code>Eclipse</code>不能继续使用<code>Java EE</code>的项目名以及<code>javax</code>的命名空间，因此在<code>Eclipse</code>接手这个项目后迫不得已将<code>javax</code>改为<code>jakarta</code>，并将大版本号提升至<code>5</code>，表示不再向下兼容</p>
+<p>总而言之，<code>javax</code>命名空间适用于<code>4.0</code>及之前的企业版项目，<code>jakarta</code>适用于<code>5.0</code>及之后的企业版</p></li>
+<li><p><code>Servlet</code>源于<code>Server Applet</code>，即在服务端上运行的小程序</p>
+<p>在<code>SE</code>的网络编程中对于<code>Http</code>的处理只介绍了<code>HttpClient</code>，即客户端的编写，是因为服务端需要考虑的东西过多</p>
+<p>而<code>Servlet</code>项目致力于高效而安全地开发服务器</p></li>
+<li><p><code>Servlet</code>本质可用于任意通信协议，但主要用于<code>HTTP</code></p>
+<p>它内部封装了线程池，通过多线程的方式处理请求，因此比起此前的方案性能更高</p></li>
+<li><p><code>Servlet</code>需要部署到专用的<code>Web</code>服务器上，称作<code>Servlet</code>容器，例如<code>Apache</code>的<code>Tomcat</code>项目、<code>Eclipse</code>的<code>Jetty</code>项目</p>
+<p>因为<code>Servlet</code>本质是一个<code>Web</code>应用，是<code>Servlet</code>容器向开发者暴露的规范接口，<code>Servlet</code>容器是更复杂的应用</p></li>
+</ul>
+<h3 id="servlet依赖"><code>servlet</code>依赖</h3>
+<ul>
+<li><p>接口依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.servlet-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.0.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>jakarta.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jakarta.servlet-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>Servlet</code>接口的实现由<code>Web</code>容器提供，可以使用<code>provided</code>表示仅编译时需要</p></li>
+</ul>
+<h3
+id="servlet接口与httpservlet实现类"><code>Servlet</code>接口与<code>HttpServlet</code>实现类</h3>
+<ul>
+<li><p><code>Servlet</code>有三个重要方法：<code>init()</code>、<code>service()</code>、<code>destroy()</code>，由<code>Servlet</code>容器调用进行生命周期管理</p>
+<p><code>service()</code>含有两个参数<code>HttpServletRequest</code>与<code>HttpServletResponse</code></p></li>
+<li><p><code>HttpServlet</code>是最常用的实现类，有四个重要方法：<code>doGet()</code>、<code>doPost()</code>、<code>doPut()</code>、<code>doDelete()</code></p>
+<p>它们也均含有两个参数：<code>HttpServletRequest</code>与<code>HttpServletResponse</code></p>
+<p>重写它们来自定义处理逻辑</p>
+<p>一般不需要重写<code>service()</code>，由<code>HttpServlet</code>已经实现好了，他会自动解析请求方法并调用<code>doXxx()</code></p>
+<p>除非需要使用<code>HttpServlet</code>处理其它通信协议</p></li>
+<li><p><code>HttpServletRequest</code>接口表示一个<code>HTTP</code>请求报文，常用方法如下：</p>
+<ul>
+<li><p><code>setCharsetEncoding(String)</code>：设置解析的编码集</p></li>
+<li><p><code>String getParameter(String name)</code>：获取某个请求参数</p>
+<p>这里的参数已经消除了<code>GET</code>、<code>POST</code>等不同请求方法的差异，但对于<code>POST</code>方法而言，只会解析类型为<code>application/x-www-form-urlencoded</code>或<code>multipart/form-data</code>，其它类型如<code>application/json</code>需要通过输入流获取</p></li>
+<li><p><code>String getHeader(String name)</code>：获取某个请求头</p></li>
+<li><p><code>getRequestDispatcher(String location)</code>：获取一个请求分发器，指向内部的另一个<code>URI</code>，通常会继续调用<code>RequestDispatcher</code>接口的<code>forward(req, resp)</code>内部转发出去或<code>include(req, resp)</code>转发后回来</p></li>
+<li><p><code>getAttribute()</code>和<code>setAttribute()</code>：可以主动设置属性，方便请求处理链条中数据的传递</p></li>
+</ul></li>
+<li><p><code>HttpServletResponse</code>接口表示一个<code>HTTP</code>响应报文，常用方法如下：</p>
+<ul>
+<li><code>setCharsetEncoding(String)</code>：设置解析的编码集</li>
+<li><code>setContentType(String type)</code>：设置响应体的类型</li>
+<li><code>PrintWriter getWriter()</code>：获取绑定的字符输出流</li>
+<li><code>ServletOutputStream getOutputStream()</code>：获取绑定的字节输出流</li>
+<li><code>setStatus(int)</code>：设置状态码</li>
+<li><code>setHeader(String name, String value)</code>：设置响应头</li>
+<li><strong><code>sendRedirect(String)</code></strong>：<code>302</code>临时重定向到另一个<code>URI</code></li>
+</ul></li>
+<li><p>一个服务器的所有<code>Servlet</code>实现类只会有一个实例，因此遇到多个请求时会用同一个实例来处理</p>
+<p>因此实现类的实例属性的所有访问需要保证线程安全</p></li>
+</ul>
+<h3 id="session与cookie"><code>Session</code>与<code>Cookie</code></h3>
+<ul>
+<li><p><code>Session</code>用于存储客户端的某种状态，能保证每个<code>Session</code>唯一，内部类似于一个<code>Map&lt;String, Object&gt;</code></p></li>
+<li><p><code>HttpServletRequest</code>对象的<code>getSession()</code>方法会(若不存在)创建并返回一个<code>HttpSession</code>对象，(若存在)直接返回<code>HttpSession</code>对象</p>
+<p><code>getSession(false)</code>则不会创建，而只是返回已有的对象，若无则返回<code>null</code></p></li>
+<li><p><code>HttpSession</code>实例的常用方法为<code>setAttribute(String, Object)</code>和<code>Object getAttribute(Stirng)</code>以及<code>removeAttribute(String)</code></p>
+<p>分别为设置、获取、删除其存储的对象数据</p></li>
+<li><p><code>Session</code>通常是通过<code>Cookie</code>技术实现的，它会让客户端在发送请求时同时发送一个<code>Session</code></p>
+<p>自定义<code>Cookie</code>需直接通过构造方法<code>new Cookie(String name, String value)</code>创建</p>
+<p><code>Cookie</code>可设置最大时间<code>setMaxAge(seconds)</code></p>
+<p>通过<code>HttpServletResponse</code>实例的<code>addCookie(Cookie)</code>方法传递给客户端</p>
+<p>通过<code>HttpServletRequest</code>实例的<code>getCookies()</code>获取<code>Cookie[]</code>数组</p>
+<p>通过<code>Cookie</code>实例的<code>getName()</code>和<code>getValue()</code>获取键值对</p></li>
+</ul>
+<h3 id="servletcontext"><code>ServletContext</code></h3>
+<ul>
+<li><code>ServletContext</code>是<code>Web</code>应用上下文的抽象，可以用它获取整个<code>Web</code>应用的信息，最常用的方法如下：</li>
+<li>获取<code>Web</code>应用的属性：<code>Object getAttribute(String)</code></li>
+<li>设置<code>Web</code>应用的属性：<code>void setAttribute(String, Object)</code></li>
+<li>移除<code>Web</code>应用的属性：<code>void removeAttribute(String)</code></li>
+<li>记录日志：<code>log(String)</code></li>
+<li>使用上下文需注意，因为处于多线程环境，虽然<code>ServletContext</code>本身是线程安全的，但传入的属性值需要自行确保线程安全</li>
+</ul>
+<h3 id="servletconfig"><code>ServletConfig</code></h3>
+<ul>
+<li><code>ServletConfig</code>是某个<code>Servlet</code>服务的配置的抽象，可以用它获取某个<code>Servlet</code>服务独有的配置项，最常用的方法如下：</li>
+<li>获取初始参数：<code>String getInitParameter()</code>，这个初始参数可以用<code>XML</code>或注解的形式设置，也可由内嵌<code>Tomcat</code>的<code>Wrapper</code>配置</li>
+</ul>
+<h3 id="jsp技术"><code>JSP</code>技术</h3>
+<ul>
+<li><p><code>JSP</code>技术比较落后，了解即可</p></li>
+<li><p>由于<code>Servlet</code>本质是内嵌<code>HTML</code>的<code>Java</code>微服务程序，大量的<code>HTML</code>文本由一行行的输出流打印比较麻烦，因此<code>JSP</code>技术出现</p>
+<p><code>JSP</code>本质也是一个<code>Servlet</code>应用，由<code>Web</code>服务器在启动时自动将其编译成<code>Servlet</code>程序并在服务器上运行</p>
+<p><code>JSP</code>作为静态资源可由<code>Web</code>容器自动部署，但也可以自定义部署<code>URL</code>路径</p></li>
+<li><p><code>JSP</code>语法：</p>
+<ul>
+<li><code>Jsp</code>脚本：<code>&lt;% Java代码 %&gt;</code>，只执行代码，没有返回值</li>
+<li><code>Jsp</code>表达式：<code>&lt;%= Expr %&gt;</code>，返回表达式的值</li>
+<li><code>Jsp</code>声明：<code>&lt;%! 成员变量、方法 %&gt;</code></li>
+<li><code>Jsp</code>指令：<code>&lt;%@ 指令 %&gt;</code></li>
+<li><code>Jsp</code>动作：<code>&lt;jsp:action /&gt;</code></li>
+<li><code>Jsp</code>注释：<code>&lt;%-- 注释 --%&gt;</code></li>
+<li><code>EL</code>表达式：<code>$ { expr }</code></li>
+</ul></li>
+<li><p><code>JSP</code>隐含对象：在<code>Jsp</code>脚本中不用声明就可使用的对象，但不能重复定义</p>
+<ul>
+<li><code>HttpServletRequest request</code>与<code>HttpServletResponse response</code>：因为<code>JSP</code>本身就是一个<code>Servlet</code>，自然有<code>request</code>和<code>response</code>参数</li>
+<li><code>HttpSession session</code>：等价于<code>request.getSession()</code></li>
+<li><code>ServletConfig config</code>：<code>JSP</code>这个<code>Servlet</code>的配置</li>
+<li><code>JspWriter out</code>：不常用</li>
+<li><code>PageContext pageContext</code>：是整个页面上下文的抽象</li>
+<li><code>page</code>：等价于<code>this</code>，是这个<code>Jsp</code>翻译得到的<code>Servlet</code>程序实例，因为<code>this</code>是可省略的所以<code>page</code>不会被直接使用</li>
+<li><code>Exception exception</code>：用于异常处理</li>
+</ul></li>
+<li><p><code>JSP</code>指令：</p>
+<ul>
+<li>声明页面的属性：<code>&lt;%@ page import="java.util.*, java.net.*" %&gt;</code></li>
+<li>声明页面包含其它页面：<code>&lt;%@ include other.jsp %&gt;</code></li>
+<li>声明<code>Tag</code>的来源以及前缀：<code>&lt;%@ taglib uri="" prefix="" %&gt;</code></li>
+</ul></li>
+<li><p><code>EL</code>表达式的隐含对象</p>
+<ul>
+<li><code>PageContext pageContext</code>：除它之外，以下所有<strong>都是<code>Map</code></strong></li>
+<li><code>param</code>：对应<code>request</code>的参数表</li>
+<li><code>paramValues</code>：对应<code>request</code>的参数表，只不过值是数组用于存储含多个值的参数</li>
+<li><code>header</code>：对应<code>request</code>的请求头表</li>
+<li><code>headerValues</code>：对应<code>request</code>的请求头表，只不过值是数组用于存储含多个值的请求头</li>
+<li><code>cookie</code>：对应<code>cookie</code>表</li>
+<li><code>initParam</code>：对应<code>ServletConfig</code>的初始参数表</li>
+<li><code>pageScope</code>：页面作用域，可通过它访问所有在页面内定义的标识符</li>
+<li><code>requestScope</code>：请求作用域，可通过它访问所有在<code>request</code>中定义的<code>attribute</code></li>
+<li><code>sessionScope</code>：会话作用域，可通过它访问所有在<code>session</code>中定义的<code>attribute</code></li>
+<li><code>applicationScope</code>：应用作用域</li>
+<li><code>EL</code>表达式可以不指定隐含对象地输出字段，此时会从小到大(<code>pageScope-&gt;requestScope-&gt;sessionScope-&gt;applicationScope</code>)地查找该字段</li>
+</ul></li>
+<li><p><code>EL</code>表达式的关键字：<code>not、le、lt、ge、gt、eq、ne、div</code>等</p></li>
+<li><p><code>Jsp</code>动作：</p>
+<ul>
+<li><p><code>&lt;jsp:useBean id="a" class="com.Clazz" scope="page|request|session|application"/&gt;</code></p>
+<p>创建一个标识为<code>a</code>、类型为<code>com.Clazz</code>、所属作用域为所有作用域的对象</p></li>
+<li><p><code>&lt;jsp:getProperty name="a" property="age"/&gt;</code></p>
+<p>获取标识为<code>a</code>的对象的<code>age</code>属性</p></li>
+<li><p><code>&lt;jsp:setProperty name="a" property="age" value="value"/&gt;</code></p>
+<p>设置标识为<code>a</code>的对象的<code>age</code>属性为字面量<code>"value"</code></p></li>
+<li><p><code>&lt;jsp:setProperty name="a" property="age" param="age"/&gt;</code></p>
+<p>设置标识为<code>a</code>的对象的<code>age</code>属性为引用变量<code>age</code>的值</p></li>
+</ul></li>
+</ul>
+<h3 id="filter"><code>Filter</code></h3>
+<ul>
+<li><code>Filter</code>接口作用于收到请求、初始化响应之后，<code>Servlet</code>服务处理请求之前，可用于身份校验、初始化配置等</li>
+<li>实现<code>Filter</code>接口需要实现<code>doFilter(ServletRequest, ServletResponse, FilterChain)</code>方法，如果需要拦截则直接<code>return</code>，如果放行则需要调用<code>FilterChain</code>实例的<code>doFilter(ServletRequest, ServletResponse)</code>方法</li>
+</ul>
+<h3 id="listener"><code>Listener</code></h3>
+<ul>
+<li><code>Listener</code>采用观察者模式，当某种实例创建、更改、销毁时，自定义的<code>Listener</code>组件会随之调用对应的方法</li>
+<li><code>Listener</code>本身并不存在，只存在一系列的<code>XxxListener</code>接口</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/08/java-tomcat/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-08</time>
+        <br>
+      Java EE: Tomcat
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/12/spring-mvc/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-12</time>
+        <br>
+      Spring framework: MVC
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/14/spring-validation/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-14</time>
+        <br>
+      Spring framework: Validation API
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/03/14/cpp-string/" rel="bookmark">
+        <time class="popular-posts-time">2024-03-14</time>
+        <br>
+      Cpp STL: std::string
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/Servlet/" rel="tag"># Servlet</a>
+              <a href="/tags/webapp/" rel="tag"># webapp</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/07/04/spring-core-resource/" rel="prev" title="Spring framework: Resource API">
+                  <i class="fa fa-angle-left"></i> Spring framework: Resource API
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/06/spring-data-jpa/" rel="next" title="Spring Data: JPA">
+                  Spring Data: JPA <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

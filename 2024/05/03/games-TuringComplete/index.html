@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Turing Complete: 图灵完备，一款数电小游戏">
+<meta property="og:url" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.1.NAND.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.2.NOT.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.3.AND.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.4.OR.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.5.NOR.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.6.XOR.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.7.XNOR.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.8.NOTp.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.9.NORp.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.11.ORp.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.10.ANDp.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.12.XORp.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.14.%E5%8D%8A%E5%8A%A0%E5%99%A8.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.15.%E5%85%A8%E5%8A%A0%E5%99%A8.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.16.%E9%AB%98%E9%80%9F%E5%8A%A0%E6%B3%95%E5%99%A8.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.19.%E6%95%B0%E6%8D%AE%E9%80%89%E6%8B%A9%E5%99%A8.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.17.%E8%AE%A1%E6%97%B6%E5%99%A8.png">
+<meta property="og:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.18.%E4%B8%89%E4%BD%8D%E8%A7%A3%E7%A0%81%E5%99%A8.png">
+<meta property="article:published_time" content="2024-05-03T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.168Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="Digital Circuit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ishi-o.github.io/2024/05/03/games-TuringComplete/1.1.NAND.png">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/05/03/games-TuringComplete/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/05/03/games-TuringComplete/","path":"2024/05/03/games-TuringComplete/","title":"Turing Complete: 图灵完备，一款数电小游戏"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Turing Complete: 图灵完备，一款数电小游戏 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#overtrue"><span class="nav-number">1.</span> <span class="nav-text">OVERTRUE</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E9%80%BB%E8%BE%91%E7%94%B5%E8%B7%AF"><span class="nav-number">1.1.</span> <span class="nav-text">基础逻辑电路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E9%80%BB%E8%BE%91%E9%97%A8"><span class="nav-number">1.1.1.</span> <span class="nav-text">基础逻辑门</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E9%97%A8%E6%89%A9%E5%B1%95"><span class="nav-number">1.1.2.</span> <span class="nav-text">逻辑门扩展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83"><span class="nav-number">1.1.3.</span> <span class="nav-text">其它</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97"><span class="nav-number">1.2.</span> <span class="nav-text">算术运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%BF%A1%E5%8F%B7%E8%AE%A1%E6%95%B0%E4%B8%8E%E4%BA%8C%E8%BF%9B%E5%88%B6%E8%A1%A5%E7%A0%81"><span class="nav-number">1.2.1.</span> <span class="nav-text">二进制信号计数与二进制补码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8A%E5%8A%A0%E5%99%A8%E4%B8%8E%E5%85%A8%E5%8A%A0%E5%99%A8%E4%B8%8E%E5%85%AB%E4%BD%8D%E5%8A%A0%E6%B3%95%E5%99%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">半加器与全加器与八位加法器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%80%89%E6%8B%A9"><span class="nav-number">1.2.3.</span> <span class="nav-text">数据选择</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8"><span class="nav-number">1.3.</span> <span class="nav-text">数据存储</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%BD%8D%E5%AD%98%E5%82%A8%E5%99%A8"><span class="nav-number">1.3.1.</span> <span class="nav-text">一位存储器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.3.2.</span> <span class="nav-text">寄存器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E6%97%B6%E5%99%A8"><span class="nav-number">1.3.3.</span> <span class="nav-text">计时器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E7%A0%81%E5%99%A8"><span class="nav-number">1.3.4.</span> <span class="nav-text">解码器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95"><span class="nav-number">1.5.</span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E9%80%BB%E8%BE%91%E9%97%A8-1"><span class="nav-number">1.5.1.</span> <span class="nav-text">基础逻辑门</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%95%B0%E8%BF%90%E7%AE%97"><span class="nav-number">1.5.2.</span> <span class="nav-text">算数运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%B6%E5%BA%8F%E9%80%BB%E8%BE%91%E7%94%B5%E8%B7%AF%E5%9F%BA%E6%9C%AC%E5%85%83%E4%BB%B6"><span class="nav-number">1.5.3.</span> <span class="nav-text">时序逻辑电路基本元件</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/01/concreteMath-special-coefficient/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-01</time>
+        <br>
+      具体数学: 特殊系数
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/11/linearAlgebra-matrix/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-11</time>
+        <br>
+      线性代数: 矩阵
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/14/linearAlgebra-determinant/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-14</time>
+        <br>
+      线性代数: 行列式
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/20/linearAlgebra-analytic-geometry/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-20</time>
+        <br>
+      向量与解析几何入门
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/05/03/games-TuringComplete/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Turing Complete: 图灵完备，一款数电小游戏 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Turing Complete: 图灵完备，一款数电小游戏
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-05-03 00:00:00" itemprop="dateCreated datePublished" datetime="2024-05-03T00:00:00+00:00">2024-05-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Games/" itemprop="url" rel="index"><span itemprop="name">Games</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>7 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="overtrue"><code>OVERTRUE</code></h1>
+<p><code>OVERTRUE</code>是最简单的图灵完备的处理器，即能够读取指令、分情况进行计算或跳转或转移数据，接下来从基础逻辑门开始搭建该架构</p>
+<h2 id="基础逻辑电路">基础逻辑电路</h2>
+<h3 id="基础逻辑门">基础逻辑门</h3>
+<p><strong><code>NAND</code>与非门</strong>是最为基础的逻辑门，根据德·摩根定理，能够用它和若干个<strong><code>NOT</code>非门</strong>搭建其它三个基础门</p>
+<ul>
+<li><p>它的真值表为<span
+class="math inline">$\begin{matrix}0&amp;1&amp;0&amp;1\\0&amp;0&amp;1&amp;1\\1&amp;1&amp;1&amp;0\end{matrix}$</span>，即<strong>非<span
+class="math inline">$\begin{matrix}1\\1\end{matrix}$</span>得<span
+class="math inline">1</span>，否则得<span
+class="math inline">0</span></strong>，画法为<img src="1.1.NAND.png" style="zoom: 15%;" /></p></li>
+<li><p>通过它可以制造<code>NOT</code>，真值表为<span
+class="math inline">$\begin{matrix}0&amp;1\\1&amp;0\end{matrix}$</span>，画法为<img src="1.2.NOT.png" style="zoom:15%;" /></p></li>
+<li><p>对<code>NAND</code>门的<strong>输出取反</strong>，得到<strong><code>AND</code>与门</strong>，逻辑为<strong><span
+class="math inline">$\begin{matrix}1\\1\end{matrix}$</span>得<span
+class="math inline">1</span>，否则得<span
+class="math inline">0</span></strong>，真值表为<code>NAND</code>输出按位取反，画法为<img src="1.3.AND.png" style="zoom:15%;" /></p></li>
+<li><p>对<code>NAND</code>门的<strong>输入取反</strong>，得到<strong><code>OR</code>或门</strong>，逻辑为<strong>非<span
+class="math inline">$\begin{matrix}0\\0\end{matrix}$</span>得<span
+class="math inline">1</span>，否则得<span
+class="math inline">0</span></strong>，真值表为<code>NAND</code>输出左右颠倒，画法为<img src="1.4.OR.png" style="zoom:15%;" /></p></li>
+<li><p>对<code>OR</code>门的输出取反(或对<code>AND</code>的输入取反)，得到<strong><code>NOR</code>或非门</strong>，逻辑为<strong><span
+class="math inline">$\begin{matrix}0\\0\end{matrix}$</span>得<span
+class="math inline">1</span>，否则得<span
+class="math inline">0</span></strong>，真值表为<code>OR</code>输出按位取反，画法为<img src="1.5.NOR.png" style="zoom:15%;" /></p></li>
+</ul>
+<h3 id="逻辑门扩展">逻辑门扩展</h3>
+<p>各个基础逻辑门互相组合，能得到所有<span
+class="math inline">2<sup>4</sup> = 16</span>种真值表，在这里扩展<strong><code>XOR</code>异或门</strong>与<strong><code>XNOR</code>同或门</strong>：</p>
+<ul>
+<li>对<code>OR</code>门与<code>NAND</code>门的输出<code>AND</code>，得到<code>XOR</code>，逻辑为<strong>输入不同得<span
+class="math inline">1</span>，否则得<span
+class="math inline">0</span></strong>，真值表为<span
+class="math inline">$\begin{matrix}0&amp;1&amp;0&amp;1\\0&amp;0&amp;1&amp;1\\0&amp;1&amp;1&amp;0\end{matrix}$</span>，画法为<img src="1.6.XOR.png" alt="1.6.XOR" style="zoom:15%;" /></li>
+<li>对<code>XOR</code>门的输出取反(或对<code>NOR</code>门与<code>AND</code>门的输出<code>OR</code>)，得到<code>XNOR</code>，逻辑为<strong>输入相同得<span
+class="math inline">1</span>，否则得<span
+class="math inline">0</span></strong>，真值表为<code>XOR</code>输出按位取反，画法为<img src="1.7.XNOR.png" style="zoom:15%;" /></li>
+</ul>
+<h3 id="其它">其它</h3>
+<p>通过<code>OR</code>与<code>AND</code>，可实现始终输出高/低电平的电路<strong><code>ON</code></strong>与<strong><code>OFF</code></strong></p>
+<p>通过两个相同类型的基础逻辑门组合，可得到<strong>三路输入</strong>的对应逻辑门</p>
+<p>通过三个<code>XOR</code>门组合，可实现在<strong>四路输入奇数个信号时，输出<span
+class="math inline">1</span></strong></p>
+<h2 id="算术运算">算术运算</h2>
+<h3 id="二进制信号计数与二进制补码">二进制信号计数与二进制补码</h3>
+<ul>
+<li>通过三个<code>XOR</code>门组合，使得<strong>当四路输入奇数个信号时，接入代表1的二进制输出上</strong></li>
+<li>枚举四路输入，使得<strong>当四路输入<span
+class="math inline">2</span>或<span
+class="math inline">3</span>个信号时，接入代表2的二进制输出上</strong></li>
+<li>通过三个<code>AND</code>门组合，使得<strong>当四路输入全为<span
+class="math inline">1</span>时，接入代表<span
+class="math inline">4</span>的二进制输出上</strong></li>
+</ul>
+<p>总而言之，通过繁琐的排列组合，实现接受<span
+class="math inline">255</span>路输入后，输出数值上最多表示<span
+class="math inline">255</span>的单字节八位信号</p>
+<p>为了方便，依然将这个信号用一点表示，使用<strong>分线器</strong>解散这个点，使用<strong>集线器</strong>构建这个点</p>
+<p>二进制补码：将一个字节的最后一位视为<span
+class="math inline"> − 128</span>后，即有<strong>按位取反加<span
+class="math inline">1</span>后变为其相反数</strong>的特性</p>
+<h3 id="半加器与全加器与八位加法器">半加器与全加器与八位加法器</h3>
+<p>半加器指对<strong>两路</strong><span
+class="math inline">1</span>位输入求和，并用两路输出<strong>本位和</strong>与<strong>进位</strong>：</p>
+<ul>
+<li>一个<code>XOR</code>门得到正确的本位和输出，即在<span
+class="math inline">1 + 0 = 1</span>或<span
+class="math inline">0 + 1 = 1</span>时输出<span
+class="math inline">1</span></li>
+<li>一个<code>AND</code>门得到正确的进位输出，即在<span
+class="math inline">1 + 1 = 10</span>时进位</li>
+</ul>
+<p>全加器指对<strong>三路</strong><span
+class="math inline">1</span>位输入求和，并用两路输出<strong>本位和</strong>与<strong>进位</strong>：</p>
+<ul>
+<li>通过两个<code>XOR</code>门，当输入信号为奇数个时在本位和处输出<span
+class="math inline">1</span></li>
+<li>对两路输入通过半加器，当进位为<span
+class="math inline">1</span>时，或本位和为<span
+class="math inline">1</span>且第三路输入为<span
+class="math inline">1</span>时，在全加器进位处输出<span
+class="math inline">1</span></li>
+</ul>
+<p>八位加法器接受一个一位输入用于继承上一个八位加法器的进位；接受两个字节输入表示两个参数；输出一个一位信号表示三个数的进位；输出一个字节信号表示除进位外的和：</p>
+<ul>
+<li>通过八个全加器与一个集线器即可得到八位加法器</li>
+<li>附录中展现了高速八位加法器，能达到<span
+class="math inline">61</span>逻辑门、<span
+class="math inline">20</span>延迟</li>
+</ul>
+<p>通过对第二个输入取相反数，实现减法</p>
+<h3 id="数据选择">数据选择</h3>
+<p>根据一个<span
+class="math inline">1</span>位信号输入来选择两路输入是很有价值的，所以需要<strong>开关</strong>：</p>
+<ul>
+<li>当开关关闭时，既不输出高电平也不输出低电平，处于<strong>高阻态</strong></li>
+<li>两个开关即可实现数据选择，开关保证了在一路输出时不会受影响另一路影响</li>
+<li>除了选择输入外，也可以用开关来选择输出端</li>
+</ul>
+<h2 id="数据存储">数据存储</h2>
+<h3 id="一位存储器">一位存储器</h3>
+<p>通过<strong>延迟线</strong>，能够将该刻的信号延迟到下一刻输出，实现存储器功能：</p>
+<ul>
+<li>接受一个代表写入开关的输入和代表待写入数据的输入，且总是输出当前存储的数据</li>
+<li>当表示是否写入的输入为<span
+class="math inline">0</span>时，选择延迟线的输出，否则选择待写入数据</li>
+<li>将这个信号传递给延迟线后进入下一刻，则存储器能通过读取输入判断是否要覆写数据，并在覆写前将旧数据输出</li>
+</ul>
+<h3 id="寄存器">寄存器</h3>
+<p>通过八个<span
+class="math inline">1</span>位存储器，实现<strong>寄存器</strong>，它额外接受一个代表读取的输入并拥有一个额外的输出端，只有当其为<span
+class="math inline">1</span>时，将该刻数据输出到这个输出端上</p>
+<h3 id="计时器">计时器</h3>
+<p>想让一个处理器逐个读取指令，需要一个计时器：</p>
+<ul>
+<li>本身处于计时模式，每过一刻钟自增固定数值；接受一个代表启动擦写的输入和一个代表待写入数值的输入；始终输出当前时刻的值</li>
+<li>通过<code>ON</code>与数据选择器即可实现步进为<span
+class="math inline">1</span>的计时器</li>
+</ul>
+<h3 id="解码器">解码器</h3>
+<p>所谓解码器，即将所有输入的所有组合输出，例如三位解码器有八位输出，这使得处理器能够处理不同的指令</p>
+<p>通过解码器、开关与数据选择器，能够实现根据输入来选择不同运算或直接输出数据</p>
+<h2 id="总结">总结</h2>
+<p><code>OVERTRUE</code>架构将一条指令看作<strong>复制、运算、条件判断、立即数</strong>的任意一种，通过解码能够简单地实现读取地址、区分运算等功能，在本架构中通过两位信号四种可能来区分它们，接下来介绍如何实现该架构</p>
+<p>在<code>OVERTRUE</code>架构中，能够操作的条件种类较少，主要是与<span
+class="math inline">0</span>对比，或总是跳转，如果满足条件，将跳转到某一寄存器所指的地址</p>
+<p>这个架构虽然具备自行处理指令的功能，但指令之间是隔离的，即运算功能使用固定的两个寄存器，跳转功能只判断一个固定的寄存器与一个固定的数值，立即数只能传入一个固定的寄存器，都需要通过复制来处理数据，对编写程序是极不友好的，而在之后的<code>LEG</code>框架能够有效提升性能</p>
+<h2 id="附录">附录</h2>
+<h3 id="基础逻辑门-1">基础逻辑门</h3>
+<p><code>NOT</code></p>
+<p><img src="1.8.NOTp.png" alt="1.8.NOTp" style="zoom:25%;" /></p>
+<p><code>NOR</code></p>
+<p><img src="1.9.NORp.png" alt="1.9.NORp" style="zoom:25%;" /></p>
+<p><code>OR</code></p>
+<p><img src="1.11.ORp.png" alt="1.11.ORp" style="zoom:25%;" /></p>
+<p><code>AND</code></p>
+<p><img src="1.10.ANDp.png" alt="1.10.ANDp" style="zoom:25%;" /></p>
+<p><code>XOR</code></p>
+<p><img src="1.12.XORp.png" alt="1.12.XORp" style="zoom:25%;" /></p>
+<h3 id="算数运算">算数运算</h3>
+<p>一位半加器</p>
+<p><img src="1.14.半加器.png" alt="1.14.半加器" style="zoom: 33%;" /></p>
+<p>一位全加器</p>
+<p><img src="1.15.全加器.png" alt="1.15.全加器" style="zoom: 33%;" /></p>
+<p>高速八位加法器</p>
+<figure>
+<img src="1.16.高速加法器.png" alt="1.16.高速加法器" />
+<figcaption aria-hidden="true">1.16.高速加法器</figcaption>
+</figure>
+<h3 id="时序逻辑电路基本元件">时序逻辑电路基本元件</h3>
+<p>数据选择器</p>
+<p><img src="1.19.数据选择器.png" alt="1.19.数据选择器" style="zoom:50%;" /></p>
+<p>计时器</p>
+<p><img src="1.17.计时器.png" alt="1.17.计时器" style="zoom:50%;" /></p>
+<p>三位解码器</p>
+<p><img src="1.18.三位解码器.png" alt="1.18.三位解码器" style="zoom:50%;" /></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/01/concreteMath-special-coefficient/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-01</time>
+        <br>
+      具体数学: 特殊系数
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/11/linearAlgebra-matrix/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-11</time>
+        <br>
+      线性代数: 矩阵
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/14/linearAlgebra-determinant/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-14</time>
+        <br>
+      线性代数: 行列式
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/20/linearAlgebra-analytic-geometry/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-20</time>
+        <br>
+      向量与解析几何入门
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/Digital-Circuit/" rel="tag"># Digital Circuit</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/29/discreteMath-graph/" rel="prev" title="离散数学: 图论基础">
+                  <i class="fa fa-angle-left"></i> 离散数学: 图论基础
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/05/04/analog-circuit/" rel="next" title="模拟电路入门">
+                  模拟电路入门 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="MATLAB: 基本语法">
+<meta property="og:url" content="https://ishi-o.github.io/2024/11/14/matlab-beginner/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ishi-o.github.io/2024/11/14/matlab-beginner/1_space.png">
+<meta property="article:published_time" content="2024-11-14T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.169Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="MATLAB">
+<meta property="article:tag" content="beginner">
+<meta property="article:tag" content="math">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ishi-o.github.io/2024/11/14/matlab-beginner/1_space.png">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/11/14/matlab-beginner/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/11/14/matlab-beginner/","path":"2024/11/14/matlab-beginner/","title":"MATLAB: 基本语法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MATLAB: 基本语法 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#matlab%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E5%8F%8A%E7%9F%A9%E9%98%B5%E7%AE%97%E6%9C%AF%E6%93%8D%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">MATLAB基本语法及矩阵算术操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">基本语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">1.1.2.</span> <span class="nav-text">运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E5%8F%98%E9%87%8F%E5%B8%B8%E9%87%8F"><span class="nav-number">1.1.3.</span> <span class="nav-text">特殊变量、常量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5"><span class="nav-number">1.1.4.</span> <span class="nav-text">条件语句</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%88%96%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">常用命令或函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%84%9A%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%9B%B8%E5%85%B3"><span class="nav-number">1.2.1.</span> <span class="nav-text">脚本数据相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%9B%B8%E5%85%B3"><span class="nav-number">1.2.2.</span> <span class="nav-text">输入输出相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%91%E9%87%8F%E5%8F%8A%E7%9F%A9%E9%98%B5"><span class="nav-number">1.2.3.</span> <span class="nav-text">向量及矩阵</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/05/probability-rdnvar/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-05</time>
+        <br>
+      概率论与数理统计: 常见的随机变量汇总
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/01/concreteMath-special-coefficient/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-01</time>
+        <br>
+      具体数学: 特殊系数
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/11/linearAlgebra-matrix/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-11</time>
+        <br>
+      线性代数: 矩阵
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/14/linearAlgebra-determinant/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-14</time>
+        <br>
+      线性代数: 行列式
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/11/14/matlab-beginner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MATLAB: 基本语法 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MATLAB: 基本语法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-11-14 00:00:00" itemprop="dateCreated datePublished" datetime="2024-11-14T00:00:00+00:00">2024-11-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/MATLAB/" itemprop="url" rel="index"><span itemprop="name">MATLAB</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>6 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1
+id="matlab基本语法及矩阵算术操作"><code>MATLAB</code>基本语法及矩阵算术操作</h1>
+<h2 id="基本语法">基本语法</h2>
+<h3 id="数据类型">数据类型</h3>
+<ul>
+<li>创建变量无需显式声明数据类型，会自动隐式推断</li>
+<li>数据类型分为：
+<ul>
+<li>数值：整型、长整型、单双精度、复数等</li>
+<li>数组：索引<strong>从<code>1</code>开始</strong>
+<ul>
+<li>结构体数组：类似<code>C</code>的结构体</li>
+<li><strong>向量与矩阵</strong>：信息的基本单位，用于<strong>存储数值数据</strong></li>
+<li>字符串：实际上是字符型向量</li>
+<li><strong>元胞数组(<code>cell array</code>)</strong>：每个元胞<strong>允许存储不同类型、不同维度</strong>的数据，例如变量、数值、字符串等</li>
+</ul></li>
+<li>自定义类</li>
+<li>其它，如布尔、字符、函数指针、内置类等</li>
+</ul></li>
+<li>约定：数组将泛指所有数组类型，涉及区分矩阵、元胞数组和结构体数组时不使用数组称呼</li>
+</ul>
+<h3 id="运算符">运算符</h3>
+<ul>
+<li>加减乘幂(<code>+-*^</code>)：矩阵的加减乘幂</li>
+<li>左除(<code>\</code>)、右除(<code>/</code>)：矩阵的除法(或矩阵方程的求解)
+<ul>
+<li><code>X\Y</code>返回<span
+class="math inline"><em>X</em><sup>−1</sup><em>Y</em></span>，<code>X/Y</code>返回<span
+class="math inline"><em>X</em><em>Y</em><sup>−1</sup></span></li>
+<li>即左除为左操作数的逆<strong>左乘</strong>右操作数，右除为右操作数的逆<strong>右乘</strong>左操作数</li>
+<li>单个数被视作一行一列的矩阵，一定可逆且逆等于其倒数，数的右除即符合习惯的数值除法</li>
+</ul></li>
+<li>前接点运算符(<code>.*  .^  .\  ./</code>)：<strong>对同型矩阵按元素</strong>求乘、幂、左除、右除</li>
+<li>方括号(<code>[]</code>)：创建向量或矩阵</li>
+<li>百分号(<code>%</code>)：后接注释</li>
+<li>关系运算：
+<ul>
+<li>大多运算符与<code>C</code>相同，其中不等号为<code>~=</code>，均为<strong>对同型矩阵按元素</strong>比较，<strong>返回布尔矩阵</strong></li>
+<li><code>isequal</code>：对整体比较，<strong>返回布尔值</strong>，且认为<code>NaN != NaN</code></li>
+<li><code>isequaln</code>：认为<code>NaN == NaN</code></li>
+</ul></li>
+<li>逻辑运算：与<code>C</code>不同，单个<code>&amp;、|</code>表示逻辑与和逻辑或</li>
+<li>按位运算：位运算都通过函数进行，函数名通常为<strong><code>bit + 位运算</code></strong>的形式</li>
+</ul>
+<h3 id="特殊变量常量">特殊变量、常量</h3>
+<ul>
+<li>对大小写敏感</li>
+<li><code>ans</code>：最近计算过的表达式的结果</li>
+<li><code>Inf</code>：数值量，无穷</li>
+<li><code>NaN</code>：数值量，<code>not a num</code></li>
+<li><code>pi</code>：数值量，<span
+class="math inline"><em>π</em></span></li>
+<li><code>i、j</code>：数值量，<span
+class="math inline">$\sqrt{-1}$</span></li>
+</ul>
+<h3 id="条件语句">条件语句</h3>
+<ul>
+<li>条件表达式将隐式调用<code>logical()</code>，不需要用括号包围条件表达式</li>
+<li><code>if、elseif、else</code></li>
+<li><code>switch、case、otherwise</code>：<code>otherwise</code>对应<code>default</code>，在匹配到唯一的<code>case</code>并执行对应语句块后，立刻跳出<code>switch</code>块</li>
+<li><code>for、while、continue、break</code>：<code>break</code>专用于循环语句，不属于<code>switch</code>语句</li>
+<li><code>end</code>：所有<code>if、for、while</code>等条件语句都应匹配一个<code>end</code>，用于终止块
+<ul>
+<li><code>end</code>在数组变量的括号内时，<strong>表示数组结尾的索引</strong></li>
+<li>为增加可读性，函数一般也添加<code>end</code>表示终止</li>
+</ul></li>
+</ul>
+<h2 id="常用命令或函数">常用命令或函数</h2>
+<p><code>MATLAB</code>是脚本语言，所有脚本语句都可在命令行运行，语句分为表达式和命令，常用命令如下：</p>
+<h3 id="脚本数据相关">脚本数据相关</h3>
+<ul>
+<li><code>who</code>：返回多行一列的<strong>元胞数组</strong>，储存所有定义过的变量，单独使用时作为一条命令而不是表达式执行</li>
+<li><code>whos</code>：返回<strong>结构体数组</strong>，存储更多信息如长度、所占字节、类型等，单独使用时作为一条命令执行</li>
+<li><code>format</code>：<strong>改变精度</strong>，默认<code>format</code>为<code>short</code>，默认精度为<code>4</code>位小数，只能作为命令
+<ul>
+<li><code>format long</code>：显示<code>16</code>位小数</li>
+<li><code>format bank</code>：四舍五入后显示<code>2</code>位小数</li>
+<li><code>format short/default</code>：改为默认精度</li>
+<li><code>format rat(ional)</code>：返回最接近的形如两个整数除法的表达式</li>
+</ul></li>
+<li><code>clc</code>：<strong>清屏</strong>，只能作为命令</li>
+<li><code>clear</code>：<strong>删除所有变量</strong>，只能作为命令</li>
+<li><code>global</code>：声明<strong>全局变量</strong></li>
+</ul>
+<h3 id="输入输出相关">输入输出相关</h3>
+<ul>
+<li><code>disp(arr|str)</code>：显示数组或字符串</li>
+<li><code>input("提示",format)</code>：输出提示，等待输入，返回输入</li>
+<li><code>;</code>：取消打印</li>
+</ul>
+<h3 id="向量及矩阵">向量及矩阵</h3>
+<ul>
+<li><p>方括号<code>[]</code>用于创建向量，其中若使用<strong>空格或逗号</strong>作分隔即为<strong>行向量</strong>，使用<strong>分号</strong>作分隔即为<strong>列向量</strong>，向量为一维数组</p></li>
+<li><p>仍用方括号创建矩阵，用空格或逗号区分列，用分号区分行，要求不同行向量的列数一致，矩阵为二维数组</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>; <span class="number">4</span> <span class="number">5</span> <span class="number">6</span>]  <span class="number">1</span> <span class="number">2</span> <span class="number">3</span></span><br><span class="line">     <span class="number">4</span> <span class="number">5</span> <span class="number">6</span></span><br></pre></td></tr></table></figure></li>
+<li><p>特殊矩阵创建：</p>
+<ul>
+<li><code>rand(m, n)</code>：创建<span
+class="math inline"><em>m</em> × <em>n</em></span>随机数矩阵，每个元素介于<code>0</code>和<code>1</code>之间</li>
+<li><code>ones|zeros</code>：单独时为一阶值为<code>1|0</code>的矩阵，参与运算时自动计算行列数</li>
+<li><code>ones(m, n)|zeros(m,n)</code>：全为<code>1|0</code>的<span
+class="math inline"><em>m</em> × <em>n</em></span>矩阵</li>
+<li><code>eye</code>：单独时为一阶单位矩阵，参与运算时将被视为<code>ones</code></li>
+<li><code>eye(n)</code>：<code>n</code>阶<strong>单位矩阵</strong></li>
+<li><code>eye(n,m)</code>：<code>m</code>列的<strong>标准型矩阵</strong></li>
+<li><code>diag(x,n=0)</code>：必须提供参数，其中<code>x</code>为指定的对角元素<strong>向量</strong>，<code>n</code>为对角线编号，<span
+class="math inline">$\begin{cases}n&gt;0&amp;主对角线向上数第n条\\n=0&amp;主对角线\\n&lt;0&amp;主对角线向下数第|n|条\end{cases}$</span>，返回<strong><code>size(M)+n</code>阶</strong>的三角型矩阵</li>
+<li><code>diag(A,n=0)</code>：必须提供参数，其中<code>A</code>为指定<strong>矩阵</strong>，返回由该矩阵的第<code>n</code>条对角线元素构成的列向量</li>
+<li><code>magic(n)</code>：<code>n&gt;2</code>时产出魔方矩阵，即用<span
+class="math inline">1 ∼ <em>n</em><sup>2</sup></span>生成所有行和、列和相等的矩阵</li>
+</ul></li>
+<li><p>批量创建向量或矩阵：</p>
+<ul>
+<li>冒号(<code>:</code>)表达式：
+<ul>
+<li>创建的矩阵占有新的内存，而抽取出的矩阵相当于引用</li>
+<li><code>Begin:End-&gt;</code>创建从<code>Begin</code>到<code>End</code>的<strong>等距行向量</strong>，距离为<code>1</code></li>
+<li><code>Begin:dist:End-&gt;</code>创建从<code>Begin</code>到<code>End</code>的<strong>等距行向量</strong>，<strong>距离为<code>dist</code></strong></li>
+<li><code>数组(代表行索引的向量)</code>：抽取<strong>第一列</strong>的部分元素</li>
+<li><code>数组(代表行索引的向量, 代表列索引的向量)</code>：抽取由这些行列构成的<strong>子阵</strong></li>
+<li><code>数组(:,j)</code>：抽取第<code>j</code>列所有元素，抽取行向量同理</li>
+<li><code>数组(:)-&gt;</code>用<strong>所有元素</strong>构成一个列向量</li>
+</ul></li>
+<li><code>linspace(Begin, End, count=100)</code>：返回从<code>Begin</code>到<code>End</code>的具<strong>有指定个数</strong>的<strong>等距行向量</strong></li>
+<li>其它：<img src="1_space.png" alt="1_space" style="zoom:50%;" /></li>
+</ul></li>
+<li><p>矩阵的算术运算：</p>
+<ul>
+<li><code>transpose()</code>：返回转置后的数组</li>
+<li><code>inv()</code>：如果可逆，返回逆</li>
+<li><code>rank()</code>：返回秩</li>
+<li><code>det()</code>：如果可求行列式，返回行列式</li>
+<li><code>rref()</code>：返回行最简型</li>
+<li><code>poly()</code>：返回由特征方程<span
+class="math inline">det (<em>λ</em><em>E</em>−<em>A</em>) = 0</span>的系数构成的行向量</li>
+<li><code>eig()</code>：
+<ul>
+<li><code>e=eig(A)</code>：返回由特征值构成的列向量</li>
+<li><code>[V,D]=eig(A)</code>：返回对角为特征值的对角型矩阵<code>D</code>，且<code>V</code>满足<code>AV=VD</code>，即<code>V</code>的每列是右特征向量</li>
+<li><code>[V,D,W]=eig(A)</code>：额外返回每列为左特征向量的满矩阵<code>W</code></li>
+</ul></li>
+<li><code>istriu()|istril()</code>：判断矩阵是否为上三角或下三角型</li>
+</ul></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/05/probability-rdnvar/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-05</time>
+        <br>
+      概率论与数理统计: 常见的随机变量汇总
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/01/concreteMath-special-coefficient/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-01</time>
+        <br>
+      具体数学: 特殊系数
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/11/linearAlgebra-matrix/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-11</time>
+        <br>
+      线性代数: 矩阵
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/05/14/linearAlgebra-determinant/" rel="bookmark">
+        <time class="popular-posts-time">2024-05-14</time>
+        <br>
+      线性代数: 行列式
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/beginner/" rel="tag"># beginner</a>
+              <a href="/tags/math/" rel="tag"># math</a>
+              <a href="/tags/MATLAB/" rel="tag"># MATLAB</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/11/01/concreteMath-special-coefficient/" rel="prev" title="具体数学: 特殊系数">
+                  <i class="fa fa-angle-left"></i> 具体数学: 特殊系数
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/11/15/physics-quantum/" rel="next" title="大学物理: 量子力学">
+                  大学物理: 量子力学 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

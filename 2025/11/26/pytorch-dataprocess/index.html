@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Pytorch: 使用torch.utils.data封装数据">
+<meta property="og:url" content="https://ishi-o.github.io/2025/11/26/pytorch-dataprocess/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ishi-o.github.io/2025/11/26/pytorch-dataprocess/DataLoader_init.png">
+<meta property="article:published_time" content="2025-11-26T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.170Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="big data">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ishi-o.github.io/2025/11/26/pytorch-dataprocess/DataLoader_init.png">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/11/26/pytorch-dataprocess/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/11/26/pytorch-dataprocess/","path":"2025/11/26/pytorch-dataprocess/","title":"Pytorch: 使用torch.utils.data封装数据"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Pytorch: 使用torch.utils.data封装数据 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E9%9B%86%E6%88%90%E6%A1%86%E6%9E%B6"><span class="nav-number">1.</span> <span class="nav-text">数据集集成框架</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/01/15/pytorch-tensor/" rel="bookmark">
+        <time class="popular-posts-time">2025-01-15</time>
+        <br>
+      Pytorch: Tensor(张量)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/03/markdown-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-03</time>
+        <br>
+      Markdown: 简单易学的笔记语言
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/14/deeplearning-simpleNN/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-14</time>
+        <br>
+      机器学习: 简单神经网络（前馈神经网络）的原理
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/11/26/pytorch-dataprocess/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Pytorch: 使用torch.utils.data封装数据 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Pytorch: 使用torch.utils.data封装数据
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-11-26 00:00:00" itemprop="dateCreated datePublished" datetime="2025-11-26T00:00:00+00:00">2025-11-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Python/Pytorch/" itemprop="url" rel="index"><span itemprop="name">Pytorch</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>4 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h3 id="数据集集成框架">数据集集成框架</h3>
+<ul>
+<li><p>数据的流向：先将数据交给自定义的数据集类(其任务为对源数据预处理，包装成数据加载器能够访问的数据集)，通常转化为张量
+通过数据加载类进行采样并送给模型计算并优化(其任务为根据默认或自定义的采样器<code>Sampler</code>进行真正的采样)</p></li>
+<li><p><code>map-style</code>和<code>iterable-style</code>：索引式数据集和迭代式数据集</p>
+<ul>
+<li>索引式数据集的做法是将整个数据集读取到内存，采样的时候通过<code>[]</code>访问即可
+适用于批量读取、小数据集，由于数据均在内存中，往往更快</li>
+<li>迭代式数据集的做法是事先定义迭代的行为，采样的时候从硬盘中取出数据并作为迭代器返回
+适用于各种数据无法事先全部读入内存的情况(例如训练过程中会产生新样本、或内存过小)，当然是比较慢的</li>
+</ul></li>
+<li><p><code>torch.utils.data.Dataset</code>(简称<code>Dataset</code>)是所有<strong>数据集类型的基类</strong>，用户如果需要构建自己的索引式数据集，必须直接继承该类并重载以下方法(其实就是封装成一个索引式数据集)：</p>
+<ul>
+<li><code>__len__()</code>：应返回数据集的长度，以便可以用<code>len(obj)</code>访问数据集长度</li>
+<li><code>__getitem__(idx)</code>：应返回该索引指向的数据，以便可以用<code>[]</code>访问数据</li>
+</ul></li>
+<li><p><code>torch.utils.data.IterableDataset</code>(简称<code>IterableDataset</code>)是所有<strong>迭代式数据集的基类</strong>，继承该类后必须重载：</p>
+<ul>
+<li><code>__iter__()</code>：<code>yield</code>一个迭代器，一般是在方法内临时读取文件并返回一条数据</li>
+</ul></li>
+<li><p><code>torch.utils.data.DataLoader</code>(简称<code>DataLoader</code>)是<strong>数据集对象的迭代器</strong>，相比诸多语言的内置迭代器封装了很多功能，不需要手动实现乱序、分批读取等，加载数据集十分方便，其构造方法<code>__init__()</code>参数用法为：</p>
+<ul>
+<li><code>dataset</code>：<code>Dataset</code>(或子类)对象，表示要遍历的数据集</li>
+<li><strong><code>batch_size</code></strong>：批数据的大小，即通过该迭代器遍历时返回的<strong>样本个数</strong>；将其设置为<code>None</code>以关闭自动批处理</li>
+<li><code>sampler</code>：可以<strong>指定采样器进行更多样的采样行为</strong></li>
+<li><code>batch_sampler</code>：类似<code>sampler</code>，但要求用户提供的采样器必须<strong>返回一批张量的索引</strong>而不是一个张量的索引，这一批张量均用用户提供的<code>Sampler</code>对象来采样，它和<code>sampler、batch_size</code>是冲突的(因为认为用户已经在<code>sampler</code>里定义了批量大小)</li>
+<li><strong><code>shuffle</code></strong>：布尔值，决定<strong>是否乱序采样</strong>，和<code>sampler、batch_sampler</code>冲突(因为要使用默认的<code>RandomSampler</code>)，没有更高需求的采样行为而懒得自定义采样器时，使<code>shuffle=True</code>就足够了</li>
+</ul>
+<p>只提供<code>dataset</code>，其它参数保持默认下，迭代器会顺序地进行批量为一的自动批处理采样
+<img src="DataLoader_init.png" alt="DataLoader_init" style="zoom:40%;" />
+其它不常用的参数：</p>
+<ul>
+<li><code>num_workers</code>：将数据分给多个子进程加载，默认只用主进程加载</li>
+<li><code>collate_fn</code>：是一个可调用对象，表示对数据集采样后，返回给用户前进行的行为
+默认的<code>collate_fn</code>常在一个开启了自动批处理的索引式数据集中用到，会<strong>将采样的数据合并为一批</strong>
+因为迭代式数据集的批量采样等行为通常是由用户在<code>__iter__()</code>中实现的，所以对迭代式数据集不会提供默认的<code>collate_fn</code>
+用户可以自定义<code>collate_fn</code></li>
+<li><code>pin_memory</code>：由于<code>GPU</code>中的内存全是锁页内存，但<code>CPU</code>中一般只是不锁页内存(即会被交换到虚存中)，设置<code>pin_memory=True</code>，将使读入的样本变成锁页内存，通过<strong>消耗<code>CPU</code>内存的方式加快其载入<code>GPU</code>的过程</strong></li>
+<li><code>drop_last</code>：布尔值，表示是否丢弃最后一个不完整的批次</li>
+<li><code>timeout</code>：表示数据加载的时限</li>
+</ul></li>
+<li><p><code>torch.utils.data.Sampler</code>(简称<code>Sampler</code>)是采样器类，表示采样的策略，具体为提供一个索引序列
+内置的<code>Sampler</code>有：</p>
+<ul>
+<li><code>SequentialSampler</code>：顺序采样，每次返回一个索引，是未提供<code>sampler</code>且<code>shuffle=False</code>时的默认采样器</li>
+<li><code>RandomSampler</code>：全集的随机采样，是未提供<code>sampler</code>且<code>shuffle=True</code>时的默认采样器</li>
+<li><code>WeightedRandomSampler</code>：根据权重的随机采样</li>
+<li><code>SubsetRandomSampler</code>：对数据集子集的随机采样</li>
+<li><code>BatchSampler</code>：对其它<code>Sampler</code>产生的索引序列分批，顺序地提供的各个批次的索引序列(一次返回整个批次的所有索引)
+开启自动批处理时，最终会经过这个采样器进行分批</li>
+</ul>
+<p>用户可以继承<code>Sampler</code>或以上这些特化的采样器类，来自定义一个<code>Sampler</code>
+不过大多数情况下，上述采样器已经足够了</p></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/01/15/pytorch-tensor/" rel="bookmark">
+        <time class="popular-posts-time">2025-01-15</time>
+        <br>
+      Pytorch: Tensor(张量)
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/03/markdown-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-03</time>
+        <br>
+      Markdown: 简单易学的笔记语言
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/14/deeplearning-simpleNN/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-14</time>
+        <br>
+      机器学习: 简单神经网络（前馈神经网络）的原理
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/big-data/" rel="tag"># big data</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/11/25/stat-tree-models/" rel="prev" title="统计学习: 树型模型">
+                  <i class="fa fa-angle-left"></i> 统计学习: 树型模型
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/11/26/Rlang-beginner/" rel="next" title="Rlang: 虽然不知道为什么要学">
+                  Rlang: 虽然不知道为什么要学 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

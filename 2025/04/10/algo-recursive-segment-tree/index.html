@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="数据结构: 递归式线段树">
+<meta property="og:url" content="https://ishi-o.github.io/2025/04/10/algo-recursive-segment-tree/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-04-10T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.164Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="algorithm">
+<meta property="article:tag" content="data structure">
+<meta property="article:tag" content="tree">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/04/10/algo-recursive-segment-tree/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/04/10/algo-recursive-segment-tree/","path":"2025/04/10/algo-recursive-segment-tree/","title":"数据结构: 递归式线段树"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>数据结构: 递归式线段树 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E5%BC%8F%E7%BA%BF%E6%AE%B5%E6%A0%91"><span class="nav-number">1.</span> <span class="nav-text">递归式线段树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E5%BC%8F%E7%BA%BF%E6%AE%B5%E6%A0%91%E7%9A%84%E7%BB%84%E6%88%90"><span class="nav-number">1.2.</span> <span class="nav-text">递归式线段树的组成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%8C%BA%E9%97%B4%E4%BF%A1%E6%81%AF%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.3.</span> <span class="nav-text">常见区间信息的设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%BC%80%E7%82%B9%E7%BA%BF%E6%AE%B5%E6%A0%91"><span class="nav-number">1.4.</span> <span class="nav-text">动态开点线段树</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/16/concreteMath-rounding/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-16</time>
+        <br>
+      具体数学: 取整函数
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/22/algo-prime-selection/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-22</time>
+        <br>
+      数论: 质数筛法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/26/algo-trick-offline-query/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-26</time>
+        <br>
+      算法竞赛: 离线查询
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/01/concreteMath-special-coefficient/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-01</time>
+        <br>
+      具体数学: 特殊系数
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/04/10/algo-recursive-segment-tree/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="数据结构: 递归式线段树 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构: 递归式线段树
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-04-10 00:00:00" itemprop="dateCreated datePublished" datetime="2025-04-10T00:00:00+00:00">2025-04-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/Data-Structure/" itemprop="url" rel="index"><span itemprop="name">Data Structure</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>4.4k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>16 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h2 id="递归式线段树">递归式线段树</h2>
+<h3 id="概述">概述</h3>
+<ul>
+<li><p>线段树基于<strong>分治思想</strong>，本质是将分治过程中产生的<strong>子区间解存储在树中</strong>，以达到<strong>快速查询</strong>的效果</p>
+<p>典型如求解<strong>最大连续子数组</strong>，虽然运用贪心算法是更快的单次算法，但如果大区间不变，而只是进行<strong>多次的子区间解查询</strong>时，线段树比贪心算法更快</p>
+<p>若加上简单的维护，则能使其很简单地支持区间修改，同时不用消耗更多的资源</p></li>
+<li><p>适用的修改操作：所有符合结合律的运算，例如比大小、求和等
+这也是和树状数组的区别，<strong>树状数组</strong>是<strong>维护所有前缀区间</strong>的信息来查询任意子区间的信息，而线段树是直接<strong>维护一些有代表性的子区间</strong>的信息并将它们<strong>组合</strong>来得到任意子区间的信息，因此不需要运算的元素拥有逆元</p></li>
+<li><p>适用问题：要求维护<strong>连续子区间</strong>的问题，例如<code>RMQ</code>(区间最大/最小查询)和<code>RSQ</code>(区间求和查询)问题</p></li>
+</ul>
+<h3 id="递归式线段树的组成">递归式线段树的组成</h3>
+<ul>
+<li><p>基本结构：</p>
+<ul>
+<li>假设根结点编号为<span class="math inline">1</span>，则所有结点<span
+class="math inline"><em>i</em></span>维护一个子区间<span
+class="math inline">[<em>l</em>,<em>r</em>]</span>的信息，其左儿子<span
+class="math inline">2<em>i</em></span>维护<span
+class="math inline">$\begin{align}\left[l,\left\lfloor\frac{l+r}{2}\right\rfloor\right]\end{align}$</span>，右儿子<span
+class="math inline">2<em>i</em> + 1</span>维护另一半区间</li>
+<li>叶子结点维护长度为一的区间信息，它们没有儿子</li>
+<li>递归式线段树不存在度为<span
+class="math inline">1</span>的结点，且<strong>是一棵平衡二叉树</strong>
+但它<strong>不一定是完全二叉树</strong>，不过没什么影响就是了</li>
+</ul></li>
+<li><p>建树：</p>
+<ul>
+<li>分治过程通常通过递归实现：如果结点的区间长度不为<span
+class="math inline">1</span>，则进行上述递归，最后合并左、右儿子返回的值作为本结点的值，然后返回给父结点
+否则，直接返回这个长度为<span
+class="math inline">1</span>的区间的值(即原数组中对应的值)</li>
+<li>空间消耗：有用的叶子结点即<span
+class="math inline"><em>n</em></span>个，同时存在着无用的叶子结点，在<strong>不存在无用的叶子</strong>结点时，<strong>深度达到最大</strong>，为<span
+class="math inline">⌈log<em>n</em>⌉</span>，则以最大深度为深度的<strong>满二叉树数组</strong>一定可以满足下标的分配，即<strong>空间为<span
+class="math inline">2<sup>⌈log <em>n</em>⌉ + 1</sup> − 1</span></strong>
+一个容易记的形式是，因为<span
+class="math inline">⌈log <em>n</em>⌉ ≤ ⌊log <em>n</em>⌋ + 1</span>，因此最大空间<span
+class="math inline"> &lt; 2<sup>⌊log <em>n</em>⌋ + 2</sup> &lt; 4 · 2<sup>log <em>n</em></sup> = 4<em>n</em></span>，直接取<span
+class="math inline">4<em>n</em></span>即可</li>
+</ul></li>
+<li><p>区间操作：</p>
+<ul>
+<li>区间查询：同样通过分治来得到答案，不过一部分分治不需要深入到叶子结点
+将待查询区间分为两种：完全覆盖当前结点维护的区间(即当前结点区间是待查询区间的子集)、以及另一种区间
+对于前者，不需要继续递归，直接返回维护的值即可
+对于后者，分为向左儿子递归和向右儿子递归的部分，如果查询区间的左端小于结点区间的中间点，则向左儿子递归；向右儿子递归同理，需要查询区间的右端大于结点区间的中间点；人话就是保证递归下去的区间和待查区间有交集
+最后合并来自各个结点的极大区间信息即可 可以证明，这些极大区间最多有<span
+class="math inline"><em>O</em>(log<em>n</em>)</span>个，即区间查询操作是<span
+class="math inline"><em>O</em>(log<em>n</em>)</span>的</li>
+<li>区间修改：需要维护一个<strong>懒惰标记</strong>，<strong>类似写时拷贝</strong>的概念，取若干个构成待修改区间的结点进行修改，需要修改时将结点的<code>lazy</code>置<code>1</code>，只修改这个结点的值，但不去修改子结点的值
+具体来说，将这次修改看作区间查询，将待修改区间分为<strong>若干个极大的子区间</strong>，所有被置<code>lazy</code>的区间都是待修改区间的极大子集(同时告知需要增加/减去的值)，对同一个子区间的多次连续修改只需要将值叠加即可；当然，最后需要像合并更新上面的结点
+直到下一次查询，如果待查询区间不完全覆盖当前区间(即<strong>需要递归时</strong>)，则要将当前结点的<strong>懒惰标记下放</strong>以保证同步
+注意这里的<strong>懒惰标记并非表示本结点未修改，而是标记子结点未修改</strong>
+为了<strong>防止懒惰标记溢出</strong>，通常在区间修改时也需要下放标记</li>
+</ul></li>
+<li><p>不同操作的线段树：</p>
+<ul>
+<li>区间内所有值赋为<code>k</code>：懒惰标记初始化为输入范围外的<code>k</code>来表示没有赋值</li>
+<li>区间内所有值加<code>k</code>：懒惰标记初始化为<code>0</code></li>
+<li>区间内所有值乘<code>k</code>：懒惰标记初始化为<code>1</code></li>
+<li>三种操作结合：赋值操作是优先级最高的，乘法操作会影响以前的加法操作，加法操作对其他操作没什么影响
+<ul>
+<li>对于极大子集(即不着急下放标记的那个分支)：
+若为赋值，则应初始化乘法标记、加法标记，因为它们没有意义了
+若为乘法，则让乘法标记乘上<code>k</code>，同时会影响以前的加法操作，需要使加法标记乘上<code>k</code>
+若为加法，直接让加法标记加上<code>k</code>即可</li>
+<li>对于下放操作：
+若赋值标记存在，则应首先下放，同时初始化左右儿子的乘法、加法标记
+由于乘法标记、加法标记在初始状态下放时，不会对信息造成影响，所以不需要判断是否存在这些标记；且加法标记在之前已经经过处理，可以直接加到左右儿子区间信息上
+拿维护最大值举例，下放乘法、加法标记时，左右儿子的最大值需乘上<code>p</code>的乘法标记、再加上<code>p</code>的加法标记；左右儿子的乘法标记直接乘以<code>p</code>的乘法标记；左右儿子的加法标记先乘上<code>p</code>的乘法标记、再加上<code>p</code>的加法标记；最后初始化<code>p</code>的乘法、加法标记</li>
+</ul></li>
+</ul></li>
+<li><p>区间加、区间求和的模板实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n;</span><br><span class="line"><span class="type">long</span> <span class="type">long</span> b[<span class="number">100010</span>];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Info</span> &#123;</span><br><span class="line">    <span class="type">int</span> l, r, s, lz; <span class="comment">// s表sum</span></span><br><span class="line">&#125;t[<span class="number">100010</span> &lt;&lt; <span class="number">2</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">build</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    t[p].l = l; <span class="comment">// 初始化结点p管辖的区间</span></span><br><span class="line">    t[p].r = r;</span><br><span class="line">    <span class="keyword">if</span> (l == r) &#123; <span class="comment">// 到叶子结点, 可以初始化了</span></span><br><span class="line">        t[p].ans = b[l];</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">build</span>(p &lt;&lt; <span class="number">1</span>, l, l + r &gt;&gt; <span class="number">1</span>); <span class="comment">// 左边</span></span><br><span class="line">    <span class="built_in">bulid</span>(p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, (l + r &gt;&gt; <span class="number">1</span>) + <span class="number">1</span>, r); <span class="comment">// 右边</span></span><br><span class="line">    t[p].s = t[p &lt;&lt; <span class="number">1</span>].s + t[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].s;  <span class="comment">// 可以将合并操作单独写一个函数</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">pushdown</span><span class="params">(<span class="type">int</span> p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (t[p].lz) &#123; <span class="comment">// 下放标记</span></span><br><span class="line">        t[p &lt;&lt; <span class="number">1</span>].s += (t[p &lt;&lt; <span class="number">1</span>].r - t[p &lt;&lt; <span class="number">1</span>].l + <span class="number">1</span>) * t[p].lz;</span><br><span class="line">        t[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].s += (t[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].r - t[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].l + <span class="number">1</span>) * t[p].lz;</span><br><span class="line">        t[p &lt;&lt; <span class="number">1</span>].lz += t[p].lz;</span><br><span class="line">        t[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].lz += t[p].lz;</span><br><span class="line">        t[p].lz = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">update</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> l, <span class="type">int</span> r, <span class="type">int</span> v)</span> </span>&#123;</span><br><span class="line"> <span class="keyword">if</span> (l &lt;= t[p].l &amp;&amp; r &gt;= t[p].r) &#123;</span><br><span class="line">        t[p].s += (t[p].r - t[p].l + <span class="number">1</span>) * v;</span><br><span class="line">        t[p].lz += v;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">pushdown</span>(p);</span><br><span class="line">    <span class="type">int</span> m = t[p].l + t[p].r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (l &lt;= m) <span class="built_in">update</span>(p &lt;&lt; <span class="number">1</span>, l, r, v);</span><br><span class="line">    <span class="keyword">if</span> (r &gt; m) <span class="built_in">update</span>(p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, l, r, v);</span><br><span class="line">    t[p].s = t[p &lt;&lt; <span class="number">1</span>].s + t[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].s;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">long</span> <span class="type">long</span> <span class="title">query</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l &lt;= t[p].l &amp;&amp; r &gt;= t[p].r) &#123;</span><br><span class="line">        <span class="keyword">return</span> t[p].s;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">pushdown</span>(p);</span><br><span class="line">    <span class="type">int</span> m = t[p].l + t[p].r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (l &lt;= m) ans += <span class="built_in">query</span>(p &lt;&lt; <span class="number">1</span>, l, r);</span><br><span class="line">    <span class="keyword">if</span> (r &gt; m) ans += <span class="built_in">query</span>(p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, l, r);</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="常见区间信息的设计">常见区间信息的设计</h3>
+<ul>
+<li><p>首先要判断一道题是否能用线段树来做：</p>
+<ul>
+<li>对题目要求的信息，是否满足<strong>区间可加性</strong>；即是否能由子区间的值求出父区间的值</li>
+<li>对要求区间修改的线段树，是否满足<strong>懒惰标记可加性</strong>和区间信息易改，即子结点的懒惰标记可以由父结点下放得到，而父结点可以快速求出整个区间进行某种修改后的值(而不需要递归)
+如果不能，看是否能降为暴力单点修改(适用于经过有限次修改后就不再改变的信息)</li>
+</ul></li>
+<li><p>区间信息及懒惰标记的设计：</p>
+<ul>
+<li>设计区间信息取决于要求什么样的区间信息：
+通常要考虑到怎么通过维护某些<strong>额外的信息</strong>：使得<strong>区间修改时，区间信息易改</strong>
+一般是将修改前和修改后的待求信息进行对比，来得出额外信息：
+例如区间加+区间和：<span class="math inline">$\begin{align}s=\sum
+a_i、s'=\sum(a_i+d)\end{align}$</span>，因此额外信息为<strong>区间长度</strong>
+区间加+区间平方和：<span class="math inline">$\begin{align}s=\sum
+a_i^2、s'=\sum(a_i+d)^2=s+2d\sum a_i+\sum
+d^2\end{align}$</span>，因此额外信息为<strong>区间和、区间长度</strong></li>
+<li>设计懒惰标记取决于要进行什么样的区间操作：
+懒惰标记要能唯一地标识两个信息，即子区间要不要改、子区间怎么改
+例如区间加就将上述两个信息合并，因为懒惰标记为<span
+class="math inline">0</span>时，自然表示不用改 其它如区间赋值，因为<span
+class="math inline">0</span>不代表不用改，所以需要：一个布尔值标识要不要改，一个值表示要赋的值
+或将这个值<strong>初始化设为范围外的值</strong>，来表示不用改</li>
+</ul></li>
+<li><p>一些常见的区间操作及它们的组合：</p>
+<ul>
+<li>区间赋值、区间加：不再赘述</li>
+<li>区间乘：下放乘标记时直接相乘即可，因为整数的乘法是半群；此外，乘法标记初始化为<span
+class="math inline">1</span></li>
+</ul></li>
+<li><p>一些常见的区间信息：</p>
+<ul>
+<li>区间<code>hash</code>：区间哈希一般用于比较两个区间是否相等，用树状数组也可
+学过字符串哈希就知道，求一个区间的基本哈希值是将它看作<span
+class="math inline"><em>p</em></span>进制数，即 <span
+class="math inline"><em>h</em><em>a</em><em>s</em><em>h</em>(<em>a</em>[1,<em>n</em>]) = <em>a</em><sub>1</sub><em>p</em><sup><em>n</em> − 1</sup> + <em>a</em><sub>2</sub><em>p</em><sup><em>n</em> − 2</sup> + ⋯ + <em>a</em><sub><em>n</em> − 1</sub><em>p</em> + <em>a</em><sub><em>n</em></sub></span>
+这其实有点像前缀和，只是多了一个<span
+class="math inline"><em>p</em></span>的幂的因子，通过简单推导可以得出：
+<span
+class="math inline"><em>h</em><em>a</em><em>s</em><em>h</em>(<em>a</em>[1,<em>r</em>]) = <em>h</em><em>a</em><em>s</em><em>h</em>(<em>a</em>[1,<em>l</em>−1]) × <em>p</em><sup><em>r</em> − <em>l</em> + 1</sup> + <em>h</em><em>a</em><em>s</em><em>h</em>(<em>a</em>[<em>l</em>,<em>r</em>])</span>
+也就是：<span
+class="math inline"><em>h</em><em>a</em><em>s</em><em>h</em>(<em>a</em>[<em>l</em>,<em>r</em>]) = <em>h</em><em>a</em><em>s</em><em>h</em>(<em>a</em>[<em>l</em>,<em>m</em>]) × <em>p</em><sup><em>r</em> − <em>m</em></sup> + <em>h</em><em>a</em><em>s</em><em>h</em>(<em>a</em>[<em>m</em>+1,<em>r</em>])</span>
+这里不考虑如何解决冲突，选择一个<strong>大质数</strong>作为模数和<strong>比<span
+class="math inline"><em>m</em><em>a</em><em>x</em>(<em>a</em>)</span>大的<span
+class="math inline"><em>p</em></span></strong>即可
+再不济，就用双值哈希</li>
+</ul></li>
+<li><p>特定区间的最大连续子区间和(所有连续子区间中，元素和最大的子区间)：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br></pre></td><td class="code"><pre><span class="line">  <span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line">  <span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">  <span class="type">int</span> i, n, m, k, a, b, gd[<span class="number">500005</span>];</span><br><span class="line">  <span class="keyword">struct</span> <span class="title class_">Info</span> &#123;</span><br><span class="line">      <span class="type">int</span> lm, rm, am, ll, rr, sum;</span><br><span class="line">  &#125;tr[<span class="number">500005</span> &lt;&lt; <span class="number">2</span>];</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">edit</span><span class="params">(Info&amp; p, Info sl, Info sr)</span> </span>&#123;</span><br><span class="line">      p.lm = <span class="built_in">max</span>(sl.lm, sl.sum + sr.lm);</span><br><span class="line">      p.rm = <span class="built_in">max</span>(sr.rm, sr.sum + sl.rm);</span><br><span class="line">      p.sum = sl.sum + sr.sum;</span><br><span class="line">      p.am = <span class="built_in">max</span>(<span class="built_in">max</span>(sl.am, sr.am), (sl.rm &lt; <span class="number">0</span> &amp;&amp; sr.lm) ? <span class="built_in">max</span>(sl.rm, sr.lm) : <span class="built_in">max</span>(<span class="number">0</span>, sl.rm) + <span class="built_in">max</span>(<span class="number">0</span>, sr.lm));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">build</span> <span class="params">(<span class="type">int</span> p, <span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">      tr[p].ll = l;</span><br><span class="line">      tr[p].rr = r;</span><br><span class="line">      <span class="keyword">if</span> (l == r) &#123;</span><br><span class="line">          tr[p].lm = tr[p].rm = tr[p].am = tr[p].sum = gd[l];</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="type">int</span> m = (l + r) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">      <span class="built_in">build</span>(p &lt;&lt; <span class="number">1</span>, l, m);</span><br><span class="line">      <span class="built_in">build</span>(p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, m + <span class="number">1</span>, r);</span><br><span class="line">      <span class="built_in">edit</span>(tr[p], tr[p &lt;&lt; <span class="number">1</span>], tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">update</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> t, <span class="type">int</span> v)</span> </span>&#123; <span class="comment">// 单点修改</span></span><br><span class="line">      <span class="keyword">if</span> (tr[p].ll == tr[p].rr &amp;&amp; tr[p].ll == t) &#123;</span><br><span class="line">          tr[p].lm = tr[p].rm = tr[p].am = tr[p].sum = v;</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="type">int</span> m = tr[p].ll + tr[p].rr &gt;&gt; <span class="number">1</span>;</span><br><span class="line">      <span class="keyword">if</span> (t &lt;= m) &#123;</span><br><span class="line">          <span class="built_in">update</span>(p &lt;&lt; <span class="number">1</span>, t, v);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="built_in">update</span>(p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, t, v);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">edit</span>(tr[p], tr[p &lt;&lt; <span class="number">1</span>], tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function">Info <span class="title">query</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (l &lt;= tr[p].ll &amp;&amp; r &gt;= tr[p].rr) &#123;</span><br><span class="line">          <span class="keyword">return</span> tr[p];</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="type">int</span> m = tr[p].ll + tr[p].rr &gt;&gt; <span class="number">1</span>;</span><br><span class="line">      <span class="keyword">if</span> (l &lt;= m &amp;&amp; r &gt; m) &#123;</span><br><span class="line">          Info ans;</span><br><span class="line">          <span class="built_in">edit</span>(ans, <span class="built_in">query</span>(p &lt;&lt; <span class="number">1</span>, l, r), <span class="built_in">query</span>(p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, l, r));</span><br><span class="line">          <span class="keyword">return</span> ans;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (l &lt;= m) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="built_in">query</span>(p &lt;&lt; <span class="number">1</span>, l, r);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="built_in">query</span>(p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, l, r);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">较复杂线段树：</span><br><span class="line"></span><br><span class="line">```c++</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n, m, i, opt, L, R;</span><br><span class="line"><span class="type">bool</span> a[<span class="number">100006</span>];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Info</span>&#123;</span><br><span class="line">    <span class="type">bool</span> fil, filv, swt;</span><br><span class="line">    <span class="type">int</span> l, r, lm[<span class="number">2</span>], rm[<span class="number">2</span>], am[<span class="number">2</span>], sum, len;</span><br><span class="line">    <span class="built_in">Info</span>() &#123;</span><br><span class="line">        fil = swt = lm[<span class="number">0</span>] = lm[<span class="number">1</span>] = rm[<span class="number">0</span>] = rm[<span class="number">1</span>] = am[<span class="number">0</span>] = am[<span class="number">1</span>] = sum = len = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;tr[<span class="number">100006</span> &lt;&lt; <span class="number">2</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">merge</span><span class="params">(Info&amp; p, Info l, Info r)</span> </span>&#123;</span><br><span class="line">    p.lm[<span class="number">0</span>] = l.lm[<span class="number">0</span>] + (l.lm[<span class="number">0</span>] == l.len ? r.lm[<span class="number">0</span>] : <span class="number">0</span>);</span><br><span class="line">    p.lm[<span class="number">1</span>] = l.lm[<span class="number">1</span>] + (l.lm[<span class="number">1</span>] == l.len ? r.lm[<span class="number">1</span>] : <span class="number">0</span>);</span><br><span class="line">    p.rm[<span class="number">0</span>] = r.rm[<span class="number">0</span>] + (r.rm[<span class="number">0</span>] == r.len ? l.rm[<span class="number">0</span>] : <span class="number">0</span>);</span><br><span class="line">    p.rm[<span class="number">1</span>] = r.rm[<span class="number">1</span>] + (r.rm[<span class="number">1</span>] == r.len ? l.rm[<span class="number">1</span>] : <span class="number">0</span>);</span><br><span class="line">    p.am[<span class="number">0</span>] = <span class="built_in">max</span>(l.rm[<span class="number">0</span>] + r.lm[<span class="number">0</span>], <span class="built_in">max</span>(l.am[<span class="number">0</span>], r.am[<span class="number">0</span>]));</span><br><span class="line">    p.am[<span class="number">1</span>] = <span class="built_in">max</span>(l.rm[<span class="number">1</span>] + r.lm[<span class="number">1</span>], <span class="built_in">max</span>(l.am[<span class="number">1</span>], r.am[<span class="number">1</span>]));</span><br><span class="line">    p.len = l.len + r.len;</span><br><span class="line">    p.sum = l.sum + r.sum;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">build</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    tr[p].l = l;</span><br><span class="line">    tr[p].r = r;</span><br><span class="line">    <span class="keyword">if</span> (l == r) &#123;</span><br><span class="line">        tr[p].len = <span class="number">1</span>;</span><br><span class="line">        tr[p].lm[<span class="number">0</span>] = tr[p].rm[<span class="number">0</span>] = tr[p].am[<span class="number">0</span>] = !a[l];</span><br><span class="line">        tr[p].lm[<span class="number">1</span>] = tr[p].rm[<span class="number">1</span>] = tr[p].am[<span class="number">1</span>] = tr[p].sum = a[l];</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">build</span>(p &lt;&lt; <span class="number">1</span>, l, l + r &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">build</span>(p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, (l + r &gt;&gt; <span class="number">1</span>) + <span class="number">1</span>, r);</span><br><span class="line">    <span class="built_in">merge</span>(tr[p], tr[p &lt;&lt; <span class="number">1</span>], tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">pushdown</span><span class="params">(<span class="type">int</span> p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tr[p].fil) &#123;</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span>].fil = tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].fil = <span class="literal">true</span>;</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span>].swt = tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].swt = <span class="literal">false</span>;</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span>].filv = tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].filv = tr[p].filv;</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span>].lm[tr[p].filv] = tr[p &lt;&lt; <span class="number">1</span>].rm[tr[p].filv] = tr[p &lt;&lt; <span class="number">1</span>].am[tr[p].filv] = tr[p &lt;&lt; <span class="number">1</span>].len;</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span>].lm[!tr[p].filv] = tr[p &lt;&lt; <span class="number">1</span>].rm[!tr[p].filv] = tr[p &lt;&lt; <span class="number">1</span>].am[!tr[p].filv] = <span class="number">0</span>;</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span>].sum = tr[p].filv ? tr[p &lt;&lt; <span class="number">1</span>].len : <span class="number">0</span>;</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].lm[tr[p].filv] = tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].rm[tr[p].filv] = tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].am[tr[p].filv] = tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].len;</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].lm[!tr[p].filv] = tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].rm[!tr[p].filv] = tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].am[!tr[p].filv] = <span class="number">0</span>;</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].sum = tr[p].filv ? tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].len : <span class="number">0</span>;</span><br><span class="line">        tr[p].fil = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (tr[p].swt) &#123;</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span>].swt = !tr[p &lt;&lt; <span class="number">1</span>].swt;</span><br><span class="line">        <span class="built_in">swap</span>(tr[p &lt;&lt; <span class="number">1</span>].am[<span class="number">0</span>], tr[p &lt;&lt; <span class="number">1</span>].am[<span class="number">1</span>]);</span><br><span class="line">        <span class="built_in">swap</span>(tr[p &lt;&lt; <span class="number">1</span>].rm[<span class="number">0</span>], tr[p &lt;&lt; <span class="number">1</span>].rm[<span class="number">1</span>]);</span><br><span class="line">        <span class="built_in">swap</span>(tr[p &lt;&lt; <span class="number">1</span>].lm[<span class="number">0</span>], tr[p &lt;&lt; <span class="number">1</span>].lm[<span class="number">1</span>]);</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span>].sum = tr[p &lt;&lt; <span class="number">1</span>].len - tr[p &lt;&lt; <span class="number">1</span>].sum;</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].swt = !tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].swt;</span><br><span class="line">        <span class="built_in">swap</span>(tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].am[<span class="number">0</span>], tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].am[<span class="number">1</span>]);</span><br><span class="line">        <span class="built_in">swap</span>(tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].rm[<span class="number">0</span>], tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].rm[<span class="number">1</span>]);</span><br><span class="line">        <span class="built_in">swap</span>(tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].lm[<span class="number">0</span>], tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].lm[<span class="number">1</span>]);</span><br><span class="line">        tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].sum = tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].len - tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>].sum;</span><br><span class="line">        tr[p].swt = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">update</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> l, <span class="type">int</span> r, <span class="type">int</span> mode)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l &lt;= tr[p].l &amp;&amp; r &gt;= tr[p].r) &#123;</span><br><span class="line">        <span class="keyword">switch</span> (mode) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>: <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                tr[p].fil = <span class="literal">true</span>;</span><br><span class="line">                tr[p].filv = mode;</span><br><span class="line">                tr[p].lm[mode] = tr[p].rm[mode] = tr[p].am[mode] = tr[p].len;</span><br><span class="line">                tr[p].lm[!mode] = tr[p].rm[!mode] = tr[p].am[!mode] = <span class="number">0</span>;</span><br><span class="line">                tr[p].sum = mode ? tr[p].len : <span class="number">0</span>;</span><br><span class="line">                tr[p].swt = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                tr[p].swt = !tr[p].swt;</span><br><span class="line">                <span class="built_in">swap</span>(tr[p].am[<span class="number">0</span>], tr[p].am[<span class="number">1</span>]);</span><br><span class="line">                <span class="built_in">swap</span>(tr[p].rm[<span class="number">0</span>], tr[p].rm[<span class="number">1</span>]);</span><br><span class="line">                <span class="built_in">swap</span>(tr[p].lm[<span class="number">0</span>], tr[p].lm[<span class="number">1</span>]);</span><br><span class="line">                tr[p].sum = tr[p].len - tr[p].sum;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">pushdown</span>(p);</span><br><span class="line">    <span class="type">int</span> m = tr[p].l + tr[p].r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (l &lt;= m) &#123;</span><br><span class="line">        <span class="built_in">update</span>(p &lt;&lt; <span class="number">1</span>, l, r, mode);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (r &gt; m) &#123;</span><br><span class="line">        <span class="built_in">update</span>(p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, l, r, mode);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">merge</span>(tr[p], tr[p &lt;&lt; <span class="number">1</span>], tr[p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Info <span class="title">query</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> l, <span class="type">int</span> r)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l &lt;= tr[p].l &amp;&amp; r &gt;= tr[p].r) &#123;</span><br><span class="line">        <span class="keyword">return</span> tr[p];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">pushdown</span>(p);</span><br><span class="line">    <span class="type">int</span> m = tr[p].l + tr[p].r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    Info ans1, ans2, ans;</span><br><span class="line">    <span class="keyword">if</span> (l &lt;= m) &#123;</span><br><span class="line">        ans1 = <span class="built_in">query</span>(p &lt;&lt; <span class="number">1</span>, l, r);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (r &gt; m) &#123;</span><br><span class="line">        ans2 = <span class="built_in">query</span>(p &lt;&lt; <span class="number">1</span> | <span class="number">1</span>, l, r);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">merge</span>(ans, ans1, ans2);</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        cin &gt;&gt; a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">build</span>(<span class="number">1</span>, <span class="number">1</span>, n);</span><br><span class="line">    <span class="keyword">while</span> (m--) &#123;</span><br><span class="line">        cin &gt;&gt; opt &gt;&gt; L &gt;&gt; R;</span><br><span class="line">        <span class="keyword">switch</span> (opt) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>: <span class="keyword">case</span> <span class="number">1</span>: <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                <span class="built_in">update</span>(<span class="number">1</span>, L + <span class="number">1</span>, R + <span class="number">1</span>, opt);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                cout &lt;&lt; <span class="built_in">query</span>(<span class="number">1</span>, L + <span class="number">1</span>, R + <span class="number">1</span>).sum &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                cout &lt;&lt; <span class="built_in">query</span>(<span class="number">1</span>, L + <span class="number">1</span>, R + <span class="number">1</span>).am[<span class="number">1</span>] &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="动态开点线段树">动态开点线段树</h3>
+<ul>
+<li><p>使用<code>p &lt;&lt; 1</code>和<code>p &lt;&lt; 1 | 1</code>作为结点的左右儿子编号，显然是很浪费空间的(因为部分结点可能从不会被读、被写)
+所以一个自然的优化是，用我们维护的<code>cnt</code>记录当前的总结点数，然后需要创建新的结点时(即需要访问从未维护过的子区间时)将<code>cnt+1</code>作为其编号，并找到有直接父子关系的结点，维护其<code>ls</code>或<code>rs</code>(就像存储二叉树那样)
+这样的话，通常只需要<span
+class="math inline">4<em>m</em>log <em>n</em></span>(<span
+class="math inline"><em>m</em></span>为查询次数)的空间，如果<span
+class="math inline"><em>m</em> ≤ 10<sup>5</sup>、<em>n</em> ≤ 10<sup>9</sup></span>，那么大概需要<span
+class="math inline">10<sup>7</sup></span>空间；当然，如果<span
+class="math inline"><em>n</em></span>较小，那是没有必要用动态开点的(除非要实现更复杂的数据结构)
+需要说明，区间信息必须<strong>能快速地初始化</strong>，否则如果要依赖子结点的区间信息，那么用动态开点就没有意义了</p></li>
+<li><p>代码实现：和一般线段树相比，不需要建树，只多了一步判断是否需要新增结点的操作
+很多参数的设计是需要根据题意修改的，这里仅提供一个区间加、求区间和的模板</p>
+<p>```c++ int n, cnt, rt; // 以1作为根结点 long long pre[MAXN]; //
+假设已经预处理好了前缀和, 注意这样无法处理n过大的情况 const int LEN =
+适合的大小; int ls[LEN], rs[LEN]; struct Info{ long long s, lz; //
+因为无法事先初始化, 所以结点就不存l, r了 }t[LEN]; void init(int&amp; p,
+int l, int r) { p = ++cnt; t[p].s = pre[r] - pre[l - 1]; } void
+pushdown(int p, int l, int r) { if (t[p].lz) { int m = l + r &gt;&gt; 1;
+if (!ls[p]) init(ls[p], l, m); // 子结点未创建 if (!rs[p]) init(rs[p], m
++ 1, r); t[ls[p]].s += t[p].lz * (m - l + 1); t[rs[p]].s += t[p].lz * (r
+- m); t[p].lz = 0; } } void update(int&amp; p, int l, int r, int L, int
+R, int v) { if (!p) init(p, L, R); if (l &lt;= L &amp;&amp; r &gt;= R) {
+t[p].s += v * (R - L + 1); t[p].lz += v; return; } pushdown(p, L, R);
+int m = L + R &gt;&gt; 1; if (l &lt;= m) update(ls[p], l, r, L, m, v);
+if (r &gt; m) update(rs[p], l, r, m + 1, R, v); t[p].s = t[ls[p]].s +
+t[rs[p]].s; } void query(int&amp; p, int l, int r, int L, int R) { if
+(!p) init(p, L, R); if (l &lt;= L &amp;&amp; r &gt;= R) { return t[p].s;
+} pushdown(p, L, R); int m = L + R &gt;&gt; 1; long long ans = 0; if (l
+&lt;= m) ans += query(ls[p], l, r, L, m); if (r &gt; m) ans +=
+query(rs[p], l, r, m + 1, R); return ans; }</p></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/16/concreteMath-rounding/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-16</time>
+        <br>
+      具体数学: 取整函数
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/22/algo-prime-selection/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-22</time>
+        <br>
+      数论: 质数筛法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/26/algo-trick-offline-query/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-26</time>
+        <br>
+      算法竞赛: 离线查询
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/01/concreteMath-special-coefficient/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-01</time>
+        <br>
+      具体数学: 特殊系数
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/algorithm/" rel="tag"># algorithm</a>
+              <a href="/tags/tree/" rel="tag"># tree</a>
+              <a href="/tags/data-structure/" rel="tag"># data structure</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/04/10/java-collection/" rel="prev" title="Java: 数据结构与算法">
+                  <i class="fa fa-angle-left"></i> Java: 数据结构与算法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/04/10/algo-minmax-heap/" rel="next" title="数据结构: 对顶堆">
+                  数据结构: 对顶堆 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="博弈论: 公平组合游戏">
+<meta property="og:url" content="https://ishi-o.github.io/2025/01/07/algo-game-fairgames/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-01-07T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.163Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="algorithm">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/01/07/algo-game-fairgames/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/01/07/algo-game-fairgames/","path":"2025/01/07/algo-game-fairgames/","title":"博弈论: 公平组合游戏"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>博弈论: 公平组合游戏 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%B9%B3%E7%BB%84%E5%90%88%E6%B8%B8%E6%88%8F"><span class="nav-number">1.</span> <span class="nav-text">公平组合游戏</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/09/19/algo-bin-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2024-09-19</time>
+        <br>
+      位运算: 基本知识
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/07/algo-fastio/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-07</time>
+        <br>
+      算法竞赛: 常数优化之快读快写
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/22/algo-prime-selection/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-22</time>
+        <br>
+      数论: 质数筛法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/19/algo-prefix-sum/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-19</time>
+        <br>
+      数据结构: 前缀和
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/01/07/algo-game-fairgames/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="博弈论: 公平组合游戏 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          博弈论: 公平组合游戏
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-01-07 00:00:00" itemprop="dateCreated datePublished" datetime="2025-01-07T00:00:00+00:00">2025-01-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/Game-Theory/" itemprop="url" rel="index"><span itemprop="name">Game Theory</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.8k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>7 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h3 id="公平组合游戏">公平组合游戏</h3>
+<ul>
+<li><p>一个博弈游戏是公平组合游戏意味着，场上所有物品对于所有玩家都是可操作的，且玩家们必须遵循同样的操作规则；即对于操作(无论是操作规则还是操作对象)来说是公平的
+但玩家总会有操作的顺序，事实上许多游戏先手和后手的胜利期望是不同的，博弈论研究的就是，当场上所有玩家都作出最“合理”的操作时，某个玩家必胜/必输的情况；不难得到，一个玩家在一局游戏里，<strong>要么必胜、要么必输</strong>
+这里的合理，意味着玩家总是枚举完所有的结局，再选出最有利的那个选择；这里有一个很直观的结论就是，如果后续所有结局都是输，那么此时一定是必输的；否则，此时一定是必胜的
+那么有没有办法，不需要枚举所有的结局，而只需要知道后续状态的必胜、必输，就可以递推出当前的必胜/必输呢？当然是可以的</p></li>
+<li><p>实际上，对于双人的游戏而言，先手必胜意味着后手必输，因此我们只讨论<strong>先手必胜/先手必输</strong>的情况
+一个约定：先手必胜/先手必输此后<strong>简称必胜/必输</strong>；能使<strong>先手必胜/必输的操作对象的初始状态</strong>(例如数量为<span
+class="math inline"><em>n</em></span>)此后简称<strong>必胜/必输状态</strong>
+对操作规则不会因操作对象状态改变的游戏而言，必胜、必输只和操作对象的状态有关，那么一个脑筋急转弯的思考就是：</p>
+<ul>
+<li>一个状态是必胜状态，当且仅当存在一个后续状态是必输状态(这里的<strong>后续</strong>指的是<strong>只通过一次操作</strong>转移到的状态)
+充分性：如果存在一个后续的必输状态，那么此时先手可以选择转移到这个状态，此时后手变成了“先手”，于是必输
+必要性显然</li>
+<li>一个状态是必输状态，当且仅当没有后续状态、或所有后续状态是必胜状态
+这个命题的一部分是上述命题的逆否命题；特别地，如果没有后续状态，说明此时的先手已经无法再操作了，意味着先手必输</li>
+</ul></li>
+<li><p>对于博弈问题，可以将上述状态视作结点，并画成一个<strong>有向无环图</strong>，标记所有无出度的节点为必输结点，然后经过一次<code>dfs</code>即可得到所有结点的必胜/必输性质
+而在一些简单的脑筋急转弯题目中更常见的做法是，对所有状态进行归纳，即找到一个特征<span
+class="math inline"><em>A</em></span>，使该特征<strong>满足<span
+class="math inline"><em>A</em></span>无论如何都无法变为<span
+class="math inline"><em>A</em></span>、而<span
+class="math inline"><em>Ā</em></span>总存在一种操作使得<span
+class="math inline"><em>Ā</em></span>变为<span
+class="math inline"><em>A</em></span></strong></p></li>
+<li><p>巴什博弈：有<span
+class="math inline"><em>n</em></span>个物品，两个人轮流取物，每次只能取<span
+class="math inline">[1,<em>m</em>]</span>个物品，最后取光者胜利</p>
+<ul>
+<li>结论：在巴什博弈中，这个特征是<span
+class="math inline">(<em>m</em>+1)|<em>n</em></span></li>
+<li>一个结点<span
+class="math inline"><em>n</em> = <em>k</em></span>的所有前置状态为<span
+class="math inline"><em>n</em> ∈ [<em>k</em>+1,<em>k</em>+<em>m</em>]</span>、所有后置状态为<span
+class="math inline"><em>n</em> ∈ [<em>k</em>−<em>m</em>,<em>k</em>−1]</span>
+很明显，只有一个出度为零的状态，即<span
+class="math inline"><em>n</em> = 0</span>时，先手必输 因此<span
+class="math inline"><em>n</em> = 0</span>的所有前置状态<span
+class="math inline"><em>n</em> ∈ [1,<em>m</em>]</span>均为必胜状态<span
+class="math inline"> ⇒ <em>n</em> = <em>m</em> + 1</span>是必输状态、所有<span
+class="math inline"><em>n</em> ∈ [<em>m</em>+2,2<em>m</em>+1]</span>是必胜的(因为后续状态包含<span
+class="math inline"><em>n</em> = <em>m</em> + 1</span>)
+递推得到，所有<span
+class="math inline"><em>n</em> = <em>k</em>(<em>m</em>+1), <em>k</em> ∈ <em>N</em></span>均为必输状态，其余为必胜状态</li>
+<li>如果先手必胜，那么先手的操作就应是：使操作后<span
+class="math inline"><em>n</em> = <em>k</em>(<em>m</em>+1)</span>，即取<span
+class="math inline"><em>n</em>%(<em>m</em>+1)</span>个</li>
+</ul></li>
+<li><p><code>Nim</code>游戏：共<span
+class="math inline"><em>n</em></span>堆物品，每堆有<span
+class="math inline"><em>a</em><sub><em>i</em></sub></span>个，两个玩家轮流取<strong>任意一堆</strong>的<strong>任意数量个</strong>物品，最后取光者胜利</p>
+<ul>
+<li><p>在<code>Nim</code>游戏中，这个特征是各堆数量的<strong>异或和(也称<code>Nim</code>和)为零</strong>，<code>Nim</code>和定理：若<span
+class="math inline">$\begin{align}\bigoplus_{1\le i\le
+n}a_i=0\end{align}$</span>，则先手必输；否则先手必胜(其中<span
+class="math inline">⊕</span>表异或)
+证明这个定理，需要证明当异或和为<span
+class="math inline">0</span>时，不存在任何操作使其异或和仍未<span
+class="math inline">0</span>；且当异或和不为<span
+class="math inline">0</span>时，总是存在操作使其异或和变为<span
+class="math inline">0</span></p>
+<ul>
+<li>对于第一个命题：假设玩家将<span
+class="math inline"><em>a</em><sub><em>i</em></sub></span>改为<span
+class="math inline"><em>a</em><sub><em>i</em></sub>′</span>，那么由异或操作可以得出<span
+class="math inline"><em>a</em><sub><em>i</em></sub> = <em>a</em><sub><em>i</em></sub>′</span>，即不取，明显不符合规则，因此不存在这样的操作</li>
+<li>对于第二个命题：假设当前异或和为<span
+class="math inline"><em>k</em></span>，那么异或上<span
+class="math inline"><em>k</em></span>即为<span
+class="math inline">0</span>，我们取合适的<span
+class="math inline"><em>a</em><sub><em>i</em></sub></span>，使其变为<span
+class="math inline"><em>a</em><sub><em>i</em></sub> ⊕ <em>k</em></span>即可
+假设<span class="math inline"><em>k</em></span>的最高的为<span
+class="math inline">1</span>的位是第<span
+class="math inline"><em>j</em></span>位，那么至少存在一个<span
+class="math inline"><em>a</em><sub><em>i</em></sub></span>，它的第<span
+class="math inline"><em>j</em></span>位也为<span
+class="math inline">1</span>，选取这个<span
+class="math inline"><em>a</em><sub><em>i</em></sub></span>，可以得到<span
+class="math inline"><em>a</em><sub><em>i</em></sub> ⊕ <em>k</em> &lt; 2<sup><em>j</em></sup> ≤ <em>a</em><sub><em>i</em></sub></span>，因此这个操作是合法的</li>
+</ul>
+<p>先手必胜的操作就是，不断地使操作后的<code>Nim</code>和为<span
+class="math inline">0</span>，此时后手的任何操作只会让<code>Nim</code>和再变为非<span
+class="math inline">0</span>，直到最后一次使<code>Nim</code>和为<span
+class="math inline">0</span>，此时所有堆的数量均为<span
+class="math inline">0</span>，先手玩家得到胜利 也就是检查所有<span
+class="math inline"><em>a</em><sub><em>i</em></sub></span>(或检查所有满足第<span
+class="math inline">__<em>l</em><em>g</em>(<em>k</em>)</span>位为<span
+class="math inline">1</span>的)，找到任意一个异或<span
+class="math inline"><em>k</em></span>后不超过<span
+class="math inline"><em>a</em><sub><em>i</em></sub></span>的，取<span
+class="math inline"><em>a</em><sub><em>i</em></sub> − (<em>a</em><sub><em>i</em></sub>⊕<em>k</em>)</span>即可</p></li>
+</ul></li>
+<li><p><a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P4018"><code>Roy&amp;October之取石子</code></a>
+<a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P4860"><code>Roy&amp;October之取石子II</code></a></p>
+<ul>
+<li>可以发现，<span class="math inline">0</span>是必输的，而<span
+class="math inline"><em>n</em> ∈ [1,5]</span>是必胜的，然后<span
+class="math inline"><em>n</em> = 6</span>是必输的
+然后我们假设特征是<span class="math inline">6|<em>n</em></span>，即<span
+class="math inline"><em>n</em> = 6<em>k</em></span></li>
+<li>它是否无论如何都无法使下一个状态为<span
+class="math inline">6|<em>n</em></span>：这需要证明任意质数的幂<span
+class="math inline"><em>p</em><sup><em>k</em></sup></span>不是<span
+class="math inline">6</span>的倍数 除了<span
+class="math inline">2</span>以外的质数，它们的幂都是奇数，因此不可能是<span
+class="math inline">6</span>的倍数 <span
+class="math inline">2</span>的幂不含<span
+class="math inline">3</span>的因子，因此也不可能是<span
+class="math inline">6</span>的倍数，得证</li>
+<li>它的补，即<span
+class="math inline">6 ∤ <em>n</em></span>是否总存在一种取法使得下一个状态为<span
+class="math inline">6|<em>n</em></span>：因为<span
+class="math inline">6 ∤ <em>n</em></span>，我们取<span
+class="math inline"><em>n</em>%6</span>即可</li>
+<li>因此答案是：若<span
+class="math inline">6|<em>n</em></span>，则先手必输；否则先手必胜</li>
+<li>后题与前题类似，只不过特征变成了<span
+class="math inline">4|<em>n</em></span></li>
+</ul></li>
+<li><p><a
+target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P1290"><code>欧几里德的游戏</code></a>：有些时候，答案不能简单地归纳，而<strong>必须通过递归</strong>得到</p>
+<ul>
+<li>取<span class="math inline"><em>m</em></span>为两数中较小者，<span
+class="math inline"><em>n</em></span>为较大者，并改写为<span
+class="math inline"><em>n</em> = <em>k</em><em>m</em> + <em>r</em></span>，<span
+class="math inline"><em>r</em></span>为<span class="math inline">$n\
+{\rm mod}\ k$</span> 可以得到退出递归的情况：<span
+class="math inline"><em>r</em> =  = 0</span>或<span
+class="math inline"><em>k</em> ≥ 2</span>，此时操作者必胜
+前者显然，而后者总是可以一步(直接减去<span
+class="math inline"><em>k</em><em>m</em></span>)或两步(先减去<span
+class="math inline">(<em>k</em>−1)<em>m</em></span>，此时数对为<span
+class="math inline">(<em>m</em>,<em>m</em>+<em>r</em>)</span>，后手只能减去<span
+class="math inline"><em>m</em></span>)使数对变为<span
+class="math inline">(<em>m</em>,<em>r</em>)</span>；由于<span
+class="math inline">(<em>m</em>,<em>r</em>)</span>一定是必胜或必败的，它必胜就两步变换、必败就一步变换，就能保证数对为<span
+class="math inline">(<em>m</em>,<em>n</em>)</span>时的操作者必胜了</li>
+<li>否则，只能进行递归：<span
+class="math inline"><em>f</em>(<em>m</em>,<em>n</em>,<em>p</em><em>l</em><em>a</em><em>y</em><em>e</em><em>r</em>) =  = <em>f</em>(<em>r</em>,<em>m</em>,¬ <em>p</em><em>l</em><em>a</em><em>y</em><em>e</em><em>r</em>)</span></li>
+</ul></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/09/19/algo-bin-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2024-09-19</time>
+        <br>
+      位运算: 基本知识
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/07/algo-fastio/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-07</time>
+        <br>
+      算法竞赛: 常数优化之快读快写
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/22/algo-prime-selection/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-22</time>
+        <br>
+      数论: 质数筛法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/19/algo-prefix-sum/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-19</time>
+        <br>
+      数据结构: 前缀和
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/algorithm/" rel="tag"># algorithm</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/12/09/algo-graph-minimum-spanning-tree/" rel="prev" title="图的算法: 最小生成树">
+                  <i class="fa fa-angle-left"></i> 图的算法: 最小生成树
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/01/11/linux-infos/" rel="next" title="Linux: 高效地监控操作系统">
+                  Linux: 高效地监控操作系统 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

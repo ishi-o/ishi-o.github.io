@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="微积分: 级数">
+<meta property="og:url" content="https://ishi-o.github.io/2024/04/14/calculus-series/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ishi-o.github.io/2024/04/14/calculus-series/calculus-series/%E9%BA%A6%E5%85%8B%E5%8A%B3%E6%9E%97%E7%BA%A7%E6%95%B0.png">
+<meta property="article:published_time" content="2024-04-14T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.165Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="math">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ishi-o.github.io/2024/04/14/calculus-series/calculus-series/%E9%BA%A6%E5%85%8B%E5%8A%B3%E6%9E%97%E7%BA%A7%E6%95%B0.png">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/04/14/calculus-series/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/04/14/calculus-series/","path":"2024/04/14/calculus-series/","title":"微积分: 级数"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>微积分: 级数 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%97%A0%E7%A9%B7%E7%BA%A7%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">无穷级数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E6%95%B0%E9%A1%B9%E7%BA%A7%E6%95%B0"><span class="nav-number">1.1.</span> <span class="nav-text">常数项级数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E5%88%86%E5%92%8C%E6%95%B0%E5%88%97"><span class="nav-number">1.1.2.</span> <span class="nav-text">部分和数列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%9B%E6%95%A3%E6%80%A7"><span class="nav-number">1.1.3.</span> <span class="nav-text">敛散性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%BA%A7%E6%95%B0"><span class="nav-number">1.1.4.</span> <span class="nav-text">常见级数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%A7%E6%95%B0%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-number">1.1.5.</span> <span class="nav-text">级数的性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E9%A1%B9%E7%BA%A7%E6%95%B0%E7%9A%84%E6%AF%94%E8%BE%83%E5%88%A4%E5%88%AB%E6%B3%95"><span class="nav-number">1.1.6.</span> <span class="nav-text">正项级数的比较判别法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E8%88%AC%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.1.6.1.</span> <span class="nav-text">一般形式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9E%81%E9%99%90%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.1.6.2.</span> <span class="nav-text">极限形式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E9%A1%B9%E7%BA%A7%E6%95%B0%E7%9A%84%E6%AF%94%E5%80%BC%E5%88%A4%E5%88%AB%E6%B3%95"><span class="nav-number">1.1.7.</span> <span class="nav-text">正项级数的比值判别法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E9%A1%B9%E7%BA%A7%E6%95%B0%E7%9A%84%E6%A0%B9%E6%A4%8D%E5%88%A4%E5%88%AB%E6%B3%95"><span class="nav-number">1.1.8.</span> <span class="nav-text">正项级数的根植判别法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E9%A1%B9%E7%BA%A7%E6%95%B0%E7%9A%84%E7%A7%AF%E5%88%86%E5%88%A4%E5%88%AB%E6%B3%95"><span class="nav-number">1.1.9.</span> <span class="nav-text">正项级数的积分判别法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%A4%E9%94%99%E7%BA%A7%E6%95%B0%E7%9A%84%E8%8E%B1%E5%B8%83%E5%B0%BC%E8%8C%A8%E5%88%A4%E5%88%AB%E6%B3%95"><span class="nav-number">1.1.10.</span> <span class="nav-text">交错级数的莱布尼茨判别法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%9D%E5%AF%B9%E6%94%B6%E6%95%9B%E4%B8%8E%E6%9D%A1%E4%BB%B6%E6%94%B6%E6%95%9B"><span class="nav-number">1.1.11.</span> <span class="nav-text">绝对收敛与条件收敛</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E9%A1%B9%E7%BA%A7%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">函数项级数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%82%E7%BA%A7%E6%95%B0"><span class="nav-number">1.2.2.</span> <span class="nav-text">幂级数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%98%BF%E8%B4%9D%E5%B0%94%E5%AE%9A%E7%90%86"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">阿贝尔定理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B6%E6%95%9B%E5%8D%8A%E5%BE%84%E8%AE%A1%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">收敛半径计算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%A7%E8%B4%A8"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">性质</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%B0%E5%8B%92%E7%BA%A7%E6%95%B0"><span class="nav-number">1.2.2.4.</span> <span class="nav-text">泰勒级数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%82%85%E9%87%8C%E5%8F%B6%E7%BA%A7%E6%95%B0"><span class="nav-number">1.2.3.</span> <span class="nav-text">傅里叶级数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8B%84%E5%88%A9%E5%85%8B%E9%9B%B7%E6%94%B6%E6%95%9B%E5%AE%9A%E7%90%86"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">狄利克雷收敛定理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bf-t2l%E4%B8%80%E8%88%AC%E5%91%A8%E6%9C%9F%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">$\bf
+T&#x3D;2l$(一般周期)函数</span></a></li></ol></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/12/03/calculus-improper-int/" rel="bookmark">
+        <time class="popular-posts-time">2023-12-03</time>
+        <br>
+      微积分: 反常积分
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/05/calculus-limit-exercise/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-05</time>
+        <br>
+      微积分: 极限练习题
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/05/probability-rdnvar/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-05</time>
+        <br>
+      概率论与数理统计: 常见的随机变量汇总
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/17/calculus-series-exercise/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-17</time>
+        <br>
+      微积分: 级数练习题
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/04/14/calculus-series/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="微积分: 级数 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          微积分: 级数
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-04-14 00:00:00" itemprop="dateCreated datePublished" datetime="2024-04-14T00:00:00+00:00">2024-04-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/" itemprop="url" rel="index"><span itemprop="name">SE Courses</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/Calculus/" itemprop="url" rel="index"><span itemprop="name">Calculus</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>3.2k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>12 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="无穷级数">无穷级数</h1>
+<h2 id="常数项级数">常数项级数</h2>
+<h3 id="定义">定义</h3>
+<p>无穷多个数相加，记为<span
+class="math inline">$\begin{align}\sum_{n=1}^\infty
+u_n\end{align}$</span>，称为常数项无穷级数，又称常数项级数或级数</p>
+<h3 id="部分和数列">部分和数列</h3>
+<p>令<span
+class="math inline">$\begin{align}S_n=\sum_{k=1}^nu_k(n=1,2,...)\end{align}$</span>，我们说，当<span
+class="math inline"><em>n</em> → ∞</span>时，<span
+class="math inline">$\begin{align}S_n\approx\sum_{n=1}^\infty
+u_n\end{align}$</span></p>
+<h3 id="敛散性">敛散性</h3>
+<p>当<span
+class="math inline">$\begin{align}\lim_{n\rightarrow\infty}S_n=S\end{align}$</span>，且<span
+class="math inline"><em>S</em></span>为一个有限值时，称<span
+class="math inline">$\begin{align}\sum_{n=1}^\infty
+u_n\end{align}$</span>收敛，且称<span
+class="math inline"><em>S</em></span>为它的和，否则称它发散</p>
+<p>对于敛散性问题，我们将它转换成<strong>求<span
+class="math inline"><em>S</em><sub><em>n</em></sub></span>通项</strong>，再判断极限是否存在的问题</p>
+<h3 id="常见级数">常见级数</h3>
+<ul>
+<li><strong>调和级数</strong>：<span
+class="math inline">$\begin{align}\sum_{n=1}^\infty
+\frac1n\end{align}$</span>发散
+<ul>
+<li><span
+class="math inline">$\begin{align}&amp;证明:u_n=\frac1n=\int_n^{n+1}\frac1ndx&gt;\int_n^{n+1}\frac1xdx\\&amp;\therefore
+S_n&gt;\int_1^{n+1}\frac1xdx=\ln
+x\Bigg|_1^{+\infty}=+\infty\\&amp;\therefore\sum_{n=1}^\infty
+\frac1n发散 \end{align}$</span></li>
+</ul></li>
+<li>p级数(超调和级数)：<span
+class="math inline">$\begin{align}\sum_{n=1}^\infty\frac1{n^p}\end{align}$</span>当<span
+class="math inline"><em>p</em> ≤ 1</span>时发散，当<span
+class="math inline"><em>p</em> &gt; 1</span>时收敛
+<ul>
+<li><span
+class="math inline">$\begin{align}&amp;证明:u_n=\frac1{n^p}=\int_n^{n+1}\frac1{n^p}dx&gt;\int_n^{n+1}\frac1{x^p}dx\\&amp;u_n=\frac1{n^p}=\int_{n-1}^{n}\frac1{n^p}dx&lt;\int_{n-1}^{n}\frac1{x^p}dx\\&amp;\therefore
+S_n&gt;\int_1^{n+1}\frac1{x^p}dx，S_n&lt;\int_0^n\frac1{x^p}dx\\&amp;1)当p=1时，为调和级数，已证明为发散\\&amp;2)当p&lt;1时，S_n&gt;\frac1{1-p}x^{1-p}\Bigg|_1^{+\infty}，易得p&lt;1时发散\\&amp;3)当p&gt;1时，S_n&lt;\frac1{1-p}x^{1-p}\Bigg|_1^{+\infty}，易得p&gt;1时收敛\end{align}$</span></li>
+</ul></li>
+<li><span
+class="math inline">$\begin{align}\sum_{n=2}^\infty\frac1{n^p(\ln
+x)^q}\end{align}$</span>当<span
+class="math inline"><em>p</em> &lt; 1</span>时发散；当<span
+class="math inline"><em>p</em> &gt; 1</span>时收敛；当<span
+class="math inline"><em>p</em> = 1</span>时，<span
+class="math inline">$\begin{cases}发散,&amp;q\le1\\收敛,&amp;q&gt;1\end{cases}$</span></li>
+</ul>
+<h3 id="级数的性质">级数的性质</h3>
+<ul>
+<li>一个级数乘以一个实数不改变其敛散性</li>
+<li>两收敛级数相加减得到的级数仍收敛，且<span
+class="math inline"><em>S</em> = <em>S</em><sub>1</sub> ± <em>S</em><sub>2</sub></span></li>
+<li>改变级数的<strong>有限个</strong>项，级数的敛散性不变</li>
+<li>若用括号将级数(S1)的部分项合并为一项，将得到的级数称为S2，若S1收敛则S2仍收敛，若S2发散则S1必发散</li>
+<li><span class="math inline">$\begin{align}\sum_{n=1}^\infty
+u_n收敛\Rightarrow\lim_{n\rightarrow\infty}u_n=0，反之不成立(例如调和级数);\
+\lim_{n\rightarrow\infty}u_n\ne0\Rightarrow\sum_{n=1}^\infty
+u_n发散\end{align}$</span></li>
+</ul>
+<h3 id="正项级数的比较判别法">正项级数的比较判别法</h3>
+<h4 id="一般形式">一般形式</h4>
+<p>对于正项级数，<span
+class="math inline">{<em>S</em><sub><em>n</em></sub>}</span>本身是单调递增的，根据单调有界收敛原理，若<span
+class="math inline">$\begin{align}\lim_{n\rightarrow\infty}S_n\end{align}$</span>存在，则该级数收敛</p>
+<p>正项级数的比较判别法与无穷区间上反常积分的比较判别法类似： <span
+class="math display">$$
+\begin{align}若存在N\in N^+,当n\ge N时0&lt;u_n\le
+v_n,若\sum_{n=1}^\infty u_n发散,则\sum_{n=1}^\infty
+v_n发散;若\sum_{n=1}^\infty v_n收敛,则\sum_{n=1}^\infty
+u_n收敛\end{align}
+$$</span>
+在用比较判别法判断时，应强调一般项的正负和用于比较的标准级数</p>
+<p>标准级数一般为p级数、等比级数等</p>
+<h4 id="极限形式">极限形式</h4>
+<p><span class="math display">$$
+\begin{align}&amp;\large若\lim_{n\rightarrow\infty}\frac{u_n}{v_n}=l(u_n、v_n&gt;0):\\&amp;\large1)若0&lt;l&lt;+\infty，则\sum_{n=1}^\infty
+u_n和\sum_{n=1}^\infty
+v_n的敛散性相同(此时k_1v_n&lt;u_n&lt;k_2v_n)\\&amp;\large2)若l=0，则说明u_n&lt;v_n，对应比较判别法\\&amp;\large3)若l=+\infty，则说明v_n&lt;u_n\end{align}
+$$</span></p>
+<h3 id="正项级数的比值判别法">正项级数的比值判别法</h3>
+<p>比较判别法需要借助一个别的标准级数，而比值判别法由级数本身来确定它的敛散性
+<span class="math display">$$
+\begin{align}&amp;\large若\lim_{n\rightarrow\infty}\frac{u_{n+1}}{u_n}=\rho(u_n&gt;0):\\&amp;\large1)当\rho&lt;1时，级数收敛\\&amp;\large2)当\rho&gt;1或\rho=+\infty时，级数发散\end{align}
+$$</span></p>
+<h3 id="正项级数的根植判别法">正项级数的根植判别法</h3>
+<p>也称柯西判别法，当一般项的外部带n次方时可以使用 <span
+class="math display">$$
+\begin{align}&amp;\large若\lim_{n\rightarrow\infty}\sqrt[n]{u_n}=\rho(u_n&gt;0):\\&amp;\large1)当\rho&lt;1时，级数收敛\\&amp;\large2)当\rho&gt;1或\rho=+\infty时，级数发散\end{align}
+$$</span></p>
+<h3 id="正项级数的积分判别法">正项级数的积分判别法</h3>
+<p>上述的调和级数和p级数敛散性问题借用反常积分转换为了反常函数判别法的问题，对于正项级数，如果它的一般项<strong>单调递减</strong>，则它与<span
+class="math inline">$\begin{align}\int_1^{+\infty}u(x)dx\end{align}$</span>的敛散性相同</p>
+<h3 id="交错级数的莱布尼茨判别法">交错级数的莱布尼茨判别法</h3>
+<p>交错级数，即各项正负相间的级数，表现为<span
+class="math inline">$\begin{align}\sum_{n=1}^\infty(-1)^{n-1}u_n\end{align}$</span></p>
+<p>若<span
+class="math inline"><em>u</em><sub><em>n</em></sub></span>单调递减且<span
+class="math inline">$\begin{align}\lim_{n\rightarrow\infty}u_n=0\end{align}$</span>，则交错级数收敛</p>
+<h3 id="绝对收敛与条件收敛">绝对收敛与条件收敛</h3>
+<p>对任意项级数，由其每一项的绝对值组成的新级数称为<strong>绝对值级数</strong>，如果它收敛，则原级数也收敛，这称为原级数<strong>绝对收敛</strong>。因此对于一个交错级数，既可以用莱布尼茨判别法，也可以用正项级数的判别法</p>
+<p>但是，当绝对值级数发散时，不能断定原级数发散，而只能说明它不是绝对收敛。如果原级数收敛而绝对值级数发散，则称原级数<strong>条件收敛</strong>，例如<span
+class="math inline">$\begin{align}\sum_{n=1}^\infty(-1)^{n-1}\frac1n\end{align}$</span></p>
+<p>因为交错级数的部分和数列是小于它的绝对值级数的部分和数列的，这就很像比较判别法：大的收敛则小的也收敛；而大的发散，小的不一定发散</p>
+<p>但是，由比值判别法或根值判别法得出绝对值级数发散的原级数也发散，这很好理解：由比值判别法得到<span
+class="math inline"><em>u</em><sub><em>n</em></sub></span>单调递增，不符合莱布尼茨判别法的第一条件；由根值判别法得到<span
+class="math inline">$\begin{align}\lim_{n\rightarrow\infty}u_n=+\infty\end{align}$</span>，不符合莱布尼茨判别法的第二条件</p>
+<p>-&gt;插曲：一个很有意思的事，欧拉证明欧拉公式时用到了泰勒级数的知识，被称为形式推导，没有考虑到<span
+class="math inline"><em>e</em><sup><em>i</em><em>π</em></sup></span>展开后条件收敛的情况，这时调节项的位置有可能改变它的敛散性，这样证明是不严谨的</p>
+<p><strong>黎曼重排定理</strong>：一个条件收敛的级数存在不同的排序方法，使其收敛于任意数(包括<span
+class="math inline"> + ∞</span>)</p>
+<p>证明：假设级数<span
+class="math inline">$\begin{align}\sum_{n=1}^\infty
+u_n\end{align}$</span><strong>条件收敛</strong>，由于<span
+class="math inline">$\begin{align}\sum_{n=1}^\infty
+|u_n|\end{align}$</span>发散，故必有<strong>发散</strong>的两个子级数<span
+class="math inline">$\begin{align}\sum_{n=1}^\infty
+a_n、\sum_{n=1}^\infty b_n\end{align}$</span>，其中<span
+class="math inline"><em>a</em><sub><em>n</em></sub> &lt; 0, <em>b</em><sub><em>n</em></sub> &gt; 0</span>，由原级数条件收敛的性质，虽然它们发散，但<span
+class="math inline">$\begin{align}\lim_{n\rightarrow\infty}a_n=\lim_{n\rightarrow\infty}b_n=0\end{align}$</span></p>
+<p>设想一个值S，它可以是有限值或无穷，从<span
+class="math inline"><em>b</em><sub><em>n</em></sub></span>中取有限个项直至重排数列的和大于S，再从<span
+class="math inline"><em>a</em><sub><em>n</em></sub></span>中取有限个项直至重排数列的和小于S，重复此操作直到<span
+class="math inline"><em>a</em><sub><em>n</em></sub><em>与</em><em>b</em><sub><em>n</em></sub></span>剩下无穷个趋于0的项，这样，重排后的数列和将无限接近S</p>
+<p>一个简单、不严谨的例子：级数<span
+class="math inline">(1−1) + (1−1) + ...</span>收敛于0，取一个1放在开头，变成：<span
+class="math inline">1 + (1−1) + (1−1) + ...</span>，则它收敛于1。这只是便于理解，但它是错误的，不能随意去掉收敛级数的括号或给发散级数添加无限个括号</p>
+<h2 id="函数项级数">函数项级数</h2>
+<h3 id="定义-1">定义</h3>
+<p>所谓函数项级数，就是每一项都由一个函数组成的级数</p>
+<p>如果在<span
+class="math inline"><em>x</em> = <em>x</em><sub>0</sub></span>处形成的数项级数收敛，则称它为这个函数项级数的收敛点，否则称为发散点</p>
+<p>所有收敛点的集合称为这个幂级数的收敛域</p>
+<h3 id="幂级数">幂级数</h3>
+<p>幂级数是最广泛的一类函数项级数，<span
+class="math inline">$\begin{align}\sum_{n=0}^\infty
+a_nx^n\end{align}$</span>称为<span
+class="math inline"><em>x</em></span>的幂级数</p>
+<h4 id="阿贝尔定理">阿贝尔定理</h4>
+<p>若一个幂级数在<span
+class="math inline"><em>x</em> = <em>x</em><sub>0</sub></span>处收敛，则它在<span
+class="math inline">(−|<em>x</em><sub>0</sub>|, |<em>x</em><sub>0</sub>|)</span>上绝对收敛；如果在此处发散，则它在<span
+class="math inline">(−∞, −|<em>x</em><sub>0</sub>|) ∪ (|<em>x</em><sub>0</sub>|, +∞)</span>上发散</p>
+<p>幂级数只有三种情况：存在一个<span
+class="math inline"><em>R</em></span></p>
+<ul>
+<li>如果<span
+class="math inline">0 &lt; <em>R</em> &lt;  + ∞</span>，则幂级数在<span
+class="math inline">(−<em>R</em>,<em>R</em>)</span>上绝对收敛，在<span
+class="math inline">(−∞,−<em>R</em>) ∪ (<em>R</em>,+∞)</span>上发散</li>
+<li>如果<span
+class="math inline"><em>R</em> = 0</span>，则幂级数处处发散</li>
+<li>如果<span
+class="math inline"><em>R</em> =  + ∞</span>，则幂级数处处绝对收敛</li>
+</ul>
+<p>所以，收敛域一般是形如<span
+class="math inline">(−<em>R</em>,<em>R</em>)</span>的区间，因此在<span
+class="math inline"><em>x</em> =  ± <em>R</em></span>处需要额外判断敛散性</p>
+<h4 id="收敛半径计算法">收敛半径计算法</h4>
+<p><span
+class="math inline"><em>R</em></span>的求法类似比值判别法，对于幂级数<span
+class="math inline">$\begin{align}\sum_{n=0}^\infty
+a_nx^n\end{align}$</span>的绝对值级数，假设有：</p>
+<p><span
+class="math inline">$\begin{align}\lim_{n\rightarrow\infty}\Bigg|\frac{a_{n+1}x^{n+1}}{a_nx^n}\Bigg|=\rho|x|,即\lim_{n\rightarrow\infty}\Bigg|\frac{a_{n+1}}{a_n}\Bigg|=\rho\end{align}$</span></p>
+<p>则当<span
+class="math inline"><em>ρ</em>|<em>x</em>| &lt; 1</span>，即<span
+class="math inline">$\begin{align}|x|&lt;\frac1\rho\end{align}$</span>时，级数收敛，反之发散</p>
+<p>因此：当<span class="math inline"><em>ρ</em> ≠ 0</span>时，<span
+class="math inline">$\begin{align}R=\frac1\rho\end{align}$</span>；当<span
+class="math inline"><em>ρ</em> = 0</span>时，<span
+class="math inline"><em>R</em> =  + ∞</span>；当<span
+class="math inline"><em>ρ</em> =  + ∞</span>时，<span
+class="math inline"><em>R</em> = 0</span></p>
+<p>所以，我们求<span
+class="math inline">$\begin{align}\lim_{n\rightarrow\infty}\Bigg|\frac{a_n}{a_{n+1}}\Bigg|\end{align}$</span>，对应的结果便是<span
+class="math inline"><em>R</em></span></p>
+<p>这个方法只适用于缺有限项或不缺项的幂级数，而类似<span
+class="math inline">$\begin{align}\sum_{n=0}^\infty
+a_nx^{2n}\end{align}$</span>这样缺无穷多项的级数应直接用比值判别法</p>
+<p><strong>推论</strong>：形似<span
+class="math inline">$\begin{align}\sum_{n=0}^\infty
+a_nx^{kn}\end{align}$</span>的收敛半径为<span
+class="math inline">$\sqrt[k]R$</span></p>
+<h4 id="性质">性质</h4>
+<ul>
+<li>线性运算：两个幂级数相加减，收敛半径为<span
+class="math inline"><em>R</em> = min (<em>R</em><sub>1</sub>,<em>R</em><sub>2</sub>)</span></li>
+<li>乘法运算：两个幂级数相乘，收敛半径也为<span
+class="math inline"><em>R</em></span></li>
+<li>若<span class="math inline">$\begin{align}\sum_{n=0}^\infty
+a_nx^n\end{align}$</span>收敛半径为<span
+class="math inline"><em>R</em></span>，则<span
+class="math inline">$\begin{align}\sum_{n=1}^\infty
+na_nx^{n-1}、\sum_{n=2}^\infty
+n(n-1)a_nx^{n-2}\end{align}$</span>和<span
+class="math inline">$\begin{align}\sum_{n=0}^\infty
+\frac{1}{n+1}a_nx^{n+1}\end{align}$</span>的收敛半径也为<span
+class="math inline"><em>R</em></span></li>
+<li>假设幂级数的和函数为<span
+class="math inline"><em>S</em>(<em>x</em>)</span>，收敛半径为<span
+class="math inline"><em>R</em></span>，则<span
+class="math inline"><em>S</em>(<em>x</em>)</span>在<span
+class="math inline">(−<em>R</em>,<em>R</em>)</span>上<strong>连续且可导且可积</strong>，且：
+<ul>
+<li><span class="math inline">$\begin{align}S'(x)=\sum_{n=1}^\infty
+na_nx^{n-1}\end{align}$</span>，根据第三点，<span
+class="math inline"><em>S</em>′(<em>x</em>)</span>对应的幂级数收敛半径也为<span
+class="math inline"><em>R</em></span></li>
+<li><span
+class="math inline">$\begin{align}\int_0^xS(x)dx=\sum_{n=0}^\infty
+\frac{1}{n+1}a_nx^{n+1}\end{align}$</span>，根据第三点，它对应的幂级数收敛半径也为<span
+class="math inline"><em>R</em></span></li>
+<li>求导或积分后对应的幂级数在<span
+class="math inline"><em>x</em> = <em>R</em></span>上的敛散性可能变化</li>
+</ul></li>
+</ul>
+<h4 id="泰勒级数">泰勒级数</h4>
+<p>幂级数形式简单，有许多性质，而且可以把无法用初等函数表示的函数写成幂级数(例如一些函数的原函数)</p>
+<p>把已知函数化为幂级数：</p>
+<p>由<span
+class="math inline"><em>f</em>(<em>x</em>)<em>在</em><em>x</em> = <em>x</em><sub>0</sub></span>处的泰勒展开<span
+class="math inline">$\begin{align}f(x)=f(x_0)+f'(x_0)(x-x_0)+\frac{f''(x_0)}{2!}(x-x_0)^2+...\end{align}$</span>，得<span
+class="math inline"><em>f</em>(<em>x</em>)</span>在<span
+class="math inline"><em>x</em> = <em>x</em><sub>0</sub></span>处的泰勒级数为<span
+class="math inline">$\begin{align}f(x)=\sum_{n=0}^\infty
+\frac{f^{(n)}(x_0)}{n!}{(x-x_0)}^n\end{align}$</span>，充要条件为<span
+class="math inline"><em>f</em>(<em>x</em>)</span>在<span
+class="math inline"><em>x</em> = <em>x</em><sub>0</sub></span>处有任意阶导数且<span
+class="math inline">$\begin{align}\lim_{n\rightarrow\infty}(拉格朗日型余项)\end{align}$</span>趋于0</p>
+<p>一般地，将<span
+class="math inline"><em>f</em>(<em>x</em>)</span>展开为泰勒级数的步骤为：</p>
+<ul>
+<li>对<span
+class="math inline"><em>f</em>(<em>x</em>)</span>高阶求导，得到幂级数</li>
+<li>求幂级数的收敛域</li>
+<li>证明<span
+class="math inline">$\begin{align}\lim_{n\rightarrow\infty}\frac{f^{(n+1)}(\xi)}{(n+1)!}(x-x_0)^{n+1}=0\end{align}$</span></li>
+</ul>
+<p>更好的方法为：记住常见的泰勒级数，对它们或<strong>求导</strong>，或<strong>积分</strong>，或<strong>换元</strong>来求所求函数的幂级数，例如要求<span
+class="math inline"><em>g</em>(<em>x</em>) = <em>f</em>′(<em>x</em>) = cos <em>x</em></span>的级数，只需对<span
+class="math inline"><em>f</em>(<em>x</em>) = sin <em>x</em></span>的泰勒级数逐项求导即可</p>
+<p>常见的麦克劳林级数：</p>
+<p><img src=".\calculus-series\麦克劳林级数.png" /></p>
+<h3 id="傅里叶级数">傅里叶级数</h3>
+<p><span
+class="math inline">$\begin{align}f(x)=\frac{a_0}2+\sum_{n=1}^\infty(a_n\cos
+nx+b_n\sin nx)\end{align}$</span></p>
+<h4 id="狄利克雷收敛定理">狄利克雷收敛定理</h4>
+<p>如果<span
+class="math inline"><em>T</em><sub><em>f</em>(<em>x</em>)</sub> = 2<em>π</em></span>且<span
+class="math inline"><em>f</em>(<em>x</em>)</span>在<span
+class="math inline">( − <em>π</em>, <em>π</em>]</span>上满足：</p>
+<ul>
+<li>连续或有有限个第一类间断点</li>
+<li>有有限个单调区间</li>
+</ul>
+<p>则<span
+class="math inline"><em>f</em>(<em>x</em>)</span>可展开为处处收敛的傅里叶级数且<span
+class="math inline">$\begin{align}&amp;S(x)=\frac{a_0}2+\sum_{n=1}^\infty(a_n\cos
+nx+b_n\sin nx)=\begin{cases}f(x),&amp;在x处连续\\\
+\large\frac{\lim_{x\rightarrow x^-}f(x)+\lim_{x\rightarrow
+x^+}f(x)}2,&amp;x为间断点\end{cases}\\&amp;a_0=\frac1\pi\int_{-\pi}^\pi
+f(x)dx,\ a_n=\frac1\pi\int_{-\pi}^\pi f(x)\cos nxdx,\
+b_n=\frac1\pi\int_{-\pi}^\pi f(x)\sin nxdx\end{align}$</span></p>
+<h4 id="bf-t2l一般周期函数"><span class="math inline">$\bf
+T=2l$</span>(一般周期)函数</h4>
+<p><span
+class="math inline">$\begin{align}&amp;f(x)\sim\frac{a_0}2+\sum_{n=1}^\infty(a_n\cos
+\frac\pi lnx+b_n\sin \frac\pi lnx)\\&amp;a_0=\frac1l\int_{-l}^l f(x)dx,\
+a_n=\frac1l\int_{-l}^l f(x)\cos \frac \pi lnxdx,\ b_n=\frac1l\int_{-l}^l
+f(x)\sin \frac \pi lnxdx\end{align}$</span></p>
+<p><strong>延拓</strong>：给一个只在有限区间上有定义的函数添加定义(如新定义它的周期)，从而拓广函数的定义域</p>
+<p>在<span
+class="math inline">[0,<em>l</em>]</span>上有定义的函数的傅里叶展开：在<span
+class="math inline">[ − <em>l</em>, 0)</span>上添加定义即可，有两种：</p>
+<ul>
+<li>奇延拓：使其展成正弦级数，<span
+class="math inline">$\begin{align}f(x)\sim \sum_{n=1}^\infty b_n\sin
+\frac\pi lnx\end{align}$</span></li>
+<li>偶延拓：使其展成余弦级数，<span
+class="math inline">$\begin{align}f(x)\sim\frac{a_0}2+\sum_{n=1}^\infty
+a_n\cos \frac\pi lnx\end{align}$</span></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/12/03/calculus-improper-int/" rel="bookmark">
+        <time class="popular-posts-time">2023-12-03</time>
+        <br>
+      微积分: 反常积分
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/05/calculus-limit-exercise/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-05</time>
+        <br>
+      微积分: 极限练习题
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/05/probability-rdnvar/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-05</time>
+        <br>
+      概率论与数理统计: 常见的随机变量汇总
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/17/calculus-series-exercise/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-17</time>
+        <br>
+      微积分: 级数练习题
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/math/" rel="tag"># math</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/02/regex/" rel="prev" title="正则表达式: 使用regex进行模糊查询">
+                  <i class="fa fa-angle-left"></i> 正则表达式: 使用regex进行模糊查询
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/04/17/calculus-series-exercise/" rel="next" title="微积分: 级数练习题">
+                  微积分: 级数练习题 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

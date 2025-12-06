@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="位运算: 基本知识">
+<meta property="og:url" content="https://ishi-o.github.io/2024/09/19/algo-bin-beginner/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-09-19T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.163Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="algorithm">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/09/19/algo-bin-beginner/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/09/19/algo-bin-beginner/","path":"2024/09/19/algo-bin-beginner/","title":"位运算: 基本知识"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>位运算: 基本知识 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9F%E7%9A%84%E4%BA%8C%E8%BF%9B%E5%88%B6%E7%AE%97%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">硬件加速的二进制算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%82%E6%9C%80%E9%AB%98%E6%9C%89%E6%95%88%E4%BD%8D"><span class="nav-number">1.1.</span> <span class="nav-text">求最高有效位</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E8%BF%90%E7%AE%97"><span class="nav-number">2.</span> <span class="nav-text">与运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%A7%E8%B4%A8"><span class="nav-number">2.1.</span> <span class="nav-text">基本性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A9%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">掩码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A11%E7%9A%84%E4%B8%AA%E6%95%B0"><span class="nav-number">2.3.</span> <span class="nav-text">计1的个数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E6%88%96%E8%BF%90%E7%AE%97"><span class="nav-number">3.</span> <span class="nav-text">异或运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%A7%E8%B4%A8-1"><span class="nav-number">3.1.</span> <span class="nav-text">基本性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%89%E6%98%8E%E8%B7%9D%E7%A6%BB"><span class="nav-number">3.2.</span> <span class="nav-text">汉明距离</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/01/07/algo-game-fairgames/" rel="bookmark">
+        <time class="popular-posts-time">2025-01-07</time>
+        <br>
+      博弈论: 公平组合游戏
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/19/discreteMath-mathamatic-logic/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-19</time>
+        <br>
+      离散数学: 数理逻辑
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/22/discreteMath-set/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-22</time>
+        <br>
+      离散数学: 集合论
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/05/calculus-limit-exercise/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-05</time>
+        <br>
+      微积分: 极限练习题
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/09/19/algo-bin-beginner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="位运算: 基本知识 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          位运算: 基本知识
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-09-19 00:00:00" itemprop="dateCreated datePublished" datetime="2024-09-19T00:00:00+00:00">2024-09-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/Trick/" itemprop="url" rel="index"><span itemprop="name">Trick</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>6 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h2 id="硬件加速的二进制算法">硬件加速的二进制算法</h2>
+<h3 id="求最高有效位">求最高有效位</h3>
+<ul>
+<li><p>定义末位为第零位</p></li>
+<li><p><code>__builtin_clz()</code>：原理<code>bsr(bit scan reserve,逆向位扫描)</code>，可视作<code>O(1)</code>，能求出前导零个数</p>
+<p>参数为零时返回结果未定义</p>
+<p>最高有效位为<code>31-__builtin_clz()</code></p></li>
+<li><p><code>__lg()</code>：直接给出，实际上编译后代码与上述方法一致</p>
+<p>且该方法是<code>log2()</code>的优替，快速返回一个整数的以<span
+class="math inline">2</span>为底对数的下取整</p></li>
+</ul>
+<h2 id="与运算">与运算</h2>
+<h3 id="基本性质">基本性质</h3>
+<ul>
+<li>与运算只保留两个操作数共同拥有的<span
+class="math inline">1</span></li>
+</ul>
+<h3 id="掩码">掩码</h3>
+<ul>
+<li><p>判奇偶性：<span
+class="math inline"><em>A</em>&amp;1 = 1?<em>奇</em> : <em>偶</em></span></p></li>
+<li><p>模<span class="math inline">2<sup><em>n</em></sup></span>：<span
+class="math inline"><em>A</em>%2<sup><em>n</em></sup> = <em>A</em>&amp;((1&lt;&lt;<em>n</em>)−1)</span></p></li>
+<li><p>判断二进制码子集：若<span
+class="math inline"><em>B</em></span>是<span
+class="math inline"><em>A</em></span>的子集，则<span
+class="math inline"><em>A</em>&amp;<em>B</em> = <em>B</em></span></p></li>
+</ul>
+<h3 id="计1的个数">计<span class="math inline">1</span>的个数</h3>
+<ul>
+<li><p>调用库函数：<code>C++:__builtin_popcount()、Java:Integer.bitCount()</code></p></li>
+<li><p>暴力算法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">while</span> (x) &#123;</span><br><span class="line">      ans += x &amp; <span class="number">1</span>;</span><br><span class="line">      x &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">- `Brian Kernighan`算法：跳过最右$<span class="number">1</span>$和末位中间的零，直接对该一计数</span><br><span class="line"></span><br><span class="line">  $k=x\&amp;(x<span class="number">-1</span>)$的性质是：$k$和$x$相差最右边的$<span class="number">1</span>$</span><br><span class="line"></span><br><span class="line">  迭代直到$x=<span class="number">0</span>$，循环次数即一的个数</span><br><span class="line"></span><br><span class="line">  ```c++</span><br><span class="line">  <span class="keyword">while</span> (x) &#123;</span><br><span class="line">      x &amp;= x - <span class="number">1</span>;</span><br><span class="line">      ++ans;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>分治算法(<code>Java bitCount()</code>所用方法)：</p>
+<ul>
+<li><p>问题难点在于不知道哪里有<span
+class="math inline">1</span>，也就无从统计</p>
+<p>暴力算法是<strong>遍历所有位</strong>(优化后的<code>BK</code>算法也是<code>O(n)</code>)使<span
+class="math inline">1</span>加起来，换言之，就是<strong>将<span
+class="math inline"><em>n</em></span>位数分成<span
+class="math inline"><em>n</em></span>组</strong></p>
+<p>那么，分治算法的思想是<strong>遍历</strong>所有<strong>两位</strong>，将其<strong>分为<span
+class="math inline">$\frac n2$</span>组</strong>，使<span
+class="math inline">1/2</span>加起来</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (x) &#123;</span><br><span class="line">    <span class="comment">// 这里需要先以每两位为一组, 求得1的个数, 覆盖回x</span></span><br><span class="line">    ans += x &amp; <span class="number">3</span>; <span class="comment">// 3 == 0b0000....0011</span></span><br><span class="line">    x &gt;&gt;= <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么首先就要知道每个组是<span
+class="math inline">0/1/2</span>中的哪个数：</p></li>
+<li><p>将整数以<strong>每两位为一组</strong>划分，要求出每组的<span
+class="math inline">1</span>的个数，就是要求每组中<strong>所有位的加和</strong></p>
+<p>其对应关系为<span
+class="math inline">$\begin{matrix}原码&amp;(1的个数)_2\\00&amp;00\\01&amp;01\\10&amp;01\\11&amp;10\end{matrix}$</span>，那么如何将这个计量关系快速算出，且每组间互不影响？</p>
+<p>首先，取掩码<span class="math inline">$\rm
+0b0101..0101$</span>，即<span class="math inline">$\rm
+0x55..5$</span>，相与后能将每组中位于奇位置的<span
+class="math inline">1</span>保留，偶位置全为零</p>
+<p>让原整数<strong>右移一位</strong>，则原本处于偶位置的<span
+class="math inline">1</span>移到奇位置，原本处于奇位置的<span
+class="math inline">1</span>移位相与后为零(故不影响其它组)</p>
+<p>将两次相与的结果相加，每组中<span
+class="math inline">1</span>的个数就得到了，因为<strong>加和最大为<span
+class="math inline">2</span></strong>，故<strong>每组是独立</strong>的</p></li>
+<li><p>当然，分治算法不能满足于如此，这样还需遍历<span
+class="math inline">$\frac n2$</span>次</p>
+<p>既然一次合并就能降低一半复杂度了，尝试继续合并，最后<span
+class="math inline"><em>a</em><em>n</em><em>s</em> = <em>x</em>&amp;(<em>全</em>1) = <em>x</em></span></p>
+<p>重复上述过程，但以<strong>每四位为一组</strong>划分：</p>
+<p>类似上述掩码，取<span class="math inline">$\rm
+0b0011..0011$</span>，即<span class="math inline">$\rm
+0x33..3$</span>，结果为<span
+class="math inline"><em>x</em>&amp;<em>M</em> + (<em>x</em>&gt;&gt;2)&amp;<em>M</em></span></p>
+<p>形象表达：将<span
+class="math inline"><em>x</em></span>看作四进制数，每两位四进制数(即每四位为一组)为一组，求每组<strong>所有位的加和</strong>；即<span
+class="math inline">$\begin{matrix}(原码)_4&amp;(所有位的加和)_4\\00&amp;00\\01/10&amp;01\\02/20/11&amp;02\\21/12&amp;03\\22&amp;10\end{matrix}$</span>，因为加和最大为<span
+class="math inline">4</span>，故每组间独立计算，互不影响</p>
+<p>重复每<span
+class="math inline">2<em>n</em></span>一组的划分，直到<strong>只剩下一组</strong>，对这一组完成最后的统计后，则剩余整数就是所求</p>
+<p>以<span
+class="math inline">32</span>位整数为例，最终一次运算应以<span
+class="math inline">32</span>位为一组，<span class="math inline">$M={\rm
+0x0000ffff}、x=x\&amp;M+(x&gt;&gt;16)\&amp;M$</span>，此时<span
+class="math inline"><em>x</em></span>就是所求</p></li>
+<li><p>```c++ // 对int/unsigned int 32位整数: x = (x &amp; 0x55555555) +
+((x &gt;&gt; 1) &amp; 0x55555555); x = (x &amp; 0x33333333) + ((x
+&gt;&gt; 2) &amp; 0x33333333); x = (x &amp; 0x0f0f0f0f) + ((x &gt;&gt;
+4) &amp; 0x0f0f0f0f); x = (x &amp; 0x00ff00ff) + ((x &gt;&gt; 8) &amp;
+0x00ff00ff); x = (x &amp; 0x0000ffff) + ((x &gt;&gt; 16) &amp;
+0x0000ffff); // 此时x为所求 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 分治算法在位运算上的优化(我也没想到这还能优化)：</span><br><span class="line"></span><br><span class="line">  - 对第一步：每组中原码和统计后码值的关系可优化为**原码减去偶数位值**：节省一次与运算</span><br><span class="line"></span><br><span class="line">    $\begin&#123;matrix&#125;原码&amp;计算过程&amp;1的个数\\00&amp;00-0&amp;00\\01&amp;01-0&amp;01\\10&amp;10-1&amp;01\\11&amp;11-1&amp;10\end&#123;matrix&#125;$，即`x -= (x &gt;&gt; 1) &amp; 0x55555555`</span><br><span class="line"></span><br><span class="line">  - 对第三步：因为经过前两步后，以每$8$位为一组时，组中所有位加和最多为$8$，最多占四位，因此可以先让高位和低位相加后再相与(**相与**为了**去除组间**的影响)：</span><br><span class="line"></span><br><span class="line">    `x = (x + (x &gt;&gt; 4)) &amp; 0x0f0f0f0f`</span><br><span class="line"></span><br><span class="line">    根据这个思路，第一、二步无法通过这种方法优化，第一步最多占两位，第二步最多占三位，因此不能先加再与；第三步以后均可通过该方法优化</span><br><span class="line"></span><br><span class="line">  - 对更后面的步骤(第四步及以后)：每组加和的最大值所需位数远小于每组位数的一半，例如第四步中，每组加和最大为$16$，占五位；而每组位数的一半为$8$</span><br><span class="line"></span><br><span class="line">    因此从上一个组移到下一个组的位不会有影响，例如：</span><br><span class="line"></span><br><span class="line">    ​ 第三步后：$\rm0x\ 0a_0\ 0a_0..0a_0$，$a_0\le1000$，若后续**不和掩码相与**</span><br><span class="line"></span><br><span class="line">    ​ 第四步后：$\rm0x\ 0a_0bb_0\ aa_1bb_0..aa_1bb_0$</span><br><span class="line"></span><br><span class="line">    ​ $bb_0=a_&#123;0h&#125;+a_&#123;0l&#125;\le10000、aa_1=a_&#123;0up&#125;+a_&#123;0h&#125;\le10000$</span><br><span class="line"></span><br><span class="line">    ​ 第五步后：$\rm0x\ 0a_0bb_0\ aa_2cc_0\ aa_3cc_0..aa_3cc_0$</span><br><span class="line"></span><br><span class="line">    ​ $cc_0=bb_&#123;0h&#125;+bb_&#123;0l&#125;\le100000、aa_2=0a_0+aa_1\le11000、aa_3=aa_1+aa_1\le100000$</span><br><span class="line"></span><br><span class="line">    ​ 若和掩码相与：第四步$\rm0x00bb00bb..00bb$、第五步$\rm0x000000cc..000000cc$</span><br><span class="line"></span><br><span class="line">    上述$cc$(有效位)只要在八位之内，多余位就可在最后一步和掩码相与后除去</span><br><span class="line"></span><br><span class="line">    换言之，只要在计数之前除去多余位即可；由于$32$位整数本就**只用$6$位**，因此第四、五步可以不与：</span><br><span class="line"></span><br><span class="line">    ```c++</span><br><span class="line">    x -= (x &gt;&gt; 1) &amp; 0x55555555;</span><br><span class="line">    x = (x &amp; 0x33333333) + ((x &gt;&gt; 2) &amp; 0x33333333);</span><br><span class="line">    x = (x + (x &gt;&gt; 4)) &amp; 0x0f0f0f0f;</span><br><span class="line">    x += x &gt;&gt; 8;</span><br><span class="line">    x += x &gt;&gt; 16;</span><br><span class="line">    x &amp;= 0x3f; // 最后保留末6位即可</span><br><span class="line">    // 推广到64位, 因为有效位为7, 故:</span><br><span class="line">    // (在第五步之后)</span><br><span class="line">    x += x &gt;&gt; 32;</span><br><span class="line">    x &amp;= 0x7f;</span><br></pre></td></tr></table></figure></p></li>
+<li><p>和乘法的结合：和上述思想类似，因为有效位只有六位，在第三步后每组八位，就可在<strong>第三步后</strong>将末三组移到最高八位相加(末三组总和不超过六位，故不会影响最高组)</p>
+<p>即：<span
+class="math inline">(<em>x</em>+<em>x</em>&lt;&lt;8+<em>x</em>&lt;&lt;16+<em>x</em>&lt;&lt;24) &gt;  &gt; 24</span>，分配律到乘法</p>
+<p>即：<span
+class="math inline">$(x\cross\rm0x1010101)&gt;&gt;24$</span>，乘法得出的高位应强制转换成<code>int</code>来舍去它们</p>
+<p>乘法效率其实不如上述优化强，但代码更简洁：</p>
+<p>```c++ unsigned int y = x; y -= (y &gt;&gt; 1) &amp; 0x55555555; y =
+(y &amp; 0x33333333) + ((y &gt;&gt; 2) &amp; 0x33333333); y = (((y
+&gt;&gt; 4) &amp; 0x0f0f0f0f) * 0x1010101) &gt;&gt; 24;</p></li>
+</ul></li>
+</ul>
+<h2 id="异或运算">异或运算</h2>
+<h3 id="基本性质-1">基本性质</h3>
+<ul>
+<li><p>异或运算后，两操作数相同位得零、不同位得一</p></li>
+<li><p>异或运算是一种对称加密：<span
+class="math inline"><em>A</em> = (<em>A</em>⊕<em>B</em>) ⊕ <em>B</em>、<em>B</em> = (<em>A</em>⊕<em>B</em>) ⊕ <em>A</em></span></p>
+<ul>
+<li>不通过第三个变量交换两个整数：<span
+class="math inline"><em>A</em> ⊕ <em>B</em> → <em>A</em>、<em>A</em> ⊕ <em>B</em> → <em>B</em>、<em>A</em> ⊕ <em>B</em> → <em>A</em></span></li>
+<li><span
+class="math inline"><em>A</em> ⊕ <em>Ā</em> = <em>全</em>1、<em>A</em> ⊕ <em>A</em> = 0</span></li>
+</ul></li>
+<li><p>满足差分性质：</p></li>
+</ul>
+<h3 id="汉明距离">汉明距离</h3>
+<ul>
+<li><p>汉明距离：两个整数中不同位的个数</p></li>
+<li><p>计算一：调用库函数</p>
+<p>```c++ __builtin_popcount(x ^ y);</p></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/01/07/algo-game-fairgames/" rel="bookmark">
+        <time class="popular-posts-time">2025-01-07</time>
+        <br>
+      博弈论: 公平组合游戏
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/19/discreteMath-mathamatic-logic/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-19</time>
+        <br>
+      离散数学: 数理逻辑
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/22/discreteMath-set/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-22</time>
+        <br>
+      离散数学: 集合论
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/05/calculus-limit-exercise/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-05</time>
+        <br>
+      微积分: 极限练习题
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/algorithm/" rel="tag"># algorithm</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/09/07/vim/" rel="prev" title="Vim: 极其高效的编辑器">
+                  <i class="fa fa-angle-left"></i> Vim: 极其高效的编辑器
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/09/21/concreteMath-recursion/" rel="next" title="具体数学: 递归">
+                  具体数学: 递归 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

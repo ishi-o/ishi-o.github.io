@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="数据库: 期末复习">
+<meta property="og:url" content="https://ishi-o.github.io/2025/06/18/db-review/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-18T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.167Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="database">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/06/18/db-review/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/06/18/db-review/","path":"2025/06/18/db-review/","title":"数据库: 期末复习"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>数据库: 期末复习 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%9F%E6%9C%AB%E6%80%BB%E5%A4%8D%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">期末总复习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%BC%8A%E7%AB%AF"><span class="nav-number">1.1.1.</span> <span class="nav-text">文件系统的弊端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dbms%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.2.</span> <span class="nav-text">DBMS基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.3.</span> <span class="nav-text">关系数据模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E4%BB%A3%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">关系代数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">概述</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.3.</span> <span class="nav-text">数据库设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#er%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.3.2.</span> <span class="nav-text">ER模型设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.3.3.</span> <span class="nav-text">关系型数据模型设计</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/28/calculus-definite-int/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-28</time>
+        <br>
+      微积分: 定积分
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/05/probability-rdnvar/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-05</time>
+        <br>
+      概率论与数理统计: 常见的随机变量汇总
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/19/discreteMath-mathamatic-logic/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-19</time>
+        <br>
+      离散数学: 数理逻辑
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/01/concreteMath-special-coefficient/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-01</time>
+        <br>
+      具体数学: 特殊系数
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/06/18/db-review/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="数据库: 期末复习 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据库: 期末复习
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-06-18 00:00:00" itemprop="dateCreated datePublished" datetime="2025-06-18T00:00:00+00:00">2025-06-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/" itemprop="url" rel="index"><span itemprop="name">SE Courses</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/DBMS/" itemprop="url" rel="index"><span itemprop="name">DBMS</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>2.4k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>9 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="期末总复习">期末总复习</h1>
+<h2 id="基本概念">基本概念</h2>
+<h3 id="文件系统的弊端">文件系统的弊端</h3>
+<ul>
+<li>数据冗余、数据不一致：在多个文件中，某些数据会出现冗余，导致修改时涉及很多文件，此时发生异常将导致数据不一致问题；这里的<strong>一致性</strong>指的是<strong>不同文件</strong>中数据<strong>本该相同，但实际上不同</strong>的情况</li>
+<li>访问困难</li>
+<li>数据孤立</li>
+<li>数据<strong>完整性</strong>：指<strong>文件中数据不符合现实逻辑</strong>的情况，对某个数据添加约束时，很难约束所有涉及到该文件的程序</li>
+<li>操作的原子性：对文件的修改难以做到要么全部完成、要么完全没有修改</li>
+<li>多用户并发访问：当多个用户同时访问文件时，容易导致数据不一致问题</li>
+<li>安全性问题：难以灵活调整不同用户对文件的访问权限</li>
+</ul>
+<h3 id="dbms基本概念"><code>DBMS</code>基本概念</h3>
+<ul>
+<li>数据是描述现实事物的符号记录</li>
+<li>数据库是数据的集合</li>
+<li><code>DBMS</code>(数据库管理系统)，是用于管理数据库的基础软件系统，也是通常意义上的数据库
+数据库系统则是由<code>DBMS</code>、数据库、管理员、应用进程组成的一套系统</li>
+<li>数据库的三级模式：分为外部层(视图层、外模式)、概念层(逻辑层、模式)、内部层(物理层、内模式)
+<ul>
+<li>先考虑模式的概念：相当于一种数据类型，一个模式包含多个属性名及对应的属性类型和完整性约束
+平常接触的表就是一个模式的实例
+平常一个模式只会有一个实例，所以经常将“关系”、“关系模式”混着说</li>
+<li>视图层：对于不同的用户、根据权限和需求展现不同的数据
+例如平时使用查询语句以及创建视图时，查出来的结果，用户可以修改视图的列名，由系统完成从视图层到概念层的映射，只不过这些视图是</li>
+<li>逻辑层：包含由创建该模式的用户起的名称及类型，例如平常接触的表就是一个概念层的实例</li>
+<li>物理层：包含具体来说在数据库管理系统中真正的由系统起名、由系统管理的名称；以及其对应的存储大小、存储位置等</li>
+</ul></li>
+<li>数据库的两级映射：使数据库具有独立性，在一层发生变动时，其它层不需要由用户维护而仍保持不变
+<ul>
+<li>视图层和逻辑层：使数据库具有逻辑独立性</li>
+<li>逻辑层和物理层：使数据库具有物理独立性</li>
+</ul></li>
+<li>数据模型：是数据、数据联系、数据语义、数据一致性约束的集合
+<ul>
+<li>概念数据模型：实体-联系模型 也就是<code>ER</code>图</li>
+<li>逻辑数据模型：关系模型、网状模型、层次模型、基于对象数据模型、半结构化数据模型</li>
+<li>物理数据模型：<code>B</code>树等</li>
+</ul></li>
+</ul>
+<h3 id="关系数据模型">关系数据模型</h3>
+<ul>
+<li>关系数据模型是一种逻辑数据模型
+其中数据结构、数据完整性约束体现在用户设计的模式上
+数据操作和数据结构、数据完整性约束共同构成关系数据模型</li>
+<li>在关系数据模型中：
+<ul>
+<li>关系模式的实例称为关系，它们通常是一对一的，所以会混着用</li>
+<li>关系也称为表</li>
+<li>属性相当于表的一列</li>
+<li>元组相当于表的一行，元组是一个关系的最小单位</li>
+</ul></li>
+<li>一个属性的域是所有可以作为该属性的值的集合
+域的原子性是第一范式，即域的所有值都是不可再分的</li>
+<li>空值<code>NULL</code>是一个特殊的值，表示未知、不确定，其参与的所有表达式都返回<code>false</code>(除<code>is null</code>等特殊表达式)</li>
+<li>关系完整性约束：
+<ul>
+<li>超码：是一个属性组，若这个属性组的值确定，则可以唯一确定关系中所有属性的值</li>
+<li>候选码：是最小的超码，其任何真子集都不是超码
+所有在候选码中出现过的属性称作<strong>主属性</strong>，其余是非主属性</li>
+<li>主码：被设计者选中来作为关系的唯一标识的那个候选码</li>
+<li>实体完整性约束：对于一个主码，它会受到<strong>实体完整性约束</strong>，用户插入的主码的值必须满足唯一、非空</li>
+<li>参照完整性约束和外码：一个关系<span
+class="math inline"><em>R</em><sub>1</sub></span>的属性组<span
+class="math inline"><em>T</em><sub>1</sub></span>参照另一个关系<span
+class="math inline"><em>R</em><sub>2</sub></span>的主码<span
+class="math inline"><em>T</em><sub>2</sub></span>，称为<span
+class="math inline"><em>T</em><sub>1</sub></span>是参照<span
+class="math inline"><em>R</em><sub>2</sub></span>的外码 其中，<span
+class="math inline"><em>T</em><sub>1</sub></span>不要求是主码，但有<strong>参照完整性约束</strong>，<span
+class="math inline"><em>T</em><sub>1</sub></span>的值要么<strong>为空</strong>、要么是<strong>现在</strong><span
+class="math inline"><em>R</em><sub>2</sub></span>中<strong>存在的<span
+class="math inline"><em>T</em><sub>2</sub></span>的值</strong> <span
+class="math inline"><em>T</em><sub>2</sub></span>要求是<span
+class="math inline"><em>R</em><sub>2</sub></span>的主码</li>
+<li>用户自定义完整性约束：唯一性约束、非空约束、检查约束(约束值的范围)</li>
+</ul></li>
+</ul>
+<h2 id="关系代数">关系代数</h2>
+<h3 id="概述">概述</h3>
+<ul>
+<li><p>过程式查询语言</p></li>
+<li><p>基本、附加、扩展</p></li>
+<li><p>基本运算：<span
+class="math inline"><em>σ</em>、<em>Π</em>、</span></p></li>
+<li><p><span
+class="math inline">$\Pi_{投影的若干列}\left(\begin{align}\sigma_{选择条件}\left(数据源\right)\end{align}\right)$</span></p></li>
+<li><p><span
+class="math inline"><em>σ</em></span>：选择(限制)运算</p></li>
+<li><p>选择条件可用的逻辑运算符：<span
+class="math inline"> ∧ 、 ∨ 、¬</span></p></li>
+<li><p><span
+class="math inline"><em>Π</em></span>：狭义的投影运算，只能选择属性进行投影</p></li>
+<li><p><span
+class="math inline"><em>ρ</em><sub><em>新</em><em>名</em></sub>(<em>原</em><em>名</em>)</span>：重命名运算</p></li>
+<li><p><span class="math inline">$\cross$</span>：笛卡尔积运算</p></li>
+<li><p>集合运算：<span class="math inline"> ∪ 、−</span></p></li>
+<li><p><span class="math inline">⋈</span>：自然连接</p></li>
+<li><p><span
+class="math inline">⟕、⟖、⟗</span>：左/右/全外连接，在<strong>自然连接的基础</strong>上保留左端/右端/两端的所有行</p></li>
+<li><p><span class="math inline">⋈<sub><em>θ</em></sub></span>：<span
+class="math inline"><em>θ</em></span>连接，其中<span
+class="math inline"><em>θ</em></span>是自定义的连接条件</p></li>
+<li><p>关系除：<span
+class="math inline"><em>r</em>(<em>R</em>)</span></p></li>
+<li><p>聚集函数：<span
+class="math inline"><sub><em>分</em><em>组</em><em>依</em><em>据</em></sub>𝒢<sub><em>聚</em><em>集</em><em>函</em><em>数</em><em>值</em></sub></span></p></li>
+</ul>
+<p><span
+class="math inline">$\begin{align}\Large\rm\Pi_{ename,sal}(\sigma_{dept.loc='New\
+York'\wedge emp.deptno=dept.deptno}(emp\cross
+dept))\end{align}$</span></p>
+<h2 id="数据库设计">数据库设计</h2>
+<h3 id="基本概念-1">基本概念</h3>
+<ul>
+<li>在进行需求分析后，数据库设计分为三步：
+<ul>
+<li>设计概念数据模型</li>
+<li>设计逻辑数据模型</li>
+<li>设计物理数据模型</li>
+</ul></li>
+</ul>
+<h3 id="er模型设计"><code>ER</code>模型设计</h3>
+<ul>
+<li><p><code>ER</code>模型是最常见的概念数据模型，全称<code>Entity-Relationship</code>模型，即实体-联系模型</p></li>
+<li><p><code>ER</code>模型由以下部分组成：</p>
+<ul>
+<li>实体集</li>
+<li>联系集</li>
+<li>属性和它的域</li>
+</ul></li>
+<li><p>属性的类型：</p>
+<ul>
+<li><p>简单类型</p></li>
+<li><p>复合类型：由多个属性组成的属性，在<code>ER</code>模型中表示为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">composite_attribute</span><br><span class="line"> component_1</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
+<p>即由缩进表示从属关系</p></li>
+<li><p>多值类型：可能同时含有多个值的类型，在<code>ER</code>模型中表示为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;multivalue_attribute&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>派生属性(或导出属性)：可以由其它属性求出的属性，在<code>ER</code>模型中表示为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">derived_attribute()</span><br></pre></td></tr></table></figure></li>
+<li><p>作为码的属性：在<code>ER</code>模型中用<strong>下划线</strong>指出</p></li>
+</ul></li>
+<li><p>实体由属性和具体的值表示，由所有可能的实体构成的集合就是实体集
+实体集在<code>ER</code>模型中表示为方框，上面是实体集名称，下面是属性集合</p></li>
+<li><p>联系是若干实体之间的关联，也就是一个联系允许关联多个实体(但本文仅考虑二元联系)，但<strong>不允许有关联联系的联系</strong>
+由相同类型的联系构成的集合就是联系集，在<code>ER</code>模型中表示为棱形
+一个联系集允许有不同于相关联实体集属性的属性，称为<strong>描述性属性</strong>，在<code>ER</code>模型中表示为由<strong>虚线引出的方框</strong>中的属性</p></li>
+<li><p>参与度约束：</p>
+<ul>
+<li>称一个实体<strong>参与</strong>一个联系集，是一个实体<strong>至少对应一个</strong>另一端的实体，即限制对应关系的<strong>下限</strong></li>
+<li>称一个实体集<strong>完全参与</strong>一个联系集，是这个实体集的所有实体都参与这个联系集
+否则称这个实体集<strong>部分参与</strong>这个联系集</li>
+<li>完全参与和部分参与在<code>ER</code>模型中表示为双线、单线</li>
+</ul></li>
+<li><p>映射基数约束：限制对应关系的<strong>上限</strong>，分为一对一基数、一对多基数、多对多基数</p>
+<ul>
+<li>一对一基数：双方实体集都满足“所有实体<strong>至多对应一个</strong>另一端的实体”</li>
+<li>一对多(或多对一)基数：对于多方实体集，没有上述限制</li>
+<li>多对多基数：对于双方实体集都没有上限的限制</li>
+</ul></li>
+<li><p>码约束：</p>
+<ul>
+<li>对于实体集来说，用户定义的码属性就是该实体集的码，它们的某个值必须能够唯一标识一个实体</li>
+<li>对于联系集来说，多方实体集的码属性就是联系集的码；如果两边都是多方，则使用双方的码作为联系集的码；如果双方都是“一”方，则使用任意一方的码作为联系集的码</li>
+<li><code>ER</code>模型中不允许出现起外码功能的属性，如果实体集中存在这样的属性则需要删去
+如果删去后剩余的码属性无法唯一标识一个实体，但依赖于另一方的码属性后又可以唯一标识时，则称该实体集为<strong>弱实体集</strong>，关联该弱实体集和其依赖的强实体集的<strong>联系集</strong>用<strong>双棱形</strong>表示
+弱实体集的“码属性”没有码的职责，因此它们的集合称为<strong>分辨符</strong>，用<strong>虚线下划线</strong>表示</li>
+</ul></li>
+</ul>
+<h3 id="关系型数据模型设计">关系型数据模型设计</h3>
+<ul>
+<li>关系型数据模型是一种逻辑数据模型，将<code>ER</code>模型转化为关系型数据模型</li>
+<li>对于所有一对一的联系集，联系集不需要单独作为一个关系，两个实体集各作为一个关系，联系集的属性可作为任意一个实体集的属性</li>
+<li></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/28/calculus-definite-int/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-28</time>
+        <br>
+      微积分: 定积分
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/05/probability-rdnvar/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-05</time>
+        <br>
+      概率论与数理统计: 常见的随机变量汇总
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/04/19/discreteMath-mathamatic-logic/" rel="bookmark">
+        <time class="popular-posts-time">2024-04-19</time>
+        <br>
+      离散数学: 数理逻辑
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/01/concreteMath-special-coefficient/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-01</time>
+        <br>
+      具体数学: 特殊系数
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/database/" rel="tag"># database</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/11/algo-tree-point-dac/" rel="prev" title="树的算法: 点分治">
+                  <i class="fa fa-angle-left"></i> 树的算法: 点分治
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/03/spring-core-IoC/" rel="next" title="Spring framework: IoC容器">
+                  Spring framework: IoC容器 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

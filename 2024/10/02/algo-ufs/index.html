@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="数据结构: 并查集">
+<meta property="og:url" content="https://ishi-o.github.io/2024/10/02/algo-ufs/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-02T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.164Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="algorithm">
+<meta property="article:tag" content="data structure">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/10/02/algo-ufs/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/10/02/algo-ufs/","path":"2024/10/02/algo-ufs/","title":"数据结构: 并查集"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>数据结构: 并查集 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86"><span class="nav-number">1.</span> <span class="nav-text">并查集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.</span> <span class="nav-text">结构与简单实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">具体结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.2.2.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#find"><span class="nav-number">1.2.3.</span> <span class="nav-text">find()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#union"><span class="nav-number">1.2.4.</span> <span class="nav-text">Union()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.</span> <span class="nav-text">方法优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E5%8E%8B%E7%BC%A9"><span class="nav-number">1.3.1.</span> <span class="nav-text">路径压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%89%E7%A7%A9%E5%90%88%E5%B9%B6"><span class="nav-number">1.3.2.</span> <span class="nav-text">按秩合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E7%90%86%E9%9D%9E%E6%95%B4%E5%9E%8B%E6%95%B0%E6%8D%AE"><span class="nav-number">1.3.3.</span> <span class="nav-text">管理非整型数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">1.4.</span> <span class="nav-text">代码</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/30/algo-descartes-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-30</time>
+        <br>
+      数据结构: 笛卡尔树
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/19/algo-fenwick-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-19</time>
+        <br>
+      数据结构: 树状数组
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/16/algo-hashmap/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-16</time>
+        <br>
+      数据结构: 哈希表
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/10/algo-linked-forward-star/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-10</time>
+        <br>
+      图的遍历: 链式前向星
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/10/02/algo-ufs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="数据结构: 并查集 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构: 并查集
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-10-02 00:00:00" itemprop="dateCreated datePublished" datetime="2024-10-02T00:00:00+00:00">2024-10-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/Data-Structure/" itemprop="url" rel="index"><span itemprop="name">Data Structure</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.3k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>5 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="并查集">并查集</h1>
+<h2 id="概述">概述</h2>
+<p>并查集用于解决<strong>不相交集合</strong>的问题，高效地提供两种方法：</p>
+<ul>
+<li><strong>合并</strong>：用于将两个不相交集合合并</li>
+<li><strong>查询</strong>：用于查询一个元素在哪个集合里</li>
+</ul>
+<p>基于上述操作，并查集这种数据结构可用于解决许多问题，例如：</p>
+<ul>
+<li>查询两个元素是否在同一集合，也即用于判断两个元素<strong>是否相通</strong></li>
+<li>合并两个不相交元素所在集合</li>
+<li>找出集合的总个数</li>
+<li>找出一个集合的元素总个数</li>
+</ul>
+<p>但这种结构是有局限的，不能通过它来解决诸如以下的问题：</p>
+<ul>
+<li>分离集合问题，并查集中的集合只并不分，也不能删除元素</li>
+<li>不会保存节点间的关系，只会保存集合与节点的关系；这种问题应依靠图来解决</li>
+</ul>
+<h2 id="结构与简单实现">结构与简单实现</h2>
+<h3 id="具体结构">具体结构</h3>
+<p>并查集是一种<strong>树状结构</strong>，对于一个集合，只选出一个元素作为代表元素，用它来标识一个集合；代表元素指向它自己，至于集合内的其它元素，或直接或间接地，最后都将指向这个代表元素</p>
+<p>在没有任何优化的并查集中，并和查是这样实现的：</p>
+<ul>
+<li>查：递归搜索节点的父节点，直到找到祖宗节点(指向自己的节点)，则它属于这个祖宗节点所代表的集合</li>
+<li>并：寻找两元素的祖宗节点，让其中之一指向另外的节点即可</li>
+</ul>
+<h3 id="初始化">初始化</h3>
+<p>并查集最浅显的实现方法是普通数组，下标代表元素编号，数组存储的是元素的父节点下标，初始化时，让所有元素指向自己：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> fa[n] = &#123;<span class="number">0</span>,<span class="number">1</span>,...,n<span class="number">-1</span>&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="find"><code>find()</code></h3>
+<p>查询操作最简单的方法是递归(无优化)：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">find</span><span class="params">(<span class="type">int</span> number)</span> </span>&#123; <span class="comment">// 找到祖宗节点,递归结束.</span></span><br><span class="line">    <span class="keyword">return</span> number == fa[number] ? number : <span class="built_in">find</span>(fa[number]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="union"><code>Union()</code></h3>
+<p>合并操作需要借助查询(无优化)：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">Union</span><span class="params">(<span class="type">int</span> num_1, <span class="type">int</span> num_2)</span> </span>&#123;</span><br><span class="line">    fa[<span class="built_in">find</span>(num_1)] = <span class="built_in">find</span>(num_2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="方法优化">方法优化</h2>
+<h3 id="路径压缩">路径压缩</h3>
+<p>对查询来说，由于每次合并后都将使树深度加一，故递归层数加一，则可以采取<strong>路径压缩</strong>方法，即沿途让每个元素直接指向父节点：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">find</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> fa[number] = number == fa[number] ? number : <span class="built_in">find</span>(fa[number]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方法有极大可能缩短搜索路径，但第一次搜索依然有可能递归多层；对于最后一个节点来说，只要一直不对它进行查询，它所在路径深度仍然较大</p>
+<p>需要注意的是，这种优化会覆盖节点与父节点间的信息，如果实际问题中需要维护中间节点，就不应该采用这种优化方法</p>
+<h3 id="按秩合并">按秩合并</h3>
+<p>对合并来说，每次合并应该让深度小的集合指向深度大的集合，这能够使新集合的秩(即深度)不增大(否则会加一)，这种优化需要额外维护一个<code>rank</code>数组，该数组下标表示元素编号，只存储祖宗节点所在集合的深度(未进行路径压缩)：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> rank[n] &#123;<span class="number">1</span>,<span class="number">1</span>,...,<span class="number">1</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Union</span><span class="params">(<span class="type">int</span> num_1, <span class="type">int</span> num_2)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> head_1 = <span class="built_in">find</span>(num_1), head_2 = <span class="built_in">find</span>(num_2);</span><br><span class="line">    <span class="keyword">if</span> (rank[head_1] &lt; rank[head_2]) &#123;</span><br><span class="line">        fa[head_1] = head_2;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (rank[head_1] == rank[head_2]) &#123;</span><br><span class="line">  ++rank[head_1];  <span class="comment">// 相等时树深仍加1.</span></span><br><span class="line">    &#125;</span><br><span class="line">    fa[head_2] = head_1; <span class="comment">// 1树更深或深度相同,都让2树指向1树.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果希望同时进行路径压缩和按秩合并优化，那么可能需要维护全局的<code>rank</code>防止树深的随意变化</p>
+<p>或者更改秩的定义，在上述定义中，秩是树的绝对深度，如果要进行路径压缩：</p>
+<ul>
+<li>定义秩为树深的上界</li>
+<li>定义秩为元素个数，因为元素多的树倾向于更深，同时还能存储元素个数</li>
+</ul>
+<p>所有这些定义方法都只是尝试不增加树深，不一定合并出更浅的树</p>
+<h3 id="管理非整型数据">管理非整型数据</h3>
+<p>上述并查集的节点数据都是基础类型的，如果需要管理其它类型，可以尝试让数组存储该类对象指针的结构体，在查询时，不采取递归而是循环的方式，返回头结点指针：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Struct</span> &#123;</span><br><span class="line">    Class* me;</span><br><span class="line">    <span class="type">int</span> father;</span><br><span class="line">&#125;;</span><br><span class="line">Struct fa[n] &#123;&#123;&amp;Obj0,<span class="number">0</span>&#125;,&#123;&amp;Objn_1,n<span class="number">-1</span>&#125;&#125;;</span><br><span class="line"><span class="function"><span class="type">const</span> Class* <span class="title">find</span><span class="params">(<span class="type">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (index != fa[index].father) &#123; <span class="comment">// 较难直观地进行路径压缩,除非允许再循环一次.</span></span><br><span class="line">        index = fa[index].father;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> fa[index].me;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的并查集编号都为整型，实际问题中很难知道一个对象的具体编号，这时可通过指针查询：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Class</span> &#123; <span class="comment">// 需要该类含有指向父节点的指针.</span></span><br><span class="line">    Class* fa;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">Class* <span class="title">find</span><span class="params">(<span class="type">const</span> Class* p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> p-&gt;fa = p == p-&gt;father ? p : <span class="built_in">find</span>(p-&gt;father);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但实际情况中，通过整型数组与哈希表映射(键为<code>value_type</code>，值为整型)相结合来实现更为有效</p>
+<h2 id="代码"><a href="./1附_Union_Find_Set.h">代码</a></h2>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/30/algo-descartes-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-30</time>
+        <br>
+      数据结构: 笛卡尔树
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/19/algo-fenwick-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-19</time>
+        <br>
+      数据结构: 树状数组
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/11/16/algo-hashmap/" rel="bookmark">
+        <time class="popular-posts-time">2024-11-16</time>
+        <br>
+      数据结构: 哈希表
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/10/algo-linked-forward-star/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-10</time>
+        <br>
+      图的遍历: 链式前向星
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/algorithm/" rel="tag"># algorithm</a>
+              <a href="/tags/data-structure/" rel="tag"># data structure</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/10/02/concreteMath-summation/" rel="prev" title="具体数学: 和式">
+                  <i class="fa fa-angle-left"></i> 具体数学: 和式
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/10/03/physics-classic-force/" rel="next" title="大学物理: 经典力学">
+                  大学物理: 经典力学 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

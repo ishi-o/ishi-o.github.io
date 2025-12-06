@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Markdown: 简单易学的笔记语言">
+<meta property="og:url" content="https://ishi-o.github.io/2023/10/03/markdown-beginner/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://ishi-o.github.io/2023/10/03/markdown-beginner/image_example.png%20(a)">
+<meta property="og:image" content="https://ishi-o.github.io/2023/10/03/markdown-beginner/image_example.png">
+<meta property="article:published_time" content="2023-10-03T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.169Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="beginner">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ishi-o.github.io/2023/10/03/markdown-beginner/image_example.png%20(a)">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2023/10/03/markdown-beginner/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2023/10/03/markdown-beginner/","path":"2023/10/03/markdown-beginner/","title":"Markdown: 简单易学的笔记语言"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Markdown: 简单易学的笔记语言 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#markdown"><span class="nav-number">1.</span> <span class="nav-text">Markdown</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#md%E8%BD%AF%E4%BB%B6"><span class="nav-number">1.1.</span> <span class="nav-text">MD软件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E8%AE%B0%E5%8F%B7"><span class="nav-number">1.2.</span> <span class="nav-text">常用记号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%B5%8Chtml"><span class="nav-number">1.3.</span> <span class="nav-text">内嵌HTML</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8%E6%A0%BC"><span class="nav-number">1.3.1.</span> <span class="nav-text">表格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E7%89%87"><span class="nav-number">1.3.2.</span> <span class="nav-text">图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5"><span class="nav-number">1.3.3.</span> <span class="nav-text">链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E5%88%B6%E5%88%86%E9%A1%B5"><span class="nav-number">1.3.4.</span> <span class="nav-text">强制分页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%8F%E6%98%8E%E5%AD%97%E4%BD%93%E5%8F%8A%E5%8F%B3%E5%AF%B9%E9%BD%90"><span class="nav-number">1.3.5.</span> <span class="nav-text">透明字体及右对齐</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/12/08/vscode/" rel="bookmark">
+        <time class="popular-posts-time">2023-12-08</time>
+        <br>
+      VS Code: 较为轻量的IDE
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/08/04/html-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2024-08-04</time>
+        <br>
+      HTML: 基本语法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/09/c-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-09</time>
+        <br>
+      C: 基本语法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/02/rust-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-02</time>
+        <br>
+      Rust: 基本语法
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2023/10/03/markdown-beginner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Markdown: 简单易学的笔记语言 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Markdown: 简单易学的笔记语言
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2023-10-03 00:00:00" itemprop="dateCreated datePublished" datetime="2023-10-03T00:00:00+00:00">2023-10-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Markup-Languages/" itemprop="url" rel="index"><span itemprop="name">Markup Languages</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>4 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<p><a id="HOME"></a></p>
+<h1 id="markdown"><code>Markdown</code></h1>
+<h2 id="md软件"><code>MD</code>软件</h2>
+<ul>
+<li><code>Typora</code>：<code>Typora</code>有“<strong>所见即所得</strong>”的特点，即你所看见的就是文件导出后的样子，付费</li>
+<li><code>Obsidian</code>：<code>Obsidian</code>的插件市场丰富，且支持笔记之间的链接功能，个人版免费</li>
+<li><code>VS Code</code>+<code>Markdown All in One</code>插件：左边编辑、右边预览，支持所见即所得，该插件提供了最基本的渲染以及快捷键配置，其它插件可查看<a
+href="./1_VS%20Code.md"><code>Markdown</code>插件</a></li>
+</ul>
+<h2 id="常用记号">常用记号</h2>
+<ul>
+<li><p><code>'\'</code>：<strong>转义记号</strong>，类似<code>C</code>语言里的<code>'\n'</code>等，它可以将内嵌的命令转义</p></li>
+<li><p><code>'#'</code>：<strong>标题记号</strong>，它可以将一行文字快捷地变为一级标题
+格式为：# title，井号越多，标题等级越低
+具有该功能的快捷键是<code>ctrl+$d</code>(<code>$d</code>表示标题等级)</p></li>
+<li><p><code>'*'</code>或<code>'_'</code>：<strong>斜体记号</strong>，两个<code>*</code>组成一队，可以将中间的文本变为<em>斜体</em>
+例如*abcd*的效果为：<em>abcd</em>
+具有该功能的快捷键是<code>ctrl+I</code></p></li>
+<li><p><code>'**'</code>或<code>'__'</code>：<strong>加粗记号</strong>，两组<code>**</code>组成一对，可以将中间的文本<strong>加粗</strong>，且可以和斜体记号一起使用
+例如***abcd***的效果为：<strong><em>abcd</em></strong>
+具有该功能的快捷键是<code>ctrl+B</code></p></li>
+<li><p>‘`’(英文反引号)：<strong>行内代码记号</strong>，两个`组成一对，可以将中间的文本变为<code>代码字体</code>，注意代码块内的记号会失效，例如使用’\’将其转义时有时会产生混乱，<strong><code>行内代码可以加粗</code></strong>
+例如`#include`的效果是：<code>#include</code>
+具有该功能的快捷键是<code>shift+ctrl+</code>`</p></li>
+<li><p><code>'```'</code>：<strong>代码块记号</strong>，三个反引号两组组成一对，可以在其中输入代码语言与相应代码等，例如：</p>
+<p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
+<li><p><code>'$$'</code>：<strong>块级数学公式记号</strong>，两组<code>$$</code>组成一对，可以在其中用<code>LaTeX</code>语法写入数学公式。使用时只需键入’$$’后按下回车即可。例如：</p>
+<p><span
+class="math display"><em>a</em><sup><em>φ</em>(<em>x</em>)</sup>% <em>n</em> = 1 (<em>a</em><em>与</em><em>n</em><em>互</em><em>素</em>)</span></p>
+<p>具体该如何写数学公式将在<a href="6_LaTeX.md">这里</a>讲述</p></li>
+<li><p><code>'$'</code>：<strong>行内数学公式记号</strong>符，两个<code>$</code>组成一对，可以在其中用<code>LaTeX</code>语法写入数学公式。
+例如：<span
+class="math inline">$\begin{align}\int_0^{\Large\frac{\pi}{2}}f(\sin
+x)dx=\int_0^{\Large\frac{\pi}{2}}f(\cos x)dx\end{align}$</span></p></li>
+<li><p><code>'[]()'</code>：<strong>链接记号</strong>，在’[]‘内输入文本，在’()’内输入链接，这个链接可以是<strong>网址</strong>、<strong>本地文件</strong>或<strong>文章内锚点</strong>，文件支持使用相对路径或绝对路径，建议使用相对路径
+例如：<a target="_blank" rel="noopener" href="https://markdown.com.cn/basic-syntax/">Markdown</a>，<a
+href="./markdown.md">aFile</a>，<a href="#HOME">aFlag</a>
+<code>'crtl+左键'</code>点击可跳转至该链接
+若链接中存在空格，建议使用<code>%20</code>代替
+<code>()</code>最后允许包含用<code>""</code>或<code>()</code>或<code>''</code>包围的提示，鼠标悬停时会指出预设的文字</p></li>
+<li><p><code>'[][]'</code>：引用表示的链接，由第二个<code>[]</code>作为中介传递链接，例如：</p>
+<p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="string">文字</span>][<span class="symbol">1</span>]</span><br><span class="line"></span><br><span class="line">[<span class="symbol">1</span>]: <span class="link">https://markdown.com.cn/basic-syntax/ (悬停提示)</span></span><br></pre></td></tr></table></figure></p></li>
+<li><p><code>'![]()'</code>：<strong>图像记号</strong>，与链接记号类似，但只能输入图片文件的路径，且会解析图片
+例如：<img src="image_example.png%20(a)" />
+图像与链接一样，支持引用表示与悬停提示</p></li>
+<li><p><code>'[toc]'</code>：<strong>目录记号</strong>，可以用它生成自带锚点的目录，例如开头所示的索引</p></li>
+<li><p><code>'---'</code>：<strong>分割线记号</strong>，可以用它生成一条直线，例如：</p>
+<hr /></li>
+</ul>
+<h2 id="内嵌html">内嵌<code>HTML</code></h2>
+<h3 id="表格">表格</h3>
+<p><code>Typora</code>支持内嵌<code>HTML</code>，常见用法为写表格，例如：</p>
+<table border="2">
+<tr>
+<td>
+title
+</td>
+<td>
+body
+</td>
+</tr>
+<tr>
+<td>
+exp1
+</td>
+<td>
+111
+</td>
+</tr>
+<tr>
+<td>
+exp2
+</td>
+<td rowspan="4" style="display:table-cell; vertical-align:middle">
+11
+</td>
+</tr>
+<tr>
+<td>
+exp3
+</td>
+</tr>
+</table>
+<p>如图，使用<code>html</code>语法，写出一个四行两列的、边界值为2的、内容<code>'11'</code>被设置为占据四行且居中的表格</p>
+<h3 id="图片">图片</h3>
+通过<code>&lt;img /&gt;</code>标签可以定义并放缩图片：
+<style>.euyexrliunuj{zoom:33%;}</style>
+<img src="/2023/10/03/markdown-beginner/image_example.png" class="euyexrliunuj">
+<p>图片可以缩放，即在前方的<code>html</code>标签内加上<code>style="zoom:num%"</code>，<code>num</code>为缩放比例</p>
+<h3 id="链接">链接</h3>
+<p><code>&lt;a id="111"&gt;&lt;/a&gt;</code>：这条元素定义了一个<code>id</code>为<code>'111'</code>的锚点，在文章内部可以通过<code>[点击](#111)</code>链接跳转到这个锚点，例如本文在目录处设定了一个<code>'HOME'</code>锚点，您可以<a
+href="#HOME">点击我</a>来跳转
+<code>&lt;a href="https://www.baidu.com"&gt;Baidu&lt;/a&gt;</code>：这条元素定义了一个链接为百度域名，显示内容为<code>'Baidu'</code>的链接，<a target="_blank" rel="noopener" href="https://www.baidu.com">Baidu</a></p>
+<h3 id="强制分页">强制分页</h3>
+<p><code>&lt;div style="page-break-after: always;"&gt;&lt;/div&gt;</code>
+在导出时，这条元素将强制新建一页</p>
+<h3 id="透明字体及右对齐">透明字体及右对齐</h3>
+<code>&lt;p style="color: rgba(400, 0, 400, 0.2)" align="right"&gt;ishiooo&lt;/p&gt;</code>
+<code>style</code>属性中，前三个数字为<code>rgb</code>值，第四个数字为透明度
+这条元素定义了一个透明度为0.2，内容为<code>'ishiooo'</code>，右对齐的段落：
+<p style="color: rgba(400, 0, 400, 0.2)" align="right">
+ishiooo
+</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/12/08/vscode/" rel="bookmark">
+        <time class="popular-posts-time">2023-12-08</time>
+        <br>
+      VS Code: 较为轻量的IDE
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/08/04/html-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2024-08-04</time>
+        <br>
+      HTML: 基本语法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/09/c-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-09</time>
+        <br>
+      C: 基本语法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/02/rust-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-02</time>
+        <br>
+      Rust: 基本语法
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/beginner/" rel="tag"># beginner</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/10/09/c-beginner/" rel="next" title="C: 基本语法">
+                  C: 基本语法 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

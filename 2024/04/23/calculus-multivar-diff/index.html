@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="微积分: 多元函数微分">
+<meta property="og:url" content="https://ishi-o.github.io/2024/04/23/calculus-multivar-diff/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-04-23T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.165Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="math">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/04/23/calculus-multivar-diff/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/04/23/calculus-multivar-diff/","path":"2024/04/23/calculus-multivar-diff/","title":"微积分: 多元函数微分"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>微积分: 多元函数微分 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E5%85%83%E5%87%BD%E6%95%B0%E5%BE%AE%E5%88%86%E5%AD%A6"><span class="nav-number">1.</span> <span class="nav-text">多元函数微分学</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%85%83%E5%87%BD%E6%95%B0%E6%9E%81%E9%99%90"><span class="nav-number">1.1.</span> <span class="nav-text">多元函数极限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E5%88%AB%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.1.</span> <span class="nav-text">判别方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E4%BA%8C%E9%87%8D%E6%9E%81%E9%99%90"><span class="nav-number">1.1.2.</span> <span class="nav-text">常见二重极限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%85%83%E5%87%BD%E6%95%B0%E8%BF%9E%E7%BB%AD%E6%80%A7"><span class="nav-number">1.1.3.</span> <span class="nav-text">二元函数连续性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%85%83%E5%87%BD%E6%95%B0%E5%85%A8%E5%BE%AE%E5%88%86"><span class="nav-number">1.2.</span> <span class="nav-text">多元函数全微分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%82%E5%81%8F%E5%AF%BC"><span class="nav-number">1.2.1.</span> <span class="nav-text">求偏导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%82%E5%85%A8%E5%BE%AE%E5%88%86"><span class="nav-number">1.2.2.</span> <span class="nav-text">求全微分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E5%90%88%E5%87%BD%E6%95%B0%E5%85%A8%E5%BE%AE%E5%88%86"><span class="nav-number">1.2.3.</span> <span class="nav-text">复合函数全微分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%90%E5%87%BD%E6%95%B0%E5%AD%98%E5%9C%A8%E5%AE%9A%E7%90%86"><span class="nav-number">1.2.4.</span> <span class="nav-text">隐函数存在定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%90%91%E5%AF%BC%E6%95%B0"><span class="nav-number">1.2.5.</span> <span class="nav-text">方向导数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E5%85%B3%E7%B3%BB%E5%9B%BE"><span class="nav-number">1.2.6.</span> <span class="nav-text">条件关系图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E5%87%A0%E4%BD%95"><span class="nav-number">1.2.7.</span> <span class="nav-text">空间几何</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A0%E6%9D%A1%E4%BB%B6%E6%9E%81%E5%80%BC"><span class="nav-number">1.2.8.</span> <span class="nav-text">无条件极值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%9E%81%E5%80%BC"><span class="nav-number">1.2.9.</span> <span class="nav-text">条件极值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0"><span class="nav-number">1.3.</span> <span class="nav-text">练习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%88%A4%E6%96%AD"><span class="nav-number">1.3.1.</span> <span class="nav-text">简单判断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E9%A2%98%E7%BB%83%E4%B9%A0"><span class="nav-number">1.3.2.</span> <span class="nav-text">大题练习</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/05/calculus-limit-exercise/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-05</time>
+        <br>
+      微积分: 极限练习题
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/30/calculus-limitation/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-30</time>
+        <br>
+      微积分: 关于极限
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/12/calculus-indefinite-int/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-12</time>
+        <br>
+      微积分: 不定积分
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/12/11/calculus-exercise-1/" rel="bookmark">
+        <time class="popular-posts-time">2023-12-11</time>
+        <br>
+      微积分: 练习题
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/04/23/calculus-multivar-diff/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="微积分: 多元函数微分 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          微积分: 多元函数微分
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-04-23 00:00:00" itemprop="dateCreated datePublished" datetime="2024-04-23T00:00:00+00:00">2024-04-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/" itemprop="url" rel="index"><span itemprop="name">SE Courses</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/Calculus/" itemprop="url" rel="index"><span itemprop="name">Calculus</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>3.7k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>13 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="多元函数微分学">多元函数微分学</h1>
+<h2 id="多元函数极限">多元函数极限</h2>
+<h3 id="判别方法">判别方法</h3>
+<p>多元函数的极限考虑一组自变量同时趋近一组常量，体现在二元函数上，是一个<strong>二重极限</strong></p>
+<ul>
+<li>任何<strong>方式</strong>趋近时极限都存在且相同，例如直线<span
+class="math inline">(<em>y</em>=<em>k</em><em>x</em>)</span>、曲线方式<span
+class="math inline">(<em>y</em>=<em>x</em><sup>2</sup>、<em>y</em>=sin<em>x</em>...)</span></li>
+<li>由<strong>具有不同变量的初等函数的四则运算</strong>复合而成的二元函数在定义域上连续，若在该点连续，则在该点极限等于函数值</li>
+<li><span class="math inline"><em>δ</em> − <em>ε</em></span>语言定义：
+<ul>
+<li>对任意<span class="math inline"><em>ε</em> &gt; 0</span>，存在<span
+class="math inline">$\var&gt;0$</span>，当<span
+class="math inline">$\begin{cases}|x-x_0|&lt;\delta\\|y-y_0|&lt;\delta\end{cases}$</span>且<span
+class="math inline">(<em>x</em>,<em>y</em>) ≠ (<em>x</em><sub>0</sub>,<em>y</em><sub>0</sub>)</span>时(去心邻域内)，有<span
+class="math inline">|<em>f</em>(<em>x</em>,<em>y</em>)−<em>A</em>| &lt; <em>ε</em></span>，则极限为<span
+class="math inline"><em>A</em></span></li>
+<li>这种语言通常通过<strong>放缩</strong>来证明二重极限存在，即找到<strong><span
+class="math inline"><em>g</em>(<em>δ</em>)</span>，使其满足<span
+class="math inline"><em>f</em>(<em>x</em>,<em>y</em>) − <em>A</em> &lt; <em>g</em>(<em>δ</em>)</span></strong>，令<span
+class="math inline"><em>ε</em> = <em>g</em>(<em>δ</em>)</span>即可</li>
+</ul></li>
+</ul>
+<h3 id="常见二重极限">常见二重极限</h3>
+<ul>
+<li><span
+class="math inline">$\begin{align}&amp;\lim_{(x,y)\rightarrow(0,0)}\frac{xy}{\sqrt{x^2+y^2}}=0\end{align}$</span>，幂次方、分子继续乘<span
+class="math inline"><em>x</em>、<em>y</em></span>的极限都为<span
+class="math inline">0</span></li>
+<li><span
+class="math inline">$\begin{align}&amp;\lim_{(x,y)\rightarrow(0,0)}\frac{xy}{x^2+y^2}\end{align}$</span>不存在</li>
+<li><span
+class="math inline">$\begin{align}&amp;\lim_{(x,y)\rightarrow(0,0)}\frac{xy}{x+y}\end{align}$</span>不存在</li>
+</ul>
+<h3 id="二元函数连续性">二元函数连续性</h3>
+<ul>
+<li>若<span
+class="math inline">$\begin{align}&amp;\lim_{(x,y)\rightarrow(x_0,y_0)}f(x,y)=f(x_0,y_0)\end{align}$</span>，称在该点连续</li>
+<li>当二重极限不存在、或在该点无定义、或二重极限存在但与该点定义不等时，该点为间断点</li>
+<li><span
+class="math inline"><em>f</em>(<em>x</em>,<em>y</em>)</span>在<span
+class="math inline">(<em>x</em><sub>0</sub>,<em>y</em><sub>0</sub>)</span>处连续<span
+class="math inline">$\begin{align}\Leftrightarrow\lim_{(x,y)\rightarrow(0,0)}\Delta
+z=0\end{align}$</span></li>
+<li>多元连续函数符合有界性、介值定理</li>
+</ul>
+<h2 id="多元函数全微分">多元函数全微分</h2>
+<h3 id="求偏导">求偏导</h3>
+<ul>
+<li>将其它变量视为常量，将整个函数看作一元函数求导</li>
+<li>与一元函数求导一样，导数间断点但用定义、导数连续点用求导法则</li>
+<li>求某点的偏导，可先行代入其它变量的值</li>
+<li>偏导函数的变量结构可化为与原函数一致，但实际求出一阶偏导后，往往会多出几种变量</li>
+<li>含<strong>二阶连续偏导</strong>的二元函数的<strong>二阶混合偏导相等</strong></li>
+</ul>
+<h3 id="求全微分">求全微分</h3>
+<ul>
+<li><span class="math inline">$\begin{align}&amp;\Delta z=f(x+\Delta
+x,y+\Delta y)-f(x,y)&amp;(1).\end{align}$</span></li>
+<li>如果函数在<span
+class="math inline">(<em>x</em><sub>0</sub>,<em>y</em><sub>0</sub>)</span>处可微，则<span
+class="math inline"><em>Δ</em><em>z</em> = <em>d</em><em>z</em> + <em>o</em>(<em>ρ</em>)</span>，且<span
+class="math inline">$\begin{align}&amp;dz=f_x'dx+f_y'dy&amp;(2).全微分公式\end{align}$</span></li>
+<li>换句话说，要证明函数在该点可微，就是证明<span
+class="math inline"><em>Δ</em><em>z</em> − <em>d</em><em>z</em></span>是<span
+class="math inline"><em>ρ</em></span>的高阶无穷小：<span
+class="math inline">$\begin{align}&amp;\lim_{(x,y)\rightarrow(0,0)}\frac{o(\rho)}{\rho}=0,其中o(\rho)=(1)-(2)\\&amp;=f(x_0+x,y_0+y)-f(x_0,y_0)-f_x'(x_0,y_0)x-f_y'(x_0,y_0)y\\&amp;\rho=\sqrt{x^2+y^2}\end{align}$</span></li>
+<li>全微分的四则运算法则与一元函数相同</li>
+<li>若已知全增量，容易得到偏导是否存在</li>
+</ul>
+<h3 id="复合函数全微分">复合函数全微分</h3>
+<ul>
+<li>假设对<span
+class="math inline"><em>x</em></span>求偏导，若所有外层函数在此点可微，最内层函数对<span
+class="math inline"><em>x</em></span>可偏导(或可导)，则符合：
+<ul>
+<li>找到所有含<span class="math inline"><em>x</em></span>的路径</li>
+<li>分叉路用偏导符号，单路用微分符号</li>
+<li><span class="math inline">$\begin{align}&amp;\frac{\part f}{\part
+x}=\frac{\part f}{\part u}·\frac{\part u}{\part
+x}+\cdots\end{align}$</span>，即相同路径求导相乘，不同路径导数相加</li>
+<li>若符号重复，可改写为<span
+class="math inline"><em>f</em>(<em>x</em>,<em>y</em>,<em>z</em>)</span>的形式，并用下标<span
+class="math inline">1, 2, ⋯</span>指代偏导</li>
+</ul></li>
+<li>一阶全微分形式不变性：复合函数一阶全微分仍可套用全微分公式</li>
+</ul>
+<h3 id="隐函数存在定理">隐函数存在定理</h3>
+<ul>
+<li>对<span class="math inline"><em>n</em></span>元函数方程确定的<span
+class="math inline"><em>n</em> − 1</span>元隐函数，若在点<span
+class="math inline"><em>P</em><sub>0</sub></span>处具有<strong>连续偏导</strong>、函数值为<span
+class="math inline">0</span>、对变量<span
+class="math inline"><em>z</em></span><strong>偏导不为<span
+class="math inline">0</span></strong>，则有唯一确定的隐函数<span
+class="math inline"><em>z</em> = <em>f</em>(<em>其</em><em>它</em><em>n</em>−1<em>个</em><em>变</em><em>量</em>)</span></li>
+<li>该隐函数的偏导<span class="math inline">$\begin{align}\frac{\part
+z}{\part i}=-\frac{f_i}{f_z}\end{align}$</span></li>
+<li>由方程组确定的隐函数：将方程转换为隐函数的全微分后，联立消去某变量</li>
+</ul>
+<h3 id="方向导数">方向导数</h3>
+<ul>
+<li>定义：<span class="math inline">$\begin{align}\frac{\part f}{\part
+l}=\lim_{\rho\rightarrow0}\frac{f(x+\Delta x,y+\Delta
+y)-f(x,y)}\rho=\lim_{t\rightarrow0^+}\frac{f(x+t\cos\alpha,y+t\cos\beta)-f(x,y)}t\end{align}$</span></li>
+<li>方向导数是沿某一<strong>射线</strong>方向切片上的导数，实质上是<strong>单侧极限</strong></li>
+<li>若在一点可微，则(以二元函数为例)：
+<ul>
+<li>在该点各个方向的方向导数存在，且满足：<span
+class="math inline">$\begin{align}\frac{\part f}{\part
+l}=f_x(x,y)\cos\alpha+f_y(x,y)\cos\beta\end{align}$</span></li>
+<li>向量<span
+class="math inline">(<em>f</em><sub><em>x</em></sub>(<em>x</em>,<em>y</em>), <em>f</em><sub><em>y</em></sub>(<em>x</em>,<em>y</em>))</span>称为<strong>梯度</strong>，记为<span
+class="math inline">$\grad f(x,y)$</span></li>
+<li>方向导数最大值为<span
+class="math inline">|(<em>f</em><sub><em>x</em></sub>(<em>x</em>,<em>y</em>), <em>f</em><sub><em>y</em></sub>(<em>x</em>,<em>y</em>))|</span>，即梯度方向的方向导数</li>
+<li>一个点的梯度方向，就是等值线在该点的<strong>法线方向</strong></li>
+</ul></li>
+</ul>
+<h3 id="条件关系图">条件关系图</h3>
+<pre><code class="highlight mermaid">graph LR
+ A(偏导连续) --&gt; B(可微)
+ B --&gt; F(方向偏导数都存在)
+    F --&gt; C(可偏导)
+    B --&gt; D(连续)
+ F --&gt; E(所有方向导数都存在)
+ AA(高阶偏导连续) ---&gt; BB(低阶偏导连续) --&gt; CC(原函数可微)</code></pre>
+<p>可偏导与连续无蕴涵关系，都是可微的必要条件</p>
+<p>方向偏导数指在某一<strong>直线</strong>方向切片上的偏导数存在</p>
+<h3 id="空间几何">空间几何</h3>
+<ul>
+<li>对<strong>空间曲面</strong>来说，由该曲面方程形成的三元函数的<strong>三个偏导所构成的向量</strong><span
+class="math inline"><em>n⃗</em></span>就是在该点处，切平面的法向量，也即法线的方向向量</li>
+<li>对以完整的参数方程形式给出的<strong>空间曲线</strong>来说，即<span
+class="math inline">$\begin{cases}x=\varphi(t)\\y=\psi(t)\\z=\omega(t)\end{cases}$</span>，其中<span
+class="math inline"><em>φ</em>(<em>t</em>), <em>ψ</em>(<em>t</em>), <em>ω</em>(<em>t</em>)</span>导数存在且不全为<span
+class="math inline">0</span>，则切线的方向向量就是它们<strong>对<span
+class="math inline"><em>t</em></span>的导数</strong>组成的向量，也即该点法平面的法向量</li>
+<li>对不完整的参数方程，例如<span
+class="math inline">$\begin{cases}y=\varphi(x)\\z=\omega(x)\end{cases}$</span>，则可改写为完整的参数方程<span
+class="math inline">$\begin{cases}x=x\\y=\varphi(x)\\z=\omega(x)\end{cases}$</span>，此时方向向量为<span
+class="math inline">(1,<em>y</em>′,<em>z</em>′)</span></li>
+<li>对<strong>一般式空间曲线</strong>，由隐函数存在定理，可转化为上述情况，法平面方程由此可转化为行列式<span
+class="math inline">$\left|\begin{matrix}x-x_0&amp;y-y_0&amp;z-z_0\\F_x&amp;F_y&amp;F_z\\G_x&amp;G_y&amp;G_z\end{matrix}\right|=0$</span>，此时法向量(即切线方向向量)为<span
+class="math inline">$\begin{align}\left(\frac{\part(F,G)}{\part(y,z)},{\bf
+-}\frac{\part(F,G)}{\part(x,z)},\frac{\part(F,G)}{\part(x,y)}\right)\end{align}$</span>，也就是<strong>两曲面法向量的叉乘积</strong></li>
+</ul>
+<h3 id="无条件极值">无条件极值</h3>
+<ul>
+<li>二元函数的<strong>二阶连续偏导</strong>点为<strong>极值点</strong>的充分条件：一阶偏导为<span
+class="math inline">0</span>，海森阵行列式大于<span
+class="math inline">0</span>
+<ul>
+<li>二元函数海森阵：<span
+class="math inline">$\left[\begin{matrix}F_{xx}&amp;F_{xy}\\F_{yx}&amp;F_{yy}\end{matrix}\right]$</span>，由于二阶偏导连续时，<span
+class="math inline"><em>F</em><sub><em>x</em><em>y</em></sub> = <em>F</em><sub><em>y</em><em>x</em></sub></span>，故此时不存在<span
+class="math inline"><em>F</em><sub><em>x</em><em>x</em></sub> = 0</span>而行列式大于<span
+class="math inline">0</span>的情况</li>
+<li>若行列式大于<span
+class="math inline">0</span>，则<strong>是极值点</strong>，且<span
+class="math inline">$\begin{cases}F_{xx}&gt;0,&amp;极小值点\\F_{xx}&lt;0,&amp;极大值点\end{cases}$</span></li>
+<li>若行列式小于<span
+class="math inline">0</span>，则不是极值点，而是<strong>鞍点</strong></li>
+<li>若行列式等于<span
+class="math inline">0</span>，则都有可能，无法判断</li>
+</ul></li>
+<li>多元函数<span
+class="math inline"><em>F</em>(<em>x</em>,<em>y</em>,⋯,<em>z</em>)</span>的二阶连续偏导点为极值点：一阶偏导为<span
+class="math inline">0</span>，考虑海森阵行列式：
+<ul>
+<li>海森阵<span
+class="math inline">$\left[\begin{matrix}F_{xx}&amp;F_{xy}&amp;\cdots&amp;F_{xz}\\F_{yx}&amp;F_{yy}&amp;\cdots&amp;F_{yz}\\\vdots&amp;\vdots&amp;&amp;\vdots\\F_{zx}&amp;F_{zy}&amp;\cdots&amp;F_{zz}\end{matrix}\right]$</span></li>
+<li>若为正定矩阵(<strong>特征值</strong>都大于<span
+class="math inline">0</span>，或<strong>顺序主子式</strong>都大于<span
+class="math inline">0</span>)：为极小值点</li>
+<li>若为负定矩阵(特征值都小于<span class="math inline">0</span>，或<span
+class="math inline">$\begin{cases}奇数阶顺序主子式小于0\\偶数阶顺序主子式大于0\end{cases}$</span>)：为极大值点</li>
+<li>若为不定矩阵(特征值含大于、小于<span
+class="math inline">0</span>)：不是极值点</li>
+<li>若为半正定矩阵、半负定矩阵(特征值<span
+class="math inline"> ≥ 0</span>、<span
+class="math inline"> ≤ 0</span>)：无法判断</li>
+</ul></li>
+<li>二元函数的不可导点也可能是极值点，但没有系统的方法可求解，只能根据图形判断</li>
+</ul>
+<h3 id="条件极值">条件极值</h3>
+<p>在求多元函数某闭区域内的最值时，需要求出所有可疑的内部极值点及边界上的极值点，求边界极值时往往会附带条件，采用<strong>拉格朗日乘数法</strong>解决：</p>
+<ul>
+<li>求<span
+class="math inline"><em>f</em>(<em>x</em>,<em>y</em>,⋯,<em>z</em>)</span>在<span
+class="math inline"><em>φ</em>(<em>x</em>,<em>y</em>,⋯,<em>z</em>) = 0、⋯、<em>ψ</em>(<em>x</em>,<em>y</em>,⋯,<em>z</em>) = 0</span>条件约束下的极值</li>
+<li>构造函数<span
+class="math inline"><em>F</em>(<em>x</em>,<em>y</em>,⋯,<em>z</em>,<em>λ</em>,⋯,<em>u</em>) = <em>f</em> + <em>λ</em><em>φ</em> + ⋯ + <em>u</em><em>ψ</em></span></li>
+<li>令<span class="math inline"><em>F</em></span>的所有偏导等于<span
+class="math inline">0</span>，解方程组得到条件极值点<span
+class="math inline">(<em>x</em><sub>0</sub>,<em>y</em><sub>0</sub>,⋯,<em>z</em><sub>0</sub>)</span>及对应的<span
+class="math inline"><em>λ</em>、⋯、<em>u</em></span></li>
+</ul>
+<h2 id="练习">练习</h2>
+<h3 id="简单判断">简单判断</h3>
+<p><span
+class="math inline">$\begin{align}&amp;1.讨论f(x,y)=\begin{cases}(x^2+y^2)\ln(x^2+y^2),&amp;x^2+y^2\ne0\\0,&amp;x^2+y^2=0\end{cases}在(0,0)处的连续性\\&amp;解:\lim_{(x,y)\rightarrow(0,0)}f(x,y)\xlongequal[y=\rho\cos
+t]{x=\rho \sin
+t}\lim_{\rho\rightarrow0}\rho^2\ln\rho^2=\lim_{\rho\rightarrow0}\frac{\ln\rho^2}{\frac1{\rho^2}}=0=f(0,0)\end{align}$</span></p>
+<hr />
+<p><span
+class="math inline">$\begin{align}&amp;2.讨论\lim_{(x,y)\rightarrow(0,0)}\frac{xy}{x+y}是否存在.\\&amp;沿y=kx,原极限=0;沿y=x^2-x,原极限=-1,故不存在\end{align}$</span></p>
+<hr />
+<p><span
+class="math inline">$\begin{align}&amp;3.讨论\lim_{(x,y)\rightarrow(0,0)}\frac{xy^2\sin
+ky}{x^2+y^4}是否存在(k\ne0).\\&amp;0\le \left|\frac{xy^2\sin
+ky}{x^2+y^4}\right|\le\left|\frac{kxy^3}{x^2+y^4}\right|\le\left|\frac{\frac12(x^2+y^4)}{x^2+y^4}ky\right|=\frac12|ky|=0\end{align}$</span></p>
+<hr />
+<p><span
+class="math inline">$\begin{align}&amp;4.f(x,y)=\begin{cases}\frac1{xy}\sin
+x^2y,&amp;xy\ne0\\0,&amp;xy=0\end{cases},则f_x'(0,1)的值为?\\&amp;分段点,定义求导f_x'(0,1)=\lim_{x\rightarrow0}\frac{\frac1x\sin
+x^2}{x-0}=1\end{align}$</span></p>
+<hr />
+<p><span
+class="math inline">$\begin{align}&amp;5.f(x,y)=e^{\sqrt{x^2+y^4}}在(0,0)处的偏导.\\&amp;在看不出是否分段时,用定义求导一定正确\\&amp;f_x(0,0)=\lim_{x\rightarrow0}\frac{e^{\sqrt{x^2}}-1}{x-0}=\lim_{x\rightarrow0}\frac{|x|}x,不存在\\&amp;f_y(0,0)=\lim_{y\rightarrow0}\frac{e^{y^2}-1}{y-0}=\lim_{y\rightarrow0}y=0\end{align}$</span></p>
+<hr />
+<p><span
+class="math inline">$\begin{align}&amp;6.证明f(x,y)在(0,0)处可微的一个充分条件为\lim_{(x,y)\rightarrow(0,0)}\frac{f(x,y)-f(0,0)}{\sqrt{x^2+y^2}}=0\\&amp;证:由条件得\lim_{x\rightarrow0}\frac{f(x,0)-f(0,0)}{|x|}=0,两边极限都等于0,故f_x(0,0)=0\\&amp;同理f_y(0,0)=0,\\&amp;考虑\lim_{(x,y)\rightarrow(0,0)}\frac{\Delta
+f-f_x(0,0)x-f_y(0,0)y}{\sqrt{x^2+y^2}}=\lim_{(x,y)\rightarrow(0,0)}\frac{f(x,y)-f(0,0)}{\sqrt{x^2+y^2}}=0\\&amp;故\Delta
+f(0,0)=f_x(0,0)dx+f_y(0,0)dy+o(\sqrt{x^2+y^2}),故可微\end{align}$</span></p>
+<hr />
+<p><span
+class="math inline">$\begin{align}&amp;7.证明f(x,y)在(0,0)处可微的一个充分条件为\lim_{(x,y)\rightarrow(0,0)}\frac{f(x,y)-f(0,0)+2x-y}{\sqrt{x^2+y^2}}=0\\&amp;与前者不同在于求偏导的过程.\\&amp;f_x(0,0)=\lim_{x\rightarrow0}(\frac{f(x,0)-f(0,0)+2x}{|x|}·\frac{|x|}{x}-2)=-2\\&amp;同理f_y(0,0)=1,其余过程相同\end{align}$</span></p>
+<hr />
+<p><span class="math inline">$\begin{align}&amp;8.xy-z\ln
+y+e^{xz}=1在(0,1,1)的一个邻域内可确定哪几个隐函数?\\&amp;代入F(0,1,1)=0,看偏导\\&amp;求导:F_x=y+e^{xz}z;F_y=x-\frac
+zy;F_z=-\ln
+y+e^{xz}x\\&amp;代入F_x(0,1,1)=2;F_y(0,1,1)=-1;F_z(0,1,1)=0\\&amp;故可确定唯一的x(y,z)和y(x,z)\end{align}$</span></p>
+<hr />
+<p><span
+class="math inline">$\begin{align}&amp;9.求函数z=1-\left(\frac{x^2}{a^2}+\frac{y^2}{b^2}\right)在点\left(\frac
+a{\sqrt2},\frac
+b{\sqrt2}\right)处\\&amp;沿曲线\frac{x^2}{a^2}+\frac{y^2}{b^2}=1在这点的内法线方向的方向导数.\\&amp;解:该曲线可确定唯一的y=y(x),补充x=x,即为参数方程\\&amp;故切向量为\left(1,-\frac{f_x}{f_y}\Bigg|_{\left(\frac
+a{\sqrt2},\frac b{\sqrt2}\right)}\right)=(1,-\frac
+ba)\\&amp;两个相反方向的法向量为\pm(b,a),内法线方向为(-b,-a)\\&amp;故方向导数为z_x\cos\alpha+z_y\cos\beta=\frac{\sqrt{2(a^2+b^2)}}{ab}\end{align}$</span></p>
+<hr />
+<p><span
+class="math inline">$\begin{align}&amp;10.若f(x,y)在有界闭区域内有二阶连续偏导,且\frac{\part^2f}{\part
+x\part y}\ne0,\frac{\part^2f}{\part x^2}+\frac{\part^2f}{\part
+y^2}=0,求其最大、最小值的位置\\&amp;令A=\frac{\part^2f}{\part
+x^2},B=\frac{\part^2f}{\part x\part y},C=\frac{\part^2f}{\part
+y^2},易得AC-B^2&lt;0,内部没有极值点\\&amp;故最大、最小值只能在边界上\end{align}$</span></p>
+<hr />
+<p><span
+class="math inline">$\begin{align}&amp;11.设函数f(x,y)在(0,0)处连续,且\lim_{(x,y)\rightarrow(0,0)}\frac{f(x,y)}{1-\cos{\sqrt{x^2+y^2}}}=-2,则在该点是否为极值?\\&amp;由1-\cos\sqrt{x^2+y^2}\sim\frac{x^2+y^2}2,易得f(x,y)是-(x^2+y^2)的等价无穷小\\&amp;即\lim_{(x,y)\rightarrow(0,0)}f(x,y)=0,连续\Rightarrow
+f(0,0)=0\\&amp;f_x(0,0)=\lim_{x\rightarrow0}\frac{f(x,0)-0}x=0,同理f_y(0,0)=0,是可疑极值点\\&amp;f(x,y)=-(x^2+y^2)(1+\alpha),其中\lim_{(x,y)\rightarrow(0,0)}\alpha=0,故f(x,y)在邻域内&lt;0\\&amp;故是极值点,且为极大值点\end{align}$</span></p>
+<hr />
+<p><span
+class="math inline">$\begin{align}&amp;12.设f(x,y)在(0,0)某邻域内连续,且\lim_{(x,y)\rightarrow(0,0)}\frac{f(x,y)-xy}{(x^2+y^2)^2}=1,证明(0,0)不是f的极值点\\&amp;由x^2+y^2\rightarrow0,得f(x,y)-xy\rightarrow0,得\lim_{(x,y)\rightarrow(0,0)}f(x,y)=0,由连续得f(0,0)=0\\&amp;[举特例说明]:再由条件得\lim_{x\rightarrow0}\frac{f(x,0)-0}{x^4}=1,即在y=0路径上为极小值点\\&amp;在y=-x路径上,\lim_{x\rightarrow0}\frac{f(x,-x)+x^2}{4x^4}=1,\therefore0&gt;\lim_{x\rightarrow0}f(x,-x)&gt;-x^2,是极大值点\\&amp;故不是极值点\\&amp;[不通过路径说明]:\frac{f(x,y)}{xy+(x^2+y^2)^2}=1+\alpha,其中\lim_{(x,y)\rightarrow(0,0)}\alpha=0\\&amp;即f(x,y)=xy+(1+\alpha)(x^2+y^2)^2\\&amp;故f(x,y)符号取决于xy,当x、y异号时为极大值点,当x、y同号时为极小值点\end{align}$</span></p>
+<h3 id="大题练习">大题练习</h3>
+<p><span
+class="math inline">$\begin{align}&amp;1.通过\begin{cases}x=e^u\\y=e^v\end{cases},变换2x^2\frac{\part^2z}{\part
+x^2}+xy\frac{\part^2z}{\part x\part y}+y^2\frac{\part^2z}{\part
+y^2}=0\\&amp;\frac{\part z}{\part u}=\frac{\part z}{\part x}e^u;\ \
+\frac{\part z}{\part v}=\frac{\part z}{\part
+y}e^v\\&amp;\frac{\part^2z}{\part u^2}=e^u\left(\frac{\part z}{\part
+x}+\frac{\part^2z}{\part
+x^2}e^u\right),对v二阶偏导、混合偏导同理\\&amp;最终答案:2\frac{\part^2z}{\part
+u^2}+\frac{\part^2z}{\part u\part v}+\frac{\part^2z}{\part
+v^2}-2\frac{\part z}{\part u}-\frac{\part z}{\part
+v}=0\end{align}$</span></p>
+<hr />
+<p><span
+class="math inline">$\begin{align}&amp;2.讨论f(x,y)=\begin{cases}\large\frac{x^2y^2}{(x^2+y^2)^{\frac32}},&amp;x^2+y^2\ne0\\0,&amp;x^2+y^2=0\end{cases}在(0,0)处是否连续、偏导数存在性、以及是否可微\\&amp;1).0\le\lim_{(x,y)\rightarrow(0,0)}f(x,y)\le\lim_{(x,y)\rightarrow(0,0)}\frac{x^2y^2}{x^2+y^2}=0,故连续\\&amp;2).分段函数用定义,f_x(0,0)=\lim_{x\rightarrow0}\frac{f(x,0)-f(0,0)}{x-0}=\lim_{x\rightarrow0}\frac{x}{x^3}·0=0\\&amp;f_y(0,0)=\lim_{y\rightarrow0}\frac{f(0,y)-f(0,0)}{y-0}=0,偏导存在\\&amp;3).\lim_{(x,y)\rightarrow(0,0)}\frac{\frac{x^2y^2}{(x^2+y^2)^{\frac32}}-0-0x-0y}{\rho}=\lim_{(x,y)\rightarrow(0,0)}\frac{x^2y^2}{(x^2+y^2)^2}=\lim_{(x,y)\rightarrow(0,0)}\left(\frac{xy}{x^2+y^2}\right)^2不存在,\\&amp;故不可微\end{align}$</span></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/05/calculus-limit-exercise/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-05</time>
+        <br>
+      微积分: 极限练习题
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/10/30/calculus-limitation/" rel="bookmark">
+        <time class="popular-posts-time">2023-10-30</time>
+        <br>
+      微积分: 关于极限
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/11/12/calculus-indefinite-int/" rel="bookmark">
+        <time class="popular-posts-time">2023-11-12</time>
+        <br>
+      微积分: 不定积分
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2023/12/11/calculus-exercise-1/" rel="bookmark">
+        <time class="popular-posts-time">2023-12-11</time>
+        <br>
+      微积分: 练习题
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/math/" rel="tag"># math</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/04/22/discreteMath-set/" rel="prev" title="离散数学: 集合论">
+                  <i class="fa fa-angle-left"></i> 离散数学: 集合论
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/04/29/discreteMath-graph/" rel="next" title="离散数学: 图论基础">
+                  离散数学: 图论基础 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

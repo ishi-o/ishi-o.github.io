@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.26.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="大学物理: 经典力学">
+<meta property="og:url" content="https://ishi-o.github.io/2024/10/03/physics-classic-force/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-03T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-06T07:59:44.169Z">
+<meta property="article:author" content="ishio">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2024/10/03/physics-classic-force/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2024/10/03/physics-classic-force/","path":"2024/10/03/physics-classic-force/","title":"大学物理: 经典力学"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>大学物理: 经典力学 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.1/mermaid.min.js","integrity":"sha256-BmQmdWDS8X2OTbrwELWK366LV6escyWhHHe0XCTU/Hk="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%8F%E5%85%B8%E5%8A%9B%E5%AD%A6"><span class="nav-number">1.</span> <span class="nav-text">经典力学</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%A8%E7%82%B9%E8%BF%90%E5%8A%A8%E7%9A%84%E6%95%B0%E5%AD%A6%E8%A7%A3%E9%87%8A"><span class="nav-number">1.1.</span> <span class="nav-text">质点运动的数学解释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%9B%E9%A1%BF%E5%AE%9A%E5%BE%8B"><span class="nav-number">1.2.</span> <span class="nav-text">牛顿定律</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E7%B3%BB"><span class="nav-number">1.3.</span> <span class="nav-text">参考系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%8A%A8%E9%87%8F"><span class="nav-number">1.4.</span> <span class="nav-text">关于动量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E8%A7%92%E5%8A%A8%E9%87%8F"><span class="nav-number">1.5.</span> <span class="nav-text">关于角动量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%8A%9F%E5%92%8C%E5%8A%9F%E7%8E%87"><span class="nav-number">1.6.</span> <span class="nav-text">关于功和功率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A2%B0%E6%92%9E%E9%97%AE%E9%A2%98"><span class="nav-number">1.7.</span> <span class="nav-text">碰撞问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9A%E4%BD%93%E5%8A%9B%E5%AD%A6"><span class="nav-number">1.8.</span> <span class="nav-text">刚体力学</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">132</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">57</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/11/physics-magnetic-field/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-11</time>
+        <br>
+      大学物理: 恒定磁场
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/14/physics-elec-induction/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-14</time>
+        <br>
+      大学物理: 电磁感应
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/15/deeplearning-fclayer/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-15</time>
+        <br>
+      机器学习: 全连接层
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/06/physics-electrostatic-field/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-06</time>
+        <br>
+      大学物理: 静电场
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2024/10/03/physics-classic-force/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="大学物理: 经典力学 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          大学物理: 经典力学
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2024-10-03 00:00:00" itemprop="dateCreated datePublished" datetime="2024-10-03T00:00:00+00:00">2024-10-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-06 07:59:44" itemprop="dateModified" datetime="2025-12-06T07:59:44+00:00">2025-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/" itemprop="url" rel="index"><span itemprop="name">SE Courses</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SE-Courses/Physics/" itemprop="url" rel="index"><span itemprop="name">Physics</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>6 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h2 id="经典力学">经典力学</h2>
+<h3 id="质点运动的数学解释">质点运动的数学解释</h3>
+<ul>
+<li>位置矢量：质点在指定参考系下的坐标向量，用<span
+class="math inline"><em>r⃗</em></span>表示，简称<strong>位矢</strong></li>
+<li>运动方程：位置矢量关于时间的方程，用<span
+class="math inline"><em>r⃗</em> = <em>r⃗</em>(<em>t</em>)</span>表示，也称运动函数</li>
+<li>速度矢量：位矢对时间的<strong>一阶导数</strong>，用<span
+class="math inline"><em>v̄</em>(<em>t</em>)</span>表示，其方向与位移方向一致</li>
+<li>加速度矢量：速度对时间的<strong>一阶导数</strong>，用<span
+class="math inline"><em>ā</em>(<em>t</em>)</span>表示，其方向<strong>总是指向轨道曲线的内侧</strong></li>
+<li>若已知质点的加速度和初始状态，求运动方程相当于解微分方程的初值问题</li>
+<li>加速度可分解为<span
+class="math inline"><strong>a</strong> = <em>a</em><sub><em>t</em></sub><strong>τ</strong> + <em>a</em><sub><em>n</em></sub><strong>n</strong></span>，其中：
+<ul>
+<li><span
+class="math inline"><em>a</em><sub><em>t</em></sub></span>为切向加速度，<span
+class="math inline"><em>a</em><sub><em>n</em></sub></span>为法向加速度(向心加速度)，<span
+class="math inline"><strong>τ</strong></span>为速度的单位切向量，<span
+class="math inline"><strong>n</strong></span>为速度的单位法向量</li>
+<li><span class="math inline">$\begin{align}a_t=\frac{\mathrm
+dv}{\mathrm dt}、a_n=\frac{v^2}{R}\end{align}$</span>，其中<span
+class="math inline"><em>v</em></span>为速度的大小</li>
+</ul></li>
+</ul>
+<h3 id="牛顿定律">牛顿定律</h3>
+<ul>
+<li>牛顿定律只对惯性系生效</li>
+<li>牛顿第一定律(惯性定律)：任何不受力物体的物体保持静止或匀速直线运动状态
+<ul>
+<li>力是物体运动状态改变的原因</li>
+<li>物体具有惯性，即保持其静止或匀速直线运动状态不变的属性</li>
+</ul></li>
+<li>牛顿第二定律：
+<ul>
+<li>动量<span
+class="math inline"><strong>p</strong> = <em>m</em><strong>v</strong></span></li>
+<li>力<span
+class="math inline">$\begin{align}\boldsymbol{F}=\frac{\mathrm
+d\boldsymbol{p}}{\mathrm dt}\end{align}$</span>，当质量为关于<span
+class="math inline"><em>t</em></span>的常数时，<span
+class="math inline"><strong>F</strong> = <em>m</em><strong>a</strong></span></li>
+<li>力恒定时，质量越大、加速度越小、物体惯性越大</li>
+</ul></li>
+<li>牛顿第三定律：相互作用力总是大小相等、方向相反、作用在一条直线上</li>
+</ul>
+<h3 id="参考系">参考系</h3>
+<ul>
+<li>参考系：可以是任意物体，以该物体作为参考系原点，即称其他物体是相对于该参考系的</li>
+<li>惯性系：在惯性系中，只要物体不受力，它就满足牛一；即惯性系本身不具有加速度</li>
+<li>绝对时空观：
+<ul>
+<li>在不同参考系下(分别记为<span
+class="math inline"><em>S</em>、<em>S</em>′</span>，原点为<span
+class="math inline"><em>O</em>、<em>O</em>′</span>，质点为<span
+class="math inline"><em>P</em></span>)，满足<span
+class="math inline"><strong>O</strong><strong>′</strong><strong>P</strong> = <strong>r</strong>′(<em>t</em>)、<em>t</em> = <em>t</em>′</span></li>
+<li>伽利略变换：设<span
+class="math inline">$\begin{align}\boldsymbol{u}=\frac{\mathrm
+d\boldsymbol{OO'}(t)}{\mathrm
+dt}\end{align}$</span>，则不同参考系下同一质点：
+<ul>
+<li>位矢关系：<span
+class="math inline"><strong>r</strong>(<em>t</em>) = <strong>r</strong>′(<em>t</em>) + <strong>O</strong><strong>O</strong><strong>′</strong>(<em>t</em>)</span>，即<span
+class="math inline"><strong>O</strong><strong>P</strong> = <strong>O</strong><strong>O</strong><strong>′</strong> + <strong>O</strong><strong>′</strong><strong>P</strong></span></li>
+<li>速度关系：<span
+class="math inline"><strong>v</strong> = <strong>v</strong>′ + <strong>u</strong></span></li>
+<li>加速度关系：<span
+class="math inline">$\begin{align}\boldsymbol{a}=\boldsymbol{a}'+\frac{\mathrm
+d\boldsymbol{u}}{\mathrm dt}\end{align}$</span></li>
+</ul></li>
+<li>伽利略坐标变换：若两<strong>惯性系</strong>在相对做<strong>匀速直线运动</strong>，则<span
+class="math inline"><strong>u</strong> = <strong>C</strong></span>，有：<span
+class="math inline">$\begin{cases}x=x'+ut\\y=y'\\z=z'\\t=t'\end{cases}$</span></li>
+</ul></li>
+<li>惯性力存在于非惯性系中，且<span
+class="math inline"><strong>F</strong><sub><em>i</em></sub> =  − <em>m</em><strong>a</strong></span>，其中<span
+class="math inline"><strong>a</strong></span>为非惯性系的加速度</li>
+</ul>
+<h3 id="关于动量">关于动量</h3>
+<ul>
+<li>动量是牛顿第二定律的另一种形式</li>
+<li>动量定理：力是动量对时间的导数，冲量是力对时间的积分
+<ul>
+<li>冲量<span
+class="math inline">$\begin{align}\boldsymbol{I}=\int_{t_1}^{t_2}\boldsymbol{F}(t)\mathrm
+dt=\int_{t_1}^{t_2}\mathrm
+d\boldsymbol{p}=\boldsymbol{p}_2-\boldsymbol{p}_1\end{align}$</span></li>
+</ul></li>
+<li>动量守恒定律：若某质点系所受合外力为零，则<span
+class="math inline">$\sum_\limits
+i\boldsymbol{p}_i=\boldsymbol{C}$</span>，例如质点系<strong>静止或做匀速直线运动</strong></li>
+<li>质心运动定理：
+<ul>
+<li>质心坐标<span
+class="math inline">$\begin{align}\boldsymbol{r}_c=\frac{\int_\Omega\rho\
+\boldsymbol{r}\mathrm d\Omega}{m}\end{align}$</span>，其中<span
+class="math inline"><em>c</em></span>为质心这个点，<span
+class="math inline"><strong>r</strong></span>为质点系中任意一点的位矢</li>
+<li>若该质点系满足动量守恒定律，则<span
+class="math inline">$\sum_\limits
+i\boldsymbol{F}_i=m\boldsymbol{a}_c$</span></li>
+</ul></li>
+</ul>
+<h3 id="关于角动量">关于角动量</h3>
+<ul>
+<li>设质点<span class="math inline"><em>P</em></span>相对于<span
+class="math inline"><em>O</em></span>的位矢为<span
+class="math inline"><strong>r</strong></span>，且所受外力为<span
+class="math inline"><strong>F</strong></span>，则定义<span
+class="math inline"><strong>F</strong></span>对<span
+class="math inline"><em>O</em></span>的力矩为<span
+class="math inline"><strong>M</strong> = <strong>r</strong> <strong>×</strong> <strong>F</strong></span></li>
+<li>力矩由力的大小、方向、作用点以及某固定点生成</li>
+<li>角动量(动量矩)：与力矩的定义方式类似，<span
+class="math inline"><strong>L</strong> = <strong>r</strong> <strong>×</strong> <strong>p</strong></span>，它包含动量对某固定点的角度信息</li>
+<li>角动量定理：力矩是角动量对时间的导数</li>
+<li>角动量守恒定律：若某质点系所受<strong>合外力矩</strong>为零，则<span
+class="math inline">$\sum_\limits
+i\boldsymbol{L}_i=\boldsymbol{C}$</span>，例如质点系<strong>做直线运动</strong>或<strong>做匀速圆周运动</strong></li>
+</ul>
+<h3 id="关于功和功率">关于功和功率</h3>
+<ul>
+<li>力做功<span
+class="math inline">$\begin{align}A=\int_L\boldsymbol{F}\mathrm
+d\boldsymbol{r}=\int_L\boldsymbol{F·v}\ \mathrm
+dt\end{align}$</span>，恒力做功<span
+class="math inline"><em>A</em> = <strong>F</strong> <strong>·</strong> <strong>Δ</strong><strong>r</strong></span></li>
+<li>根据格林公式及斯托克斯公式，将做功与路径无关，即<span
+class="math inline"><strong>F</strong></span>的雅可比行列式为<span
+class="math inline">0</span>的力称为保守力</li>
+<li>功率<span class="math inline">$\begin{align}P=\frac{\mathrm
+dA}{\mathrm dt}=\boldsymbol{F·v}\end{align}$</span></li>
+<li>动能定理：<span
+class="math inline">$\begin{align}E_k=\frac12mv^2\end{align}$</span>，<span
+class="math inline"><em>A</em> = <em>Δ</em><em>E</em><sub><em>k</em></sub></span></li>
+<li><strong>保守内力</strong>做功<span
+class="math inline"><em>A</em> =  − <em>Δ</em><em>E</em><sub><em>p</em></sub></span></li>
+<li>机械能守恒定律：如果系统只有保守内力做功，则<span
+class="math inline"><em>E</em><sub><em>M</em></sub> = <em>E</em><sub><em>k</em></sub> + <em>E</em><sub><em>p</em></sub> = <em>C</em></span></li>
+</ul>
+<h3 id="碰撞问题">碰撞问题</h3>
+<ul>
+<li>完全非弹性碰撞：动量守恒，但有非保守内力做功，只满足<span
+class="math inline"><em>m</em><sub><em>合</em></sub><strong>v</strong><sub><em>合</em></sub> = <em>m</em><sub>1</sub><strong>v</strong><sub>1</sub> + <em>m</em><sub>2</sub><strong>v</strong><sub>2</sub></span></li>
+<li>完全弹性碰撞：动量守恒且机械能守恒
+<ul>
+<li>矢量式：<span
+class="math inline"><em>m</em><sub>1</sub><strong>v</strong><sub>10</sub> + <em>m</em><sub>2</sub><strong>v</strong><sub>20</sub> = <em>m</em><sub>1</sub><strong>v</strong><sub>1</sub> + <em>m</em><sub>2</sub><strong>v</strong><sub>2</sub></span></li>
+<li><span
+class="math inline">$\begin{align}\frac{m_1v_{10}^2}2+\frac{m_2v_{20}^2}2=\frac{m_1v_{1}^2}2+\frac{m_2v_{2}^2}2\end{align}$</span></li>
+<li>若<span
+class="math inline"><em>m</em><sub>2</sub></span>初速度为<span
+class="math inline">0</span>，则<span
+class="math inline">$\begin{align}\boldsymbol{v}_1\boldsymbol{·v}_2=\frac{m_1-m_2}{2m_1}v_2^2\end{align}$</span>，即<span
+class="math inline">$\begin{align}\cos&lt;\boldsymbol{v}_1,\boldsymbol{v}_2&gt;=\frac{m_1-m_2}{2m_1}\frac{v_2}{v_1}\end{align}$</span></li>
+<li>若为对心碰撞，则可总结出更一般的速度式，因为此时<span
+class="math inline">cos  &lt; <strong>v</strong><sub>1</sub>, <strong>v</strong><sub>2</sub> &gt;  =  − 1</span>，动量守恒式变成标量式：<span
+class="math inline">$\begin{align}\begin{cases}v_1=\frac{\large(m_1-m_2)v_{10}+2m_2
+v_{20}}{\large
+m_1+m_2}\\v_2=\frac{\large2m_1v_{10}+(m_2-m_1)v_{20}}{\large
+m_1+m_2}\end{cases}\end{align}$</span>(借助平方差公式推导)</li>
+</ul></li>
+</ul>
+<h3 id="刚体力学">刚体力学</h3>
+<ul>
+<li><p>角速度大小：<span
+class="math inline">$\begin{align}\omega=\frac{\mathrm d\theta}{\mathrm
+dt}=\frac1r\frac{\mathrm dl}{\mathrm dt}=\frac
+vr\end{align}$</span></p></li>
+<li><p>角速度方向：<span
+class="math inline"><strong>v</strong> = <strong>ω</strong> <strong>×</strong> <strong>r</strong></span></p></li>
+<li><p>角加速度和加速度的关系：</p>
+<ul>
+<li><span class="math inline">$\begin{align}a_t=\frac{\mathrm
+dv}{\mathrm dt}=r\frac{\mathrm d\omega}{\mathrm
+dt}=r\alpha\end{align}$</span></li>
+<li><span
+class="math inline">$\begin{align}a_n=\frac{v^2}{r}=r\omega^2\end{align}$</span></li>
+<li><span class="math inline">$\begin{align}\boldsymbol{a}=\frac{\mathrm
+d(\boldsymbol{\omega\times r})}{\mathrm dt}=\boldsymbol{\alpha\times
+r}+\boldsymbol{\omega\times v}\end{align}$</span></li>
+</ul></li>
+<li><p>刚体绕定轴转动时，轴向动量和位矢垂直，故轴向角动量的大小<span
+class="math inline"><em>L</em><sub><em>i</em></sub> = |<strong>r</strong> <strong>×</strong> <strong>p</strong><sub><em>i</em></sub>| = <em>m</em><em>r</em><sub><em>i</em></sub><em>v</em><sub><em>i</em></sub> = <em>m</em><em>r</em><sub><em>i</em></sub><sup>2</sup><em>ω</em><sub><em>i</em></sub></span></p>
+<p>定义刚体绕某轴旋转的<strong>转动惯量</strong>为<span
+class="math inline">$\begin{align}J=mr_i^2=\int_\Omega \rho\
+r_i^2\mathrm d\Omega\end{align}$</span>，则轴向角动量的大小为<span
+class="math inline"><em>L</em><sub><em>i</em></sub> = <em>J</em><em>ω</em></span>，轴向力矩大小为<span
+class="math inline"><em>M</em><sub><em>i</em></sub> = <em>J</em><em>α</em></span></p></li>
+<li><p>刚体定轴转动定律：刚体绕定轴的<strong>角加速度</strong>和<strong>轴向力矩</strong>成正比，类比加速度和力的关系<span
+class="math inline"><em>F</em> = <em>m</em><em>a</em></span></p></li>
+<li><p>转动问题中，<span
+class="math inline">$\begin{align}A=\int_{\theta_1}^{\theta_2}M_i\mathrm
+d\theta\end{align}$</span>，即外力做的功等于轴向力矩和角位移的积</p></li>
+<li><p>转动动能：<span
+class="math inline">$\begin{align}E_k=\frac12J\omega^2\end{align}$</span></p></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/11/physics-magnetic-field/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-11</time>
+        <br>
+      大学物理: 恒定磁场
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/14/physics-elec-induction/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-14</time>
+        <br>
+      大学物理: 电磁感应
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/07/15/deeplearning-fclayer/" rel="bookmark">
+        <time class="popular-posts-time">2025-07-15</time>
+        <br>
+      机器学习: 全连接层
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/10/06/physics-electrostatic-field/" rel="bookmark">
+        <time class="popular-posts-time">2024-10-06</time>
+        <br>
+      大学物理: 静电场
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/10/02/algo-ufs/" rel="prev" title="数据结构: 并查集">
+                  <i class="fa fa-angle-left"></i> 数据结构: 并查集
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2024/10/06/physics-electrostatic-field/" rel="next" title="大学物理: 静电场">
+                  大学物理: 静电场 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">241k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">14:38</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
