@@ -1504,23 +1504,6 @@ $$</span></p></li>
       </tags>
   </entry>
   <entry>
-    <title>Spring framework: Security</title>
-    <url>/2025/07/14/spring-security/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-]]></content>
-      <categories>
-        <category>Programming</category>
-        <category>Java</category>
-        <category>Spring framework</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>security</tag>
-        <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Spring framework: Validation API</title>
     <url>/2025/07/14/spring-validation/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -1579,6 +1562,23 @@ id="集成bean-validation-api">集成<code>Bean Validation API</code></h2>
       <tags>
         <tag>Java</tag>
         <tag>validation</tag>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring framework: Security</title>
+    <url>/2025/07/14/spring-security/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Java</category>
+        <category>Spring framework</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>security</tag>
         <tag>Spring</tag>
       </tags>
   </entry>
@@ -2458,8 +2458,8 @@ class="math inline">$\begin{align}\frac{1}{1-p}\end{align}$</span></p>
         <category>ML/DL</category>
       </categories>
       <tags>
-        <tag>DL</tag>
         <tag>ML</tag>
+        <tag>DL</tag>
         <tag>Regularization</tag>
       </tags>
   </entry>
@@ -11524,8 +11524,8 @@ class="math inline"><strong>y</strong></span></p>
       </categories>
       <tags>
         <tag>beginner</tag>
-        <tag>DL</tag>
         <tag>ML</tag>
+        <tag>DL</tag>
       </tags>
   </entry>
   <entry>
@@ -19330,8 +19330,8 @@ exp3
 <p>如图，使用<code>html</code>语法，写出一个四行两列的、边界值为2的、内容<code>'11'</code>被设置为占据四行且居中的表格</p>
 <h3 id="图片">图片</h3>
 通过<code>&lt;img /&gt;</code>标签可以定义并放缩图片：
-<style>.xxabulkrhpfi{zoom:33%;}</style>
-<img src="/2023/10/03/markdown-beginner/image_example.png" class="xxabulkrhpfi">
+<style>.vvzfkkjyfhei{zoom:33%;}</style>
+<img src="/2023/10/03/markdown-beginner/image_example.png" class="vvzfkkjyfhei">
 <p>图片可以缩放，即在前方的<code>html</code>标签内加上<code>style="zoom:num%"</code>，<code>num</code>为缩放比例</p>
 <h3 id="链接">链接</h3>
 <p><code>&lt;a id="111"&gt;&lt;/a&gt;</code>：这条元素定义了一个<code>id</code>为<code>'111'</code>的锚点，在文章内部可以通过<code>[点击](#111)</code>链接跳转到这个锚点，例如本文在目录处设定了一个<code>'HOME'</code>锚点，您可以<a
