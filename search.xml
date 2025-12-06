@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>编译原理: 语法分析</title>
-    <url>/blogs/2025/12/03/compilers-syntax/</url>
+    <url>/2025/12/03/compilers-syntax/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="语法分析">语法分析</h1>
@@ -208,7 +208,7 @@ class="math inline"><em>f</em><em>i</em><em>r</em><em>s</em><em>t</em>(<em>α</e
   </entry>
   <entry>
     <title>编译原理: 词法分析</title>
-    <url>/blogs/2025/12/02/compilers-lexical/</url>
+    <url>/2025/12/02/compilers-lexical/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="词法分析">词法分析</h1>
@@ -284,7 +284,7 @@ class="math inline"><em>x</em><em>s</em><sup>*</sup><em>y</em></span>：使<code
   </entry>
   <entry>
     <title>统计学习: 无监督学习</title>
-    <url>/blogs/2025/11/28/stat-unsupervise-learning/</url>
+    <url>/2025/11/28/stat-unsupervise-learning/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="无监督学习">无监督学习</h1>
@@ -336,7 +336,7 @@ class="math inline"><em>M</em></span></li>
   </entry>
   <entry>
     <title>统计学习: SVM（支持向量机）</title>
-    <url>/blogs/2025/11/27/stat-svm/</url>
+    <url>/2025/11/27/stat-svm/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="支持向量机">支持向量机</h1>
@@ -386,7 +386,7 @@ class="math inline"> &lt; <em>x</em>, <em>x</em><sub><em>i</em></sub>&gt;<
   </entry>
   <entry>
     <title>Rlang: 虽然不知道为什么要学</title>
-    <url>/blogs/2025/11/26/Rlang-beginner/</url>
+    <url>/2025/11/26/Rlang-beginner/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="统计学习">统计学习</h1>
@@ -504,7 +504,7 @@ class="math inline"><em>F</em></span>假设检验的<code>p</code>值
   </entry>
   <entry>
     <title>Pytorch: 使用torch.utils.data封装数据</title>
-    <url>/blogs/2025/11/26/pytorch-dataprocess/</url>
+    <url>/2025/11/26/pytorch-dataprocess/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="数据集集成框架">数据集集成框架</h3>
@@ -573,7 +573,7 @@ class="math inline"><em>F</em></span>假设检验的<code>p</code>值
   </entry>
   <entry>
     <title>统计学习: 树型模型</title>
-    <url>/blogs/2025/11/25/stat-tree-models/</url>
+    <url>/2025/11/25/stat-tree-models/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="树模型">树模型</h1>
@@ -670,7 +670,7 @@ class="math inline"><em>y</em></span></li>
   </entry>
   <entry>
     <title>统计学习: 非线性模型</title>
-    <url>/blogs/2025/11/24/stat-nlinear-models/</url>
+    <url>/2025/11/24/stat-nlinear-models/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="非线性模型">非线性模型</h1>
@@ -739,7 +739,7 @@ class="math inline"><em>f</em><sub><em>j</em></sub>(<em>x</em><sub><em>j</em></s
   </entry>
   <entry>
     <title>统计学习: 估计方法</title>
-    <url>/blogs/2025/11/20/stat-estimate/</url>
+    <url>/2025/11/20/stat-estimate/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="估计方法">估计方法</h1>
@@ -851,7 +851,7 @@ class="math inline"><em>p</em></span>的惩罚</p></li>
   </entry>
   <entry>
     <title>统计学习: 变量选择</title>
-    <url>/blogs/2025/11/20/stat-var-selection/</url>
+    <url>/2025/11/20/stat-var-selection/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="变量选择">变量选择</h1>
@@ -956,7 +956,7 @@ class="math inline"><em>Y</em></span>会参与降维的过程</li>
   </entry>
   <entry>
     <title>统计学习: 分类任务</title>
-    <url>/blogs/2025/11/18/stat-classification/</url>
+    <url>/2025/11/18/stat-classification/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="分类任务">分类任务</h1>
@@ -1058,7 +1058,7 @@ $$</span></p></li>
   </entry>
   <entry>
     <title>统计学习: 线性回归</title>
-    <url>/blogs/2025/11/17/stat-linear-regression/</url>
+    <url>/2025/11/17/stat-linear-regression/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="线性回归">线性回归</h1>
@@ -1134,7 +1134,7 @@ class="math inline"><em>ε</em></span>之间互不相关(且假设服从正态�
   </entry>
   <entry>
     <title>Linux: 内核</title>
-    <url>/blogs/2025/08/20/linux-kernel/</url>
+    <url>/2025/08/20/linux-kernel/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="linux内核"><code>Linux</code>内核</h1>
@@ -1157,7 +1157,7 @@ class="math inline"><em>ε</em></span>之间互不相关(且假设服从正态�
   </entry>
   <entry>
     <title>机器学习: 卷积层</title>
-    <url>/blogs/2025/07/18/deeplearning-convlayer/</url>
+    <url>/2025/07/18/deeplearning-convlayer/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="卷积层">卷积层</h3>
@@ -1305,7 +1305,7 @@ $$</span></p></li>
   </entry>
   <entry>
     <title>Java: Mybatis</title>
-    <url>/blogs/2025/07/16/java-mybatis/</url>
+    <url>/2025/07/16/java-mybatis/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="mybatis"><code>MyBatis</code></h1>
@@ -1332,7 +1332,7 @@ $$</span></p></li>
   </entry>
   <entry>
     <title>机器学习: 全连接层</title>
-    <url>/blogs/2025/07/15/deeplearning-fclayer/</url>
+    <url>/2025/07/15/deeplearning-fclayer/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="全连接层">全连接层</h3>
@@ -1393,7 +1393,7 @@ $$</span></p></li>
   </entry>
   <entry>
     <title>机器学习: 简单神经网络（前馈神经网络）的原理</title>
-    <url>/blogs/2025/07/14/deeplearning-simpleNN/</url>
+    <url>/2025/07/14/deeplearning-simpleNN/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="前馈神经网络基本原理">前馈神经网络基本原理</h2>
@@ -1505,7 +1505,7 @@ $$</span></p></li>
   </entry>
   <entry>
     <title>Spring framework: Security</title>
-    <url>/blogs/2025/07/14/spring-security/</url>
+    <url>/2025/07/14/spring-security/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 ]]></content>
@@ -1522,7 +1522,7 @@ $$</span></p></li>
   </entry>
   <entry>
     <title>Spring framework: Validation API</title>
-    <url>/blogs/2025/07/14/spring-validation/</url>
+    <url>/2025/07/14/spring-validation/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="spring-validation"><code>Spring Validation</code></h1>
@@ -1584,7 +1584,7 @@ id="集成bean-validation-api">集成<code>Bean Validation API</code></h2>
   </entry>
   <entry>
     <title>Spring framework: MVC</title>
-    <url>/blogs/2025/07/12/spring-mvc/</url>
+    <url>/2025/07/12/spring-mvc/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="spring-web-mvc"><code>Spring Web MVC</code></h1>
@@ -1794,7 +1794,7 @@ id="dispatcherservlet的配置"><code>DispatcherServlet</code>的配置</h3>
   </entry>
   <entry>
     <title>Java EE: Bean Validation</title>
-    <url>/blogs/2025/07/11/java-bean-validation/</url>
+    <url>/2025/07/11/java-bean-validation/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1
@@ -1889,7 +1889,7 @@ id="jakarta-ee-validation-api"><code>Jakarta EE Validation API</code></h1>
   </entry>
   <entry>
     <title>机器学习: 激活函数</title>
-    <url>/blogs/2025/07/09/deeplearning-activeFuncs/</url>
+    <url>/2025/07/09/deeplearning-activeFuncs/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="激活函数">激活函数</h2>
@@ -1957,7 +1957,7 @@ class="math inline">$f(x)=\begin{cases}x,&amp;x&gt;0\\\alpha(e^x-1),&amp;x\le0\e
   </entry>
   <entry>
     <title>Java EE: JPA</title>
-    <url>/blogs/2025/07/09/java-jpa/</url>
+    <url>/2025/07/09/java-jpa/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1
@@ -2187,7 +2187,7 @@ id="entitymanager与entitymanagerfactory"><code>EntityManager</code>与<code>Ent
   </entry>
   <entry>
     <title>Java EE: Tomcat</title>
-    <url>/blogs/2025/07/08/java-tomcat/</url>
+    <url>/2025/07/08/java-tomcat/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="tomcat"><code>Tomcat</code></h2>
@@ -2291,7 +2291,7 @@ id="entitymanager与entitymanagerfactory"><code>EntityManager</code>与<code>Ent
   </entry>
   <entry>
     <title>机器学习: 损失函数与正则化</title>
-    <url>/blogs/2025/07/06/deeplearning-lossAregular/</url>
+    <url>/2025/07/06/deeplearning-lossAregular/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="损失函数及正则化">损失函数及正则化</h2>
@@ -2465,7 +2465,7 @@ class="math inline">$\begin{align}\frac{1}{1-p}\end{align}$</span></p>
   </entry>
   <entry>
     <title>Spring Data: JPA</title>
-    <url>/blogs/2025/07/06/spring-data-jpa/</url>
+    <url>/2025/07/06/spring-data-jpa/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 ]]></content>
@@ -2482,7 +2482,7 @@ class="math inline">$\begin{align}\frac{1}{1-p}\end{align}$</span></p>
   </entry>
   <entry>
     <title>Java EE: Servlet API</title>
-    <url>/blogs/2025/07/05/java-servlet/</url>
+    <url>/2025/07/05/java-servlet/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="javax.servlet"><code>javax.servlet</code></h2>
@@ -2649,7 +2649,7 @@ id="servlet接口与httpservlet实现类"><code>Servlet</code>接口与<code>Htt
   </entry>
   <entry>
     <title>Spring framework: Resource API</title>
-    <url>/blogs/2025/07/04/spring-core-resource/</url>
+    <url>/2025/07/04/spring-core-resource/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="spring资源管理"><code>Spring</code>资源管理</h1>
@@ -2713,7 +2713,7 @@ id="resourceloaderaware接口可选"><code>ResourceLoaderAware</code>接口(可�
   </entry>
   <entry>
     <title>Spring framework: IoC容器</title>
-    <url>/blogs/2025/07/03/spring-core-IoC/</url>
+    <url>/2025/07/03/spring-core-IoC/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="ioc容器"><code>IoC</code>容器</h1>
@@ -2852,7 +2852,7 @@ id="resourceloaderaware接口可选"><code>ResourceLoaderAware</code>接口(可�
   </entry>
   <entry>
     <title>数据库: 期末复习</title>
-    <url>/blogs/2025/06/18/db-review/</url>
+    <url>/2025/06/18/db-review/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="期末总复习">期末总复习</h1>
@@ -3042,7 +3042,7 @@ dept))\end{align}$</span></p>
   </entry>
   <entry>
     <title>树的算法: 点分治</title>
-    <url>/blogs/2025/06/11/algo-tree-point-dac/</url>
+    <url>/2025/06/11/algo-tree-point-dac/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="概述">概述</h3>
@@ -3140,7 +3140,7 @@ cin &gt;&gt; n &gt;&gt; m &gt;&gt; q; // 输入略 getCenter(1, 0, n); //
   </entry>
   <entry>
     <title>操作系统: 期末复习</title>
-    <url>/blogs/2025/06/11/os-review/</url>
+    <url>/2025/06/11/os-review/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="操作系统复习">操作系统复习</h1>
@@ -3490,7 +3490,7 @@ class="math inline">$\begin{align}R=\frac{W+T}{T}\end{align}$</span>，周转时
   </entry>
   <entry>
     <title>操作系统: 文件系统</title>
-    <url>/blogs/2025/06/10/os-filesystem/</url>
+    <url>/2025/06/10/os-filesystem/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <ul>
@@ -3565,7 +3565,7 @@ class="math inline">$\begin{align}R=\frac{W+T}{T}\end{align}$</span>，周转时
   </entry>
   <entry>
     <title>操作系统: 内存管理</title>
-    <url>/blogs/2025/06/03/os-memory/</url>
+    <url>/2025/06/03/os-memory/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="主存管理">主存管理</h3>
@@ -3641,7 +3641,7 @@ class="math inline">$\begin{align}R=\frac{W+T}{T}\end{align}$</span>，周转时
   </entry>
   <entry>
     <title>Java: JDBC编程</title>
-    <url>/blogs/2025/06/02/java-jdbc/</url>
+    <url>/2025/06/02/java-jdbc/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="java数据库编程"><code>Java</code>数据库编程</h1>
@@ -3678,7 +3678,7 @@ id="spring-boot与mybatis"><code>Spring Boot</code>与<code>MyBatis</code></h2>
   </entry>
   <entry>
     <title>数据结构: 笛卡尔树</title>
-    <url>/blogs/2025/05/30/algo-descartes-tree/</url>
+    <url>/2025/05/30/algo-descartes-tree/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="笛卡尔树">笛卡尔树</h3>
@@ -3736,7 +3736,7 @@ class="math inline"><em>k</em> ∈ [1,<em>n</em>]</span>且不重复，故�
   </entry>
   <entry>
     <title>Java: 反射API</title>
-    <url>/blogs/2025/05/24/java-reflection/</url>
+    <url>/2025/05/24/java-reflection/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 ]]></content>
@@ -3752,7 +3752,7 @@ class="math inline"><em>k</em> ∈ [1,<em>n</em>]</span>且不重复，故�
   </entry>
   <entry>
     <title>WSL2: Windows下极其轻量的Linux虚拟机</title>
-    <url>/blogs/2025/05/19/WSL/</url>
+    <url>/2025/05/19/WSL/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="wsl2"><code>WSL2</code></h2>
@@ -3809,7 +3809,7 @@ class="math inline"><em>k</em> ∈ [1,<em>n</em>]</span>且不重复，故�
   </entry>
   <entry>
     <title>Java: 多线程编程</title>
-    <url>/blogs/2025/05/17/java-multithreading/</url>
+    <url>/2025/05/17/java-multithreading/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="java多线程编程"><code>Java</code>多线程编程</h2>
@@ -4029,7 +4029,7 @@ id="callablet接口与异步线程池"><code>Callable&lt;T&gt;</code>接口与�
   </entry>
   <entry>
     <title>Java: 网络编程基础</title>
-    <url>/blogs/2025/05/10/java-net/</url>
+    <url>/2025/05/10/java-net/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="网络编程基础">网络编程基础</h2>
@@ -4134,7 +4134,7 @@ id="callablet接口与异步线程池"><code>Callable&lt;T&gt;</code>接口与�
   </entry>
   <entry>
     <title>概率论与数理统计: 常见的随机变量汇总</title>
-    <url>/blogs/2025/05/05/probability-rdnvar/</url>
+    <url>/2025/05/05/probability-rdnvar/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="常见随机变量分布及其数学特征">常见随机变量分布及其数学特征</h2>
@@ -4367,7 +4367,7 @@ class="math inline">$\begin{align}U=\frac{\large\frac{X}{n}}{\large\frac{Y}{m}}\
   </entry>
   <entry>
     <title>Java: 函数式编程</title>
-    <url>/blogs/2025/05/04/java-stream-api/</url>
+    <url>/2025/05/04/java-stream-api/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="函数式编程">函数式编程</h2>
@@ -4478,7 +4478,7 @@ class="math inline">$\begin{align}U=\frac{\large\frac{X}{n}}{\large\frac{Y}{m}}\
   </entry>
   <entry>
     <title>计算机网络: 数据链路层</title>
-    <url>/blogs/2025/05/03/comp-networking-datalinklayer/</url>
+    <url>/2025/05/03/comp-networking-datalinklayer/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="数据链路层">数据链路层</h2>
@@ -4547,7 +4547,7 @@ class="math inline">$\begin{align}\frac1{1+5d_{prop}/d_{trans}}\end{align}$</spa
   </entry>
   <entry>
     <title>Rust: 基本语法</title>
-    <url>/blogs/2025/05/02/rust-beginner/</url>
+    <url>/2025/05/02/rust-beginner/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="rust基本语法"><code>Rust</code>基本语法</h1>
@@ -4646,7 +4646,7 @@ class="math inline">$\begin{align}\frac1{1+5d_{prop}/d_{trans}}\end{align}$</spa
   </entry>
   <entry>
     <title>计算机网络: 网络层协议</title>
-    <url>/blogs/2025/05/01/comp-networking-iplayer/</url>
+    <url>/2025/05/01/comp-networking-iplayer/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="网络层协议">网络层协议</h2>
@@ -4805,7 +4805,7 @@ class="math inline">8|<em>L</em><sub><em>m</em><em>a</em><em>x</em></sub></span>
   </entry>
   <entry>
     <title>计算机网络: 传输层协议</title>
-    <url>/blogs/2025/05/01/comp-networking-trsflayer/</url>
+    <url>/2025/05/01/comp-networking-trsflayer/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="传输层协议">传输层协议</h2>
@@ -4935,7 +4935,7 @@ class="math inline">≤</span>序号数量的一半</strong>，因为响应报�
   </entry>
   <entry>
     <title>树的算法: 寻找树的重心</title>
-    <url>/blogs/2025/04/30/algo-tree-gravity/</url>
+    <url>/2025/04/30/algo-tree-gravity/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="概述">概述</h3>
@@ -4988,7 +4988,7 @@ pos; // 记录该重心 } }</p></li>
   </entry>
   <entry>
     <title>树的算法: LCA（最近公共祖先）</title>
-    <url>/blogs/2025/04/30/algo-tree-lca/</url>
+    <url>/2025/04/30/algo-tree-lca/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="lca算法"><code>LCA</code>算法</h2>
@@ -5061,7 +5061,7 @@ class="math inline"><em>O</em>(log<em>n</em>)</span></li>
   </entry>
   <entry>
     <title>字符串算法: 马拉车（manacher）回文串统计</title>
-    <url>/blogs/2025/04/26/algo-string-manacher/</url>
+    <url>/2025/04/26/algo-string-manacher/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> d[<span class="number">11000010</span> &lt;&lt; <span class="number">1</span>], l = <span class="number">0</span>, r = <span class="number">-1</span>, i, ans, n;</span><br><span class="line">string t;</span><br><span class="line"><span class="type">char</span> s[<span class="number">11000010</span> &lt;&lt; <span class="number">1</span>];</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cin &gt;&gt; t;</span><br><span class="line">    s[<span class="number">0</span>] = <span class="string">&#x27;#&#x27;</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; t.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">        s[(i &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>] = t[i];</span><br><span class="line">        s[(i &lt;&lt; <span class="number">1</span>) + <span class="number">2</span>] = <span class="string">&#x27;#&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    n = (i &lt;&lt; <span class="number">1</span>) + <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i &lt;= r) &#123;</span><br><span class="line">            d[i] = <span class="built_in">min</span>(d[l + r - i], r - i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (i - d[i] &gt;= <span class="number">0</span> &amp;&amp; i + d[i] &lt; n &amp;&amp; s[i - d[i]] == s[i + d[i]]) &#123;</span><br><span class="line">            ++d[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (i + d[i] &gt; r) &#123;</span><br><span class="line">            l = i - d[i];</span><br><span class="line">            r = i + d[i];</span><br><span class="line">        &#125;</span><br><span class="line">        ans = <span class="built_in">max</span>(ans, d[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; ans - <span class="number">1</span> &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -5078,7 +5078,7 @@ class="math inline"><em>O</em>(log<em>n</em>)</span></li>
   </entry>
   <entry>
     <title>数论: 质数筛法</title>
-    <url>/blogs/2025/04/22/algo-prime-selection/</url>
+    <url>/2025/04/22/algo-prime-selection/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="埃氏筛法">埃氏筛法</h3>
@@ -5107,7 +5107,7 @@ class="math inline">10<sup>6</sup></span>数量级内，且需要快速判断一
   </entry>
   <entry>
     <title>数论: 扩展欧拉定理</title>
-    <url>/blogs/2025/04/20/algo-math-ext-euler-theorem/</url>
+    <url>/2025/04/20/algo-math-ext-euler-theorem/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="扩展欧拉定理">扩展欧拉定理</h3>
@@ -5208,7 +5208,7 @@ class="math inline"><em>b</em> &lt; <em>φ</em>(<em>m</em>)</span>了，自�
   </entry>
   <entry>
     <title>计算机网络: 应用层协议</title>
-    <url>/blogs/2025/04/20/comp-networking-applayer/</url>
+    <url>/2025/04/20/comp-networking-applayer/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="应用层体系结构">应用层体系结构</h3>
@@ -5241,7 +5241,7 @@ class="math inline"><em>b</em> &lt; <em>φ</em>(<em>m</em>)</span>了，自�
   </entry>
   <entry>
     <title>SQL: 基本用法</title>
-    <url>/blogs/2025/04/20/sql-std/</url>
+    <url>/2025/04/20/sql-std/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="sql语法"><code>SQL</code>语法</h1>
@@ -5537,7 +5537,7 @@ href="#expl_gfunc">常见聚集函数</a><a id='more_gfunc'></a></h3>
   </entry>
   <entry>
     <title>计算机网络: 概览</title>
-    <url>/blogs/2025/04/18/comp-networking-profile/</url>
+    <url>/2025/04/18/comp-networking-profile/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="计算机网络指标">计算机网络指标</h3>
@@ -5612,7 +5612,7 @@ class="math inline">$\begin{align}\frac{丢包数}{分组包数}\end{align}$</sp
   </entry>
   <entry>
     <title>Java: IO</title>
-    <url>/blogs/2025/04/17/java-io/</url>
+    <url>/2025/04/17/java-io/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="java-io"><code>Java IO</code></h1>
@@ -5805,7 +5805,7 @@ id="java.nio.file.attribute"><code>java.nio.file.attribute</code></h3>
   </entry>
   <entry>
     <title>图的遍历: 链式前向星</title>
-    <url>/blogs/2025/04/10/algo-linked-forward-star/</url>
+    <url>/2025/04/10/algo-linked-forward-star/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="对顶堆">对顶堆</h3>
@@ -5854,7 +5854,7 @@ class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
   </entry>
   <entry>
     <title>数据结构: 对顶堆</title>
-    <url>/blogs/2025/04/10/algo-minmax-heap/</url>
+    <url>/2025/04/10/algo-minmax-heap/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="对顶堆">对顶堆</h3>
@@ -5903,7 +5903,7 @@ class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
   </entry>
   <entry>
     <title>数据结构: 递归式线段树</title>
-    <url>/blogs/2025/04/10/algo-recursive-segment-tree/</url>
+    <url>/2025/04/10/algo-recursive-segment-tree/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="递归式线段树">递归式线段树</h2>
@@ -6077,7 +6077,7 @@ query(rs[p], l, r, m + 1, R); return ans; }</p></li>
   </entry>
   <entry>
     <title>Java: 数据结构与算法</title>
-    <url>/blogs/2025/04/10/java-collection/</url>
+    <url>/2025/04/10/java-collection/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="java数据结构与算法"><code>Java</code>数据结构与算法</h1>
@@ -6317,7 +6317,7 @@ id="queuee和dequee接口"><code>Queue&lt;E&gt;</code>和<code>Deque&lt;E&gt;</c
   </entry>
   <entry>
     <title>算法竞赛: 常数优化之快读快写</title>
-    <url>/blogs/2025/04/07/algo-fastio/</url>
+    <url>/2025/04/07/algo-fastio/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="快读快写">快读快写</h3>
@@ -6358,7 +6358,7 @@ x; }</p></li>
   </entry>
   <entry>
     <title>Java: 异常处理</title>
-    <url>/blogs/2025/04/04/java-exception/</url>
+    <url>/2025/04/04/java-exception/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="java异常处理"><code>Java</code>异常处理</h2>
@@ -6409,7 +6409,7 @@ Checked --&gt; ...</code></pre></li>
   </entry>
   <entry>
     <title>操作系统: 进程管理</title>
-    <url>/blogs/2025/04/03/os-process/</url>
+    <url>/2025/04/03/os-process/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="进程组成">进程组成</h3>
@@ -6645,7 +6645,7 @@ class="math inline">$\begin{align}\left(R=\frac{周转时间}{执行时间}=\fra
   </entry>
   <entry>
     <title>数据结构: 树状数组</title>
-    <url>/blogs/2025/03/19/algo-fenwick-tree/</url>
+    <url>/2025/03/19/algo-fenwick-tree/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="概述">概述</h3>
@@ -6799,7 +6799,7 @@ href="https://www.luogu.com.cn/problem/P1966">NOIP 2013 提高组]
   </entry>
   <entry>
     <title>数据结构: 前缀和</title>
-    <url>/blogs/2025/03/19/algo-prefix-sum/</url>
+    <url>/2025/03/19/algo-prefix-sum/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="一维前缀和">一维前缀和</h3>
@@ -6863,7 +6863,7 @@ i = 1; i &lt;= n; ++i) { for (int j = 1; j &lt;= m; ++j) { a[i + 1][j]
   </entry>
   <entry>
     <title>Java: 泛型编程</title>
-    <url>/blogs/2025/03/18/java-generics/</url>
+    <url>/2025/03/18/java-generics/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="java泛型编程"><code>Java</code>泛型编程</h2>
@@ -6923,7 +6923,7 @@ i = 1; i &lt;= n; ++i) { for (int j = 1; j &lt;= m; ++j) { a[i + 1][j]
   </entry>
   <entry>
     <title>Java: 面向对象编程</title>
-    <url>/blogs/2025/03/06/java-oop/</url>
+    <url>/2025/03/06/java-oop/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="java面向对象编程"><code>Java</code>面向对象编程</h2>
@@ -7052,7 +7052,7 @@ i = 1; i &lt;= n; ++i) { for (int j = 1; j &lt;= m; ++j) { a[i + 1][j]
   </entry>
   <entry>
     <title>Java: 基本语法</title>
-    <url>/blogs/2025/03/04/java-base/</url>
+    <url>/2025/03/04/java-base/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="java基本语法"><code>Java</code>基本语法</h1>
@@ -7228,7 +7228,7 @@ id="synchronizedtransientvolatilesealedpermits"><code>synchronized、transient�
   </entry>
   <entry>
     <title>博弈论: 01字典树</title>
-    <url>/blogs/2025/02/21/algo-bin-01tire/</url>
+    <url>/2025/02/21/algo-bin-01tire/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">int</span> n, i, u, v, w, head[<span class="number">100002</span>], cnt = <span class="number">1</span>, cnt01 = <span class="number">1</span>, ch[<span class="number">100002</span> * <span class="number">32</span>][<span class="number">2</span>], ans, sum[<span class="number">100002</span>];</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Edge</span>&#123;</span><br><span class="line">    <span class="type">int</span> to, next, w;</span><br><span class="line">&#125;e[<span class="number">100002</span> &lt;&lt; <span class="number">1</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">addEdge</span><span class="params">(<span class="type">int</span> from, <span class="type">int</span> to, <span class="type">int</span> ww)</span> </span>&#123;</span><br><span class="line">    e[cnt].to = to;</span><br><span class="line">    e[cnt].w = ww;</span><br><span class="line">    e[cnt].next = head[from];</span><br><span class="line">    head[from] = cnt++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">addWt</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="type">bool</span> m;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">31</span>, s = <span class="number">0</span>; k &gt;= <span class="number">0</span>; --k) &#123;</span><br><span class="line">        m = x &amp; (<span class="number">1</span> &lt;&lt; k);</span><br><span class="line">        <span class="keyword">if</span> (!ch[s][m]) &#123;</span><br><span class="line">            ch[s][m] = cnt01++;</span><br><span class="line">        &#125;</span><br><span class="line">        s = ch[s][m];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> p, <span class="type">int</span> fa, <span class="type">int</span> xorw)</span> </span>&#123;</span><br><span class="line">    sum[p] = xorw;</span><br><span class="line">    <span class="built_in">addWt</span>(xorw);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = head[p]; k; k = e[k].next) &#123;</span><br><span class="line">        <span class="keyword">if</span> (e[k].to != fa) &#123;</span><br><span class="line">            <span class="built_in">dfs</span>(e[k].to, p, xorw ^ e[k].w);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">find</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="type">bool</span> m;</span><br><span class="line">    <span class="type">int</span> nans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">31</span>, s = <span class="number">0</span>; k &gt;= <span class="number">0</span>; --k) &#123;</span><br><span class="line">        m = x &amp; (<span class="number">1</span> &lt;&lt; k);</span><br><span class="line">        <span class="keyword">if</span> (ch[s][!m]) &#123;</span><br><span class="line">            nans &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">            ++nans;</span><br><span class="line">            s = ch[s][!m];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            nans &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">            s = ch[s][m];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ans = <span class="built_in">max</span>(ans, nans);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        cin &gt;&gt; u &gt;&gt; v &gt;&gt; w;</span><br><span class="line">        <span class="built_in">addEdge</span>(u, v, w);</span><br><span class="line">        <span class="built_in">addEdge</span>(v, u, w);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">dfs</span>(<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">2</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        <span class="built_in">find</span>(sum[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; ans &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -7244,7 +7244,7 @@ id="synchronizedtransientvolatilesealedpermits"><code>synchronized、transient�
   </entry>
   <entry>
     <title>图的算法: SCC（强连通分量）</title>
-    <url>/blogs/2025/02/11/algo-graph-scc/</url>
+    <url>/2025/02/11/algo-graph-scc/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">bool</span> vis[<span class="number">10004</span>];</span><br><span class="line"><span class="type">int</span> head[<span class="number">10004</span>], cnt = <span class="number">1</span>, w[<span class="number">10004</span>], sw[<span class="number">10004</span>], i, n, m, u, v, dfn[<span class="number">10004</span>], rt[<span class="number">10004</span>], scecnt = <span class="number">1</span>, schead[<span class="number">10004</span>], ncnt, aans[<span class="number">10004</span>];</span><br><span class="line">stack&lt;<span class="type">int</span>&gt; stk;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Edge</span>&#123;</span><br><span class="line">    <span class="type">int</span> from, to, next;</span><br><span class="line">&#125;e[<span class="number">100004</span>], se[<span class="number">100004</span>];</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">getScc</span><span class="params">(<span class="type">int</span> p)</span> </span>&#123;</span><br><span class="line">    dfn[p] = rt[p] = ++ncnt;</span><br><span class="line">    vis[p] = <span class="literal">true</span>;</span><br><span class="line">    stk.<span class="built_in">push</span>(p);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = head[p]; k; k = e[k].next) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!dfn[e[k].to]) &#123;</span><br><span class="line">            <span class="built_in">getScc</span>(e[k].to);</span><br><span class="line">            rt[p] = <span class="built_in">min</span>(rt[p], rt[e[k].to]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (vis[e[k].to]) &#123;</span><br><span class="line">            rt[p] = <span class="built_in">min</span>(rt[p], rt[e[k].to]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (rt[p] == dfn[p]) &#123;</span><br><span class="line">        <span class="keyword">while</span> (stk.<span class="built_in">top</span>() != p) &#123;</span><br><span class="line">            rt[stk.<span class="built_in">top</span>()] = dfn[p];</span><br><span class="line">            vis[stk.<span class="built_in">top</span>()] = <span class="literal">false</span>;</span><br><span class="line">            sw[rt[p]] += w[stk.<span class="built_in">top</span>()];</span><br><span class="line">            stk.<span class="built_in">pop</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        vis[p] = <span class="literal">false</span>;</span><br><span class="line">        sw[rt[p]] += w[p];</span><br><span class="line">        stk.<span class="built_in">pop</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">getSccgraph</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">1</span>; k &lt;= m; ++k) &#123;</span><br><span class="line">        <span class="keyword">if</span> (rt[e[k].from] != rt[e[k].to]) &#123;</span><br><span class="line">            se[scecnt].to = rt[e[k].to];</span><br><span class="line">            se[scecnt].next = schead[rt[e[k].from]];</span><br><span class="line">            schead[rt[e[k].from]] = scecnt++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (vis[p]) &#123;</span><br><span class="line">        <span class="keyword">return</span> aans[p];</span><br><span class="line">    &#125;</span><br><span class="line">    vis[p] = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">if</span> (!schead[p]) &#123;</span><br><span class="line">        <span class="keyword">return</span> aans[p] = sw[p];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = schead[p]; k; k = se[k].next) &#123;</span><br><span class="line">        ans = <span class="built_in">max</span>(ans, <span class="built_in">dfs</span>(se[k].to) + sw[p]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> aans[p] = ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        cin &gt;&gt; w[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= m; ++i) &#123;</span><br><span class="line">        cin &gt;&gt; u &gt;&gt; v;</span><br><span class="line">        e[cnt].from = u;</span><br><span class="line">        e[cnt].to = v;</span><br><span class="line">        e[cnt].next = head[u];</span><br><span class="line">        head[u] = cnt++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!dfn[i]) &#123;</span><br><span class="line">            <span class="built_in">getScc</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">getSccgraph</span>();</span><br><span class="line">    <span class="type">int</span> realans = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (dfn[i] == rt[i]) &#123;</span><br><span class="line">            realans = <span class="built_in">max</span>(realans, <span class="built_in">dfs</span>(rt[i]));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; realans &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -7260,7 +7260,7 @@ id="synchronizedtransientvolatilesealedpermits"><code>synchronized、transient�
   </entry>
   <entry>
     <title>操作系统: 基本结构</title>
-    <url>/blogs/2025/02/10/os-structure/</url>
+    <url>/2025/02/10/os-structure/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="操作系统概述">操作系统概述</h2>
@@ -7370,7 +7370,7 @@ id="synchronizedtransientvolatilesealedpermits"><code>synchronized、transient�
   </entry>
   <entry>
     <title>Python: 使用argparse开发CLI</title>
-    <url>/blogs/2025/01/20/python-argparse/</url>
+    <url>/2025/01/20/python-argparse/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="前置命令行工具知识">前置命令行工具知识</h3>
@@ -7464,7 +7464,7 @@ subp1 = subp.add_parsers(name=‘init’) subp1.add_argument(‘-a’)</p>
   </entry>
   <entry>
     <title>Python: 使用Pandas处理数据</title>
-    <url>/blogs/2025/01/18/python-pandas/</url>
+    <url>/2025/01/18/python-pandas/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="pandas介绍"><code>pandas</code>介绍</h3>
@@ -7551,7 +7551,7 @@ subp1 = subp.add_parsers(name=‘init’) subp1.add_argument(‘-a’)</p>
   </entry>
   <entry>
     <title>Pytorch: Tensor(张量)</title>
-    <url>/blogs/2025/01/15/pytorch-tensor/</url>
+    <url>/2025/01/15/pytorch-tensor/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="tensor张量"><code>Tensor</code>(张量)</h3>
@@ -7686,7 +7686,7 @@ href="https://numpy.org/doc/stable/user/basics.broadcasting.html"><code>Broadcas
   </entry>
   <entry>
     <title>Linux: 高效地监控操作系统</title>
-    <url>/blogs/2025/01/11/linux-infos/</url>
+    <url>/2025/01/11/linux-infos/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="bash-shell命令"><code>Bash Shell</code>命令</h1>
@@ -7715,7 +7715,7 @@ href="https://numpy.org/doc/stable/user/basics.broadcasting.html"><code>Broadcas
   </entry>
   <entry>
     <title>博弈论: 公平组合游戏</title>
-    <url>/blogs/2025/01/07/algo-game-fairgames/</url>
+    <url>/2025/01/07/algo-game-fairgames/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="公平组合游戏">公平组合游戏</h3>
@@ -7873,7 +7873,7 @@ class="math inline"><em>f</em>(<em>m</em>,<em>n</em>,<em>p</em><em>l</em><em>a</
   </entry>
   <entry>
     <title>图的算法: 最小生成树</title>
-    <url>/blogs/2024/12/09/algo-graph-minimum-spanning-tree/</url>
+    <url>/2024/12/09/algo-graph-minimum-spanning-tree/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="最小生成树">最小生成树</h1>
@@ -7927,7 +7927,7 @@ class="math inline"><em>f</em>(<em>m</em>,<em>n</em>,<em>p</em><em>l</em><em>a</
   </entry>
   <entry>
     <title>计算机组成原理: 算术运算</title>
-    <url>/blogs/2024/12/06/coa-arithmetic-operations/</url>
+    <url>/2024/12/06/coa-arithmetic-operations/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="计算机的算术运算">计算机的算术运算</h1>
@@ -8280,7 +8280,7 @@ return ans; } <figure class="highlight plaintext"><table><tr><td class="code"><p
   </entry>
   <entry>
     <title>算法竞赛: 离线查询</title>
-    <url>/blogs/2024/11/26/algo-trick-offline-query/</url>
+    <url>/2024/11/26/algo-trick-offline-query/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="离线查询">离线查询</h3>
@@ -8349,7 +8349,7 @@ query(p[i].l, p[i].r) * p[i].id; } cout &lt;&lt; ans; }</li>
   </entry>
   <entry>
     <title>数据结构: 哈希表</title>
-    <url>/blogs/2024/11/16/algo-hashmap/</url>
+    <url>/2024/11/16/algo-hashmap/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="哈希表">哈希表</h1>
@@ -8433,7 +8433,7 @@ query(p[i].l, p[i].r) * p[i].id; } cout &lt;&lt; ans; }</li>
   </entry>
   <entry>
     <title>大学物理: 量子力学</title>
-    <url>/blogs/2024/11/15/physics-quantum/</url>
+    <url>/2024/11/15/physics-quantum/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="量子物理">量子物理</h1>
@@ -8518,7 +8518,7 @@ class="math inline"><em>I</em> = <em>N</em><em>h</em><em>v</em></span></p>
   </entry>
   <entry>
     <title>MATLAB: 基本语法</title>
-    <url>/blogs/2024/11/14/matlab-beginner/</url>
+    <url>/2024/11/14/matlab-beginner/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1
@@ -8678,7 +8678,7 @@ class="math inline">det (<em>λ</em><em>E</em>−<em>A</em>) = 0</span>的
   </entry>
   <entry>
     <title>具体数学: 特殊系数</title>
-    <url>/blogs/2024/11/01/concreteMath-special-coefficient/</url>
+    <url>/2024/11/01/concreteMath-special-coefficient/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="二项式系数">二项式系数</h2>
@@ -8824,7 +8824,7 @@ n\rfloor+1即可\\&amp;(1)当n=2^k时,右式=\frac{k+1}2\\&amp;H_n=\sum_{i=0}^k\
   </entry>
   <entry>
     <title>字符串算法: KMP匹配</title>
-    <url>/blogs/2024/10/23/algo-string-kmpmatch/</url>
+    <url>/2024/10/23/algo-string-kmpmatch/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="kmp算法"><code>KMP</code>算法</h2>
@@ -8884,7 +8884,7 @@ id="求出每个前缀子串的最长公共前后缀长">求出每个前缀子�
   </entry>
   <entry>
     <title>大学物理: 相对论</title>
-    <url>/blogs/2024/10/19/physics-relativity/</url>
+    <url>/2024/10/19/physics-relativity/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="狭义相对论">狭义相对论</h2>
@@ -9109,7 +9109,7 @@ E{c^2}=\frac{hv}c\end{align}$</span></li>
   </entry>
   <entry>
     <title>具体数学: 取整函数</title>
-    <url>/blogs/2024/10/16/concreteMath-rounding/</url>
+    <url>/2024/10/16/concreteMath-rounding/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <ul>
@@ -9211,7 +9211,7 @@ i&lt;m}i((i+1)^2-i^2)+m(n-m^2)\\&amp;=mn-m^3+\sum_{i=1}^{m-1}(2i^2+i)=mn-m^3+\su
   </entry>
   <entry>
     <title>大学物理: 电磁感应</title>
-    <url>/blogs/2024/10/14/physics-elec-induction/</url>
+    <url>/2024/10/14/physics-elec-induction/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="电磁感应">电磁感应</h2>
@@ -9361,7 +9361,7 @@ class="math inline"><strong>S</strong> = (<em>ω</em><sub><em>c</em></sub>+<
   </entry>
   <entry>
     <title>大学物理: 恒定磁场</title>
-    <url>/blogs/2024/10/11/physics-magnetic-field/</url>
+    <url>/2024/10/11/physics-magnetic-field/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="恒定磁场">恒定磁场</h2>
@@ -9564,7 +9564,7 @@ v=\sqrt{\frac{2qU}{m}}、r=\frac1B\sqrt{\frac{2mU}{q}}\end{align}$</span></li>
   </entry>
   <entry>
     <title>大学物理: 静电场</title>
-    <url>/blogs/2024/10/06/physics-electrostatic-field/</url>
+    <url>/2024/10/06/physics-electrostatic-field/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="静电场">静电场</h1>
@@ -9824,7 +9824,7 @@ class="math inline"><em>P</em><sub><em>n</em></sub> = <em>σ</em><sub><em>�
   </entry>
   <entry>
     <title>大学物理: 经典力学</title>
-    <url>/blogs/2024/10/03/physics-classic-force/</url>
+    <url>/2024/10/03/physics-classic-force/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="经典力学">经典力学</h2>
@@ -10033,7 +10033,7 @@ class="math inline">$\begin{align}E_k=\frac12J\omega^2\end{align}$</span></p></l
   </entry>
   <entry>
     <title>数据结构: 并查集</title>
-    <url>/blogs/2024/10/02/algo-ufs/</url>
+    <url>/2024/10/02/algo-ufs/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="并查集">并查集</h1>
@@ -10107,7 +10107,7 @@ class="math inline">$\begin{align}E_k=\frac12J\omega^2\end{align}$</span></p></l
   </entry>
   <entry>
     <title>具体数学: 和式</title>
-    <url>/blogs/2024/10/02/concreteMath-summation/</url>
+    <url>/2024/10/02/concreteMath-summation/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="和式">和式</h2>
@@ -10222,7 +10222,7 @@ x=\frac{c^{n+1}-1}{c-1}\end{align}$</span></li>
   </entry>
   <entry>
     <title>离散数学: 近世代数（群、环、域）</title>
-    <url>/blogs/2024/09/27/discreteMath-abstract-algebra/</url>
+    <url>/2024/09/27/discreteMath-abstract-algebra/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="近世代数">近世代数</h1>
@@ -10474,7 +10474,7 @@ href="https://www.cnblogs.com/gonghr/p/15474256.html#偏序格">离散数学（�
   </entry>
   <entry>
     <title>具体数学: 递归</title>
-    <url>/blogs/2024/09/21/concreteMath-recursion/</url>
+    <url>/2024/09/21/concreteMath-recursion/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="递归问题分析">递归问题分析</h2>
@@ -10661,7 +10661,7 @@ class="math inline"><em>f</em>(<em>n</em>) = (<em>n</em>)<sub>2</sub><em>循
   </entry>
   <entry>
     <title>位运算: 基本知识</title>
-    <url>/blogs/2024/09/19/algo-bin-beginner/</url>
+    <url>/2024/09/19/algo-bin-beginner/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="硬件加速的二进制算法">硬件加速的二进制算法</h2>
@@ -10793,7 +10793,7 @@ class="math inline"><em>A</em> ⊕ <em>Ā</em> = <em>全</em>1、<em>A<
   </entry>
   <entry>
     <title>Vim: 极其高效的编辑器</title>
-    <url>/blogs/2024/09/07/vim/</url>
+    <url>/2024/09/07/vim/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="vim"><code>Vim</code></h1>
@@ -10930,7 +10930,7 @@ class="math inline"><em>A</em> ⊕ <em>Ā</em> = <em>全</em>1、<em>A<
   </entry>
   <entry>
     <title>离散数学: 代数系统</title>
-    <url>/blogs/2024/08/07/discreteMath-algebra-system/</url>
+    <url>/2024/08/07/discreteMath-algebra-system/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="代数系统">代数系统</h1>
@@ -11443,7 +11443,7 @@ class="math inline"> &lt; <em>S</em> × <em>T</em>,  ⊗ &gt;</spa
   </entry>
   <entry>
     <title>机器学习: 基本概念</title>
-    <url>/blogs/2024/08/04/deeplearning-beginner/</url>
+    <url>/2024/08/04/deeplearning-beginner/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="机器学习基础">机器学习基础</h2>
@@ -11530,7 +11530,7 @@ class="math inline"><strong>y</strong></span></p>
   </entry>
   <entry>
     <title>HTML: 基本语法</title>
-    <url>/blogs/2024/08/04/html-beginner/</url>
+    <url>/2024/08/04/html-beginner/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="html"><code>HTML</code></h1>
@@ -11651,7 +11651,7 @@ description)</li>
   </entry>
   <entry>
     <title>Cpp: Effective Modern C++阅读笔记</title>
-    <url>/blogs/2024/07/15/cpp-effective-moderncpp-reaction/</url>
+    <url>/2024/07/15/cpp-effective-moderncpp-reaction/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="effective-modern-c"><code>Effective Modern C++</code></h1>
@@ -11785,7 +11785,7 @@ id="优先使用noexcept只要函数不抛出异常">优先使用<code>noexcept<
   </entry>
   <entry>
     <title>Qt: 数据库连接</title>
-    <url>/blogs/2024/06/30/cpp-qt-database/</url>
+    <url>/2024/06/30/cpp-qt-database/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="数据库">数据库</h1>
@@ -11919,7 +11919,7 @@ href="https://www.cnblogs.com/zhuchunlin/p/16485926.html">更多模型/视图</a
   </entry>
   <entry>
     <title>Qt: 基本用法</title>
-    <url>/blogs/2024/06/27/cpp-qt-beginner/</url>
+    <url>/2024/06/27/cpp-qt-beginner/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="qt基础"><code>Qt</code>基础</h1>
@@ -12110,7 +12110,7 @@ href="https://www.cnblogs.com/WushiShengFei/p/9820835.html">元对象系统</a>(
   </entry>
   <entry>
     <title>Git: 使用git进行版本管理</title>
-    <url>/blogs/2024/06/12/git/</url>
+    <url>/2024/06/12/git/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="使用git进行版本管理">使用<code>Git</code>进行版本管理</h1>
@@ -12166,7 +12166,7 @@ class="uri">https://zhuanlan.zhihu.com/p/114067067#:~:text=[译</a>] Git
   </entry>
   <entry>
     <title>线性代数: 矩阵的秩</title>
-    <url>/blogs/2024/05/31/linearAlgebra-rank/</url>
+    <url>/2024/05/31/linearAlgebra-rank/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="矩阵的秩">矩阵的秩</h1>
@@ -12377,7 +12377,7 @@ B也是解\Rightarrow当B与A等价时,也为基础解系\Rightarrow写出B=AK,K
   </entry>
   <entry>
     <title>向量与解析几何入门</title>
-    <url>/blogs/2024/05/20/linearAlgebra-analytic-geometry/</url>
+    <url>/2024/05/20/linearAlgebra-analytic-geometry/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="向量与解析几何">向量与解析几何</h1>
@@ -12687,7 +12687,7 @@ class="math inline">$\begin{align}&amp;3.已知点A,B的坐标分别为(1,0,0),(
   </entry>
   <entry>
     <title>线性代数: 行列式</title>
-    <url>/blogs/2024/05/14/linearAlgebra-determinant/</url>
+    <url>/2024/05/14/linearAlgebra-determinant/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="行列式">行列式</h1>
@@ -12838,7 +12838,7 @@ class="math inline">$\begin{align}&amp;D_n=\left|\begin{matrix}-1&amp;1&amp;1&am
   </entry>
   <entry>
     <title>线性代数: 矩阵</title>
-    <url>/blogs/2024/05/11/linearAlgebra-matrix/</url>
+    <url>/2024/05/11/linearAlgebra-matrix/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="矩阵">矩阵</h1>
@@ -13080,7 +13080,7 @@ class="math inline">|<em>A</em><em>B</em>| = |<em>B</em><em>A</em>|</span></
   </entry>
   <entry>
     <title>模拟电路入门</title>
-    <url>/blogs/2024/05/04/analog-circuit/</url>
+    <url>/2024/05/04/analog-circuit/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="模拟电路">模拟电路</h1>
@@ -13575,7 +13575,7 @@ class="math inline">1 − <em>公</em><em>共</em><em>端</em>、2、<em>输
   </entry>
   <entry>
     <title>Turing Complete: 图灵完备，一款数电小游戏</title>
-    <url>/blogs/2024/05/03/games-TuringComplete/</url>
+    <url>/2024/05/03/games-TuringComplete/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="overtrue"><code>OVERTRUE</code></h1>
@@ -13744,7 +13744,7 @@ class="math inline">0</span>对比，或总是跳转，如果满足条件，将�
   </entry>
   <entry>
     <title>离散数学: 图论基础</title>
-    <url>/blogs/2024/04/29/discreteMath-graph/</url>
+    <url>/2024/04/29/discreteMath-graph/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="图">图</h1>
@@ -13855,7 +13855,7 @@ class="math inline"><em>i</em>/<em>j</em></span>的边的个数</li>
   </entry>
   <entry>
     <title>微积分: 多元函数微分</title>
-    <url>/blogs/2024/04/23/calculus-multivar-diff/</url>
+    <url>/2024/04/23/calculus-multivar-diff/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="多元函数微分学">多元函数微分学</h1>
@@ -14138,7 +14138,7 @@ class="math inline">$\begin{align}&amp;2.讨论f(x,y)=\begin{cases}\large\frac{x
   </entry>
   <entry>
     <title>离散数学: 集合论</title>
-    <url>/blogs/2024/04/22/discreteMath-set/</url>
+    <url>/2024/04/22/discreteMath-set/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="集合论">集合论</h1>
@@ -14310,7 +14310,7 @@ n}|V_i|\end{align}$</span></p>
   </entry>
   <entry>
     <title>微积分: 常微分方程</title>
-    <url>/blogs/2024/04/20/calculus-diff-equation/</url>
+    <url>/2024/04/20/calculus-diff-equation/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="微分方程">微分方程</h1>
@@ -14615,7 +14615,7 @@ class="math inline"><em>u</em><sup>(<em>n</em>)</sup>(<em>x</em>)</span></p>
   </entry>
   <entry>
     <title>离散数学: 数理逻辑</title>
-    <url>/blogs/2024/04/19/discreteMath-mathamatic-logic/</url>
+    <url>/2024/04/19/discreteMath-mathamatic-logic/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="数理逻辑">数理逻辑</h1>
@@ -15007,7 +15007,7 @@ class="math inline"><em>y</em></span>的个体域</li>
   </entry>
   <entry>
     <title>微积分: 级数练习题</title>
-    <url>/blogs/2024/04/17/calculus-series-exercise/</url>
+    <url>/2024/04/17/calculus-series-exercise/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="级数练习">级数练习</h1>
@@ -15225,7 +15225,7 @@ S(1)=5e\end{align}$</span></p>
   </entry>
   <entry>
     <title>微积分: 级数</title>
-    <url>/blogs/2024/04/14/calculus-series/</url>
+    <url>/2024/04/14/calculus-series/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="无穷级数">无穷级数</h1>
@@ -15525,7 +15525,7 @@ a_n\cos \frac\pi lnx\end{align}$</span></li>
   </entry>
   <entry>
     <title>正则表达式: 使用regex进行模糊查询</title>
-    <url>/blogs/2024/04/02/regex/</url>
+    <url>/2024/04/02/regex/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="regex"><code>Regex</code></h1>
@@ -15645,7 +15645,7 @@ a_n\cos \frac\pi lnx\end{align}$</span></li>
   </entry>
   <entry>
     <title>Cpp STL: std::string</title>
-    <url>/blogs/2024/03/14/cpp-string/</url>
+    <url>/2024/03/14/cpp-string/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="string类"><code>string</code>类</h1>
@@ -15700,7 +15700,7 @@ a_n\cos \frac\pi lnx\end{align}$</span></li>
   </entry>
   <entry>
     <title>Linux: 文件系统</title>
-    <url>/blogs/2024/03/12/linux-file/</url>
+    <url>/2024/03/12/linux-file/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="bash-shell命令"><code>Bash Shell</code>命令</h1>
@@ -15774,7 +15774,7 @@ a_n\cos \frac\pi lnx\end{align}$</span></li>
   </entry>
   <entry>
     <title>算法竞赛: 动态规划引入</title>
-    <url>/blogs/2024/03/11/algo-dp-beginner/</url>
+    <url>/2024/03/11/algo-dp-beginner/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h2 id="回溯与动态规划与贪心引入">回溯与动态规划与贪心引入</h2>
@@ -15976,14 +15976,14 @@ value\Big(0+\big(n_1+(n_1+1)\big)+n_2+\dots+(n_{k-1}+1)+n\Big)\end{align}$</span
         <category>DP</category>
       </categories>
       <tags>
-        <tag>algorithm</tag>
         <tag>beginner</tag>
+        <tag>algorithm</tag>
         <tag>dp</tag>
       </tags>
   </entry>
   <entry>
     <title>Python: 常用的数据结构</title>
-    <url>/blogs/2024/02/02/python-data-structure/</url>
+    <url>/2024/02/02/python-data-structure/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h3 id="不可变可变类型">不可变/可变类型</h3>
@@ -16061,7 +16061,7 @@ value\Big(0+\big(n_1+(n_1+1)\big)+n_2+\dots+(n_{k-1}+1)+n\Big)\end{align}$</span
   </entry>
   <entry>
     <title>Cpp: I/O</title>
-    <url>/blogs/2024/01/19/cpp-io/</url>
+    <url>/2024/01/19/cpp-io/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="c风格的io"><code>C++</code>风格的<code>I/O</code></h1>
@@ -16398,7 +16398,7 @@ id="ifstreamofstream"><code>ifstream</code>&amp;<code>ofstream</code></h3>
   </entry>
   <entry>
     <title>Python: 使用pyplot可视化</title>
-    <url>/blogs/2024/01/11/python-pyplot/</url>
+    <url>/2024/01/11/python-pyplot/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="matplotlib数据可视化"><code>matplotlib</code>数据可视化</h1>
@@ -16616,7 +16616,7 @@ href="https://blog.csdn.net/qq_35240689/article/details/130924160">链接</a></p
   </entry>
   <entry>
     <title>微积分: 练习题</title>
-    <url>/blogs/2023/12/11/calculus-exercise-1/</url>
+    <url>/2023/12/11/calculus-exercise-1/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="极限">极限</h1>
@@ -17340,7 +17340,7 @@ x,求由曲线f=0绕y=-1旋转而成的几何体的体积\end{align}$</span></p>
   </entry>
   <entry>
     <title>JavaScript: 基本使用</title>
-    <url>/blogs/2023/12/09/javascript-beginner/</url>
+    <url>/2023/12/09/javascript-beginner/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="javascript语法"><code>JavaScript</code>语法</h1>
@@ -17551,7 +17551,7 @@ x,求由曲线f=0绕y=-1旋转而成的几何体的体积\end{align}$</span></p>
   </entry>
   <entry>
     <title>VS Code: 较为轻量的IDE</title>
-    <url>/blogs/2023/12/08/vscode/</url>
+    <url>/2023/12/08/vscode/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="vs-code"><code>VS Code</code></h1>
@@ -17702,7 +17702,7 @@ class="uri">https://vscodethemes.com/</a>快速预览</li>
   </entry>
   <entry>
     <title>微积分: 反常积分</title>
-    <url>/blogs/2023/12/03/calculus-improper-int/</url>
+    <url>/2023/12/03/calculus-improper-int/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="反常积分">反常积分</h1>
@@ -17736,7 +17736,7 @@ class="math inline">$\begin{align}&amp;证明\int_0^{+\infty}\frac{dx}{1+x^4}=\i
   </entry>
   <entry>
     <title>微积分: 定积分</title>
-    <url>/blogs/2023/11/28/calculus-definite-int/</url>
+    <url>/2023/11/28/calculus-definite-int/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="定积分">定积分</h1>
@@ -17936,7 +17936,7 @@ V=\int_0^{\large\frac{\sqrt{2}}2}\pi(\frac{x^2}2-x^4)dx+\int_{\large\frac{\sqrt{
   </entry>
   <entry>
     <title>微积分: 不定积分</title>
-    <url>/blogs/2023/11/12/calculus-indefinite-int/</url>
+    <url>/2023/11/12/calculus-indefinite-int/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="不定积分">不定积分</h1>
@@ -18009,7 +18009,7 @@ class="math inline">$\begin{align}分子=分式1分子+分式2分子+...\end{ali
   </entry>
   <entry>
     <title>微积分: 极限练习题</title>
-    <url>/blogs/2023/11/05/calculus-limit-exercise/</url>
+    <url>/2023/11/05/calculus-limit-exercise/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="极限">极限</h1>
@@ -18287,7 +18287,7 @@ class="math inline">$\begin{align}=\lim_{n\rightarrow+\infty}\frac{y_n}{\large\f
   </entry>
   <entry>
     <title>微积分: 关于极限</title>
-    <url>/blogs/2023/10/30/calculus-limitation/</url>
+    <url>/2023/10/30/calculus-limitation/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="极限">极限</h1>
@@ -18480,7 +18480,7 @@ $$</span></p>
   </entry>
   <entry>
     <title>C: 基本语法</title>
-    <url>/blogs/2023/10/09/c-beginner/</url>
+    <url>/2023/10/09/c-beginner/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <h1 id="c">C</h1>
@@ -19241,7 +19241,7 @@ size(返回所占数据区的字节总数)
   </entry>
   <entry>
     <title>Markdown: 简单易学的笔记语言</title>
-    <url>/blogs/2023/10/03/markdown-beginner/</url>
+    <url>/2023/10/03/markdown-beginner/</url>
     <content><![CDATA[<!-- placeholder -->
 <span id="more"></span>
 <p><a id="HOME"></a></p>
@@ -19330,8 +19330,8 @@ exp3
 <p>如图，使用<code>html</code>语法，写出一个四行两列的、边界值为2的、内容<code>'11'</code>被设置为占据四行且居中的表格</p>
 <h3 id="图片">图片</h3>
 通过<code>&lt;img /&gt;</code>标签可以定义并放缩图片：
-<style>.tvqwvbtbltbr{zoom:33%;}</style>
-<img src="/blogs/2023/10/03/markdown-beginner/image_example.png" class="tvqwvbtbltbr">
+<style>.xxabulkrhpfi{zoom:33%;}</style>
+<img src="/2023/10/03/markdown-beginner/image_example.png" class="xxabulkrhpfi">
 <p>图片可以缩放，即在前方的<code>html</code>标签内加上<code>style="zoom:num%"</code>，<code>num</code>为缩放比例</p>
 <h3 id="链接">链接</h3>
 <p><code>&lt;a id="111"&gt;&lt;/a&gt;</code>：这条元素定义了一个<code>id</code>为<code>'111'</code>的锚点，在文章内部可以通过<code>[点击](#111)</code>链接跳转到这个锚点，例如本文在目录处设定了一个<code>'HOME'</code>锚点，您可以<a
