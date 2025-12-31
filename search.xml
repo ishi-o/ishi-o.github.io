@@ -3310,6 +3310,23 @@ $$</span></p></li>
       </tags>
   </entry>
   <entry>
+    <title>Spring framework: Security</title>
+    <url>/2025/07/14/spring-security/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Java</category>
+        <category>Spring framework</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>security</tag>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring framework: Validation API</title>
     <url>/2025/07/14/spring-validation/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -3368,23 +3385,6 @@ id="集成bean-validation-api">集成<code>Bean Validation API</code></h2>
       <tags>
         <tag>validation</tag>
         <tag>Java</tag>
-        <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Spring framework: Security</title>
-    <url>/2025/07/14/spring-security/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-]]></content>
-      <categories>
-        <category>Programming</category>
-        <category>Java</category>
-        <category>Spring framework</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>security</tag>
         <tag>Spring</tag>
       </tags>
   </entry>
@@ -6451,6 +6451,136 @@ class="math inline">$\begin{align}\frac1{1+5d_{prop}/d_{trans}}\end{align}$</spa
       </tags>
   </entry>
   <entry>
+    <title>计算机网络: 传输层协议</title>
+    <url>/2025/05/01/comp-networking-trsflayer/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h2 id="传输层协议">传输层协议</h2>
+<h3 id="可靠数据传输的组成">可靠数据传输的组成</h3>
+<ul>
+<li><p>处理比特差错：比特差错指，分组能运输到主机，但具有比特位丢失或错误；又分为非响应分组错误和响应分组错误</p>
+<ul>
+<li>通过<strong>重传分组</strong>解决，又因为重传会导致<strong>分组冗余</strong>，故需要给分组添加<strong>编号</strong></li>
+<li>完备的解决方案：
+发送方：发送分组后进入阻塞态，若收到有错误的响应报文，则重传；否则完成委托，等待下一个来自应用层的调用
+接收方：有比特差错或无比特差错但序号错，则响应上一个序号的报文，并丢弃当前收到的报文；否则响应当前序号的报文，并增加确认序号</li>
+</ul></li>
+<li><p>处理丢包：通过<strong>超时重传</strong>解决，超时即一段时间内未收到正确的响应报文，若超时则响应上一个序号的报文；在此处，发送方接收到有错响应报文时，不立刻重传，而是超时再重传
+丢包大概率因为中间路由缓存满而丢弃分组，小概率因为链路中断</p></li>
+<li><p>上述是一次只传输一个分组的情况，称为<strong>停等协议</strong>(发送方在收到响应前进入阻塞)；为了效率，需要实现流水线传输，有以下方案：</p>
+<ul>
+<li><p>回退<code>N</code>步(<code>GBN</code>)协议：只要一切正常，效率就可以大幅提高
+发送方：维护基序号<code>b</code>，发送方可以<strong>一次性发送序号为<code>[b,b+N]</code></strong>内的分组，直到<strong>收到<code>ACK_b</code></strong>，才将<code>b</code>右移，并将新的窗口中未发送的分组发送；否则，一旦<strong>超时，就将窗口内的分组全部重传</strong>
+接收方：接收窗口长度只为<code>1</code>，即接收方<strong>只接收序号为<code>b</code>的分组</strong>，响应策略和停等协议一致(分组出错时响应<code>ACK_b-1</code>)
+即，<strong><code>GBN</code>协议是发送方可以发送多个分组的停等协议</strong>，当<code>N=1</code>时退化为停等协议，其始终等待<code>b</code>号响应报文的策略使其具有自然有序、且每一时刻序号小于<code>b</code>的报文均已可靠传输的性质</p></li>
+<li><p>选择重传(<code>SR</code>)协议：上述接收方的策略可以优化，接收方可以选择<strong>缓存</strong>并自行排序而非丢弃序号错误的分组，相当于将接收方窗口长度拉长，使接收方可以确认所有正确的报文(无论其序号是多少)
+对于发送方的好处是，发送方下次<strong>超时重传时就不需要重传已经确认的分组</strong>，而不是像<code>GBN</code>那样全部重传，发送方的具体策略为：</p>
+<ul>
+<li>一开始全部发送后，对<strong>每个分组都设置定时器</strong>，一次超时事件<strong>只会重传一个分组</strong>(“选择重传”的来历)</li>
+<li>接收到的<code>ACK</code>确认号不是<code>b</code>(一定会落在窗口内)，则进行标记</li>
+<li>接收到的<code>ACK</code>确认号是<code>b</code>，则移动<code>b</code>到下一个没被标记的分组，发送新窗口的未被标记分组</li>
+</ul>
+<p>接收方的具体策略为：</p>
+<ul>
+<li>收到序号不为<code>b</code>的报文：缓存，响应<code>ACK_b</code></li>
+<li>收到序号为<code>b</code>的报文：立刻交付它以及窗口内所有已缓存的报文，移动窗口到下一个没有收到过的序号</li>
+</ul>
+<p>基于序号有限的现实问题，<strong>发送方窗口<span
+class="math inline">=</span>接收方窗口<span
+class="math inline">≤</span>序号数量的一半</strong>，因为响应报文完整/丢失可能导致同步问题：如果接收方窗口长度超过序号数量的一半，那么在一次完美的传输后，<strong>接收方</strong>窗口会<strong>第二次使用相同的序号</strong>，此时若响应报文完整，则发送方会第二次使用相同的序号，此次分组实际是新分组；若<strong>响应报文丢失，则发送方会重传</strong>，此次分组<strong>实际是已确认分组</strong>，但接收方会<strong>误以为是新分组</strong>(因为序号相同)
+长度不超过序号数量的一半就不会有这样的问题</p></li>
+</ul></li>
+</ul>
+<h3 id="tcp性质及功能"><code>TCP</code>性质及功能</h3>
+<ul>
+<li>全双工协议，即双方都可作为发送方或接收方</li>
+<li>面向连接的协议，即双方真正传输数据前需要建立连接、后需要关闭连接</li>
+<li>支持百分百的可靠数据传输，同时有一定的拥塞控制、流量控制、检错功能</li>
+<li>通过端口号来标识进程，为了支持全双工，双方都需要提供<code>IP</code>和端口号</li>
+<li>协商<code>MSS</code>(<code>MSS=MTU+IP头部长+TCP头部长</code>，即<code>MSS</code>本身不包含<code>TCP</code>头部)，以避免<code>IP</code>分组
+<ul>
+<li>主机是边缘设备，在传输层<strong>控制一个<code>TCP</code>分组的长度</strong>可以<strong>避免在发送方被网络层分组</strong>，有效降低网络负载(因为<strong>网络层分组/重组</strong>并保证完整传输相比不分组，<strong>需要更多开销</strong>)</li>
+<li>现代路径发现<code>MSS</code>：为了防止在中途路由被分组，现代设备可以动态发现整个路径所有网段中的最小<code>MTU</code>而不仅仅是本地网段的<code>MTU</code>，进一步避免被网络层分组</li>
+</ul></li>
+</ul>
+<h3 id="tcp协议报文"><code>TCP</code>协议报文</h3>
+<ul>
+<li>第一行字段：源端口号、目的端口号
+<ul>
+<li>每个<strong>端口号共<code>16</code>位</strong>，端口号分为<strong>周知端口号(<code>0~1023</code>)</strong>和非周知端口号(<code>1024~65535</code>)</li>
+<li>周知端口号是给服务器使用的，这样客户端就可以默认向使用该端口号作为目的端口号</li>
+<li>常见的周知端口号：<code>HTTP~80、FTP传输数据~20、FTP传输控制信息~21、Telnet~23、DNS~53</code></li>
+</ul></li>
+<li>第二行字段：<code>32</code>位序号，表示本报文所承载数据段的<strong>首字节编号</strong></li>
+<li>第三行字段：<code>32</code>位确认号，表示本报文所希望的下一个数据段的首字节编号
+小于确认号的序号的报文均已被接收方完整接收</li>
+<li>第四行字段：
+<ul>
+<li><code>4</code>位首部长度：标记首部的字节数，<strong>单位为<code>4</code>个字节</strong></li>
+<li>标记位：<code>URG、ACK、PSH、RST、SYN、FIN</code></li>
+<li><code>16</code>位接收窗口：用于<strong>流量控制</strong>，流量控制用于解决发送方<strong>发送速率</strong>和接收方<strong>接收速率</strong>不匹配问题
+<strong>触发流量控制的事件不是超时</strong>，超时是触发拥塞控制的事件，而流量控制依赖于响应报文的接收窗口，当接收窗口为<code>0</code>时，表示接收方已经无法再接收，发送方随即停止发送，并试探性地发送一个没有数据的报文直到响应报文的接收窗口不为<code>0</code></li>
+</ul></li>
+</ul>
+<h3 id="tcp连接过程"><code>TCP</code>连接过程</h3>
+<ul>
+<li>假设发送方为<code>A</code>、接收方为<code>B</code>，发送方、接收方期望发送的第一个字节编号分别为<code>a、b</code>
+那么三次握手过程为：
+<ul>
+<li>发送方发送报文，其中<code>ACK=0、SYN=1、序列号=a-1</code></li>
+<li>接收方发送报文，其中<code>ACK=1、SYN=1、序列号=b-1、确认号=a</code></li>
+<li>发送方发送报文，其中<code>ACK=1、SYN=0、序列号=a、确认号=b</code>
+这里因为接收方不再发送响应报文，所以发送方下次发送的报文序号仍为<code>a</code></li>
+</ul></li>
+<li>四次挥手过程为：
+<ul>
+<li>主动结束方发送报文，其中<code>FIN=1、ACK=1、序列号=x(上次接收的确认号)、确认号=y(上次接收的序列号+字节数)</code>
+此后主动结束方不会再发送数据报文，但仍能接收数据报文</li>
+<li>被动结束方发送响应报文，其中<code>FIN=0、ACK=1、序列号=y、确认号=x+1</code></li>
+<li>被动结束方发送结束报文，其中<code>FIN=1、ACK=1、序列号=z(被动结束方上次接收报文的确认号)、确认号=x+1</code></li>
+<li>主动结束方发送响应报文，其中<code>FIN=0、ACK=1、序列号=x+1、确认号=z+1</code>
+防止响应报文丢失，主动结束方最后会进入<code>TIME_WAIT</code>，如果响应报文丢失，被动结束方会超时重传，主动结束方则在<code>TIME_WAIT</code>内受理该重传的<code>FIN</code>报文
+注意，这个<code>TIME_WAIT</code>和超时重传是两回事</li>
+</ul></li>
+</ul>
+<h3 id="tcp的附加功能"><code>TCP</code>的附加功能</h3>
+<ul>
+<li><p>流量控制：不再赘述</p></li>
+<li><p>基于序号和确认号在同一份报文内的机制，通常不单独发送响应报文，而是在要发送的数据中<strong>捎带</strong>上确认信息</p></li>
+<li><p>期望<code>RTT</code>(往返时间)：通过对最近<code>RTT</code>采样，并加权重(越近的样本权重越大)计算期望<code>RTT</code>
+方差<code>RTT</code>：测量期望<code>RTT</code>的变化
+重传计时器的时间通常设为：期望<code>RTT</code>+<code>4</code>方差<code>RTT</code>
+在超时事件未发生时，<code>TCP</code>通过它来指导计时器的时间</p></li>
+<li><p>快速重传：每次丢包都等超时后再重传效率过低，因为丢包后，有概率能接收到冗余<code>ACK</code>报文(确认号相同的报文)，发送方可以将这个事件视为丢包的暗示，进行快速重传</p></li>
+<li><p>拥塞起因：发送方的<strong>发送速率</strong>和中间路由<strong>转发速率</strong>不匹配导致数据分组冗余
+拥塞控制：当丢包事件(<strong>超时</strong>或接收到若干个<strong>冗余<code>ACK</code></strong>报文，被认为是丢包)发生时，触发拥塞控制机制，其中超时事件相比冗余<code>ACK</code>事件，更能说明链路拥塞(因为冗余<code>ACK</code>起码能接收到，丢包可能是因为物理链路出问题)
+<code>TCP</code>通过<strong>慢启动</strong>来控制发送速率：</p>
+<ul>
+<li>慢启动状态：初始发送窗口为一个<code>MSS</code>，但以指数增长
+超时事件发生时，重新进入慢启动状态，将触发超时时候的<strong>发送窗口大小的一半</strong>设置为<strong>慢启动阈值</strong>
+冗余<code>ACK</code>事件发生时，执行快速重传，进入快速恢复状态
+指数增长到慢启动阈值(从未发生过超时时，为无穷大)时，进入拥塞避免状态</li>
+<li>拥塞避免状态：谨慎地增加发送窗口长度，可能是线性地增加
+超时事件发生时，进入慢启动状态，并更新慢启动阈值
+冗余<code>ACK</code>事件发生时，需要作出反应但不应过于剧烈，因此将<strong>发送窗口减半</strong>而非重置(通常因为有<code>k</code>个冗余<code>ACK</code>，说明中间链路起码还有转发<code>k</code>个分组的能力，所以还要在减半后加上<code>k</code>个<code>MSS</code>)，并进入快速恢复状态</li>
+<li>快速恢复状态：快速重传后，仍可能收到冗余<code>ACK</code>，每接收一个冗余<code>ACK</code>，相应地增加一个<code>MSS</code>
+超时事件发生时，同上
+当接收到新的<code>ACK</code>而不是冗余<code>ACK</code>时，将发送窗口置为慢启动阈值，进入拥塞避免状态</li>
+</ul>
+<p>因此，进入慢启动状态一定是因为超时发生，且初始为<code>1</code>个<code>MSS</code>
+进入拥塞避免状态是因为在慢启动时超过了慢启动阈值、或在快速恢复时收到新<code>ACK</code>，<strong>初始为慢启动阈值</strong>
+进入快速恢复状态一定是因为收到冗余<code>ACK</code>，处于快速恢复状态的时间较短</p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>SE Courses</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>TCP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>计算机网络: 网络层协议</title>
     <url>/2025/05/01/comp-networking-iplayer/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -6607,136 +6737,6 @@ class="math inline">8|<em>L</em><sub><em>m</em><em>a</em><em>x</em></sub></span>
         <tag>IPv4</tag>
         <tag>NAT</tag>
         <tag>DHCP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>计算机网络: 传输层协议</title>
-    <url>/2025/05/01/comp-networking-trsflayer/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-<h2 id="传输层协议">传输层协议</h2>
-<h3 id="可靠数据传输的组成">可靠数据传输的组成</h3>
-<ul>
-<li><p>处理比特差错：比特差错指，分组能运输到主机，但具有比特位丢失或错误；又分为非响应分组错误和响应分组错误</p>
-<ul>
-<li>通过<strong>重传分组</strong>解决，又因为重传会导致<strong>分组冗余</strong>，故需要给分组添加<strong>编号</strong></li>
-<li>完备的解决方案：
-发送方：发送分组后进入阻塞态，若收到有错误的响应报文，则重传；否则完成委托，等待下一个来自应用层的调用
-接收方：有比特差错或无比特差错但序号错，则响应上一个序号的报文，并丢弃当前收到的报文；否则响应当前序号的报文，并增加确认序号</li>
-</ul></li>
-<li><p>处理丢包：通过<strong>超时重传</strong>解决，超时即一段时间内未收到正确的响应报文，若超时则响应上一个序号的报文；在此处，发送方接收到有错响应报文时，不立刻重传，而是超时再重传
-丢包大概率因为中间路由缓存满而丢弃分组，小概率因为链路中断</p></li>
-<li><p>上述是一次只传输一个分组的情况，称为<strong>停等协议</strong>(发送方在收到响应前进入阻塞)；为了效率，需要实现流水线传输，有以下方案：</p>
-<ul>
-<li><p>回退<code>N</code>步(<code>GBN</code>)协议：只要一切正常，效率就可以大幅提高
-发送方：维护基序号<code>b</code>，发送方可以<strong>一次性发送序号为<code>[b,b+N]</code></strong>内的分组，直到<strong>收到<code>ACK_b</code></strong>，才将<code>b</code>右移，并将新的窗口中未发送的分组发送；否则，一旦<strong>超时，就将窗口内的分组全部重传</strong>
-接收方：接收窗口长度只为<code>1</code>，即接收方<strong>只接收序号为<code>b</code>的分组</strong>，响应策略和停等协议一致(分组出错时响应<code>ACK_b-1</code>)
-即，<strong><code>GBN</code>协议是发送方可以发送多个分组的停等协议</strong>，当<code>N=1</code>时退化为停等协议，其始终等待<code>b</code>号响应报文的策略使其具有自然有序、且每一时刻序号小于<code>b</code>的报文均已可靠传输的性质</p></li>
-<li><p>选择重传(<code>SR</code>)协议：上述接收方的策略可以优化，接收方可以选择<strong>缓存</strong>并自行排序而非丢弃序号错误的分组，相当于将接收方窗口长度拉长，使接收方可以确认所有正确的报文(无论其序号是多少)
-对于发送方的好处是，发送方下次<strong>超时重传时就不需要重传已经确认的分组</strong>，而不是像<code>GBN</code>那样全部重传，发送方的具体策略为：</p>
-<ul>
-<li>一开始全部发送后，对<strong>每个分组都设置定时器</strong>，一次超时事件<strong>只会重传一个分组</strong>(“选择重传”的来历)</li>
-<li>接收到的<code>ACK</code>确认号不是<code>b</code>(一定会落在窗口内)，则进行标记</li>
-<li>接收到的<code>ACK</code>确认号是<code>b</code>，则移动<code>b</code>到下一个没被标记的分组，发送新窗口的未被标记分组</li>
-</ul>
-<p>接收方的具体策略为：</p>
-<ul>
-<li>收到序号不为<code>b</code>的报文：缓存，响应<code>ACK_b</code></li>
-<li>收到序号为<code>b</code>的报文：立刻交付它以及窗口内所有已缓存的报文，移动窗口到下一个没有收到过的序号</li>
-</ul>
-<p>基于序号有限的现实问题，<strong>发送方窗口<span
-class="math inline">=</span>接收方窗口<span
-class="math inline">≤</span>序号数量的一半</strong>，因为响应报文完整/丢失可能导致同步问题：如果接收方窗口长度超过序号数量的一半，那么在一次完美的传输后，<strong>接收方</strong>窗口会<strong>第二次使用相同的序号</strong>，此时若响应报文完整，则发送方会第二次使用相同的序号，此次分组实际是新分组；若<strong>响应报文丢失，则发送方会重传</strong>，此次分组<strong>实际是已确认分组</strong>，但接收方会<strong>误以为是新分组</strong>(因为序号相同)
-长度不超过序号数量的一半就不会有这样的问题</p></li>
-</ul></li>
-</ul>
-<h3 id="tcp性质及功能"><code>TCP</code>性质及功能</h3>
-<ul>
-<li>全双工协议，即双方都可作为发送方或接收方</li>
-<li>面向连接的协议，即双方真正传输数据前需要建立连接、后需要关闭连接</li>
-<li>支持百分百的可靠数据传输，同时有一定的拥塞控制、流量控制、检错功能</li>
-<li>通过端口号来标识进程，为了支持全双工，双方都需要提供<code>IP</code>和端口号</li>
-<li>协商<code>MSS</code>(<code>MSS=MTU+IP头部长+TCP头部长</code>，即<code>MSS</code>本身不包含<code>TCP</code>头部)，以避免<code>IP</code>分组
-<ul>
-<li>主机是边缘设备，在传输层<strong>控制一个<code>TCP</code>分组的长度</strong>可以<strong>避免在发送方被网络层分组</strong>，有效降低网络负载(因为<strong>网络层分组/重组</strong>并保证完整传输相比不分组，<strong>需要更多开销</strong>)</li>
-<li>现代路径发现<code>MSS</code>：为了防止在中途路由被分组，现代设备可以动态发现整个路径所有网段中的最小<code>MTU</code>而不仅仅是本地网段的<code>MTU</code>，进一步避免被网络层分组</li>
-</ul></li>
-</ul>
-<h3 id="tcp协议报文"><code>TCP</code>协议报文</h3>
-<ul>
-<li>第一行字段：源端口号、目的端口号
-<ul>
-<li>每个<strong>端口号共<code>16</code>位</strong>，端口号分为<strong>周知端口号(<code>0~1023</code>)</strong>和非周知端口号(<code>1024~65535</code>)</li>
-<li>周知端口号是给服务器使用的，这样客户端就可以默认向使用该端口号作为目的端口号</li>
-<li>常见的周知端口号：<code>HTTP~80、FTP传输数据~20、FTP传输控制信息~21、Telnet~23、DNS~53</code></li>
-</ul></li>
-<li>第二行字段：<code>32</code>位序号，表示本报文所承载数据段的<strong>首字节编号</strong></li>
-<li>第三行字段：<code>32</code>位确认号，表示本报文所希望的下一个数据段的首字节编号
-小于确认号的序号的报文均已被接收方完整接收</li>
-<li>第四行字段：
-<ul>
-<li><code>4</code>位首部长度：标记首部的字节数，<strong>单位为<code>4</code>个字节</strong></li>
-<li>标记位：<code>URG、ACK、PSH、RST、SYN、FIN</code></li>
-<li><code>16</code>位接收窗口：用于<strong>流量控制</strong>，流量控制用于解决发送方<strong>发送速率</strong>和接收方<strong>接收速率</strong>不匹配问题
-<strong>触发流量控制的事件不是超时</strong>，超时是触发拥塞控制的事件，而流量控制依赖于响应报文的接收窗口，当接收窗口为<code>0</code>时，表示接收方已经无法再接收，发送方随即停止发送，并试探性地发送一个没有数据的报文直到响应报文的接收窗口不为<code>0</code></li>
-</ul></li>
-</ul>
-<h3 id="tcp连接过程"><code>TCP</code>连接过程</h3>
-<ul>
-<li>假设发送方为<code>A</code>、接收方为<code>B</code>，发送方、接收方期望发送的第一个字节编号分别为<code>a、b</code>
-那么三次握手过程为：
-<ul>
-<li>发送方发送报文，其中<code>ACK=0、SYN=1、序列号=a-1</code></li>
-<li>接收方发送报文，其中<code>ACK=1、SYN=1、序列号=b-1、确认号=a</code></li>
-<li>发送方发送报文，其中<code>ACK=1、SYN=0、序列号=a、确认号=b</code>
-这里因为接收方不再发送响应报文，所以发送方下次发送的报文序号仍为<code>a</code></li>
-</ul></li>
-<li>四次挥手过程为：
-<ul>
-<li>主动结束方发送报文，其中<code>FIN=1、ACK=1、序列号=x(上次接收的确认号)、确认号=y(上次接收的序列号+字节数)</code>
-此后主动结束方不会再发送数据报文，但仍能接收数据报文</li>
-<li>被动结束方发送响应报文，其中<code>FIN=0、ACK=1、序列号=y、确认号=x+1</code></li>
-<li>被动结束方发送结束报文，其中<code>FIN=1、ACK=1、序列号=z(被动结束方上次接收报文的确认号)、确认号=x+1</code></li>
-<li>主动结束方发送响应报文，其中<code>FIN=0、ACK=1、序列号=x+1、确认号=z+1</code>
-防止响应报文丢失，主动结束方最后会进入<code>TIME_WAIT</code>，如果响应报文丢失，被动结束方会超时重传，主动结束方则在<code>TIME_WAIT</code>内受理该重传的<code>FIN</code>报文
-注意，这个<code>TIME_WAIT</code>和超时重传是两回事</li>
-</ul></li>
-</ul>
-<h3 id="tcp的附加功能"><code>TCP</code>的附加功能</h3>
-<ul>
-<li><p>流量控制：不再赘述</p></li>
-<li><p>基于序号和确认号在同一份报文内的机制，通常不单独发送响应报文，而是在要发送的数据中<strong>捎带</strong>上确认信息</p></li>
-<li><p>期望<code>RTT</code>(往返时间)：通过对最近<code>RTT</code>采样，并加权重(越近的样本权重越大)计算期望<code>RTT</code>
-方差<code>RTT</code>：测量期望<code>RTT</code>的变化
-重传计时器的时间通常设为：期望<code>RTT</code>+<code>4</code>方差<code>RTT</code>
-在超时事件未发生时，<code>TCP</code>通过它来指导计时器的时间</p></li>
-<li><p>快速重传：每次丢包都等超时后再重传效率过低，因为丢包后，有概率能接收到冗余<code>ACK</code>报文(确认号相同的报文)，发送方可以将这个事件视为丢包的暗示，进行快速重传</p></li>
-<li><p>拥塞起因：发送方的<strong>发送速率</strong>和中间路由<strong>转发速率</strong>不匹配导致数据分组冗余
-拥塞控制：当丢包事件(<strong>超时</strong>或接收到若干个<strong>冗余<code>ACK</code></strong>报文，被认为是丢包)发生时，触发拥塞控制机制，其中超时事件相比冗余<code>ACK</code>事件，更能说明链路拥塞(因为冗余<code>ACK</code>起码能接收到，丢包可能是因为物理链路出问题)
-<code>TCP</code>通过<strong>慢启动</strong>来控制发送速率：</p>
-<ul>
-<li>慢启动状态：初始发送窗口为一个<code>MSS</code>，但以指数增长
-超时事件发生时，重新进入慢启动状态，将触发超时时候的<strong>发送窗口大小的一半</strong>设置为<strong>慢启动阈值</strong>
-冗余<code>ACK</code>事件发生时，执行快速重传，进入快速恢复状态
-指数增长到慢启动阈值(从未发生过超时时，为无穷大)时，进入拥塞避免状态</li>
-<li>拥塞避免状态：谨慎地增加发送窗口长度，可能是线性地增加
-超时事件发生时，进入慢启动状态，并更新慢启动阈值
-冗余<code>ACK</code>事件发生时，需要作出反应但不应过于剧烈，因此将<strong>发送窗口减半</strong>而非重置(通常因为有<code>k</code>个冗余<code>ACK</code>，说明中间链路起码还有转发<code>k</code>个分组的能力，所以还要在减半后加上<code>k</code>个<code>MSS</code>)，并进入快速恢复状态</li>
-<li>快速恢复状态：快速重传后，仍可能收到冗余<code>ACK</code>，每接收一个冗余<code>ACK</code>，相应地增加一个<code>MSS</code>
-超时事件发生时，同上
-当接收到新的<code>ACK</code>而不是冗余<code>ACK</code>时，将发送窗口置为慢启动阈值，进入拥塞避免状态</li>
-</ul>
-<p>因此，进入慢启动状态一定是因为超时发生，且初始为<code>1</code>个<code>MSS</code>
-进入拥塞避免状态是因为在慢启动时超过了慢启动阈值、或在快速恢复时收到新<code>ACK</code>，<strong>初始为慢启动阈值</strong>
-进入快速恢复状态一定是因为收到冗余<code>ACK</code>，处于快速恢复状态的时间较短</p></li>
-</ul>
-]]></content>
-      <categories>
-        <category>SE Courses</category>
-        <category>Network</category>
-      </categories>
-      <tags>
-        <tag>TCP</tag>
       </tags>
   </entry>
   <entry>
@@ -7659,55 +7659,6 @@ class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
       </tags>
   </entry>
   <entry>
-    <title>数据结构: 对顶堆</title>
-    <url>/2025/04/10/algo-minmax-heap/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-<h3 id="对顶堆">对顶堆</h3>
-<ul>
-<li><p>对顶堆是用于解决<strong>寻找序列中第<span
-class="math inline"><em>k</em></span>小数</strong>的数据结构，其中序列可动态变化、<span
-class="math inline"><em>k</em></span>可动态变化
-对顶堆较易实现，比实现权值线段树、平衡树有码量上的优势</p></li>
-<li><p>基本组成：一个大顶堆和一个小顶堆(辅助堆)，大顶堆维护前<span
-class="math inline"><em>k</em></span>小的元素(包括<span
-class="math inline"><em>k</em></span>)，小顶堆维护其它元素(即比第<span
-class="math inline"><em>k</em></span>元素大的元素)</p>
-<p>这样，大顶堆的堆顶就是第<span
-class="math inline"><em>k</em></span>个元素、小顶堆的堆顶是第<span
-class="math inline"><em>k</em> + 1</span>个元素
-如果要求寻找序列中第<span
-class="math inline"><em>k</em></span>大的数，则反过来用小顶堆维护前<span
-class="math inline"><em>k</em></span>大的元素、用大顶堆作辅助堆即可</p></li>
-<li><p>每次涉及到动态修改(如插入、修改<span
-class="math inline"><em>k</em></span>值)，需要在操作结束后维护：
-若大顶堆元素超出<span
-class="math inline"><em>k</em></span>个，则将大顶堆的堆顶弹出后插入小顶堆中
-否则将小顶堆堆顶插入大顶堆中</p></li>
-<li><p>插入元素：若插入元素不小于大顶堆堆顶，则插入小顶堆中，否则插入大顶堆中</p></li>
-<li><p>查询第<span
-class="math inline"><em>k</em></span>小元素：返回大顶堆堆顶</p></li>
-<li><p>删除第<span
-class="math inline"><em>k</em></span>小元素：推出大顶堆堆顶和小顶堆堆顶，将后者插入大顶堆中</p></li>
-<li><p>动态修改<span
-class="math inline"><em>k</em></span>值：与维护操作描述一致，若<span
-class="math inline"><em>k</em></span>增大，则推出小顶堆堆顶插入大顶堆中；否则推出大顶堆堆顶插入小顶堆中</p></li>
-<li><p>时间复杂度：查询<span
-class="math inline"><em>O</em>(1)</span>，其余操作<span
-class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
-</ul>
-]]></content>
-      <categories>
-        <category>Algorithm</category>
-        <category>Data Structure</category>
-      </categories>
-      <tags>
-        <tag>algorithm</tag>
-        <tag>data structure</tag>
-        <tag>sort</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数据结构: 递归式线段树</title>
     <url>/2025/04/10/algo-recursive-segment-tree/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -7879,6 +7830,55 @@ query(rs[p], l, r, m + 1, R); return ans; }</p></li>
         <tag>algorithm</tag>
         <tag>tree</tag>
         <tag>data structure</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据结构: 对顶堆</title>
+    <url>/2025/04/10/algo-minmax-heap/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h3 id="对顶堆">对顶堆</h3>
+<ul>
+<li><p>对顶堆是用于解决<strong>寻找序列中第<span
+class="math inline"><em>k</em></span>小数</strong>的数据结构，其中序列可动态变化、<span
+class="math inline"><em>k</em></span>可动态变化
+对顶堆较易实现，比实现权值线段树、平衡树有码量上的优势</p></li>
+<li><p>基本组成：一个大顶堆和一个小顶堆(辅助堆)，大顶堆维护前<span
+class="math inline"><em>k</em></span>小的元素(包括<span
+class="math inline"><em>k</em></span>)，小顶堆维护其它元素(即比第<span
+class="math inline"><em>k</em></span>元素大的元素)</p>
+<p>这样，大顶堆的堆顶就是第<span
+class="math inline"><em>k</em></span>个元素、小顶堆的堆顶是第<span
+class="math inline"><em>k</em> + 1</span>个元素
+如果要求寻找序列中第<span
+class="math inline"><em>k</em></span>大的数，则反过来用小顶堆维护前<span
+class="math inline"><em>k</em></span>大的元素、用大顶堆作辅助堆即可</p></li>
+<li><p>每次涉及到动态修改(如插入、修改<span
+class="math inline"><em>k</em></span>值)，需要在操作结束后维护：
+若大顶堆元素超出<span
+class="math inline"><em>k</em></span>个，则将大顶堆的堆顶弹出后插入小顶堆中
+否则将小顶堆堆顶插入大顶堆中</p></li>
+<li><p>插入元素：若插入元素不小于大顶堆堆顶，则插入小顶堆中，否则插入大顶堆中</p></li>
+<li><p>查询第<span
+class="math inline"><em>k</em></span>小元素：返回大顶堆堆顶</p></li>
+<li><p>删除第<span
+class="math inline"><em>k</em></span>小元素：推出大顶堆堆顶和小顶堆堆顶，将后者插入大顶堆中</p></li>
+<li><p>动态修改<span
+class="math inline"><em>k</em></span>值：与维护操作描述一致，若<span
+class="math inline"><em>k</em></span>增大，则推出小顶堆堆顶插入大顶堆中；否则推出大顶堆堆顶插入小顶堆中</p></li>
+<li><p>时间复杂度：查询<span
+class="math inline"><em>O</em>(1)</span>，其余操作<span
+class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Algorithm</category>
+        <category>Data Structure</category>
+      </categories>
+      <tags>
+        <tag>algorithm</tag>
+        <tag>data structure</tag>
+        <tag>sort</tag>
       </tags>
   </entry>
   <entry>
@@ -21136,8 +21136,8 @@ exp3
 <p>如图，使用<code>html</code>语法，写出一个四行两列的、边界值为2的、内容<code>'11'</code>被设置为占据四行且居中的表格</p>
 <h3 id="图片">图片</h3>
 通过<code>&lt;img /&gt;</code>标签可以定义并放缩图片：
-<style>.kwxkfprwbvku{zoom:33%;}</style>
-<img src="/2023/10/03/markdown-beginner/image_example.png" class="kwxkfprwbvku">
+<style>.ijsisthaqgwy{zoom:33%;}</style>
+<img src="/2023/10/03/markdown-beginner/image_example.png" class="ijsisthaqgwy">
 <p>图片可以缩放，即在前方的<code>html</code>标签内加上<code>style="zoom:num%"</code>，<code>num</code>为缩放比例</p>
 <h3 id="链接">链接</h3>
 <p><code>&lt;a id="111"&gt;&lt;/a&gt;</code>：这条元素定义了一个<code>id</code>为<code>'111'</code>的锚点，在文章内部可以通过<code>[点击](#111)</code>链接跳转到这个锚点，例如本文在目录处设定了一个<code>'HOME'</code>锚点，您可以<a

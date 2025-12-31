@@ -29,7 +29,25 @@
   </url>
   
   <url>
+    <loc>https://ishi-o.github.io/2025/11/24/stat-nlinear-models/</loc>
+    
+    <lastmod>2025-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://ishi-o.github.io/2025/11/20/stat-var-selection/</loc>
+    
+    <lastmod>2025-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/2025/11/17/stat-linear-regression/</loc>
     
     <lastmod>2025-12-31</lastmod>
     
@@ -56,7 +74,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/index.html</loc>
+    <loc>https://ishi-o.github.io/about/index.html</loc>
     
     <lastmod>2025-12-31</lastmod>
     
@@ -65,7 +83,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/about/index.html</loc>
+    <loc>https://ishi-o.github.io/categories/index.html</loc>
     
     <lastmod>2025-12-31</lastmod>
     
@@ -92,15 +110,6 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/2025/11/24/stat-nlinear-models/</loc>
-    
-    <lastmod>2025-12-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://ishi-o.github.io/2025/11/20/stat-estimate/</loc>
     
     <lastmod>2025-12-31</lastmod>
@@ -119,7 +128,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/2025/11/17/stat-linear-regression/</loc>
+    <loc>https://ishi-o.github.io/2025/07/14/spring-security/</loc>
     
     <lastmod>2025-12-31</lastmod>
     
@@ -129,15 +138,6 @@
   
   <url>
     <loc>https://ishi-o.github.io/2025/07/14/spring-validation/</loc>
-    
-    <lastmod>2025-12-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://ishi-o.github.io/2025/07/14/spring-security/</loc>
     
     <lastmod>2025-12-31</lastmod>
     
@@ -381,6 +381,15 @@
   
   <url>
     <loc>https://ishi-o.github.io/2025/07/16/java-mybatis/</loc>
+    
+    <lastmod>2025-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/2025/07/11/java-bean-validation/</loc>
     
     <lastmod>2025-12-31</lastmod>
     
@@ -758,15 +767,6 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/2025/07/11/java-bean-validation/</loc>
-    
-    <lastmod>2025-12-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://ishi-o.github.io/2025/03/04/java-base/</loc>
     
     <lastmod>2025-12-31</lastmod>
@@ -813,6 +813,15 @@
   
   <url>
     <loc>https://ishi-o.github.io/2025/07/14/deeplearning-simpleNN/</loc>
+    
+    <lastmod>2025-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/2025/07/09/deeplearning-activeFuncs/</loc>
     
     <lastmod>2025-12-31</lastmod>
     
@@ -893,15 +902,6 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/2025/07/09/deeplearning-activeFuncs/</loc>
-    
-    <lastmod>2025-12-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://ishi-o.github.io/2025/06/18/db-review/</loc>
     
     <lastmod>2025-12-31</lastmod>
@@ -965,7 +965,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/2025/05/01/comp-networking-iplayer/</loc>
+    <loc>https://ishi-o.github.io/2025/05/01/comp-networking-trsflayer/</loc>
     
     <lastmod>2025-12-31</lastmod>
     
@@ -974,7 +974,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/2025/05/01/comp-networking-trsflayer/</loc>
+    <loc>https://ishi-o.github.io/2025/05/01/comp-networking-iplayer/</loc>
     
     <lastmod>2025-12-31</lastmod>
     
@@ -1091,6 +1091,24 @@
   </url>
   
   <url>
+    <loc>https://ishi-o.github.io/2023/12/11/calculus-exercise-1/</loc>
+    
+    <lastmod>2025-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/2023/12/03/calculus-improper-int/</loc>
+    
+    <lastmod>2025-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://ishi-o.github.io/2023/11/12/calculus-indefinite-int/</loc>
     
     <lastmod>2025-12-31</lastmod>
@@ -1127,6 +1145,24 @@
   </url>
   
   <url>
+    <loc>https://ishi-o.github.io/2025/04/30/algo-tree-gravity/</loc>
+    
+    <lastmod>2025-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/2025/04/30/algo-tree-lca/</loc>
+    
+    <lastmod>2025-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://ishi-o.github.io/2024/11/26/algo-trick-offline-query/</loc>
     
     <lastmod>2025-12-31</lastmod>
@@ -1155,24 +1191,6 @@
   
   <url>
     <loc>https://ishi-o.github.io/2024/04/20/calculus-diff-equation/</loc>
-    
-    <lastmod>2025-12-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://ishi-o.github.io/2023/12/11/calculus-exercise-1/</loc>
-    
-    <lastmod>2025-12-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://ishi-o.github.io/2023/12/03/calculus-improper-int/</loc>
     
     <lastmod>2025-12-31</lastmod>
     
@@ -1226,24 +1244,6 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/2025/04/30/algo-tree-gravity/</loc>
-    
-    <lastmod>2025-12-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://ishi-o.github.io/2025/04/30/algo-tree-lca/</loc>
-    
-    <lastmod>2025-12-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://ishi-o.github.io/2025/04/26/algo-string-manacher/</loc>
     
     <lastmod>2025-12-31</lastmod>
@@ -1280,7 +1280,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/2025/04/10/algo-minmax-heap/</loc>
+    <loc>https://ishi-o.github.io/2025/04/10/algo-recursive-segment-tree/</loc>
     
     <lastmod>2025-12-31</lastmod>
     
@@ -1289,7 +1289,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/2025/04/10/algo-recursive-segment-tree/</loc>
+    <loc>https://ishi-o.github.io/2025/04/10/algo-minmax-heap/</loc>
     
     <lastmod>2025-12-31</lastmod>
     
@@ -1455,14 +1455,14 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/data-structure/</loc>
+    <loc>https://ishi-o.github.io/tags/dp/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/dp/</loc>
+    <loc>https://ishi-o.github.io/tags/data-structure/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1490,13 +1490,6 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/sort/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://ishi-o.github.io/tags/array/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -1518,6 +1511,13 @@
   </url>
   
   <url>
+    <loc>https://ishi-o.github.io/tags/sort/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://ishi-o.github.io/tags/palindrome/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -1532,14 +1532,14 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/devide-and-conquer/</loc>
+    <loc>https://ishi-o.github.io/tags/trick/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/trick/</loc>
+    <loc>https://ishi-o.github.io/tags/devide-and-conquer/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1553,13 +1553,6 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/HTTP/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://ishi-o.github.io/tags/COA/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -1567,7 +1560,42 @@
   </url>
   
   <url>
+    <loc>https://ishi-o.github.io/tags/HTTP/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://ishi-o.github.io/tags/MAC/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/tags/compiler/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/tags/TCP/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/tags/summation/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/tags/recursion/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1589,41 +1617,6 @@
   
   <url>
     <loc>https://ishi-o.github.io/tags/DHCP/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://ishi-o.github.io/tags/TCP/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://ishi-o.github.io/tags/compiler/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://ishi-o.github.io/tags/recursion/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://ishi-o.github.io/tags/summation/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://ishi-o.github.io/tags/reaction/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1658,13 +1651,6 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/Cpp-STL/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://ishi-o.github.io/tags/database/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -1679,6 +1665,20 @@
   </url>
   
   <url>
+    <loc>https://ishi-o.github.io/tags/ML/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/tags/Cpp-STL/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://ishi-o.github.io/tags/CNN/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -1686,7 +1686,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/ML/</loc>
+    <loc>https://ishi-o.github.io/tags/reaction/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1707,7 +1707,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/Digital-Circuit/</loc>
+    <loc>https://ishi-o.github.io/tags/set/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1735,7 +1735,14 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/set/</loc>
+    <loc>https://ishi-o.github.io/tags/concurrent/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/tags/exception/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1763,7 +1770,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/exception/</loc>
+    <loc>https://ishi-o.github.io/tags/Digital-Circuit/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1805,13 +1812,6 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/concurrent/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://ishi-o.github.io/tags/serializing/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -1826,14 +1826,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/log/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://ishi-o.github.io/tags/HTML/</loc>
+    <loc>https://ishi-o.github.io/tags/SQL/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1847,14 +1840,21 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/security/</loc>
+    <loc>https://ishi-o.github.io/tags/HTML/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/SQL/</loc>
+    <loc>https://ishi-o.github.io/tags/log/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/tags/security/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1889,14 +1889,14 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/OOP/</loc>
+    <loc>https://ishi-o.github.io/tags/socket/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/socket/</loc>
+    <loc>https://ishi-o.github.io/tags/OOP/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1917,14 +1917,14 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/tomcat/</loc>
+    <loc>https://ishi-o.github.io/tags/FP/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/FP/</loc>
+    <loc>https://ishi-o.github.io/tags/tomcat/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1959,14 +1959,14 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/kernel/</loc>
+    <loc>https://ishi-o.github.io/tags/filesystem/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/filesystem/</loc>
+    <loc>https://ishi-o.github.io/tags/kernel/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2008,13 +2008,6 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/pyplot/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://ishi-o.github.io/tags/pandas/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -2029,7 +2022,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/tags/pytorch/</loc>
+    <loc>https://ishi-o.github.io/tags/pyplot/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2044,6 +2037,13 @@
   
   <url>
     <loc>https://ishi-o.github.io/tags/fuzzy-search/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/tags/pytorch/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2136,14 +2136,14 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/Algorithm/Trick/</loc>
+    <loc>https://ishi-o.github.io/categories/Algorithm/Data-Structure/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/Algorithm/Game-Theory/</loc>
+    <loc>https://ishi-o.github.io/categories/Algorithm/Trick/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2157,7 +2157,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/Algorithm/Data-Structure/</loc>
+    <loc>https://ishi-o.github.io/categories/Algorithm/Game-Theory/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2220,13 +2220,6 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/Games/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://ishi-o.github.io/categories/Tools-Utilities/manager/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -2248,14 +2241,14 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/SE-Courses/Calculus/</loc>
+    <loc>https://ishi-o.github.io/categories/Games/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/Programming/Markup-Languages/</loc>
+    <loc>https://ishi-o.github.io/categories/SE-Courses/Calculus/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2269,7 +2262,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/SE-Courses/Network/</loc>
+    <loc>https://ishi-o.github.io/categories/Programming/Markup-Languages/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2277,6 +2270,13 @@
   
   <url>
     <loc>https://ishi-o.github.io/categories/SE-Courses/COA/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/categories/SE-Courses/Network/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2304,14 +2304,14 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/OS/</loc>
+    <loc>https://ishi-o.github.io/categories/SE-Courses/Concrete-Math/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/SE-Courses/Concrete-Math/</loc>
+    <loc>https://ishi-o.github.io/categories/OS/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2346,7 +2346,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/SE-Courses/Probability-Math/</loc>
+    <loc>https://ishi-o.github.io/categories/SE-Courses/DBMS/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2360,7 +2360,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/SE-Courses/DBMS/</loc>
+    <loc>https://ishi-o.github.io/categories/SE-Courses/Probability-Math/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2381,13 +2381,6 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/SE-Courses/Discrete-Math/</loc>
-    <lastmod>2025-12-31</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://ishi-o.github.io/categories/Programming/SQL/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
@@ -2396,6 +2389,13 @@
   
   <url>
     <loc>https://ishi-o.github.io/categories/SE-Courses/stat/</loc>
+    <lastmod>2025-12-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ishi-o.github.io/categories/SE-Courses/Discrete-Math/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2514,7 +2514,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/Programming/Go/3P-Framework/Zap/</loc>
+    <loc>https://ishi-o.github.io/categories/Programming/Go/3P-Framework/Database/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -2528,7 +2528,7 @@
   </url>
   
   <url>
-    <loc>https://ishi-o.github.io/categories/Programming/Go/3P-Framework/Database/</loc>
+    <loc>https://ishi-o.github.io/categories/Programming/Go/3P-Framework/Zap/</loc>
     <lastmod>2025-12-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
