@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Go: 基本语法">
+<meta property="og:url" content="https://ishi-o.github.io/2025/12/23/go-beginner/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-12-23T22:48:43.000Z">
+<meta property="article:modified_time" content="2025-12-31T09:51:32.604Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="Go">
+<meta property="article:tag" content="beginner">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/12/23/go-beginner/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/12/23/go-beginner/","path":"2025/12/23/go-beginner/","title":"Go: 基本语法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Go: 基本语法 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#go%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">Go基本语法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E7%AE%A1%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">包管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%BC%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">值类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.2.</span> <span class="nav-text">引用类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E9%9D%A2%E9%87%8F"><span class="nav-number">1.2.3.</span> <span class="nav-text">字面量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E8%AF%AD%E5%8F%A5"><span class="nav-number">1.3.</span> <span class="nav-text">声明语句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E"><span class="nav-number">1.3.1.</span> <span class="nav-text">变量声明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E5%A3%B0%E6%98%8E"><span class="nav-number">1.3.2.</span> <span class="nav-text">类型声明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E5%88%AB%E5%90%8D"><span class="nav-number">1.3.3.</span> <span class="nav-text">类型别名</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E7%AE%97%E4%B8%8E%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.4.</span> <span class="nav-text">运算与表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%AE%97"><span class="nav-number">1.4.1.</span> <span class="nav-text">运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%8E%A7%E5%88%B6"><span class="nav-number">1.4.2.</span> <span class="nav-text">条件控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6"><span class="nav-number">1.4.3.</span> <span class="nav-text">循环控制</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">152</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/25/go-generics/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-25</time>
+        <br>
+      Go: 泛型
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/24/go-strings/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-24</time>
+        <br>
+      Go: 字符串
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/24/go-map/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-24</time>
+        <br>
+      Go: map
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/25/go-iterator/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-25</time>
+        <br>
+      Go: 迭代器
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/12/23/go-beginner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Go: 基本语法 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Go: 基本语法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-12-23 22:48:43" itemprop="dateCreated datePublished" datetime="2025-12-23T22:48:43+00:00">2025-12-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-31 09:51:32" itemprop="dateModified" datetime="2025-12-31T09:51:32+00:00">2025-12-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Go/Spec-Stdlib/" itemprop="url" rel="index"><span itemprop="name">Spec & Stdlib</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>2.4k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>9 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="go基本语法"><code>Go</code>基本语法</h1>
+<h2 id="包管理">包管理</h2>
+<ul>
+<li><p><code>package</code>关键字表示当前文件属于哪个包，主函数文件想要当作入口文件，必须声明<code>package main</code>，包名设计和路径不同，不像<code>java</code>通过<code>.</code>分隔，而是单纯的一个字段表示包名，但仍然是一个目录对应一个包，不会进行递归扫描</p>
+<p>不强制目录名和包名相同，导入后使用的是<code>package</code>后声明的字段而不是目录名，但一般目录名和包名相同</p></li>
+<li><p><code>import</code>是导入其它包的关键字，这里引入的是用<code>/</code>分隔的包含包所在网址或本地项目路径的绝对包名</p>
+<p>因此如果导入多个不同路径的同时，它们包含一个相同的包名，会发生冲突，需要重命名</p></li>
+<li><p><code>import</code>可以通过<code>()</code>对导入进行分组，也可以重命名：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	strs <span class="string">&quot;strings&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Print(<span class="string">&quot;Hello world!&quot;</span>)</span><br><span class="line">	strs.Split(<span class="string">&quot;a,b,c&quot;</span>, <span class="string">&quot;,&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>import</code>起别名时可以用<code>_</code>表示匿名引入，只加载其中的<code>init</code>函数</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> _ <span class="string">&quot;mysql-driver-go&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>内部包：<code>Go</code>约定，在命名为<code>internal</code>包内的函数无法被外部包导入</p>
+<p>可以导入内部包的文件，只有该内部包<strong>直接父目录的所有子文件</strong></p></li>
+</ul>
+<h2 id="数据类型">数据类型</h2>
+<h3 id="值类型">值类型</h3>
+<ul>
+<li><p>整型：</p>
+<ul>
+<li><code>uint8/16/32/64</code>：无符号整k型</li>
+<li><code>int8/16/32/64</code></li>
+<li><code>uint</code>和<code>int</code>：至少<code>32</code>位的整型</li>
+<li><code>byte</code>：等价于<code>uint8</code></li>
+<li><code>uintptr</code>：保证足够大以至于能存储任何指针</li>
+</ul></li>
+<li><p>浮点型：<code>float32/64</code></p></li>
+<li><p>复数：<code>complex64/128</code>，本质为两个<code>float32/64</code>的封装</p></li>
+<li><p>字符型：</p>
+<ul>
+<li><p><code>byte/uint8</code>：可存储<code>ASCII</code>码</p></li>
+<li><p><code>rune</code>：等价于<code>int32</code>，可存储<code>utf8</code>字符，用<code>rune</code>来在语义上区分整型和字符，也可表示一个<code>Unicode</code></p></li>
+<li><p><code>string</code>：字符序列，可视为一个只读<code>[]byte</code>，它同样可以表示<code>utf8</code>(编码为<code>byte</code>序列后)字符串</p>
+<p><code>string</code>是一个不可变类型</p></li>
+</ul></li>
+<li><p>布尔型：<code>bool</code></p></li>
+<li><p>数组类型：<code>[n]Type</code>，其中<code>n</code>必须是编译时可确定的</p>
+<p>数组也是一种值类型</p></li>
+<li><p>结构体：<code>struct {}</code>自定义类类型，是值类型</p></li>
+<li><p>指针类型：<code>*Type</code>，指针类型的对象可通过<code>&amp;</code>作用于对象来创建，同时可以不使用解引用符访问值的属性和方法</p>
+<p>因此解引用符<code>*</code>更多作用于右值，此时解出来的是副本</p>
+<p>通过使用指针，可以实现类似引用类型的效果</p></li>
+</ul>
+<h3 id="引用类型">引用类型</h3>
+<ul>
+<li><p>切片类型：<code>[]Type</code>，是可变长的序列</p></li>
+<li><p>映射类型：<code>map[keyType]valueType</code></p></li>
+<li><p>方法：<code>func(T...) R</code>自定义方法</p></li>
+<li><p>通道类型：<code>Go</code>擅于多线程场景，通道是<code>Go</code>提供的线程间通信手段</p>
+<ul>
+<li><code>chan Type</code>：双向通道，<code>chan</code>表明它是一个通道，<code>Type</code>是通道传输的数据的类型</li>
+<li><code>chan&lt;- Type</code>：只写通道</li>
+<li><code>&lt;-chan Type</code>：只读通道</li>
+</ul></li>
+<li><p>接口：<code>interface {}</code>自定义接口类型</p></li>
+<li><p>任意类型(别名)：<code>any = interface{}</code></p></li>
+<li><p>可比较类型(别名)：<code>comparable = interface{ comparable }</code></p>
+<p><code>comparable</code>应该作为函数参数的类型以限制形参，而不是用来定义一个变量</p>
+<p>所有基本数据类型、以及由可比较类型组成的数组、以及由可比较类型组成的<code>struct</code>都是<code>comparable</code>的</p></li>
+<li><p><code>Go</code>的引用类型只有切片、映射、方法、通道、接口五种，它们像指针那样共享同一份堆中的数据，拷贝的是地址</p></li>
+<li><p>使用类型断言：<code>obj.(type)</code>获取<code>obj</code>的类型，<code>obj.(Type)</code>返回<code>(value, ok)</code></p></li>
+</ul>
+<h3 id="字面量">字面量</h3>
+<ul>
+<li><p><code>true</code>和<code>false</code></p></li>
+<li><p>整型可使用<code>_</code>分割加强可读性</p></li>
+<li><p><code>iota</code>：是预定义的字面量，<strong>只在<code>const</code>块下生效</strong>，表示<strong>自增的自然数序列</strong>，即<code>0-idx</code></p>
+<p><code>const</code>组的一个特性是：后续没有显式赋值的常量会延用最近使用的表达式，因此只需要第一项指定为<code>iota</code>，后续可默认生成</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	a = <span class="literal">iota</span>     <span class="comment">// 0</span></span><br><span class="line">	b            <span class="comment">// 延用 iota, 为1</span></span><br><span class="line">	c = <span class="literal">iota</span> * <span class="number">2</span> <span class="comment">// 2 * 2</span></span><br><span class="line">	d            <span class="comment">// 延用 iota * 2, 为3 * 2</span></span><br><span class="line">	e = <span class="number">1</span></span><br><span class="line">	f = <span class="literal">iota</span> <span class="comment">// 5</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>实际上，<code>iota</code>并不算很好的命名，目前只有<code>Cpp</code>与<code>APL</code>以及<code>Go</code>在使用</p>
+<p>一种场景是：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	a = <span class="number">1</span> &lt;&lt; <span class="literal">iota</span></span><br><span class="line">	b <span class="comment">// 1 &lt;&lt; 1</span></span><br><span class="line">	c <span class="comment">// 1 &lt;&lt; 2</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li><p><strong><code>nil</code></strong>：空值，它不是类型，而是用于初始化指针类型、内置引用类型的零值</p></li>
+<li><p>数组/切片字面量：一维数组如下，高维数组类似</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a := [<span class="number">5</span>]<span class="type">int32</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;</span><br><span class="line"><span class="comment">// 可以通过 idx:value 局部赋值</span></span><br><span class="line"><span class="comment">// 0-idx</span></span><br><span class="line">b := [<span class="number">5</span>]<span class="type">int32</span>&#123;<span class="number">1</span>: <span class="number">2</span>, <span class="number">4</span>: <span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>结构体字面量：结构体字面量有若干种写法</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一个类型的字面量是紧跟该类型后的大括号</span></span><br><span class="line"><span class="keyword">var</span> a AStruct = AStruct&#123;</span><br><span class="line">	<span class="number">1</span>, <span class="comment">// 如果不带字段名, 则按顺序赋值, 且必须全部手动赋值</span></span><br><span class="line">	<span class="number">2</span>, <span class="comment">// 所有属性值需要紧跟 &#x27;,&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 可以指定字段名, 此时顺序无影响</span></span><br><span class="line"><span class="comment">// 此时会将所有未手动赋值的属性赋为零值</span></span><br><span class="line"><span class="keyword">var</span> b BStruct = BStruct&#123;</span><br><span class="line">	a: <span class="number">1</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 匿名结构体习惯使用 := 赋值</span></span><br><span class="line">a := <span class="keyword">struct</span> &#123;</span><br><span class="line">	a <span class="type">int32</span></span><br><span class="line">	b <span class="type">int32</span></span><br><span class="line">&#125;&#123;</span><br><span class="line">	<span class="number">1</span>,</span><br><span class="line">	<span class="number">2</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 允许混合声明, 指定字段必须放在最后</span></span><br><span class="line"><span class="comment">// 但这是不好的代码习惯</span></span><br><span class="line">b := <span class="keyword">struct</span> &#123;</span><br><span class="line">	a <span class="type">int32</span></span><br><span class="line">	b <span class="type">int32</span></span><br><span class="line">&#125;&#123;</span><br><span class="line">	<span class="number">1</span>,</span><br><span class="line">	a: <span class="number">2</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>new()</code>与<code>make()</code>：用于值类型和引用类型的内存分配</p>
+<ul>
+<li><p><code>new(Type) *Type</code>：<code>new</code>只能用于创建值类型，且使用零值初始化，返回指针</p>
+<p>不常用，更常用的是先创建一个值类型的值然后取地址</p></li>
+<li><p><code>make(Type, ...int) Type</code>：<code>make</code>专门用于为映射、切片、通道这三个内置引用类型分配内存，并返回它们的<strong>值</strong>引用</p>
+<p>这三种类型对应的<code>make</code>函数格式不同，根据第一个参数解析后续的参数</p></li>
+</ul></li>
+</ul>
+<h2 id="声明语句">声明语句</h2>
+<h3 id="变量声明">变量声明</h3>
+<ul>
+<li><p><code>Go</code>是静态强类型语言，虽然可以使用<code>var</code>与<code>const</code>，但是最终需要编译时确定类型，即指定类型或指定初始值必须含一</p></li>
+<li><p>根据字面量动态推断类型：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a := <span class="number">1</span></span><br><span class="line"><span class="keyword">const</span> b = <span class="number">1</span> <span class="comment">// const变量只能进行一次初始化</span></span><br><span class="line">c := <span class="number">1</span>      <span class="comment">// 等价于 var c = 1</span></span><br></pre></td></tr></table></figure>
+<p>短变量赋值语句只能在函数作用域内使用</p></li>
+<li><p>指定数据类型：<code>Go</code>是类型后置的，如果使用<code>var</code>声明变量不附带初始值，则必须指定类型</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a <span class="type">int</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> b <span class="type">int</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>类型后置能带来一系列优点，首先是可以抛弃<code>void</code>而不影响观感，最重要的是方法签名和<strong>函数类型易于阅读</strong></p></li>
+<li><p>变量分组：通过<code>()</code>对变量进行分组能提高可读性</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	a <span class="type">int32</span></span><br><span class="line">	b <span class="type">float32</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	a = <span class="number">1</span></span><br><span class="line">	b</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li><p>多返回值：<code>Go</code>支持多返回值以及函数多返回值</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">a, b := <span class="number">1</span>, <span class="number">2</span></span><br><span class="line">a, b := b, a <span class="comment">// swap</span></span><br><span class="line">a, b = <span class="function"><span class="keyword">func</span><span class="params">()</span></span> (<span class="type">int32</span>, <span class="type">int32</span>) &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>, <span class="number">2</span></span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="类型声明">类型声明</h3>
+<ul>
+<li><p>类型声明(创建新类型)使用<code>type TypeName OriginTypeName</code>，基于其它类型创建新类型(两者类型的头信息不同)</p>
+<p>所有在之前数据类型小节讲述的类型以及自定义的类型都可以作为<code>OriginTypeName</code></p></li>
+<li><p>与<code>var</code>和<code>const</code>类似，<code>type</code>关键字也可以使用<code>type ()</code>分组声明</p>
+<p>同一个<code>type</code>分组的类型声明，遵循先后顺序，且在前语句声明的类型可以在后语句立刻使用，需要注意循环引用</p>
+<p><code>Go</code>的引用类型不像<code>Java</code>的引用类型，其更相似的是指针类型，使用指针类型可以实现循环引用</p></li>
+<li><p>示例-数组：<code>type IntArr5 [5]int32</code></p></li>
+<li><p>示例-切片：<code>type IntSlice []int32</code></p></li>
+<li><p>示例-结构体：结构体是一系列属性的集合</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> StructName <span class="keyword">struct</span> &#123;</span><br><span class="line">	a <span class="type">int64</span></span><br><span class="line">	b <span class="type">int32</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>示例-接口：接口是一系列方法的集合</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> InterfaceName <span class="keyword">interface</span> &#123;</span><br><span class="line">	A() <span class="type">int</span></span><br><span class="line">	B(a <span class="type">int32</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>示例-通道：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> (</span><br><span class="line">	DEIntChan <span class="keyword">chan</span> <span class="type">int32</span></span><br><span class="line">	RIntChan  &lt;-<span class="keyword">chan</span> <span class="type">int32</span></span><br><span class="line">	WIntChan  <span class="keyword">chan</span>&lt;- <span class="type">int32</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li><p>示例-函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> RetIntFunc <span class="function"><span class="keyword">func</span><span class="params">()</span></span> <span class="type">int32</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="类型别名">类型别名</h3>
+<ul>
+<li><p>类型别名使用<code>type TypeName = OriginTypeName</code>，使用<code>=</code>后，这个类型是类型别名，两者等价</p>
+<p>别名，意味着<code>OriginTypeName</code>必须已经声明，而不能是匿名的（如匿名结构体、匿名接口），但函数类型是允许的</p></li>
+<li><p>类型别名可以和类型声明放进同一个<code>type</code>分组里</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> (</span><br><span class="line">	RetIntFunc = <span class="function"><span class="keyword">func</span><span class="params">()</span></span> <span class="type">int32</span> <span class="comment">// ok</span></span><br><span class="line">	StrcutA    = <span class="keyword">struct</span> &#123;     <span class="comment">// error</span></span><br><span class="line">		a <span class="type">int32</span></span><br><span class="line">	&#125;</span><br><span class="line">	StructB <span class="keyword">struct</span> &#123;</span><br><span class="line">		a <span class="type">int32</span></span><br><span class="line">	&#125;</span><br><span class="line">	StructC = StructB</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li><p>同一个<code>type</code>分组里，类型别名的位置没有任何影响，即使其引用的原类型在同一分组内的后面定义</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> (</span><br><span class="line">	A = B</span><br><span class="line"></span><br><span class="line">	B <span class="type">int32</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="运算与表达式">运算与表达式</h2>
+<h3 id="运算">运算</h3>
+<ul>
+<li>大多数运算符和其它语言类似</li>
+<li>不含前缀<code>++</code>或前缀<code>--</code>，且后缀<code>++</code>和后缀<code>--</code>都不具有返回值，即它们变成了原子操作</li>
+<li>不支持三元表达式</li>
+<li>条件表达式不需要小括号括住，且条件表达式必须返回布尔值，其它类型不会自动隐式地转换为布尔值</li>
+</ul>
+<h3 id="条件控制">条件控制</h3>
+<ul>
+<li><p><code>if</code>表达式与其它语言类似</p></li>
+<li><p><code>switch</code>表达式则有较大不同：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// switch 后可跟简单的计算语句</span></span><br><span class="line"><span class="comment">// 特殊的是这些语句需要以 ; 结尾</span></span><br><span class="line"><span class="keyword">switch</span> t := nbr; &#123;</span><br><span class="line"><span class="comment">// case 语句后面跟条件表达式</span></span><br><span class="line"><span class="keyword">case</span> t == <span class="number">1</span>:</span><br><span class="line">	stmt</span><br><span class="line"><span class="comment">// 和其它语言不同, 默认情况下,</span></span><br><span class="line"><span class="comment">// 每个条件块执行结束结束即退出(默认break)</span></span><br><span class="line"><span class="comment">// 如果想继续执行下一分支则应使用 fallthrough</span></span><br><span class="line"><span class="keyword">case</span> t == <span class="number">2</span>:</span><br><span class="line">	stmt</span><br><span class="line">	<span class="keyword">fallthrough</span></span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">	default_stmt</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>虽然支持<code>label</code>和<code>goto</code>语句，但是尽量不用<code>goto</code>，倒是可以结合<code>break</code>和<code>continue</code>使用标签</p></li>
+</ul>
+<h3 id="循环控制">循环控制</h3>
+<ul>
+<li><p>没有<code>while</code>表达式，全部使用<code>for</code>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> init_stmt; expr; post_stmt &#123;</span><br><span class="line">	for_stmt</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> expr &#123;</span><br><span class="line">	while_stmt</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> &#123; <span class="comment">// 不带表达式默认为 true</span></span><br><span class="line">	while_true_stmt</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>for-range</code>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> idx, val := <span class="keyword">range</span> iterable &#123;</span><br><span class="line">	stmt</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>不支持省略<code>if</code>、<code>for</code>语句的大括号</p></li>
+<li><p>不支持左大括号换行</p></li>
+<li><p>大部分风格可以由格式化工具如<code>goimport</code>和<code>gofumpt</code>决定，不需要过多注意</p></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/25/go-generics/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-25</time>
+        <br>
+      Go: 泛型
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/24/go-strings/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-24</time>
+        <br>
+      Go: 字符串
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/24/go-map/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-24</time>
+        <br>
+      Go: map
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/25/go-iterator/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-25</time>
+        <br>
+      Go: 迭代器
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/beginner/" rel="tag"># beginner</a>
+              <a href="/tags/Go/" rel="tag"># Go</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/12/03/compilers-syntax/" rel="prev" title="编译原理: 语法分析">
+                  <i class="fa fa-angle-left"></i> 编译原理: 语法分析
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/12/24/go-composition/" rel="next" title="Go: 组合式编程">
+                  Go: 组合式编程 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">263k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">15:56</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

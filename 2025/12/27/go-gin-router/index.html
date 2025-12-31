@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Gin: 路由">
+<meta property="og:url" content="https://ishi-o.github.io/2025/12/27/go-gin-router/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-12-27T14:58:39.000Z">
+<meta property="article:modified_time" content="2025-12-31T09:51:32.604Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="Go">
+<meta property="article:tag" content="net">
+<meta property="article:tag" content="webapp">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/12/27/go-gin-router/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/12/27/go-gin-router/","path":"2025/12/27/go-gin-router/","title":"Gin: 路由"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Gin: 路由 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#gin%E8%B7%AF%E7%94%B1"><span class="nav-number">1.</span> <span class="nav-text">Gin路由</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#httprouter"><span class="nav-number">1.1.</span> <span class="nav-text">httprouter</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-number">1.1.1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#api"><span class="nav-number">1.1.2.</span> <span class="nav-text">API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gin%E7%9A%84%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90"><span class="nav-number">1.2.</span> <span class="nav-text">Gin的参数解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E8%B7%AF%E7%94%B1"><span class="nav-number">1.3.</span> <span class="nav-text">分组路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E5%99%A8"><span class="nav-number">1.4.</span> <span class="nav-text">错误处理器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cors%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="nav-number">1.5.</span> <span class="nav-text">CORS中间件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A5%E5%BF%97%E9%87%8D%E5%AE%9A%E5%90%91"><span class="nav-number">1.6.</span> <span class="nav-text">日志重定向</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">152</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/28/go-gin-middleware/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-28</time>
+        <br>
+      Gin: 中间件
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/25/go-netprog/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-25</time>
+        <br>
+      Go: 网络编程基础
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/28/go-gin-response/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-28</time>
+        <br>
+      Gin: 响应处理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/31/go-sqlx/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-31</time>
+        <br>
+      Go: sqlx
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/12/27/go-gin-router/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Gin: 路由 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Gin: 路由
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-12-27 14:58:39" itemprop="dateCreated datePublished" datetime="2025-12-27T14:58:39+00:00">2025-12-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-31 09:51:32" itemprop="dateModified" datetime="2025-12-31T09:51:32+00:00">2025-12-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Go/3P-Framework/" itemprop="url" rel="index"><span itemprop="name">3P Framework</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Go/3P-Framework/Gin/" itemprop="url" rel="index"><span itemprop="name">Gin</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>6 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="gin路由"><a
+target="_blank" rel="noopener" href="https://github.com/gin-gonic/gin"><code>Gin</code></a>路由</h1>
+<h2 id="httprouter"><code>httprouter</code></h2>
+<h3 id="特点">特点</h3>
+<ul>
+<li><code>Gin</code>的路由基于<code>julienschmidt/httprouter</code>，是一个轻量级的路由组建（总共三个文件一千余行代码）</li>
+<li><code>httprouter</code>只提供路由功能，标准库中的<code>HandleFunc()</code>依赖<code>ServeMux</code>来路由，而<code>ServeMux</code>针对前缀匹配采用遍历的方式匹配，效率较差</li>
+<li><code>httprouter</code>提供：请求方法和路径分离，路由算法优化（基于基数树）因此一次路由极快，路径模糊匹配，路径参数捕获</li>
+<li>那么<code>httprouter.Router</code>就可以作为一个前端控制器直接传递给<code>http.ListenAndServe(path, handler)</code>了</li>
+</ul>
+<h3 id="api"><code>API</code></h3>
+<ul>
+<li><code>httprouter.New()</code>：获取路由器对象</li>
+<li><code>*httprouter.Router</code>提供一系列方法绑定路由（仅仅处理路由）
+<ul>
+<li><code>Handle(method, path string, handle Handle)</code>：将方法、路径绑定到处理器，其中<code>handle</code>为<code>httprouter.Handle</code></li>
+<li><code>GET/POST/PUT/DELETE/PATCH/OPTIONS/HEAD(path string, handle Handle)</code>：<code>Handle()</code>的快捷方法</li>
+<li><code>Handler()/HandlerFunc()</code>：<code>net/http</code>的适配器</li>
+</ul></li>
+<li>路径参数捕获：路径中使用<code>:</code>可以捕获，例如<code>/users/:uid</code>，将不包含路径分隔符的路径参数捕获并赋值给<code>uid</code>
+<ul>
+<li>使用<code>httprouter.Handle</code>：<code>Handle</code>方法的签名就是<code>func(http.ResponseWriter, *http.Request, Params)</code>，直接使用<code>Params</code>参数来访问</li>
+<li>使用<code>http</code>的处理器<code>API</code>：则适配器会将参数挂到<code>*http.Request.Context()</code>中，通过<code>httprouter.ParamsFromContext(Context)</code>获取<code>Params</code>对象</li>
+</ul></li>
+<li>还可以使用<code>*</code>捕获包含路径分隔符的路径参数，因此它们只能放在最后，例如<code>/*userinfo</code></li>
+<li>当模糊匹配和精确匹配发生冲突时，按精确匹配大于<code>:</code>大于<code>*</code>的顺序进行匹配</li>
+<li><code>Params</code>提供<code>ByName(string)</code>获取键对应的值</li>
+</ul>
+<h2 id="gin的参数解析"><code>Gin</code>的参数解析</h2>
+<ul>
+<li><code>gin.Default(...OptionFunc) *Engine</code>：获取一个<code>*gin.Engine</code>，默认配置即可，可以通过选项模式修改配置</li>
+<li><code>Gin</code>支持路由参数，和<code>httprouter</code>的使用方法类似
+<ul>
+<li><p><code>*gin.Engine</code>对象提供和<code>*httprouter.Router</code>类似的方法：<code>Handle()/GET()/...</code></p></li>
+<li><p>路径匹配规则类似：精确匹配、<code>:</code>匹配、<code>*</code>匹配</p></li>
+<li><p>区别在于处理器函数的类型是<code>HandlerFunc</code>：<code>func(*gin.Context)</code></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(http.ResponseWriter, *http.Request, Params)</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(*gin.Context)</span></span></span><br></pre></td></tr></table></figure>
+<p>将参数替换成了上下文</p></li>
+<li><p>因此获取参数也变成了：<code>*gin.Context.Param(string)</code></p></li>
+</ul></li>
+<li><code>Gin</code>还支持捕获<code>URL</code>参数：
+<ul>
+<li><code>*gin.Context.Query(string)</code>：获取<code>GET</code>参数的值，若无返回空</li>
+<li><code>*gin.Context.DefaultQuery(string, string)</code>：允许自定义默认值</li>
+</ul></li>
+<li><code>Gin</code>还支持捕获请求体参数
+<ul>
+<li><code>*gin.Context.PostForm(string)</code>：可以解析表单参数<code>application/x-www-form-urlencoded</code>与<code>multipart/form-data</code></li>
+<li><code>*gin.Context.ShouldBind(any)</code>：自动选择解析器，并赋值给传入的参数，因此传入的参数应该是指针，不会进行错误处理</li>
+<li><code>*gin.Context.Bind(any)</code>：是对<code>ShouldBind()</code>的封装，但如果参数解析错误则会自动返回<code>400</code>错误</li>
+<li><code>*gin.Context.MustBindWith(any, binding.Binding)</code>：指定解析器，和<code>Bind()</code>一样会自动返回<code>400</code>错误</li>
+<li><code>BindJSON()/BindQuery()/BindYAML()/BindXML()</code>等：<code>MustBindWith()</code>的快捷函数</li>
+</ul></li>
+<li>对于<code>JSON</code>、<code>XML</code>、<code>ProtoBuf</code>等数据，<code>ShouldBind()</code>只能调用一次，需要使用<code>ShouldBindBodyWith()</code>方法</li>
+</ul>
+<h2 id="分组路由">分组路由</h2>
+<ul>
+<li><p><code>Gin</code>提供<code>*gin.Engine.Group(relativePath string, handlers ...HandlerFunc) *RouterGroup</code>方法分组</p></li>
+<li><p><code>relativePath</code>的捕获语法与<code>httprouter</code>一致，相当于分组所表示的前缀</p>
+<p>可以表示相对路径（即开头不带<code>/</code>），则相对于<code>Engine</code>等价于相对于根路径，相对于<code>RouterGroup</code>等价于相对于路由组的路径</p></li>
+<li><p><code>handlers</code>会在子路由处理器执行之前执行，它们不是<code>relativePath</code>对应的处理器，如果需要则应该在分组内绑定一个<code>""</code>路由</p></li>
+<li><p><code>*RouterGroup</code>的方法和<code>*Engine</code>注册路由类似，此外它本身也可以注册新的路由组</p></li>
+<li><p>为了规范，在注册路由组下的路由时，通常用<code>{}</code>括住：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">g := e.Group(<span class="string">&quot;v1&quot;</span>)</span><br><span class="line">&#123;</span><br><span class="line"> g.GET(<span class="string">&quot;/xxx&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line"> &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="错误处理器">错误处理器</h2>
+<ul>
+<li>针对<code>404</code>路由响应（没有对应的路由），可以自定义处理器：<code>*gin.Engine.NoRoute(HandlerFunc)</code></li>
+<li>针对<code>405</code>路由响应（有对应的路由但是没有匹配的请求方法），可以使用<code>*gin.Engine.NoMethod(HandlerFunc)</code></li>
+<li><code>gin</code>本身没有十分完整的捕获错误、统一处理，不像<code>spring-mvc</code>的<code>@ControllerAdvice</code>，但是可以通过中间件实现</li>
+<li>但是可以使用中间件，<code>gin</code>的中间件引入非常灵活，扩展性很高，完全可以实现类似统一错误处理器的效果</li>
+</ul>
+<h2 id="cors中间件"><code>CORS</code>中间件</h2>
+<ul>
+<li><p>官方提供了<code>cors</code>的中间件<a
+target="_blank" rel="noopener" href="https://github.com/gin-contrib/cors"><code>github.com/gin-contrib/cors</code></a></p></li>
+<li><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">cors.New(cors.Config&#123;</span><br><span class="line"> <span class="keyword">type</span> Config <span class="keyword">struct</span> &#123;</span><br><span class="line">  AllowAllOrigins <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// AllowOrigins is a list of origins a cross-domain request can be executed from.</span></span><br><span class="line">  <span class="comment">// If the special &quot;*&quot; value is present in the list, all origins will be allowed.</span></span><br><span class="line">  <span class="comment">// Default value is []</span></span><br><span class="line">  AllowOrigins []<span class="type">string</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// AllowOriginFunc is a custom function to validate the origin. It takes the origin</span></span><br><span class="line">  <span class="comment">// as an argument and returns true if allowed or false otherwise. If this option is</span></span><br><span class="line">  <span class="comment">// set, the content of AllowOrigins is ignored.</span></span><br><span class="line">  AllowOriginFunc <span class="function"><span class="keyword">func</span><span class="params">(origin <span class="type">string</span>)</span></span> <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Same as AllowOriginFunc except also receives the full request context.</span></span><br><span class="line">  <span class="comment">// This function should use the context as a read only source and not</span></span><br><span class="line">  <span class="comment">// have any side effects on the request, such as aborting or injecting</span></span><br><span class="line">  <span class="comment">// values on the request.</span></span><br><span class="line">  AllowOriginWithContextFunc <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context, origin <span class="type">string</span>)</span></span> <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// AllowMethods is a list of methods the client is allowed to use with</span></span><br><span class="line">  <span class="comment">// cross-domain requests. Default value is simple methods (GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS)</span></span><br><span class="line">  AllowMethods []<span class="type">string</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// AllowPrivateNetwork indicates whether the response should include allow private network header</span></span><br><span class="line">  AllowPrivateNetwork <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// AllowHeaders is list of non simple headers the client is allowed to use with</span></span><br><span class="line">  <span class="comment">// cross-domain requests.</span></span><br><span class="line">  AllowHeaders []<span class="type">string</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// AllowCredentials indicates whether the request can include user credentials like</span></span><br><span class="line">  <span class="comment">// cookies, HTTP authentication or client side SSL certificates.</span></span><br><span class="line">  AllowCredentials <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// ExposeHeaders indicates which headers are safe to expose to the API of a CORS</span></span><br><span class="line">  <span class="comment">// API specification</span></span><br><span class="line">  ExposeHeaders []<span class="type">string</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// MaxAge indicates how long (with second-precision) the results of a preflight request</span></span><br><span class="line">  <span class="comment">// can be cached</span></span><br><span class="line">  MaxAge time.Duration</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Allows to add origins like http://some-domain/*, https://api.* or http://some.*.subdomain.com</span></span><br><span class="line">  AllowWildcard <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Allows usage of popular browser extensions schemas</span></span><br><span class="line">  AllowBrowserExtensions <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Allows to add custom schema like tauri://</span></span><br><span class="line">  CustomSchemas []<span class="type">string</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Allows usage of WebSocket protocol</span></span><br><span class="line">  AllowWebSockets <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Allows usage of file:// schema (dangerous!) use it only when you 100% sure it&#x27;s needed</span></span><br><span class="line">  AllowFiles <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Allows to pass custom OPTIONS response status code for old browsers / clients</span></span><br><span class="line">  OptionsResponseStatusCode <span class="type">int</span></span><br><span class="line"> &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>常用的配置项和一般的网页应用一样：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;github.com/gin-contrib/cors&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">A</span><span class="params">()</span></span> &#123;</span><br><span class="line">	cors.New(cors.Config&#123;</span><br><span class="line">		AllowOrigins: []<span class="type">string</span>&#123;<span class="string">&quot;http://localhost:8000&quot;</span>&#125;,</span><br><span class="line">		AllowMethods: []<span class="type">string</span>&#123;<span class="string">&quot;*&quot;</span>&#125;,</span><br><span class="line">		<span class="comment">// 允许客户端发送的请求头</span></span><br><span class="line">		AllowHeaders: []<span class="type">string</span>&#123;</span><br><span class="line">			<span class="string">&quot;Origin&quot;</span>,</span><br><span class="line">			<span class="string">&quot;X-Requested-With&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Content-Type&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Accept&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Authorization&quot;</span>,</span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="comment">// 允许客户端读取的响应头</span></span><br><span class="line">		ExposeHeaders: []<span class="type">string</span>&#123;</span><br><span class="line">			<span class="string">&quot;Content-Length&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Access-Control-Allow-Origin&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Access-Control-Allow-Headers&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Cache-Control&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Content-Language&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Content-Type&quot;</span>,</span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="comment">// 允许携带 cookie</span></span><br><span class="line">		AllowCredentials: <span class="literal">true</span>,</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="日志重定向">日志重定向</h2>
+<ul>
+<li><p><code>gin</code>本身直接使用<code>Stdout</code>和<code>Stderr</code>，如果需要集成<code>zap</code>等，直接替换掉默认的日志记录器即可：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gin.DefaultWriter = sugar.Writer()</span><br><span class="line">gin.DefaultErrorWriter = sugar.Writer()</span><br></pre></td></tr></table></figure></li>
+<li><p>如果不想使用<code>zap</code>的<code>sugar</code>，可以手动实现一个适配器</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> zapWriter <span class="keyword">struct</span> &#123;</span><br><span class="line"> logger *zap.Logger</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(w *zapWriter)</span></span> Write(p []<span class="type">byte</span>) (n <span class="type">int</span>, err <span class="type">error</span>) &#123;</span><br><span class="line"> w.logger.Info(<span class="type">string</span>(p))</span><br><span class="line"> <span class="keyword">return</span> <span class="built_in">len</span>(p), <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gin.DefaultWriter = &amp;zapWriter&#123; logger:logger &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/28/go-gin-middleware/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-28</time>
+        <br>
+      Gin: 中间件
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/25/go-netprog/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-25</time>
+        <br>
+      Go: 网络编程基础
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/28/go-gin-response/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-28</time>
+        <br>
+      Gin: 响应处理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/31/go-sqlx/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-31</time>
+        <br>
+      Go: sqlx
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/Go/" rel="tag"># Go</a>
+              <a href="/tags/webapp/" rel="tag"># webapp</a>
+              <a href="/tags/net/" rel="tag"># net</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/12/27/go-viper/" rel="prev" title="Go: Viper配置管理">
+                  <i class="fa fa-angle-left"></i> Go: Viper配置管理
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/12/27/go-gin-validator/" rel="next" title="Gin: 数据校验">
+                  Gin: 数据校验 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">263k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">15:56</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

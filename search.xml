@@ -1,6 +1,1812 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Go: sqlx</title>
+    <url>/2025/12/31/go-sqlx/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="sqlx"><code>sqlx</code></h1>
+<h2 id="连接数据库">连接数据库</h2>
+<ul>
+<li><p><code>sqlx</code>是标准库<code>sql</code>的扩展库，只要是<code>sql</code>支持的数据库，或者说只要是实现了<code>driver.Driver</code>接口的数据库都支持</p></li>
+<li><p>注册驱动：需要匿名导入对应的驱动（它们的<code>init()</code>里会调用<code>sql.Register()</code>），例如：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> _ <span class="string">&quot;github.com/go-sql-driver/mysql&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>sqlx.Open(driverName, DSN string) (*DB, error)</code>：打开一个数据库连接，其中<code>driverName</code>为注册时指定的名称，<code>DSN</code>为数据源，得到一个<code>DB</code>对象：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">sqlx.Open(<span class="string">&quot;mysql&quot;</span>, <span class="string">&quot;root:pwd@tcp(127.0.0.1:3306)/test&quot;</span>)</span><br></pre></td></tr></table></figure></li>
+<li><p><code>sqlx.Connect(dn, dsn string) (*DB, error)</code>：与<code>Open()</code>类似，但是会主动通过<code>ping</code>来验证连接是否有效</p></li>
+<li><p>也可以通过<code>*DB.Ping()</code>手动验证</p></li>
+<li><p><code>*DB.Close()</code>：关闭数据库连接</p></li>
+</ul>
+<h2 id="db-api"><code>DB API</code></h2>
+<ul>
+<li><code>*DB.Query(query string, args ...any) (*sql.Rows, error)</code>：基础查询</li>
+<li><code>*DB.Queryx(query string, args ...any) (*sqlx.Rows, error)</code>：增强查询，返回<code>sqlx.Rows</code></li>
+<li><code>*DB.NamedQuery(query string, arg any) (*sqlx.Rows, error)</code>：增强命名查询，返回<code>sqlx.Rows</code></li>
+<li><code>*DB.Get(dest any, query string, args ...any) error</code>：查询单行记录赋值给结构体，查询结果必须只有一行</li>
+<li><code>*DB.Select(dest any, query string, args ...any) error</code>：查询多行记录赋值给结构体切片</li>
+<li><code>*DB.Exec(query string, args ...any) (sql.Result, error)</code>：执行<code>SQL</code>语句，通常是非查询语句如<code>INSERT</code>等</li>
+<li><code>*DB.NamedExec(query string, arg any) (sql.Result, error)</code>：命名参数执行，即支持通过<code>:xxx</code>而不是<code>?</code>传递参数，<code>arg</code>可以传递<code>map</code>或是结构体</li>
+<li><code>*DB.Preparex(query string) (*Stmt, error)</code>：预编译语句，得到的<code>Stmt</code>可重复执行，需要<code>Close()</code></li>
+<li><code>*DB.PrepareNamed(query string) (*NamedStmt, error)</code>：预编译命名语句</li>
+<li><code>sql.Result</code>提供<code>LastInsertId()</code>与<code>RowsAffected()</code>方法获取主键<code>id</code>与影响的行数</li>
+<li><code>*DB.XXXContext(...)</code>：带上下文版本的方法，在开发中建议使用带上下文的查询以实现</li>
+</ul>
+<h2 id="stmt与namedstmt"><code>Stmt</code>与<code>NamedStmt</code></h2>
+<ul>
+<li>它们需要<code>Close()</code></li>
+<li>它们是预编译的语句，可以重复使用同时效率比执行相同的<code>Select()</code>高效</li>
+<li>它们的大多数方法的名字和<code>*DB</code>的相同，不过不需要<code>query</code>参数了</li>
+</ul>
+<h2 id="查询帮助函数">查询帮助函数</h2>
+<ul>
+<li><p><code>sqlx.In(query string, args ...any) (string, any, error)</code>：将一个切片展开</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">ids := []<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line">sqlx.In(<span class="string">&quot;SELECT * FROM x WHERE id IN (?)&quot;</span>, ids)</span><br><span class="line"><span class="comment">// 返回 &quot;SELECT * FROM x WHERE id IN (?, ?, ?)&quot;, 1, 2, 3</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>*DB.Rebind(query string) string</code>：将一个查询语句翻译成<code>DB</code>方言适配的查询</p></li>
+</ul>
+<h2 id="事务管理">事务管理</h2>
+<ul>
+<li><p><code>Begin()</code>：返回<code>*sql.Tx</code></p></li>
+<li><p><code>Beginx()</code>：返回<code>*sqlx.Tx</code></p></li>
+<li><p><code>BeginTx(ctx context.Context, opts *sql.TxOptions)</code>：带上下文地开启事务，返回<code>*sql.Tx</code></p></li>
+<li><p><code>BeginTxx(ctx context.Context, opts *sql.TxOptions)</code>：带上下文地开启事务，返回<code>*sqlx.Tx</code></p></li>
+<li><p><code>Tx.Rollback()</code>：回滚</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line"> <span class="comment">// 发现有 panic</span></span><br><span class="line"> <span class="keyword">if</span> p := <span class="built_in">recover</span>(); p != <span class="literal">nil</span> &#123;</span><br><span class="line">  tx.Rollback()</span><br><span class="line">  <span class="built_in">panic</span>(p)</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>Tx.Commit() error</code>：提交事务</p></li>
+<li><p>在事务内操作使用<code>Tx</code>而不是<code>DB</code>调用方法即可，其<code>API</code>与<code>DB</code>类似</p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>3P Framework</category>
+        <category>Database</category>
+      </categories>
+      <tags>
+        <tag>database</tag>
+        <tag>Go</tag>
+        <tag>SQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: 日志管理</title>
+    <url>/2025/12/30/go-log/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="go日志管理"><code>Go</code>日志管理</h1>
+<h2 id="log标准库"><code>log</code>标准库</h2>
+<h3 id="配置设置">配置设置</h3>
+<ul>
+<li><code>log.SetPrefix(stirng)</code>：设置前缀</li>
+<li><code>log.Prefix() string</code>：获取前缀</li>
+</ul>
+<h3 id="记录日志">记录日志</h3>
+<ul>
+<li><code>log</code>的封装较为简单，包含以下三类常用方法</li>
+<li><code>log.Print("INFO")</code>：记录信息</li>
+<li><code>log.Panic("PANIC")</code>：记录信息后抛出<code>panic</code></li>
+<li><code>log.Fatal("FATAL)</code>：记录信息后调用<code>os.exit(1)</code></li>
+<li>它们都有对应的<code>ln</code>版本</li>
+</ul>
+<h2 id="zap"><code>zap</code></h2>
+<h3 id="zap配置定义"><code>zap</code>配置定义</h3>
+<ul>
+<li><p><code>zap.Config</code>定义：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;go.uber.org/zap/zapcore&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Config <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// Level is the minimum enabled logging level.</span></span><br><span class="line">	<span class="comment">// 运行时修改会修改全部 logger 的 Level</span></span><br><span class="line">	Level AtomicLevel <span class="string">`json:&quot;level&quot; yaml:&quot;level&quot;`</span></span><br><span class="line">	<span class="comment">// 开发模式, zap 在提供默认配置时会参考该值</span></span><br><span class="line">	<span class="comment">// 调用对应的 NewProductionXxxConfig() / NewDevelopmentXxxConfig()</span></span><br><span class="line">	Development <span class="type">bool</span> <span class="string">`json:&quot;development&quot; yaml:&quot;development&quot;`</span></span><br><span class="line">	<span class="comment">// (默认即可) 默认记录 调用者 所有场景</span></span><br><span class="line">	DisableCaller <span class="type">bool</span> <span class="string">`json:&quot;disableCaller&quot; yaml:&quot;disableCaller&quot;`</span></span><br><span class="line">	<span class="comment">// (默认即可) 默认记录 堆栈 WarnLevel-Development / ErrorLevel-Production</span></span><br><span class="line">	DisableStacktrace <span class="type">bool</span> <span class="string">`json:&quot;disableStacktrace&quot; yaml:&quot;disableStacktrace&quot;`</span></span><br><span class="line">	<span class="comment">// (默认即可) 生产环境下有采样, 用于限流高频日志</span></span><br><span class="line">	Sampling *SamplingConfig <span class="string">`json:&quot;sampling&quot; yaml:&quot;sampling&quot;`</span></span><br><span class="line">	<span class="comment">// 编码 &quot;json&quot; (json风格 建议生产环境) / &quot;console&quot; (控制台风格 建议开发环境)</span></span><br><span class="line">	Encoding <span class="type">string</span> <span class="string">`json:&quot;encoding&quot; yaml:&quot;encoding&quot;`</span></span><br><span class="line">	<span class="comment">// 编码器配置</span></span><br><span class="line">	EncoderConfig zapcore.EncoderConfig <span class="string">`json:&quot;encoderConfig&quot; yaml:&quot;encoderConfig&quot;`</span></span><br><span class="line">	<span class="comment">// 输出路径 &quot;stdout&quot; 表示标准输出 不会自动创建不存在的目录</span></span><br><span class="line">	OutputPaths []<span class="type">string</span> <span class="string">`json:&quot;outputPaths&quot; yaml:&quot;outputPaths&quot;`</span></span><br><span class="line">	<span class="comment">// 错误日志输出路径 &quot;stderr&quot; 表示标准错误流</span></span><br><span class="line">	ErrorOutputPaths []<span class="type">string</span> <span class="string">`json:&quot;errorOutputPaths&quot; yaml:&quot;errorOutputPaths&quot;`</span></span><br><span class="line">	<span class="comment">// 自定义的针对所有日志都默认追加的输出</span></span><br><span class="line">	InitialFields <span class="keyword">map</span>[<span class="type">string</span>]<span class="keyword">interface</span>&#123;&#125; <span class="string">`json:&quot;initialFields&quot; yaml:&quot;initialFields&quot;`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>zapcore.EncoderConfig</code>定义：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;io&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> EncoderConfig <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// Set the keys used for each log entry. If any key is empty, that portion</span></span><br><span class="line">	<span class="comment">// of the entry is omitted.</span></span><br><span class="line">	<span class="comment">// 信息 键</span></span><br><span class="line">	MessageKey <span class="type">string</span> <span class="string">`json:&quot;messageKey&quot; yaml:&quot;messageKey&quot;`</span></span><br><span class="line">	<span class="comment">// 级别 键</span></span><br><span class="line">	LevelKey <span class="type">string</span> <span class="string">`json:&quot;levelKey&quot; yaml:&quot;levelKey&quot;`</span></span><br><span class="line">	<span class="comment">// 时间戳 键</span></span><br><span class="line">	TimeKey <span class="type">string</span> <span class="string">`json:&quot;timeKey&quot; yaml:&quot;timeKey&quot;`</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	NameKey <span class="type">string</span> <span class="string">`json:&quot;nameKey&quot; yaml:&quot;nameKey&quot;`</span></span><br><span class="line">	<span class="comment">// 调用者 键</span></span><br><span class="line">	CallerKey <span class="type">string</span> <span class="string">`json:&quot;callerKey&quot; yaml:&quot;callerKey&quot;`</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	FunctionKey <span class="type">string</span> <span class="string">`json:&quot;functionKey&quot; yaml:&quot;functionKey&quot;`</span></span><br><span class="line">	<span class="comment">// 调用栈 键</span></span><br><span class="line">	StacktraceKey <span class="type">string</span> <span class="string">`json:&quot;stacktraceKey&quot; yaml:&quot;stacktraceKey&quot;`</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	SkipLineEnding <span class="type">bool</span> <span class="string">`json:&quot;skipLineEnding&quot; yaml:&quot;skipLineEnding&quot;`</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	LineEnding <span class="type">string</span> <span class="string">`json:&quot;lineEnding&quot; yaml:&quot;lineEnding&quot;`</span></span><br><span class="line">	<span class="comment">// Configure the primitive representations of common complex types. For</span></span><br><span class="line">	<span class="comment">// example, some users may want all time.Times serialized as floating-point</span></span><br><span class="line">	<span class="comment">// seconds since epoch, while others may prefer ISO8601 strings.</span></span><br><span class="line">	<span class="comment">// 日志级别 编码器</span></span><br><span class="line">	EncodeLevel LevelEncoder <span class="string">`json:&quot;levelEncoder&quot; yaml:&quot;levelEncoder&quot;`</span></span><br><span class="line">	<span class="comment">// 时间戳 编码器</span></span><br><span class="line">	EncodeTime TimeEncoder <span class="string">`json:&quot;timeEncoder&quot; yaml:&quot;timeEncoder&quot;`</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	EncodeDuration DurationEncoder <span class="string">`json:&quot;durationEncoder&quot; yaml:&quot;durationEncoder&quot;`</span></span><br><span class="line">	<span class="comment">// 调用者 编码器</span></span><br><span class="line">	EncodeCaller CallerEncoder <span class="string">`json:&quot;callerEncoder&quot; yaml:&quot;callerEncoder&quot;`</span></span><br><span class="line">	<span class="comment">// Unlike the other primitive type encoders, EncodeName is optional. The</span></span><br><span class="line">	<span class="comment">// zero value falls back to FullNameEncoder.</span></span><br><span class="line">	EncodeName NameEncoder <span class="string">`json:&quot;nameEncoder&quot; yaml:&quot;nameEncoder&quot;`</span></span><br><span class="line">	<span class="comment">// Configure the encoder for interface&#123;&#125; type objects.</span></span><br><span class="line">	<span class="comment">// If not provided, objects are encoded using json.Encoder</span></span><br><span class="line">	NewReflectedEncoder <span class="function"><span class="keyword">func</span><span class="params">(io.Writer)</span></span> ReflectedEncoder <span class="string">`json:&quot;-&quot; yaml:&quot;-&quot;`</span></span><br><span class="line">	<span class="comment">// Configures the field separator used by the console encoder. Defaults to tab.</span></span><br><span class="line">	<span class="comment">// 控制台 不同字段的分隔符 默认为 tab</span></span><br><span class="line">	ConsoleSeparator <span class="type">string</span> <span class="string">`json:&quot;consoleSeparator&quot; yaml:&quot;consoleSeparator&quot;`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="zap默认配置"><code>zap</code>默认配置</h3>
+<ul>
+<li><code>zap.NewProduction() (*zap.Logger, error)</code>：获取生产环境下的默认<code>Logger</code>实例</li>
+<li><code>zap.NewDevelopment() (*zap.Logger, error)</code>：获取开发环境下的默认<code>Logger</code>实例</li>
+<li><code>zap.NewProductionConfig() zap.Config</code>：获取生产环境的默认配置</li>
+<li><code>zap.NewDevelopmentConfig() zap.Config</code>：获取开发环境的默认配置</li>
+</ul>
+<h3 id="自定义配置zapcore">自定义配置(<code>zapcore</code>)</h3>
+<ul>
+<li><p><code>zap</code>的默认配置很多时候十分死板，而<code>zap</code>提供的获取<code>Logger</code>的方法不支持自定义编码器配置与自定义写接口，因此需要使用<code>zapcore</code></p>
+<p>甚至<code>zap</code>提供的默认配置无法通过<code>viper</code>管理</p></li>
+<li><p><code>zapcore.NewProductionEncoderConfig() zapcore.EncoderConfig</code>：获取生产环境的编码器配置，可在此基础上作修改</p></li>
+<li><p><code>zapcore.NewDevelopmentEncoderConfig() zapcore.EncoderConfig</code>：获取开发环境的编码器配置</p></li>
+<li><p><code>zapcore.NewJSONEncoder(EncoderConfig) zapcore.Encoder</code>：获取输出<code>JSON</code>格式的编码器</p></li>
+<li><p><code>zapcore.NewConsoleEncoder(EncoderConfig) zapcore.Encoder</code>：获取输出控制台、更易读日志的编码器</p></li>
+<li><p><code>zapcore.Level</code>：日志级别，实现了<code>zapcore.LevelEnabler</code>接口</p>
+<p><code>zap</code>和<code>zapcore</code>提供了日志级别的快捷枚举：</p>
+<ul>
+<li><code>DebugLevel</code></li>
+<li><code>InfoLevel</code></li>
+<li><code>WarnLevel</code></li>
+<li><code>ErrorLevel</code></li>
+<li><code>DPanicLevel</code></li>
+<li><code>PanicLevel</code></li>
+<li><code>FatalLevel</code></li>
+</ul></li>
+<li><p><code>zapcore.AddSync(w io.Writer) zapcore.WriteSyncer</code>：将一个<code>io.Writer</code>包装成<code>WriteSyncer</code></p></li>
+<li><p><code>zapcore.NewMultiWriteSyncer(ws ...zapcore.WriteSyncer) zapcore.WriteSyncer</code>：将多个<code>WriteSyncer</code>包装成一个<code>WriteSyncer</code>，在写入时会同步写入所有的<code>ws</code>，需要<strong>多路径输出</strong>时使用</p></li>
+<li><p><code>zapcore.NewCore(enc zapcore.Encoder, ws zapcore.WriteSyncer, enab zapcore.LevelEnabler) zapcore.Core</code>：将编码器、写入器、级别限制包装成<code>zapcore.Core</code>，需要<strong>分级别输出</strong>时可以创建多个核心</p></li>
+<li><p><code>zapcore.NewTee(...zapcore.Core) zapcore.Core</code>：将多个核心包装成一个核心，需要<strong>分级别输出</strong>时使用</p></li>
+<li><p><code>zap.New(zapcore.Core, ...zap.Option) *zap.Logger</code>：使用给定的核心创建<code>Logger</code>对象，不会有错误抛出</p></li>
+</ul>
+<h3 id="lumberjack"><code>lumberjack</code></h3>
+<ul>
+<li><p><code>lumberjack</code>只有一个核心用法：以<code>zap</code>作为后端，提供日志轮转功能，包括日志过大分割、日志定时丢弃、日志压缩</p></li>
+<li><p>创建<code>lumberjack.Logger</code>：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">logRotator := &amp;lumberjack.Logger&#123;</span><br><span class="line">  Filename:   <span class="string">&quot;/var/log/myapp/app.log&quot;</span>, <span class="comment">// 日志文件路径</span></span><br><span class="line">  MaxSize:    <span class="number">100</span>,    <span class="comment">// 单位: MB, 单个文件最大尺寸, 超过即分割</span></span><br><span class="line">  MaxBackups: <span class="number">30</span>,     <span class="comment">// 保留的旧日志文件最大数量</span></span><br><span class="line">  MaxAge:     <span class="number">90</span>,     <span class="comment">// 单位: 天, 保留旧日志的最大天数</span></span><br><span class="line">  Compress:   <span class="literal">true</span>,   <span class="comment">// 是否压缩归档的旧日志文件</span></span><br><span class="line">  LocalTime:  <span class="literal">true</span>,   <span class="comment">// 使用本地时间命名旧日志文件 (默认使用 UTC)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>通过<code>zapcore.AddSync(&amp;lumberjack.Logger{...})</code>将其转换为<code>zapcore.WriteSyncer</code></p></li>
+</ul>
+<h3 id="自定义编码器格式">自定义编码器格式</h3>
+<ul>
+<li><code>EncodeTime</code>：<code>type TimeEncoder func(time.Time, zapcore.PrimitiveArrayEncoder)</code></li>
+<li><code>EncodeLevel</code>：<code>type LevelEncoder func(zapcore.Level, zapcore.PrimitiveArrayEncoder)</code></li>
+<li><code>EncodeDuration</code>：<code>type DurationEncoder func(time.Duration, zapcore.PrimitiveArrayEncoder)</code></li>
+<li><code>EncodeCaller</code>：<code>type CallerEncoder func(zapcore.EntryCaller, zapcore.PrimitiveArrayEncoder)</code></li>
+<li><code>EncodeName</code>：<code>type NameEncoder func(string, zapcore.PrimitiveArrayEncoder)</code></li>
+<li>在自定义时，直接调用<code>zapcore.PrimitiveArrayEncoder</code>接口的方法，包含一系列<code>AppendXxx()</code>方法，其中<code>Xxx</code>可以是数值类型和字符串类型</li>
+</ul>
+<h3 id="zap.option"><code>zap.Option</code></h3>
+<ul>
+<li><code>zap.AddCaller()</code>：在日志中添加调用者的文件名和行号</li>
+<li><code>zap.AddCallerSkip(skip int)</code>：设置调用栈信息跳过的层数</li>
+<li><code>zap.AddStacktrace(lvl zapcore.Level)</code>：为指定级别及以上的日志记录堆栈跟踪</li>
+<li><code>zap.Fields(fields ...Field)</code>：向Logger添加固定的上下文字段</li>
+<li><code>zap.Development()</code>：启用开发模式（更易读的输出、禁用采样等）</li>
+<li><code>zap.ErrorOutput(w zapcore.WriteSyncer)</code>：设置内部错误（如编码失败）的输出位置</li>
+<li><code>zap.WrapCore(f func(zapcore.Core) zapcore.Core)</code>：用于包装或替换底层的Core</li>
+<li><code>zap.Hooks(hooks ...func(zapcore.Entry) error)</code>：为每条日志添加钩子函数</li>
+<li><code>zap.IncreaseLevel(lvl zapcore.LevelEnabler)</code>：提高日志记录的最低级别</li>
+<li><code>zap.WithClock(clock zapcore.Clock)</code>：自定义日志时间来源</li>
+<li><code>zap.WithFatalHook(hook zapcore.CheckWriteHook)</code>：为Fatal级别的日志设置钩子</li>
+<li><code>zap.WithPanicHook(hook func(entry zapcore.Entry) error)</code>：为Panic级别的日志设置钩子</li>
+</ul>
+<h3 id="logger使用"><code>Logger</code>使用</h3>
+<ul>
+<li><p><code>Logger</code>本身很简单，对应每种级别有对应的方法（七种级别），<code>Logger</code>的性能较好，方法签名如下：</p>
+<p><code>Xxx(msg string, ...zap.Field)</code>：本条日志的信息是<code>msg</code>，后面附带一系列字段（强类型）</p></li>
+<li><p><code>zap.Field</code>：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	<span class="comment">// UnknownType is the default field type. Attempting to add it to an encoder will panic.</span></span><br><span class="line">	UnknownType FieldType = <span class="literal">iota</span></span><br><span class="line">	<span class="comment">// ArrayMarshalerType indicates that the field carries an ArrayMarshaler.</span></span><br><span class="line">	ArrayMarshalerType</span><br><span class="line">	<span class="comment">// ObjectMarshalerType indicates that the field carries an ObjectMarshaler.</span></span><br><span class="line">	ObjectMarshalerType</span><br><span class="line">	<span class="comment">// BinaryType indicates that the field carries an opaque binary blob.</span></span><br><span class="line">	BinaryType</span><br><span class="line">	<span class="comment">// BoolType indicates that the field carries a bool.</span></span><br><span class="line">	BoolType</span><br><span class="line">	<span class="comment">// ByteStringType indicates that the field carries UTF-8 encoded bytes.</span></span><br><span class="line">	ByteStringType</span><br><span class="line">	<span class="comment">// Complex128Type indicates that the field carries a complex128.</span></span><br><span class="line">	Complex128Type</span><br><span class="line">	<span class="comment">// Complex64Type indicates that the field carries a complex64.</span></span><br><span class="line">	Complex64Type</span><br><span class="line">	<span class="comment">// DurationType indicates that the field carries a time.Duration.</span></span><br><span class="line">	DurationType</span><br><span class="line">	<span class="comment">// Float64Type indicates that the field carries a float64.</span></span><br><span class="line">	Float64Type</span><br><span class="line">	<span class="comment">// Float32Type indicates that the field carries a float32.</span></span><br><span class="line">	Float32Type</span><br><span class="line">	<span class="comment">// Int64Type indicates that the field carries an int64.</span></span><br><span class="line">	Int64Type</span><br><span class="line">	<span class="comment">// Int32Type indicates that the field carries an int32.</span></span><br><span class="line">	Int32Type</span><br><span class="line">	<span class="comment">// Int16Type indicates that the field carries an int16.</span></span><br><span class="line">	Int16Type</span><br><span class="line">	<span class="comment">// Int8Type indicates that the field carries an int8.</span></span><br><span class="line">	Int8Type</span><br><span class="line">	<span class="comment">// StringType indicates that the field carries a string.</span></span><br><span class="line">	StringType</span><br><span class="line">	<span class="comment">// TimeType indicates that the field carries a time.Time that is</span></span><br><span class="line">	<span class="comment">// representable by a UnixNano() stored as an int64.</span></span><br><span class="line">	TimeType</span><br><span class="line">	<span class="comment">// TimeFullType indicates that the field carries a time.Time stored as-is.</span></span><br><span class="line">	TimeFullType</span><br><span class="line">	<span class="comment">// Uint64Type indicates that the field carries a uint64.</span></span><br><span class="line">	Uint64Type</span><br><span class="line">	<span class="comment">// Uint32Type indicates that the field carries a uint32.</span></span><br><span class="line">	Uint32Type</span><br><span class="line">	<span class="comment">// Uint16Type indicates that the field carries a uint16.</span></span><br><span class="line">	Uint16Type</span><br><span class="line">	<span class="comment">// Uint8Type indicates that the field carries a uint8.</span></span><br><span class="line">	Uint8Type</span><br><span class="line">	<span class="comment">// UintptrType indicates that the field carries a uintptr.</span></span><br><span class="line">	UintptrType</span><br><span class="line">	<span class="comment">// ReflectType indicates that the field carries an interface&#123;&#125;, which should</span></span><br><span class="line">	<span class="comment">// be serialized using reflection.</span></span><br><span class="line">	ReflectType</span><br><span class="line">	<span class="comment">// NamespaceType signals the beginning of an isolated namespace. All</span></span><br><span class="line">	<span class="comment">// subsequent fields should be added to the new namespace.</span></span><br><span class="line">	NamespaceType</span><br><span class="line">	<span class="comment">// StringerType indicates that the field carries a fmt.Stringer.</span></span><br><span class="line">	StringerType</span><br><span class="line">	<span class="comment">// ErrorType indicates that the field carries an error.</span></span><br><span class="line">	ErrorType</span><br><span class="line">	<span class="comment">// SkipType indicates that the field is a no-op.</span></span><br><span class="line">	SkipType</span><br><span class="line"></span><br><span class="line">	<span class="comment">// InlineMarshalerType indicates that the field carries an ObjectMarshaler</span></span><br><span class="line">	<span class="comment">// that should be inlined.</span></span><br><span class="line">	InlineMarshalerType</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>每种类型都对应一个方法，<code>Xxx(key string, value Type) zap.Field</code>，需要提供键、对应的强类型的值</p></li>
+<li><p><code>Logger.Sugared() *zap.SugaredLogger</code>：获取一个<strong>性能较差</strong>，但是支持<code>log</code>标准库风格的日志器，即<code>SugaredLogger</code>提供<code>Xxx(string)</code>和<code>Xxxf(string, ...any)</code></p></li>
+</ul>
+<h3 id="例子配置">例子配置</h3>
+<ul>
+<li><p><code>viper</code>配置映射及级别配置：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;go.uber.org/zap/zapcore&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	DebugLevel   = <span class="string">&quot;debug&quot;</span></span><br><span class="line">	InfoLevel    = <span class="string">&quot;info&quot;</span></span><br><span class="line">	FatalLevel   = <span class="string">&quot;fatal&quot;</span></span><br><span class="line">	WarnLevel    = <span class="string">&quot;warn&quot;</span></span><br><span class="line">	ErrorLevel   = <span class="string">&quot;error&quot;</span></span><br><span class="line">	PanicLevel   = <span class="string">&quot;panic&quot;</span></span><br><span class="line">	DefaultLevel = <span class="string">&quot;debug&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> ZapConfig <span class="keyword">struct</span> &#123;</span><br><span class="line">	Level            <span class="type">string</span>         <span class="string">`mapstruct:&quot;level&quot;`</span></span><br><span class="line">	Development      <span class="type">bool</span>           <span class="string">`mapstruct:&quot;development&quot;`</span></span><br><span class="line">	Encoding         <span class="type">string</span>         <span class="string">`mapstruct:&quot;encoding&quot;`</span></span><br><span class="line">	OutputPaths      []<span class="type">string</span>       <span class="string">`mapstruct:&quot;outputPaths&quot;`</span></span><br><span class="line">	ErrorOutputPaths []<span class="type">string</span>       <span class="string">`mapstruct:&quot;errorOutputPaths&quot;`</span></span><br><span class="line">	InitialFields    <span class="keyword">map</span>[<span class="type">string</span>]any <span class="string">`mapstruct:&quot;initialFields&quot;`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">zapLevelEnabler</span><span class="params">(cfg *config.ZapConfig)</span></span> zapcore.LevelEnabler &#123;</span><br><span class="line">	level, ok := levelMap[cfg.Level]</span><br><span class="line">	<span class="keyword">if</span> ok &#123;</span><br><span class="line">		<span class="keyword">return</span> level</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> levelMap[config.DefaultLevel]</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>配置编码器，这里使用的就是默认的</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;go.uber.org/zap&quot;</span></span><br><span class="line">	<span class="string">&quot;go.uber.org/zap/zapcore&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">zapEncoderConfig</span><span class="params">(cfg *config.ZapConfig)</span></span> zapcore.EncoderConfig &#123;</span><br><span class="line">	<span class="keyword">var</span> encoderCfg zapcore.EncoderConfig</span><br><span class="line">	<span class="keyword">if</span> cfg.Development &#123;</span><br><span class="line">		encoderCfg = zap.NewDevelopmentEncoderConfig()</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		encoderCfg = zap.NewProductionEncoderConfig()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> encoderCfg</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">zapEncoder</span><span class="params">(cfg *config.ZapConfig)</span></span> zapcore.Encoder &#123;</span><br><span class="line">	encoderCfg := zapEncoderConfig(cfg)</span><br><span class="line">	<span class="keyword">switch</span> cfg.Encoding &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">&quot;json&quot;</span>:</span><br><span class="line">		<span class="keyword">return</span> zapcore.NewJSONEncoder(encoderCfg)</span><br><span class="line">	<span class="keyword">case</span> <span class="string">&quot;console&quot;</span>:</span><br><span class="line">		<span class="keyword">return</span> zapcore.NewConsoleEncoder(encoderCfg)</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		<span class="keyword">return</span> zapcore.NewConsoleEncoder(encoderCfg)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>WriteSyncer</code>配置：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line">	<span class="string">&quot;strings&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;github.com/natefinch/lumberjack&quot;</span></span><br><span class="line">	<span class="string">&quot;go.uber.org/zap/zapcore&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newWriterSyncer</span><span class="params">(paths []<span class="type">string</span>)</span></span> zapcore.WriteSyncer &#123;</span><br><span class="line">	syncers := <span class="built_in">make</span>([]zapcore.WriteSyncer, <span class="number">0</span>, <span class="built_in">len</span>(paths))</span><br><span class="line">	<span class="keyword">for</span> _, path := <span class="keyword">range</span> paths &#123;</span><br><span class="line">		<span class="keyword">var</span> ws zapcore.WriteSyncer</span><br><span class="line">		<span class="keyword">switch</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> strings.ToLower(path) == <span class="string">&quot;stdout&quot;</span>:</span><br><span class="line">			ws = zapcore.AddSync(os.Stdout)</span><br><span class="line">		<span class="keyword">case</span> strings.ToLower(path) == <span class="string">&quot;stderr&quot;</span>:</span><br><span class="line">			ws = zapcore.AddSync(os.Stderr)</span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			lumberjackLogger := &amp;lumberjack.Logger&#123;</span><br><span class="line">				Filename:   path,</span><br><span class="line">				MaxSize:    <span class="number">100</span>,</span><br><span class="line">				MaxBackups: <span class="number">30</span>,</span><br><span class="line">				MaxAge:     <span class="number">90</span>,</span><br><span class="line">				Compress:   <span class="literal">true</span>,</span><br><span class="line">			&#125;</span><br><span class="line">			ws = zapcore.AddSync(lumberjackLogger)</span><br><span class="line">		&#125;</span><br><span class="line">		syncers = <span class="built_in">append</span>(syncers, ws)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> zapcore.NewMultiWriteSyncer(syncers...)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">zapWriterSyncer</span><span class="params">(cfg *config.ZapConfig)</span></span> (zapcore.WriteSyncer, zapcore.WriteSyncer) &#123;</span><br><span class="line">	<span class="keyword">return</span> newWriterSyncer(cfg.OutputPaths), newWriterSyncer(cfg.ErrorOutputPaths)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>3P Framework</category>
+        <category>Zap</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>log</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Gin: 会话管理</title>
+    <url>/2025/12/30/go-gin-session/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="gin会话管理"><code>Gin</code>会话管理</h1>
+<h2 id="session"><code>session</code></h2>
+<h3 id="注册会话">注册会话</h3>
+<ul>
+<li><p><code>Gin</code>本身不支持会话管理，需要第三方框架<a
+href="https://github.com/gin-contrib/sessions"><code>github.com/gin-contrib/sessions</code></a></p></li>
+<li><p><code>sessions.Store</code>表示一个存储引擎，<code>sesssion</code>的常用存储方式有三种：内存存储、<code>cookie</code>存储、<code>redis</code>存储（还支持<code>MongoDB</code>、<code>GORM</code>和<code>PostgreSQL</code>）</p>
+<p>这三种存储方式的实现在<code>sessions/memstore</code>、<code>sessions/cookie</code>、<code>sessions/redis</code>中，区别和<code>gin</code>没有关系，属于常识：</p>
+<p>内存存储和<code>redis</code>存储都是将会话信息存储在服务端然后使用<code>cookie</code>传输<code>sessionId</code>等会话的元数据，而<code>cookie</code>存储是将会话信息完全由<code>cookie</code>传输并存储在客户端浏览器上</p></li>
+<li><p><code>cookie</code>引擎（通常附带密钥增加安全性）：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">cookie.NewStore(</span><br><span class="line">  []<span class="type">byte</span>(<span class="string">&quot;authentication-key-32-bytes-long&quot;</span>),</span><br><span class="line">  []<span class="type">byte</span>(<span class="string">&quot;encryption-key-32-bytes-long&quot;</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>通常附带两个密钥，第一个会被用于认证密钥（使客户端无法写会话内容），第二个会被用于加密密钥（使客户端无法读会话内容）</p></li>
+<li><p>内存引擎（不支持集群）：<code>memstore.NewStore()</code>，也可以传递密钥，用于保护<code>cookie</code>的元数据</p></li>
+<li><p><code>redis</code>存储（支持集群）：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">redis</span>.<span class="title">NewStore</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function"> size <span class="type">int</span>,</span></span></span><br><span class="line"><span class="params"><span class="function"> network <span class="type">string</span>,</span></span></span><br><span class="line"><span class="params"><span class="function"> address <span class="type">string</span>,</span></span></span><br><span class="line"><span class="params"><span class="function"> username <span class="type">string</span>,</span></span></span><br><span class="line"><span class="params"><span class="function"> password <span class="type">string</span>,</span></span></span><br><span class="line"><span class="params"><span class="function"> keyPairs ...[]<span class="type">byte</span>)</span></span> (redis.Store, <span class="type">error</span>)</span><br></pre></td></tr></table></figure>
+<p>从上至下为连接池大小、传输协议、<code>redis</code>地址、<code>redis</code>用户名、<code>redis</code>密码、<code>keyPairs</code>与上述两种引擎一致，都是为了防止客户端修改和读取</p></li>
+<li><p>通过<code>sessions.Sessions(name string, store sessions.Store) gin.HandlerFunc</code>获取<code>gin</code>的中间件，<code>name</code>就是传输给浏览器的<code>cookie</code>的名字</p></li>
+<li><p><code>Store</code>包含以下可配置项：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;net/http&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;github.com/gorilla/sessions&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">A</span><span class="params">()</span></span> &#123;</span><br><span class="line">	store.Options(sessions.Options&#123;</span><br><span class="line">		Path:   <span class="string">&quot;/&quot;</span>, <span class="comment">// cookie 生效的路径, 只有在请求响应该路径或子路径时才会发送</span></span><br><span class="line">		Domain: <span class="string">&quot;&quot;</span>,  <span class="comment">// cookie 生效的域名, 空表示当前域名</span></span><br><span class="line">		<span class="comment">// MaxAge=0 浏览器关闭即删除</span></span><br><span class="line">		<span class="comment">// MaxAge&lt;0 响应收到后即删除</span></span><br><span class="line">		<span class="comment">// MaxAge&gt;0 指定秒数后即删除</span></span><br><span class="line">		MaxAge:   <span class="number">0</span>,</span><br><span class="line">		Secure:   <span class="literal">false</span>, <span class="comment">// 是否仅允许 https</span></span><br><span class="line">		HttpOnly: <span class="literal">true</span>,  <span class="comment">// 禁止 js 访问 cookie (与加密不同, 这是直接无法读取)</span></span><br><span class="line">		<span class="comment">// 跨站请求是否发送 cookie, 防 CSRF</span></span><br><span class="line">		<span class="comment">// 要么 NoneMode+secure=true 要么 LaxMode</span></span><br><span class="line">		SameSite: http.SameSiteLaxMode,</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="会话api">会话<code>API</code></h3>
+<ul>
+<li><code>sessions.Default(*gin.Context) sessions.Session</code>：获取和当前请求绑定的<code>session</code>实例</li>
+<li><code>Session.Get(key any) any</code>：获取某个键对应的值</li>
+<li><code>Session.Set(key, value any)</code>：设置某个键值对</li>
+<li><code>Session.Delete(key any)</code>：删除某个键</li>
+<li><code>Session.Save() error</code>：执行保存当前<code>session</code>的修改</li>
+</ul>
+<h2 id="jwt"><code>JWT</code></h2>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>3P Framework</category>
+        <category>Gin</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>webapp</tag>
+        <tag>session</tag>
+        <tag>jwt</tag>
+        <tag>cookie</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: 序列化与反序列化</title>
+    <url>/2025/12/30/go-serializing/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="go的序列化"><code>Go</code>的序列化</h1>
+<h2 id="特性">特性</h2>
+<ul>
+<li><code>Go</code>通过结构体标签来支持序列化和反序列化，内置的<code>encoding</code>标准库支持<code>xml/json</code>等配置文件的序列化和反序列化</li>
+<li><code>gopls</code>本身支持<code>json</code>结构体标签的快速生成</li>
+<li><code>Go</code>只会对一个结构体的公有字段进行序列化和反序列化</li>
+</ul>
+<h2 id="api"><code>API</code></h2>
+<ul>
+<li>通过<code>encoding</code>下的子包<code>encoding/xml</code>或<code>encoding/json</code>的<code>API</code></li>
+<li><code>Marshal(v any) ([]byte, error)</code>：将任意值序列化，返回字节数组</li>
+<li><code>MarshalIndent(v any) ([]byte, error)</code>：类似<code>Marshal()</code>但是会提供缩进美化</li>
+<li><code>Unmarshal(data []byte, v any) error</code>：反序列化，<code>v</code>应当是指针</li>
+</ul>
+<h2 id="xml-etree"><code>xml-etree</code></h2>
+<ul>
+<li><a
+href="https://github.com/beevik/etree"><code>beevik/etree</code></a>是用于解析<code>xml</code>的第三方库</li>
+</ul>
+<h2 id="yaml"><code>yaml</code></h2>
+<ul>
+<li>需要借助第三方库<a
+href="https://github.com/go-yaml/yaml"><code>go-yaml/yaml</code></a></li>
+<li>用法与<code>encoding API</code>一致，只不过<code>yaml</code>是严格缩进的，因此没有<code>MarshalIndent()</code></li>
+<li>切片和<code>yaml</code>数组对应</li>
+<li>一个结构体会将<code>yaml</code>的子属性和公有字段对应，只收集匹配成功的，会<strong>忽略无法匹配的项</strong>，若没有配置则<strong>使用零值赋值</strong></li>
+<li>一个<code>map</code>会将所有该字段下的子字段全部收集起来，收集到和值类型相匹配的，如果存在和值类型不匹配的字段则<strong>报错</strong></li>
+</ul>
+<h2 id="protobuf"><code>protobuf</code></h2>
+<ul>
+<li>需要借助第三方库<a
+href="https://github.com/golang/protobuf"><code>github.com/golang/protobuf/proto</code></a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>serializing</tag>
+        <tag>config</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Gin: 中间件</title>
+    <url>/2025/12/28/go-gin-middleware/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="gin的中间件"><code>Gin</code>的中间件</h1>
+<h2 id="中间件的原理">中间件的原理</h2>
+<ul>
+<li><p><code>Gin</code>的中间件提供的很少，但是提供了一个灵活的接口</p></li>
+<li><p>所有中间件只要封装成<code>HandlerFunc</code>，就可以注册为中间件，每个路由对应的处理器也算是一个<code>HandlerFunc</code>，只不过是局部中间件，更多时候是在最后被调用的</p></li>
+<li><p><code>*gin.Context.Next()</code>：这个方法是最核心的方法</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Context)</span></span> Next() &#123;</span><br><span class="line">	c.index++</span><br><span class="line">	<span class="keyword">for</span> c.index &lt; <span class="type">int8</span>(<span class="built_in">len</span>(c.handlers)) &#123;</span><br><span class="line">		c.handlers[c.index](c)</span><br><span class="line">		c.index++</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>gin</code>会把所有中间件统一到<code>ctx</code>对象中，封装为<code>handlers</code>(<code>[]HandlerFunc</code>)和<code>index</code>，它们组成了处理器调用链</p>
+<p><code>index</code>的初值为<code>-1</code>，由路由匹配成功后直接调用<code>Next()</code>，一上来就自增使其指向第一个处理器</p>
+<p>一上来就自增的原因是处理器可以在内部调用<code>Next()</code>，因此需要使其主动指向下一个处理器</p>
+<p>因此一个处理器要么返回后执行<code>for</code>内部的自增，要么在内部调用<code>Next()</code>自增，为了安全，假设每个处理器都调用一次<code>Next()</code>，那么所有处理器的数量不能超过<code>math.MaxInt8 &gt;&gt; 1 = 63</code>，这个条件虽然很难达到，但也在注册函数内被<code>assert</code>检查了</p></li>
+<li><p>注册全局中间件：调用<code>*gin.Engine.Use(...HandlerFunc)</code></p></li>
+<li><p>注册局部中间件：调用路由组<code>*gin.RouterGroup(relativeName string, ...HandlerFunc)</code></p></li>
+<li><p>中间件执行顺序由左到右，由先加入到后加入</p>
+<p>此外全局中间件一定比局部中间件更先执行，所有中间件一定比定义路由时绑定的处理器先执行</p></li>
+</ul>
+<h2 id="错误处理中间件">错误处理中间件</h2>
+<ul>
+<li><p><code>*gin.Context.Error(error) *gin.Error</code>：在处理过程中添加自定义错误，返回<code>*gin.Error</code></p></li>
+<li><p><code>*gin.Error</code>可以继续链式地调用<code>SetType(gin.ErrorType)</code>和<code>SetMeta(data any)</code></p></li>
+<li><p>可以在处理器中使用<code>ctx.Errors</code>获取所有的错误</p></li>
+<li><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;reflect&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;github.com/gin-gonic/gin&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	errorTypes    = <span class="built_in">make</span>(<span class="keyword">map</span>[reflect.Type]<span class="type">string</span>)</span><br><span class="line">	errorHandlers = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]gin.HandlerFunc)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">RegisterErrorType</span><span class="params">(errorCategory <span class="type">string</span>, errorType ...<span class="type">error</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> _, errType := <span class="keyword">range</span> errorType &#123;</span><br><span class="line">		errorTypes[reflect.TypeOf(errType)] = errorCategory</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">RegisterErrorHandler</span><span class="params">(errorCategory <span class="type">string</span>, handler gin.HandlerFunc)</span></span> &#123;</span><br><span class="line">	errorHandlers[errorCategory] = handler</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">ErrorHandlerMiddleware</span><span class="params">()</span></span> gin.HandlerFunc &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line">		c.Next()</span><br><span class="line">		<span class="keyword">if</span> <span class="built_in">len</span>(c.Errors) == <span class="number">0</span> &#123;</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		err := c.Errors[<span class="number">0</span>].Err</span><br><span class="line">		errType := reflect.TypeOf(err)</span><br><span class="line"></span><br><span class="line">		<span class="keyword">var</span> handler gin.HandlerFunc</span><br><span class="line">		<span class="keyword">if</span> t, exists := errorTypes[errType]; exists &#123;</span><br><span class="line">			<span class="keyword">if</span> h, exists := errorHandlers[t]; exists &#123;</span><br><span class="line">				handler = h</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> handler != <span class="literal">nil</span> &#123;</span><br><span class="line">			handler(c)</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			c.JSON(<span class="number">500</span>, gin.H&#123;<span class="string">&quot;error&quot;</span>: <span class="string">&quot;Internal Error&quot;</span>&#125;)</span><br><span class="line">		&#125;</span><br><span class="line">		c.Abort()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>3P Framework</category>
+        <category>Gin</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>middleware</tag>
+        <tag>webapp</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Gin: 响应处理</title>
+    <url>/2025/12/28/go-gin-response/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="gin的响应"><code>Gin</code>的响应</h1>
+<h2 id="响应方法">响应方法</h2>
+<ul>
+<li>以下方法都是<code>*gin.Context</code>的方法：</li>
+<li><code>Status(code int)</code>：设置状态码</li>
+<li><code>Header(key, value string)</code>：设置响应头</li>
+<li>以下方法能够自动设置状态码和<code>Content-Type</code>响应头</li>
+<li><code>String(code int, format string, values ...any)</code>：字符串响应</li>
+<li><code>JSON(code int, obj any)</code>：JSON响应</li>
+<li><code>XML(code int, obj any)</code>：XML响应</li>
+<li><code>YAML(code int, obj any)</code>：YAML响应</li>
+<li><code>ProtoBuf(code int, obj any)</code>：Protobuf响应</li>
+<li><code>HTML(code int, name string, obj any)</code>：HTML模板渲染</li>
+<li><code>File(filepath string)</code>：文件响应（显示文件）</li>
+<li><code>FileFromFS(filepath string, fs http.FileSystem)</code>：文件响应（从<code>fs</code>中获取）</li>
+<li><code>FileAttachment(filepath, filename string)</code>：文件响应（请求浏览器下载文件）</li>
+<li><code>Data(code int, contentType string, data []byte)</code>：原始数据</li>
+<li><code>Stream(step func(w io.Writer) bool)</code>：流式响应</li>
+<li><code>Redirect(code int, location string)</code>：重定向</li>
+<li><code>code</code>通常传递<code>http.StatusXxx</code></li>
+<li><code>obj</code>直接传递待发送的对象即可，针对模板文件它们是传入模板文件的数据，需要事先使用<code>*gin.Engine.LoadHTMLFiles()</code>或<code>LoadHTMLGlob()</code></li>
+</ul>
+<h2 id="上传文件">上传文件</h2>
+<ul>
+<li><code>FormFile(name string) (*multipart.FileHeader, error)</code>：传入文件<code>name</code>，获取</li>
+<li><code>MultipartFrom() (*multipart.Form, error)</code>：获取完整的<code>multipart</code>表单</li>
+<li><code>SaveUploadedFile(file *multipart.FileHeader, dst string, perm ...fs.FileMode) error</code>：保存文件到本地磁盘</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>3P Framework</category>
+        <category>Gin</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>webapp</tag>
+        <tag>net</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Gin: 数据校验</title>
+    <url>/2025/12/27/go-gin-validator/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="validator"><a
+href="https://github.com/go-playground/validator"><code>validator</code></a></h1>
+<h2 id="标签">标签</h2>
+<h3 id="语法介绍">语法介绍</h3>
+<ul>
+<li><p><code>gin</code>框架依赖于<code>validator</code>，<code>validator</code>是基于结构体标签和反射进行数据校验的框架</p></li>
+<li><p><code>validator</code>提供的结构体标签是<code>validate</code>：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span> &#123;</span><br><span class="line">	Pub <span class="type">string</span> <span class="string">`validate:&quot;endwith=abc&quot;`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>validator</code>提供的标签在<code>baked_in.go</code>中</p></li>
+<li><p>标签的不同规则通过<code>,</code>相与，通过<code>|</code>相或，标签的参数通过<code>=</code>传递，<code>oneof</code>标签的不同参数通过空格<code></code>分隔，<code>-</code>表示跳过验证，特殊字符(<code>-</code>、<code>,</code>、<code>=</code>、<code>|</code>)需要<code>unicode</code>转义</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span> &#123;</span><br><span class="line">	Pub    <span class="type">string</span> <span class="string">`validate:&quot;requried,min=3,max=8&quot;`</span></span><br><span class="line">	Enum   <span class="type">string</span> <span class="string">`validate:&quot;required,oneof=admin rdonly user&quot;`</span></span><br><span class="line">	Abc    <span class="type">string</span> <span class="string">`validate:&quot;required,eq=abc0x3d&quot;`</span></span><br><span class="line">	Ignore <span class="type">int</span>    <span class="string">`validate:&quot;-&quot;`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>=</code>为<code>0x3d</code>，<code>,</code>为<code>0x2c</code>，<code>|</code>为<code>0x7c</code>，<code>-</code>为<code>0x2d</code></p></li>
+<li><p>与和或不支持使用括号，只能从左到右校验</p></li>
+</ul>
+<h3 id="通用校验">通用校验</h3>
+<ul>
+<li><code>eq/lt/gt/ne/lte/gte=xxx</code>：等于/小于/大于/不等于/小于等于/大于等于校验</li>
+<li><code>required</code>：强制要求
+<ul>
+<li>数值/布尔值：允许为零值</li>
+<li>结构体/字符串：禁止为空结构体/空串</li>
+<li>不允许为<code>nil</code></li>
+</ul></li>
+<li><code>min/max</code>：限制数值范围</li>
+<li><code>omitempty</code>：可选字段，即可以是<code>nil</code>或零值，如果不为<code>nil</code>则要经过后续的校验</li>
+<li><code>omitnil</code>：可选字段，可以是<code>nil</code>，但如果是零值则要经过后续校验</li>
+<li><code>oneof=xxx1 xxx2</code>：限制可选值范围，可用于枚举</li>
+<li><code>len=xxx</code>：限制长度</li>
+<li><code>required_if=Field xxx</code>：<code>Field</code>为<code>xxx</code>时强制要求</li>
+<li><code>unique</code>：不允许重复</li>
+</ul>
+<h3 id="常用格式校验">常用格式校验</h3>
+<ul>
+<li><code>email</code>：是否为邮箱格式</li>
+<li><code>uuid/uuid4</code>：<code>uuid</code>/<code>uuid4</code>校验</li>
+<li><code>json</code>：<code>json</code>格式校验</li>
+<li><code>datetime=DateTimeFormat</code>：日期时间验证</li>
+<li><code>base64</code>：<code>base64</code>格式校验</li>
+</ul>
+<h3 id="常用字符串校验">常用字符串校验</h3>
+<ul>
+<li><code>alphanum/alpha/numeric</code>：是否只包含数字字母/字母/数字</li>
+<li><code>contains=xxx</code>：是否包含<code>xxx</code>子串</li>
+<li><code>containsany=xxx</code>：是否包含<code>xxx</code>字符集中的任何字符</li>
+<li><code>excludes=xxx</code>：是否不包含<code>xxx</code>子串</li>
+<li><code>excludesall=xxx</code>：是否不包含<code>xxx</code>字符集中的任何字符</li>
+<li><code>startswith=xxx/startsnotwith=xxx</code>：是否以/不以指定文本开始</li>
+<li><code>endswith=xxx/endsnotwith=xxx</code>：是否以/不以指定文本结束</li>
+<li><code>uppercase/lowercase</code>：是否全大写/小写</li>
+</ul>
+<h3 id="常用跨字段校验">常用跨字段校验</h3>
+<ul>
+<li><code>validator</code>比起<code>java</code>的<code>bean validation</code>，还支持跨字段验证</li>
+<li><code>eqfield/nefield=OtherField</code>：本字段和指定字段相等/不相等</li>
+<li><code>gtfield/gtefield/ltfield/ltefield=OtherField</code>：大于/大于等于/小于//小于等于指定字段</li>
+<li><code>csfield</code>系列可以跨结构体校验，但是不常用</li>
+</ul>
+<h3 id="常用网络字段校验">常用网络字段校验</h3>
+<ul>
+<li><code>ip/ipv4/ipv6</code>：通用<code>ip</code>/<code>ipv4</code>/<code>ipv6</code>地址格式校验</li>
+<li><code>url/uri</code>：<code>url</code>/<code>uri</code>格式校验</li>
+<li><code>hostname</code>：主机名校验</li>
+<li><code>fqdn</code>：完全限定域名校验</li>
+</ul>
+<h2 id="验证api">验证<code>API</code></h2>
+<h3 id="创建验证器">创建验证器</h3>
+<ul>
+<li>使用<code>validator.New() *validator.Validate</code>创建验证器</li>
+<li>通常使验证器为单例模式</li>
+</ul>
+<h3 id="结构体校验">结构体校验</h3>
+<ul>
+<li><p><code>*Validate.Struct(any) error</code>：验证传入的结构体的所有<strong>公开字段</strong>，即首字母大写的字段，默认进行递归校验</p></li>
+<li><p>应该传入结构体指针，否则返回<code>InvalidValidationError</code></p></li>
+<li><p>如果验证出错，将返回<code>ValidationErrors</code>，被封装成<code>error</code></p></li>
+<li><p>提取校验错误：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">err := validate.Struct(a)</span><br><span class="line"><span class="keyword">for</span> _, err := <span class="keyword">range</span> err.(validator.ValidationErrors) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中<code>err</code>即<code>validator.FieldError</code></p></li>
+<li><p><code>FieldError</code>提供若干方法：<!--TODO: validator.FieldError--></p></li>
+</ul>
+<h3 id="其它数据结构的校验">其它数据结构的校验</h3>
+<ul>
+<li><p>虽然通常用于结构体，但也可以用于其它数据结构体的校验</p></li>
+<li><p><code>map</code>对象：使用一个和<code>map</code>对象结构相同的<code>map</code>对象，其中每个键对应的值是标签数据</p>
+<p>通过<code>*Validate.ValidateMap(data, rules) map[string]any</code>校验，返回错误<code>map</code>，每个键对应一个<code>FieldError</code></p></li>
+<li><p>切片：通过<code>*Validate.Var(any, tag string)</code>校验，从左到右维度下降(切片本身到切片的每个元素)，通过<code>dive</code>标签划分不同的维度</p>
+<p>多维切片道理类似，通过<code>dive</code>标签划分不同维度</p></li>
+<li><p>一般变量：同样通过<code>Var()</code>进行验证</p></li>
+</ul>
+<h2 id="自定义标签">自定义标签</h2>
+<h3 id="自定义别名">自定义别名</h3>
+<ul>
+<li><code>*Validate.RegisterAlias(alias, tag string)</code>：将一个<code>tag</code>命名为<code>alias</code>，则验证时会直接展开成<code>tag</code></li>
+</ul>
+<h3 id="自定义验证函数">自定义验证函数</h3>
+<ul>
+<li><code>RegisterValidation(tag string, fn Func, callValidationEvenIfNull ...bool) error</code>：通过注册函数注册</li>
+<li><code>Func</code>是一个函数，签名为<code>func(fl FieldLevel) bool</code>，其中<code>FieldLevel</code>接口是一系列返回<code>reflect.Value</code>的快捷函数，最常用的是<code>Filed()</code>和<code>Param()</code>，表示获取当前字段的值和标签参数</li>
+<li><code>fn</code>返回<code>true</code>表示校验成功</li>
+</ul>
+<h2 id="与gin的集成">与<code>Gin</code>的集成</h2>
+<ul>
+<li>在<code>gin</code>中，标签使用<code>binding</code>而不是<code>validate</code></li>
+<li>在<code>gin</code>中，不需要显式创建验证器和显式调用验证方法，所有校验错误会在解析数据、绑定数据失败时返回<code>error</code></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>3P Framework</category>
+        <category>Gin</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>webapp</tag>
+        <tag>validation</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Gin: 路由</title>
+    <url>/2025/12/27/go-gin-router/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="gin路由"><a
+href="https://github.com/gin-gonic/gin"><code>Gin</code></a>路由</h1>
+<h2 id="httprouter"><code>httprouter</code></h2>
+<h3 id="特点">特点</h3>
+<ul>
+<li><code>Gin</code>的路由基于<code>julienschmidt/httprouter</code>，是一个轻量级的路由组建（总共三个文件一千余行代码）</li>
+<li><code>httprouter</code>只提供路由功能，标准库中的<code>HandleFunc()</code>依赖<code>ServeMux</code>来路由，而<code>ServeMux</code>针对前缀匹配采用遍历的方式匹配，效率较差</li>
+<li><code>httprouter</code>提供：请求方法和路径分离，路由算法优化（基于基数树）因此一次路由极快，路径模糊匹配，路径参数捕获</li>
+<li>那么<code>httprouter.Router</code>就可以作为一个前端控制器直接传递给<code>http.ListenAndServe(path, handler)</code>了</li>
+</ul>
+<h3 id="api"><code>API</code></h3>
+<ul>
+<li><code>httprouter.New()</code>：获取路由器对象</li>
+<li><code>*httprouter.Router</code>提供一系列方法绑定路由（仅仅处理路由）
+<ul>
+<li><code>Handle(method, path string, handle Handle)</code>：将方法、路径绑定到处理器，其中<code>handle</code>为<code>httprouter.Handle</code></li>
+<li><code>GET/POST/PUT/DELETE/PATCH/OPTIONS/HEAD(path string, handle Handle)</code>：<code>Handle()</code>的快捷方法</li>
+<li><code>Handler()/HandlerFunc()</code>：<code>net/http</code>的适配器</li>
+</ul></li>
+<li>路径参数捕获：路径中使用<code>:</code>可以捕获，例如<code>/users/:uid</code>，将不包含路径分隔符的路径参数捕获并赋值给<code>uid</code>
+<ul>
+<li>使用<code>httprouter.Handle</code>：<code>Handle</code>方法的签名就是<code>func(http.ResponseWriter, *http.Request, Params)</code>，直接使用<code>Params</code>参数来访问</li>
+<li>使用<code>http</code>的处理器<code>API</code>：则适配器会将参数挂到<code>*http.Request.Context()</code>中，通过<code>httprouter.ParamsFromContext(Context)</code>获取<code>Params</code>对象</li>
+</ul></li>
+<li>还可以使用<code>*</code>捕获包含路径分隔符的路径参数，因此它们只能放在最后，例如<code>/*userinfo</code></li>
+<li>当模糊匹配和精确匹配发生冲突时，按精确匹配大于<code>:</code>大于<code>*</code>的顺序进行匹配</li>
+<li><code>Params</code>提供<code>ByName(string)</code>获取键对应的值</li>
+</ul>
+<h2 id="gin的参数解析"><code>Gin</code>的参数解析</h2>
+<ul>
+<li><code>gin.Default(...OptionFunc) *Engine</code>：获取一个<code>*gin.Engine</code>，默认配置即可，可以通过选项模式修改配置</li>
+<li><code>Gin</code>支持路由参数，和<code>httprouter</code>的使用方法类似
+<ul>
+<li><p><code>*gin.Engine</code>对象提供和<code>*httprouter.Router</code>类似的方法：<code>Handle()/GET()/...</code></p></li>
+<li><p>路径匹配规则类似：精确匹配、<code>:</code>匹配、<code>*</code>匹配</p></li>
+<li><p>区别在于处理器函数的类型是<code>HandlerFunc</code>：<code>func(*gin.Context)</code></p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(http.ResponseWriter, *http.Request, Params)</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(*gin.Context)</span></span></span><br></pre></td></tr></table></figure>
+<p>将参数替换成了上下文</p></li>
+<li><p>因此获取参数也变成了：<code>*gin.Context.Param(string)</code></p></li>
+</ul></li>
+<li><code>Gin</code>还支持捕获<code>URL</code>参数：
+<ul>
+<li><code>*gin.Context.Query(string)</code>：获取<code>GET</code>参数的值，若无返回空</li>
+<li><code>*gin.Context.DefaultQuery(string, string)</code>：允许自定义默认值</li>
+</ul></li>
+<li><code>Gin</code>还支持捕获请求体参数
+<ul>
+<li><code>*gin.Context.PostForm(string)</code>：可以解析表单参数<code>application/x-www-form-urlencoded</code>与<code>multipart/form-data</code></li>
+<li><code>*gin.Context.ShouldBind(any)</code>：自动选择解析器，并赋值给传入的参数，因此传入的参数应该是指针，不会进行错误处理</li>
+<li><code>*gin.Context.Bind(any)</code>：是对<code>ShouldBind()</code>的封装，但如果参数解析错误则会自动返回<code>400</code>错误</li>
+<li><code>*gin.Context.MustBindWith(any, binding.Binding)</code>：指定解析器，和<code>Bind()</code>一样会自动返回<code>400</code>错误</li>
+<li><code>BindJSON()/BindQuery()/BindYAML()/BindXML()</code>等：<code>MustBindWith()</code>的快捷函数</li>
+</ul></li>
+<li>对于<code>JSON</code>、<code>XML</code>、<code>ProtoBuf</code>等数据，<code>ShouldBind()</code>只能调用一次，需要使用<code>ShouldBindBodyWith()</code>方法</li>
+</ul>
+<h2 id="分组路由">分组路由</h2>
+<ul>
+<li><p><code>Gin</code>提供<code>*gin.Engine.Group(relativePath string, handlers ...HandlerFunc) *RouterGroup</code>方法分组</p></li>
+<li><p><code>relativePath</code>的捕获语法与<code>httprouter</code>一致，相当于分组所表示的前缀</p>
+<p>可以表示相对路径（即开头不带<code>/</code>），则相对于<code>Engine</code>等价于相对于根路径，相对于<code>RouterGroup</code>等价于相对于路由组的路径</p></li>
+<li><p><code>handlers</code>会在子路由处理器执行之前执行，它们不是<code>relativePath</code>对应的处理器，如果需要则应该在分组内绑定一个<code>""</code>路由</p></li>
+<li><p><code>*RouterGroup</code>的方法和<code>*Engine</code>注册路由类似，此外它本身也可以注册新的路由组</p></li>
+<li><p>为了规范，在注册路由组下的路由时，通常用<code>{}</code>括住：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">g := e.Group(<span class="string">&quot;v1&quot;</span>)</span><br><span class="line">&#123;</span><br><span class="line"> g.GET(<span class="string">&quot;/xxx&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context)</span></span> &#123;</span><br><span class="line"> &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="错误处理器">错误处理器</h2>
+<ul>
+<li>针对<code>404</code>路由响应（没有对应的路由），可以自定义处理器：<code>*gin.Engine.NoRoute(HandlerFunc)</code></li>
+<li>针对<code>405</code>路由响应（有对应的路由但是没有匹配的请求方法），可以使用<code>*gin.Engine.NoMethod(HandlerFunc)</code></li>
+<li><code>gin</code>本身没有十分完整的捕获错误、统一处理，不像<code>spring-mvc</code>的<code>@ControllerAdvice</code>，但是可以通过中间件实现</li>
+<li>但是可以使用中间件，<code>gin</code>的中间件引入非常灵活，扩展性很高，完全可以实现类似统一错误处理器的效果</li>
+</ul>
+<h2 id="cors中间件"><code>CORS</code>中间件</h2>
+<ul>
+<li><p>官方提供了<code>cors</code>的中间件<a
+href="https://github.com/gin-contrib/cors"><code>github.com/gin-contrib/cors</code></a></p></li>
+<li><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">cors.New(cors.Config&#123;</span><br><span class="line"> <span class="keyword">type</span> Config <span class="keyword">struct</span> &#123;</span><br><span class="line">  AllowAllOrigins <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// AllowOrigins is a list of origins a cross-domain request can be executed from.</span></span><br><span class="line">  <span class="comment">// If the special &quot;*&quot; value is present in the list, all origins will be allowed.</span></span><br><span class="line">  <span class="comment">// Default value is []</span></span><br><span class="line">  AllowOrigins []<span class="type">string</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// AllowOriginFunc is a custom function to validate the origin. It takes the origin</span></span><br><span class="line">  <span class="comment">// as an argument and returns true if allowed or false otherwise. If this option is</span></span><br><span class="line">  <span class="comment">// set, the content of AllowOrigins is ignored.</span></span><br><span class="line">  AllowOriginFunc <span class="function"><span class="keyword">func</span><span class="params">(origin <span class="type">string</span>)</span></span> <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Same as AllowOriginFunc except also receives the full request context.</span></span><br><span class="line">  <span class="comment">// This function should use the context as a read only source and not</span></span><br><span class="line">  <span class="comment">// have any side effects on the request, such as aborting or injecting</span></span><br><span class="line">  <span class="comment">// values on the request.</span></span><br><span class="line">  AllowOriginWithContextFunc <span class="function"><span class="keyword">func</span><span class="params">(c *gin.Context, origin <span class="type">string</span>)</span></span> <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// AllowMethods is a list of methods the client is allowed to use with</span></span><br><span class="line">  <span class="comment">// cross-domain requests. Default value is simple methods (GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS)</span></span><br><span class="line">  AllowMethods []<span class="type">string</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// AllowPrivateNetwork indicates whether the response should include allow private network header</span></span><br><span class="line">  AllowPrivateNetwork <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// AllowHeaders is list of non simple headers the client is allowed to use with</span></span><br><span class="line">  <span class="comment">// cross-domain requests.</span></span><br><span class="line">  AllowHeaders []<span class="type">string</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// AllowCredentials indicates whether the request can include user credentials like</span></span><br><span class="line">  <span class="comment">// cookies, HTTP authentication or client side SSL certificates.</span></span><br><span class="line">  AllowCredentials <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// ExposeHeaders indicates which headers are safe to expose to the API of a CORS</span></span><br><span class="line">  <span class="comment">// API specification</span></span><br><span class="line">  ExposeHeaders []<span class="type">string</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// MaxAge indicates how long (with second-precision) the results of a preflight request</span></span><br><span class="line">  <span class="comment">// can be cached</span></span><br><span class="line">  MaxAge time.Duration</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Allows to add origins like http://some-domain/*, https://api.* or http://some.*.subdomain.com</span></span><br><span class="line">  AllowWildcard <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Allows usage of popular browser extensions schemas</span></span><br><span class="line">  AllowBrowserExtensions <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Allows to add custom schema like tauri://</span></span><br><span class="line">  CustomSchemas []<span class="type">string</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Allows usage of WebSocket protocol</span></span><br><span class="line">  AllowWebSockets <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Allows usage of file:// schema (dangerous!) use it only when you 100% sure it&#x27;s needed</span></span><br><span class="line">  AllowFiles <span class="type">bool</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Allows to pass custom OPTIONS response status code for old browsers / clients</span></span><br><span class="line">  OptionsResponseStatusCode <span class="type">int</span></span><br><span class="line"> &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>常用的配置项和一般的网页应用一样：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;github.com/gin-contrib/cors&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">A</span><span class="params">()</span></span> &#123;</span><br><span class="line">	cors.New(cors.Config&#123;</span><br><span class="line">		AllowOrigins: []<span class="type">string</span>&#123;<span class="string">&quot;http://localhost:8000&quot;</span>&#125;,</span><br><span class="line">		AllowMethods: []<span class="type">string</span>&#123;<span class="string">&quot;*&quot;</span>&#125;,</span><br><span class="line">		<span class="comment">// 允许客户端发送的请求头</span></span><br><span class="line">		AllowHeaders: []<span class="type">string</span>&#123;</span><br><span class="line">			<span class="string">&quot;Origin&quot;</span>,</span><br><span class="line">			<span class="string">&quot;X-Requested-With&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Content-Type&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Accept&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Authorization&quot;</span>,</span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="comment">// 允许客户端读取的响应头</span></span><br><span class="line">		ExposeHeaders: []<span class="type">string</span>&#123;</span><br><span class="line">			<span class="string">&quot;Content-Length&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Access-Control-Allow-Origin&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Access-Control-Allow-Headers&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Cache-Control&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Content-Language&quot;</span>,</span><br><span class="line">			<span class="string">&quot;Content-Type&quot;</span>,</span><br><span class="line">		&#125;,</span><br><span class="line">		<span class="comment">// 允许携带 cookie</span></span><br><span class="line">		AllowCredentials: <span class="literal">true</span>,</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="日志重定向">日志重定向</h2>
+<ul>
+<li><p><code>gin</code>本身直接使用<code>Stdout</code>和<code>Stderr</code>，如果需要集成<code>zap</code>等，直接替换掉默认的日志记录器即可：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">gin.DefaultWriter = sugar.Writer()</span><br><span class="line">gin.DefaultErrorWriter = sugar.Writer()</span><br></pre></td></tr></table></figure></li>
+<li><p>如果不想使用<code>zap</code>的<code>sugar</code>，可以手动实现一个适配器</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> zapWriter <span class="keyword">struct</span> &#123;</span><br><span class="line"> logger *zap.Logger</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(w *zapWriter)</span></span> Write(p []<span class="type">byte</span>) (n <span class="type">int</span>, err <span class="type">error</span>) &#123;</span><br><span class="line"> w.logger.Info(<span class="type">string</span>(p))</span><br><span class="line"> <span class="keyword">return</span> <span class="built_in">len</span>(p), <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gin.DefaultWriter = &amp;zapWriter&#123; logger:logger &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>3P Framework</category>
+        <category>Gin</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>webapp</tag>
+        <tag>net</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: Viper配置管理</title>
+    <url>/2025/12/27/go-viper/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="viper配置管理"><code>Viper</code>配置管理</h1>
+<h2 id="配置优先级">配置优先级</h2>
+<ul>
+<li><code>Viper.Set()</code>设置的值</li>
+<li>命令行中传入的参数</li>
+<li>环境变量</li>
+<li>配置文件</li>
+<li>键值存储</li>
+<li><code>Viper.SetDefault()</code>设置的值</li>
+</ul>
+<h2 id="读取配置">读取配置</h2>
+<h3 id="从文件读取">从文件读取</h3>
+<ul>
+<li><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.SetConfigName(<span class="string">&quot;config&quot;</span>)</span><br><span class="line">viper.SetConfigType(<span class="string">&quot;yaml&quot;</span>)</span><br><span class="line">viper.AddConfigPath(<span class="string">&quot;/etc/appname/&quot;</span>)</span><br><span class="line">viper.AddConfigPath(<span class="string">&quot;$HOME/.appname&quot;</span>)</span><br><span class="line">viper.AddConfigPath(<span class="string">&quot;.&quot;</span>)</span><br><span class="line">err := viper.ReadInConfig()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">  <span class="built_in">panic</span>(fmt.Errorf(<span class="string">&quot;fatal error config file%w&quot;</span>, err))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><code>SetConfigName()</code>：设置配置文件名，若不包含扩展名，需要设置<code>SetConfigType()</code></li>
+<li><code>SetConfigType()</code>：设置文件扩展名</li>
+<li><code>AddConfigPath()</code>：设置配置文件搜索路径，先加入的优先级较低，支持使用环境变量</li>
+<li><code>ReadInConfig() error</code>：搜索并读取配置</li>
+</ul>
+<h3 id="设置默认值">设置默认值</h3>
+<ul>
+<li><code>SetDefault(k, v)</code></li>
+</ul>
+<h3 id="访问配置">访问配置</h3>
+<ul>
+<li><p><code>Get(key string) any</code></p></li>
+<li><p><code>GetBool(key string) bool</code></p></li>
+<li><p><code>GetFloat64(key string) float64</code></p></li>
+<li><p><code>GetInt(key string) int</code></p></li>
+<li><p><code>GetIntSlice(key string) []int</code></p></li>
+<li><p><code>GetString(key string) string</code></p></li>
+<li><p><code>GetStringMap(key string) map[string]any</code></p></li>
+<li><p><code>GetStringMapString(key string) map[string]string</code></p></li>
+<li><p><code>GetStringSlice(key string) []string</code></p></li>
+<li><p><code>GetTime(key string) time.Time</code></p></li>
+<li><p><code>GetDuration(key string) time.Duration</code></p></li>
+<li><p><code>IsSet(key string) bool</code></p></li>
+<li><p><code>AllSettings() map[string]any</code></p></li>
+<li><p>键的构造：<code>viper</code>对大小写敏感，通常使用<code>.</code>来表示嵌套的子配置，如果存在环境变量，则会被隐式地替换为大写字母和<code>_</code>分隔</p>
+<p>例如<code>default.filepath</code>会先检查<code>DEFAULT_FILEPATH</code>，然后检查配置文件中<code>default</code>字段的子字段<code>filepath</code></p></li>
+</ul>
+<h3 id="反序列化">反序列化</h3>
+<ul>
+<li><p><code>Unmarshal(rawVal any) error</code>：传入一个指针，将配置反序列化给该指针</p></li>
+<li><p><code>UnmarshalKey(key string, rawVal any) error</code>：仅反序列化某个键的配置</p></li>
+<li><p>针对第一种反序列化，基本上都是传递一个匹配的结构体的指针，通常显式地指定<code>mapstruct</code>标签</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> Conf <span class="keyword">struct</span> &#123;</span><br><span class="line">	FilePath <span class="type">string</span> <span class="string">`mapstruct:&quot;file_path&quot;`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="监控配置变化与动态读取">监控配置变化与动态读取</h2>
+<ul>
+<li><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">viper.OnConfigChane(<span class="function"><span class="keyword">func</span><span class="params">(e fsnotify.Event)</span></span> &#123;</span><br><span class="line">  <span class="comment">// doSth</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 或</span></span><br><span class="line">viper.WatchConfig()</span><br></pre></td></tr></table></figure></li>
+<li><code>AutomaticEnv()</code>：</li>
+<li>开发阶段常用</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>3P Framework</category>
+        <category>Viper</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>webapp</tag>
+        <tag>config</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: 网络编程基础</title>
+    <url>/2025/12/25/go-netprog/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="net"><code>net</code></h1>
+<h2 id="nethttp"><code>net/http</code></h2>
+<h3 id="服务端">服务端</h3>
+<ul>
+<li><p><code>http.Server</code>结构体的常用配置项：</p>
+<ul>
+<li><code>Addr</code>：监听端口</li>
+<li><code>Handler</code>：请求处理器</li>
+<li><code>XXXTimeout</code>：一些超时控制</li>
+</ul></li>
+<li><p><code>http.ListenAndServe(addr string, handler Handler) error</code>：启动一个服务器，如传入<code>(":8000", nil)</code></p>
+<p>或调用<code>http.Server.ListenAndServe()</code>方法</p></li>
+<li><p>处理器实现：<code>Handler</code>接口包含<code>ServeHTTP(ResponseWriter, *Request)</code>方法，可以针对请求进行不同的写入</p></li>
+<li><p><code>http.Handle(pattern string, handler Handler)</code>：将处理器绑定到<code>pattern</code>路径上路由</p></li>
+<li><p><code>http.HandleFunc(pattern string, handler func(ResponseWriter, *Request))</code>：可以直接传入一个匿名函数，内部通过适配器转换成一个<code>Handler</code>对象</p></li>
+</ul>
+<h3 id="反向代理">反向代理</h3>
+<h3 id="客户端">客户端</h3>
+<ul>
+<li><code>http.Client</code>结构体的可配置项：
+<ul>
+<li><code>Transport RoundTripper</code>：连接池配置</li>
+<li><code>CheckRedirect func(req *Request, via []*Request) error</code>：重定向控制函数</li>
+<li><code>Jar CookieJar</code>：<code>cookie</code>配置</li>
+<li><code>Timeout time.Duration</code>：超时配置</li>
+</ul></li>
+</ul>
+<h3 id="独立请求">独立请求</h3>
+<ul>
+<li><code>Get(url string) (resp *Response, err error)</code>：发起<code>get</code>请求</li>
+<li><code>Post(url, contentType string, body io.Reader) (resp *Response, err error)</code>：发起<code>post</code>请求</li>
+<li><code>Response</code>结构体的常用字段：
+<ul>
+<li><code>StatusCode</code>：状态码</li>
+<li><code>Header</code>：响应头，是<code>map[string][]string</code></li>
+<li><code>Body</code>：响应体，是<code>io.ReadCloser</code>，需要<code>Close()</code>，只能读一次</li>
+</ul></li>
+<li><code>Response</code>的常用方法：
+<ul>
+<li><code>Cookies() []*Cookie</code>：提取<code>Header</code>中的<code>Cookie</code></li>
+</ul></li>
+<li><code>http.StatusXXX</code>：状态码常量</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>webapp</tag>
+        <tag>net</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: 并发编程</title>
+    <url>/2025/12/25/go-concurrent/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="并发">并发</h1>
+<h2 id="协程">协程</h2>
+<h3 id="特点">特点</h3>
+<ul>
+<li><code>Go</code>的并发支持是天生的，其中协程在<code>Go</code>中是十分简洁而高效的</li>
+<li>其他语言如<code>Rust</code>、<code>C#</code>、<code>Kotlin</code>、<code>Lua</code>都支持协程，协程是用户级线程，上下文开销比<code>OS</code>级线程还要小，这种轻量级的线程却能完成十分复杂的任务</li>
+</ul>
+<h3 id="启动协程">启动协程</h3>
+<ul>
+<li><p>启动一个<code>coroutine</code>十分简单，只需要使用<code>go</code>关键字后跟一个函数调用即可：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">A</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		fmt.Print(<span class="string">&quot;Hello world!&quot;</span>)</span><br><span class="line">	&#125;()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>go</code>协程允许函数调用带返回值，但不允许后跟有返回值的内置函数，如<code>len()/make()</code>等</p></li>
+<li><p>就像<code>java</code>的线程需要<code>join()</code>一样，单独声明<code>goroutine</code>是无效的，因为启动协程需要时间，而主协程在这之前已经退出了，因此需要通信来协调父子协程和同级协程</p></li>
+</ul>
+<h3 id="管道">管道</h3>
+<ul>
+<li><p>传统协程或线程通过共享内存来通信，而<code>Go</code>的声明是：<a
+href="https://go.dev/blog/codelab-share">通过通信来共享内存</a></p>
+<p>传统线程模型中，多个线程通过锁来防止对同一份共享内存的操作发生冲突</p>
+<p><code>Go</code>的管道模型中，多个协程通过管道来通信，而管道本身不需要开发者通过锁手动管理</p>
+<p>这其实是一句俏皮话，在传统模型中通信是目的，共享内存与锁是实现方法，而<code>Go</code>将共享内存和加解锁的过程封装成了<strong>管道原语</strong>，用更容易理解的话说：使用通信(共享内存的封装)来<strong>代替</strong>共享内存这种手段</p></li>
+<li><p><code>chan</code>类型用于在不同协程之间通信，可以通过<code>make()</code>创建：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="built_in">make</span>(chanType, bufsize)</span><br></pre></td></tr></table></figure>
+<p>如之前所说，分为<code>chan/&lt;-chan/chan&lt;-</code>三种管道类型，<code>bufsize</code>是管道的缓冲大小</p></li>
+<li><p>使用内置函数<code>close(chan&lt;-)</code>关闭一个管道，也可以使用<code>defer</code>延迟</p>
+<p><strong>写协程一方</strong>一定要记得(也应该由这一方)<code>close()</code>，否则读协程可能会阻塞地等待写协程写入数据，但写协程已经不再使用写管道或已经结束了</p>
+<p>管道关闭后，读协程可以继续读取管道，但如果<strong>不再有元素，也会立刻返回</strong>，不过返回的标志位是<code>false</code></p></li>
+<li><p>管道操作：通过<code>data, fin := &lt;-chanObj</code>读取管道，通过<code>chanObj &lt;- data</code>写入管道</p></li>
+<li><p>管道阻塞：</p>
+<ul>
+<li>管道是一个阻塞队列，管道的操作是同步的，即内部封装决定了同一时刻只有一个协程能够读取或写入管道，且读和写互斥</li>
+<li>无缓冲管道：缓冲区长度为零，一个协程向管道写入后必须由另一个协程读取这个管道，写协程才能继续运行，否则会阻塞</li>
+<li>有缓冲管道：写协程在写入满管道会阻塞、读协程在读取空管道会阻塞，其它情况可以继续运行</li>
+<li><code>nil</code>管道：无论写入还是读取都会导致协程阻塞</li>
+</ul></li>
+<li><p>管道<code>panic</code>：</p>
+<ul>
+<li>关闭一个<code>nil</code>管道</li>
+<li>向已关闭管道写入</li>
+<li>关闭已关闭的管道</li>
+</ul></li>
+<li><p>管道传递的是值本身，因此针对大对象应该使用指针，实现类似共享内存的效果，针对引用类型的对象，本来就是传递指针似的</p>
+<p>编译器不会检查在写入后修改原变量的行为，如果写入指针或引用类型对象，则写协程不应该对原变量继续修改，否则会造成丢失修改</p>
+<p>一个协程最好只在写入一个变量之前修改变量，读取一个元素后所有权转移给读协程</p></li>
+<li><p><code>len()</code>与<code>cap()</code>可以作用于管道查询缓冲区的元素个数和空间大小</p></li>
+<li><p>单向管道通常用于函数签名和函数返回值的类型限制，双向管道最为常用，双向管道也可以隐式地转换成单向管道</p></li>
+<li><p>可读管道可以使用<code>for range</code>语法糖读取</p></li>
+</ul>
+<h3
+id="等待其它协程sync.waitgroup">等待其它协程(<code>sync.WaitGroup</code>)</h3>
+<ul>
+<li><code>WaitGroup</code>用于等待一组协程</li>
+<li><code>WaitGroup</code>的实现是计数器加信号量，它是一个结构体所以零值是可用的，不需要自己构造，直接声明就能使用下面的方法</li>
+<li><code>Add(delta int)</code>：指定要等待的协程的个数，即初始化计数器</li>
+<li><code>Done()</code>：调用该方法的协程执行完毕，即计数器减一</li>
+<li><code>Wait()</code>：调用该方法的协程需要等待子协程执行完毕，即通过信号量等待计数器减为零</li>
+</ul>
+<h3 id="上下文context.context">上下文(<code>context.Context</code>)</h3>
+<ul>
+<li><code>Context</code>是一个接口，有更强的协程控制能力
+<ul>
+<li><code>Deadline() (deadline time.Time, ok bool)</code>：获取上下文应该取消的时间，若<code>ok</code>为<code>false</code>则没有<code>ddl</code></li>
+<li><code>Done() &lt;-chan struct{}</code>：获取一个只读通道，若上下文取消时这个只读通道就会被关闭，部分实现中不支持它的返回值是<code>nil</code></li>
+<li><code>Err() error</code>：表示上下文取消的原因，上下文未关闭时返回<code>nil</code></li>
+<li><code>Value(key any) any</code>：返回上下文中<code>key</code>对应的值，不存在则返回<code>nil</code></li>
+</ul></li>
+<li>上下文是不可变对象，因此自然是并发安全的</li>
+<li><code>context</code>标准库提供了若干实现：<code>emptyCtx/cancelCtx/timerCtx/valueCtx</code>
+<ul>
+<li><p><code>context.Background()</code>：获取一个<code>emptyCtx</code></p></li>
+<li><p><code>context.TODO()</code>：获取另一个预先声明的<code>emptyCtx</code></p></li>
+<li><p><code>emptyCtx</code>的方法均返回零值，通常作为一个无法被取消的最顶层的上下文，由于不同上下文实例的内存理应不同(方便调试)，<code>emptyCtx</code>的底层类型是<code>int</code></p>
+<p>使用<code>Background()</code>作为默认的根上下文，从这个空上下文开始派生子上下文</p>
+<p>使用<code>TODO()</code>作为占位符，当需要派生子上下文，但是不知道应该放置什么类型的上下文时使用<code>TODO</code></p></li>
+<li><p><code>context.WithValue(parent Context, key, value any) Context</code>：基于<code>parent</code>派生一个<code>valueCtx</code>，只额外实现了<code>Value()</code>方法，会向上查找键对应的值</p></li>
+<li><p><code>context.WithCancel(parent Context) (ctx Context, cancel CancelFunc)</code>：可取消的上下文，执行<code>cancel()</code>后，其下的所有上下文（因为基于自己）都会被取消</p>
+<p>实现很简单，在创建时向上查找可取消的上下文，如果不存在则自己创建一个协程等待取消信号，就能实现当父上下文取消时所有子上下文都递归取消</p>
+<p>执行<code>cancel()</code>后，所有子上下文被关闭，<code>&lt;-Done()</code>通道发出关闭事件，可以通过<code>select</code>检测</p></li>
+<li><p><code>context.WithTimeout(parent Context, time.Duration) (Context, CancelFunc)</code>：与<code>cancelCtx</code>类似，但是额外地实现了<code>Deadline()</code>，即使不手动取消，超时后也会取消</p></li>
+<li><p><code>context.WithDeadline(Context, time.Time) (Context, CancelFunc)</code>：与上面的区别是指定的是具体的时刻而不是时间间隔</p></li>
+<li><p>可取消的上下文可以通过<code>context.WithXxxCause()</code>获取一个能传递<code>error</code>的<code>cancel()</code>函数</p></li>
+</ul></li>
+</ul>
+<h2 id="select语句"><code>select</code>语句</h2>
+<ul>
+<li><p><code>select</code>语句用于<code>IO</code>多路复用</p></li>
+<li><p><code>select</code>类似<code>switch</code>语句，包含<code>case</code>和<code>default</code>子句，但是<code>case</code>检测的是一个管道是否有返回值(不是是否关闭)：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> &lt;-chA: <span class="comment">// 可以配合 管道关闭</span></span><br><span class="line">	<span class="comment">// doSth</span></span><br><span class="line"><span class="keyword">case</span> _, ok := &lt;-chB:</span><br><span class="line">	<span class="comment">// doSth</span></span><br><span class="line"><span class="keyword">default</span>: <span class="comment">// doSth</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>当任何一个<code>case</code>都不可用时，选择<code>default</code>，若没有自定义<code>default</code>则阻塞直到有一个<code>case</code>可用；若同时有多个<code>case</code>可用则随机选择一个<code>case</code>执行</p></li>
+<li><p>之前说过管道在关闭后，即使没有元素也会立刻返回，因此<code>&lt;-ctx.Done()</code>在上下文取消后，管道关闭会立刻返回，因此能被<code>case</code>选中</p></li>
+</ul>
+<h2 id="锁">锁</h2>
+<h3 id="sync.mutex"><code>sync.Mutex</code></h3>
+<ul>
+<li>多个协程同时访问共享数据时，比起使用通道，使用锁也是一种控制方法</li>
+<li><code>sync.Mutex</code>是不可重入锁，即同一个协程不能重复获得同一个锁对象，否则会<code>fatal</code></li>
+<li>实现了<code>sync.Locker</code>接口：
+<ul>
+<li><code>Lock()</code>：加锁</li>
+<li><code>Unlock()</code>：解锁</li>
+</ul></li>
+<li><code>TryLock()</code>：非阻塞式加锁，<code>sync.Mutex</code>额外实现了它</li>
+</ul>
+<h3 id="sync.rwmutex"><code>sync.RWMutex</code></h3>
+<ul>
+<li><code>sync.RWMutex</code>是读写互斥锁，分离了读锁和写锁</li>
+<li>像<code>sync.Mutex</code>那样的方法被分离成了加写锁，解写锁和非阻塞式加写锁</li>
+<li>额外实现了<code>RLock()</code>，<code>RUnlock()</code>，<code>TryRLock()</code>表示对读锁的操作</li>
+<li>和其它语言的读写分离一样，存在写锁时无法加读锁和写锁，存在读锁时无法加写锁但可以加读锁，实现上是内部封装了单个<code>sync.Mutex</code></li>
+</ul>
+<h3 id="sync.cond"><code>sync.Cond</code></h3>
+<ul>
+<li><code>sync.Cond</code>条件锁，或者更准确的名称：条件变量，和<code>java</code>的<code>Condition</code>一样，建立在锁之上</li>
+<li>条件变量允许一个锁拥有多个等待队列</li>
+<li><code>sync.NewCond(l Locker) *Cond</code>：获取一个针对<code>l</code>的条件变量指针</li>
+<li><code>Wait()</code>：短暂释放锁</li>
+<li><code>Signal()</code>：唤醒一个在等待队列的进程</li>
+<li><code>Broadcast()</code>：可以理解为<code>SignalAll</code>，唤醒全部在这个条件上等待的进程</li>
+</ul>
+<!--TODO: Add `sync` note-->
+<h2 id="sync的其它工具"><code>sync</code>的其它工具</h2>
+<h3 id="sync.pool"><code>sync.Pool</code></h3>
+<h3 id="sync.once"><code>sync.Once</code></h3>
+<h3 id="sync.map"><code>sync.Map</code></h3>
+<h2 id="atomic"><code>atomic</code></h2>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>concurrent</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: 迭代器</title>
+    <url>/2025/12/25/go-iterator/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="迭代器">迭代器</h1>
+<h2 id="range"><code>range</code></h2>
+<h3 id="特定数据结构的迭代">特定数据结构的迭代</h3>
+<ul>
+<li><p>在一开始，<code>range</code>只能用于数组、切片、字符串、<code>map</code>、可读<code>chan</code>的迭代</p></li>
+<li><p>数组/切片：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> idx, val := <span class="keyword">range</span> slice &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>map</code>：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> key, val := <span class="keyword">range</span> mapp &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>字符串：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> idx, bt := <span class="keyword">range</span> str &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>可读通道</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> elem := <span class="keyword">range</span> channel &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="整型迭代">整型迭代</h3>
+<ul>
+<li><p><code>Go 1.22+</code>引入了整型迭代语法糖</p></li>
+<li><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i := <span class="keyword">range</span> n &#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 等价于</span></span><br><span class="line"><span class="keyword">for</span> i = <span class="number">0</span>; i &lt; n; i++ &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>同时引入了不含索引变量的版本：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="keyword">range</span> n &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="迭代器函数">迭代器函数</h2>
+<h3 id="推送式迭代器">推送式迭代器</h3>
+<ul>
+<li><p>在<code>Go 1.22</code>，引入了<code>Range over func</code>，即迭代器函数，迭代器函数会降低一定的可读性</p></li>
+<li><p>推送式迭代器函数的形式：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Func</span><span class="params">(...any)</span></span> <span class="function"><span class="keyword">func</span><span class="params">(yield <span class="keyword">func</span>(T)</span></span> <span class="type">bool</span>) &#123;</span><br><span class="line">	<span class="comment">// 环境声明...</span></span><br><span class="line">	<span class="keyword">var</span> a T</span><br><span class="line">	<span class="comment">// 返回闭包</span></span><br><span class="line">	<span class="comment">// 若干次调用 yield(a) ... a 即推送给 临时变量 v 的值</span></span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(yield <span class="keyword">func</span>(T)</span></span> <span class="type">bool</span>) &#123;</span><br><span class="line">		<span class="comment">// for 中的 break / return 将使 yield() 返回 false</span></span><br><span class="line">		<span class="keyword">if</span> !yield(a) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="comment">// return 退出闭包函数, 外部 for 结束</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 迭代 a</span></span><br><span class="line">		a = DoSth(a)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">A</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// 使用</span></span><br><span class="line">	<span class="keyword">for</span> v := <span class="keyword">range</span> Func(n) &#123;</span><br><span class="line">		<span class="comment">// body</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>迭代器函数返回一个闭包函数，闭包函数返回空，接收一个回调函数<code>yield</code></p>
+<p>回调函数<code>yield</code>由运行时自动注入，是外部开发者定义的<code>for</code>块，即：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> v := <span class="keyword">range</span> Func(n) &#123;</span><br><span class="line">	<span class="comment">// body</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 等价于</span></span><br><span class="line">iterator := Func(n) <span class="comment">// 获取提供了指定环境的闭包函数</span></span><br><span class="line"><span class="comment">// 传递 for 块作为 yield 传递给闭包函数</span></span><br><span class="line"><span class="comment">// 其中 v 在闭包中由开发者主动推送</span></span><br><span class="line">iterator(<span class="function"><span class="keyword">func</span><span class="params">(v T)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">	<span class="comment">// body</span></span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p><code>for</code>体默认在结尾返回<code>true</code>，在遇到<code>break</code>、<code>return</code>等时，体现在<code>yield()</code>里则是返回<code>false</code></p></li>
+<li><p>在一切正常时(<code>for</code>体没有<code>break</code>和<code>return</code>)，<code>for</code>执行多少次完全取决于闭包函数内<code>yield()</code>被调用了多少次</p>
+<p>简单的理解就是：<code>range</code>后跟自定义的迭代器函数，迭代器函数返回一个闭包函数</p>
+<p>闭包函数提供<code>v</code>的序列，通过<code>yield()</code>一轮一轮地推送</p>
+<p><code>yield()</code>是<code>for</code>内的代码块，在结尾自动添加<code>return true</code>以及在特定关键字后添加<code>return false</code></p></li>
+<li><p><code>yield()</code>最多支持两个参数，允许只接收一个参数但没有意义</p></li>
+<li><p><code>Go 1.23</code>引入了<code>iter.Seq[T any]</code>与<code>iter.Seq2[T, S any]</code>，它们简化了迭代器函数的返回值，推送式迭代器和原生的<code>for range</code>的性能相差不大</p></li>
+</ul>
+<h3 id="拉取式迭代器">拉取式迭代器</h3>
+<ul>
+<li><p>推送式迭代器的迭代逻辑全部位于闭包函数内，而很多时候迭代器需要由<code>for</code>块主动调用，这种迭代器称为拉取式迭代器</p></li>
+<li><p><code>Go 1.23</code>引入了<code>iter.Pull[V any](seq Seq[V]) (next func() (V, bool), stop func())</code>和<code>iter.Pull2(...)...</code>，用于将推送式迭代器转化为拉取式迭代器</p></li>
+<li><p>这个实现原理是：推送式作为生产者会不断调用<code>yield</code>，而<code>Pull</code>在中间添加了一个协程，用于伪装一个<code>yield</code>(并不是<code>for</code>体)，这个协程提供的<code>yield</code>收到推送式迭代器提供的参数后转发给<code>next()</code>，并阻塞式地等待返回值，从而实现阻塞式地迭代</p>
+<p>那么在调用<code>next()</code>时，推送式迭代器调用的<code>yield</code>就是协程提供的<code>yield</code></p></li>
+<li><p>但是这种实现方式并不常用，因为先实现一个推送式迭代器再启用一个协程带来更大的复杂度和性能损耗，但和使用闭包并没有很大的区别</p></li>
+<li><p><code>stop()</code>则是向生产者协程主动发送停止信号，让它停止阻塞式地等待消费者的信号</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;iter&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">A</span><span class="params">()</span></span> &#123;</span><br><span class="line">	next, stop := iter.Pull[<span class="type">int</span>](seq)</span><br><span class="line">	<span class="keyword">defer</span> stop()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> <span class="keyword">range</span> n &#123;</span><br><span class="line">		v := next()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="标准库的迭代器">标准库的迭代器</h2>
+<h3 id="slices"><code>slices</code></h3>
+<ul>
+<li><code>All[Slice ~[]E, E any](s Slice) iter.Seq2[int, E]</code>：将切片转换成切片迭代器，内部实际上就是<code>for range s</code>，一般用于数据流处理</li>
+<li><code>Values[Slice ~[]E, E any](s Slice) iter.Seq[E]</code>：转换成不返回索引的切片迭代器</li>
+<li><code>Chunk[Slice ~[]E, E any](s Slice, n int) iter.Seq[Slice]</code>：返回若干子切片，切片最多含有<code>n</code>个元素</li>
+<li><code>Collect[E any](iter.Seq[E]) []E</code>：将切片迭代器收集成切片</li>
+</ul>
+<h3 id="maps"><code>maps</code></h3>
+<ul>
+<li><code>Keys()</code>：返回键的迭代器</li>
+<li><code>Values()</code>：返回值的迭代器</li>
+<li><code>All()</code>：返回键值对的迭代器，和直接使用<code>for range</code>类似，一般用于数据流处理</li>
+<li><code>Collect()</code>：将映射表迭代器收集成映射表</li>
+</ul>
+<h2 id="流式处理">流式处理</h2>
+<ul>
+<li><code>Go</code>采用返回闭包并封装成标准库函数的形式实现迭代器函数，而不是声明一个流对象并以流对象作为接收者和返回值来实现(像<code>Java</code>那样)</li>
+<li>因此<code>Go</code>的标准库并不提供链式调用的流式处理，因此调用链长度较长时可读性会下降</li>
+<li>因此需要自己实现流式调用形式的，即自己定义一个流对象并封装一系列它的方法，在内部调用<code>slices</code>和<code>maps</code>提供的方法</li>
+<li><code>Go</code>目前还不支持匿名函数的简写，需要完整写完函数定义和函数体</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>data structure</tag>
+        <tag>Go</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: I/O</title>
+    <url>/2025/12/25/go-io/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="go-io"><code>Go I/O</code></h1>
+<h2 id="os"><code>os</code></h2>
+<h3 id="os.file"><code>os.File</code></h3>
+<ul>
+<li><code>os.File</code>是<code>Go</code>对文件描述符的抽象</li>
+<li><code>os.OpenFile(name string, flag int, perm os.FileMode) (*os.File, error)</code>：用指定<code>flag</code>打开文件并返回文件指针，若发生错误则<code>error</code>不为<code>nil</code>
+<ul>
+<li><p><code>flag</code>包括</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;syscall&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	<span class="comment">// Exactly one of O_RDONLY, O_WRONLY, or O_RDWR must be specified.</span></span><br><span class="line">	O_RDONLY <span class="type">int</span> = syscall.O_RDONLY <span class="comment">// open the file read-only.</span></span><br><span class="line">	O_WRONLY <span class="type">int</span> = syscall.O_WRONLY <span class="comment">// open the file write-only.</span></span><br><span class="line">	O_RDWR   <span class="type">int</span> = syscall.O_RDWR   <span class="comment">// open the file read-write.</span></span><br><span class="line">	<span class="comment">// The remaining values may be or&#x27;ed in to control behavior.</span></span><br><span class="line">	O_APPEND <span class="type">int</span> = syscall.O_APPEND <span class="comment">// append data to the file when writing.</span></span><br><span class="line">	O_CREATE <span class="type">int</span> = syscall.O_CREAT  <span class="comment">// create a new file if none exists.</span></span><br><span class="line">	O_EXCL   <span class="type">int</span> = syscall.O_EXCL   <span class="comment">// used with O_CREATE, file must not exist.</span></span><br><span class="line">	O_SYNC   <span class="type">int</span> = syscall.O_SYNC   <span class="comment">// open for synchronous I/O.</span></span><br><span class="line">	O_TRUNC  <span class="type">int</span> = syscall.O_TRUNC  <span class="comment">// truncate regular writable file when opened.</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>只读、只写、读写、追加、创建、不存在才创建、同步写、存在则清空，它们可以使用按位或运算同时存在</p>
+<p>必须三选一：指定只读、只写、读写</p>
+<p>其它标志可以使用按位或运算配合使用</p>
+<p>其中<code>O_EXCL</code>必须配合<code>O_CREATE</code>一起使用，此时如果文件已存在则会报错</p></li>
+<li><p><code>FileMode</code>：表示文件类型和文件权限，<code>Linux</code>下用<code>ls -l</code>查询出的权限的分段二进制表示，比如<code>0444</code></p>
+<p><code>FileMode</code>只有在<strong>创建文件时</strong>有效，在其它情况下使用<code>0</code>即可</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;io/fs&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// A FileMode represents a file&#x27;s mode and permission bits.</span></span><br><span class="line"><span class="comment">// The bits have the same definition on all systems, so that</span></span><br><span class="line"><span class="comment">// information about files can be moved from one system</span></span><br><span class="line"><span class="comment">// to another portably. Not all bits apply to all systems.</span></span><br><span class="line"><span class="comment">// The only required bit is [ModeDir] for directories.</span></span><br><span class="line"><span class="comment">// os</span></span><br><span class="line"><span class="keyword">type</span> FileMode = fs.FileMode</span><br><span class="line"></span><br><span class="line"><span class="comment">// fs</span></span><br><span class="line"><span class="keyword">type</span> FileMode <span class="type">uint32</span></span><br></pre></td></tr></table></figure></li>
+</ul></li>
+<li><code>Open(name string) (*File, error)</code>：只读打开文件</li>
+<li><code>Create(name string) (*File, error)</code>：创建文件，若文件存在则截断，否则以<code>0o666</code>模式创建</li>
+<li><code>NewFile(fd uintptr, name string) *File</code>：将<code>fd</code>封装成<code>*File</code>返回，<code>*File</code>可以使用<code>Fd()</code>获取底层的<code>uintptr</code></li>
+<li><code>*File</code>一定要记得<code>Close()</code>，例如在获取后立刻<code>defer f.Close()</code></li>
+</ul>
+<h3 id="文件io错误">文件<code>I/O</code>错误</h3>
+<ul>
+<li><code>os</code>提供一系列方法帮助判断<code>err</code>：
+<ul>
+<li><code>IsExist(error)/IsNotExist(error)</code>：判断错误是否为文件存在/文件不存在</li>
+<li><code>IsPermission(error)</code>：判断错误是否为文件权限不足</li>
+<li><code>IsTimeout(error)</code>：判断错误是否为超时</li>
+</ul></li>
+</ul>
+<h3 id="读写文件">读写文件</h3>
+<ul>
+<li><code>*File</code>提供的方法：
+<ul>
+<li><code>Read(b []byte) (n int, error)</code>：读取文件内容存储到<code>b</code>，只会覆盖到<code>len(b)</code></li>
+<li><code>ReadAt()</code>：可额外传递偏移量（开始读的偏移量而不是字节切片的偏移量）</li>
+<li><code>Write(b []byte) (n int, error)</code>：将<code>b</code>的内容写入文件，只会写入直到<code>len(b)</code>的内容</li>
+<li><code>WriteAt()</code>：可额外传递偏移量（开始写的偏移量而不是字节切片的偏移量），和<code>os.O_APPEND</code>互斥</li>
+<li><code>WriteString(s string) (n int, error)</code>：写入字符串</li>
+</ul></li>
+<li><code>os.ReadFile(name string) ([]byte, error)</code>：读取一个文件的全部内容并返回字节切片</li>
+<li><code>os.WriteFile(name string, data []byte, FileMode) error</code>：将字节切片的全部内容写入文件</li>
+</ul>
+<h3 id="文件元属性操作">文件元属性操作</h3>
+<ul>
+<li><code>os.Rename(oldpath, newpath string) error</code>：重命名文件</li>
+<li><code>os.Delete(name string) error</code>：删除文件</li>
+<li><code>os.DeleteAll(dir string) error</code>：递归删除目录下所有文件和目录</li>
+<li><code>(*File) Sync()</code>：刷盘</li>
+</ul>
+<h3 id="目录操作">目录操作</h3>
+<ul>
+<li><p><code>os.ReadDir(name string) ([]DirEntry, error)</code>：读取一个目录，返回切片</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;os&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">A</span><span class="params">()</span></span> &#123;</span><br><span class="line">	dirs, _ := os.ReadDir(<span class="string">&quot;.&quot;</span>)</span><br><span class="line">	<span class="keyword">for</span> _, dir := <span class="keyword">range</span> dirs &#123;</span><br><span class="line">		dir.Name()  <span class="comment">// string</span></span><br><span class="line">		dir.IsDir() <span class="comment">// bool</span></span><br><span class="line">		dir.Info()  <span class="comment">// (os.FileInfo, error)</span></span><br><span class="line">		dir.Type()  <span class="comment">// os.FileMode</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>或者使用<code>*File</code>的<code>ReadDir(n int)</code>，最多读取<code>n</code>个<code>DirEntry</code>，<code>n</code>为负数时读取全部</p>
+<p><code>os.ReadDir()</code>是对它的简单封装</p></li>
+<li><p><code>os.Mkdir(name string, perm FileMode) error</code>：创建目录</p></li>
+<li><p><code>os.MkdirAll(path string, perm FileMode) error</code>：类似<code>mkdir -p</code>地创建目录</p></li>
+<li><p><code>os.Getwd() (string, error)</code>：获取工作目录</p></li>
+<li><p><code>os.Chdir(dir string) error</code>：修改工作目录</p></li>
+</ul>
+<h3 id="环境变量相关">环境变量相关</h3>
+<ul>
+<li><code>os.Getenv(key string) string</code></li>
+<li><code>os.Setenv(key, value string) error</code></li>
+<li><code>os.LookupEnv(key string) (string bool)</code></li>
+<li><code>filepath</code>标准库提供一系列处理文件路径的函数</li>
+</ul>
+<h2 id="io与iofs"><code>io</code>与<code>io/fs</code></h2>
+<h3 id="io接口"><code>I/O</code>接口</h3>
+<ul>
+<li><code>io.Reader</code>：只有<code>Read([]byte) (n int, error)</code>方法</li>
+<li><code>io.Writer</code>：只有<code>Write([]byte) (n int, error)</code>方法</li>
+<li><code>io.Closer</code>：只有<code>Close() error</code>方法</li>
+<li><code>io.Seeker</code>：只有<code>Seek(offset int64, whence int) (int64, error)</code>方法</li>
+<li><code>io.ReadWriter</code>：<code>Reader</code>与<code>Writer</code>并集</li>
+<li><code>io.ReadCloser</code>：<code>Reader | Closer</code></li>
+<li><code>io.WriteCloser</code>：<code>Writer | Closer</code></li>
+<li><code>io.ReadWriteCloser</code>：<code>Writer | Reader | Closer</code></li>
+<li><code>io.ReadSeeker</code>：<code>Reader | Seeker</code></li>
+<li><code>io.ReadSeekCloser</code>：<code>Reader | Seeker | Closer</code></li>
+<li>更多接口可查阅文档</li>
+<li><code>*os.File</code>实现了上述所有接口</li>
+</ul>
+<h3 id="io工具函数"><code>io</code>工具函数</h3>
+<ul>
+<li><code>io.Copy(dst Writer, src Reader) (written int64, err error)</code>：复制文件，默认使用<code>32K</code>的缓冲区</li>
+<li><code>io.CopyBuffer(Writer, Reader, []byte) (int64, error)</code>：可以自己指定缓冲区</li>
+<li><code>io.CopyN(Writer, Reader, int64)</code>：指定最多读取的字节数</li>
+<li><code>io.ReadAll(Reader) ([]byte, error)</code>：读取所有字节并返回字节切片</li>
+<li><code>io.ReadFull(Reader, []byte) (int, error)</code>：调用<code>Reader</code>的<code>Read</code>，若长度不足则报错</li>
+<li><code>io.MultiReader(...Reader) Reader</code>：串联多个<code>Reader</code>顺序读取</li>
+<li><code>io.MultiWriter(...Writer) Writer</code>：并联多个<code>Writer</code>同时写入</li>
+</ul>
+<h3 id="fs.fs"><code>fs.FS</code></h3>
+<ul>
+<li><code>fs.FS</code>将一系列文件资源包括网络资源都抽象成<code>fs.FS</code>，<code>FS</code>接口只有一个<code>Open(name string) (File, error)</code>方法</li>
+<li>可以通过<code>os.DirFS(dir string) fs.FS</code>将目录转化为<code>FS</code>对象</li>
+<li><code>fs.Sub(fsys FS, dir string) (FS, erorr)</code>：将文件系统对象的一个子目录再转换为文件系统对象</li>
+<li><code>fs</code>提供了很多查找和读取文件的方法：
+<ul>
+<li><code>fs.ReadFile(FS, name string) ([]byte, error)</code>：读取整个文件</li>
+<li><code>fs.Open(name string) (File, error)</code>：打开一个文件，根目录为文件系统对象的目录</li>
+<li><code>fs.File.Read([]byte) (int, error)</code>：读取一个文件读取到字节切片里</li>
+<li><code>fs.File.Close() error</code>：关闭文件</li>
+<li><code>fs.Glob(FS, pattern string) ([]string, error)</code>：模式匹配地查找文件名</li>
+<li><code>fs.ValidPath(name string) bool</code>：检查路径是否生效</li>
+</ul></li>
+<li>以及很多关于目录的方法：
+<ul>
+<li><p><code>fs.WalkDir(fsys FS, root string, WalkDirFunc) error</code>：递归遍历目录，<code>root</code>相对于<code>fsys</code>的路径，<code>WalkDirFunc</code>回调用于自定义处理函数</p></li>
+<li><p><code>fs.ReadDir(FS, string) ([]DirEntry, error)</code>：读取目录内容</p></li>
+<li><p><code>WalkDirFunc</code>：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(path <span class="type">string</span>, d DirEntry, err <span class="type">error</span>)</span></span> <span class="type">error</span></span><br></pre></td></tr></table></figure>
+<p>在回调中需要处理<code>err</code>，对<code>d</code>进行自定义的处理</p>
+<p>返回<code>nil</code>表示继续遍历，<code>fs.SkipDir</code>表示跳过当前的<code>d</code>，<code>fs.SkipAll</code>表示跳过所有的<code>d</code></p></li>
+</ul></li>
+<li>在仅需要读取和遍历文件或其它资源的情况下，使用<code>fs</code>比使用<code>os</code>更好</li>
+</ul>
+<h2 id="标准输入输出">标准输入输出</h2>
+<ul>
+<li><code>os</code>包内置声明了三个标准输入输出描述符：<code>Stdin</code>、<code>Stdout</code>、<code>Stdout</code></li>
+<li><code>os</code>包的这三个描述符本身就是文件，可以使用上述的<code>os</code>、<code>io</code>、<code>fs</code>提供的方法输出和输入</li>
+<li>内置的<code>print()</code>和<code>println()</code>可以打印，但通常用于测试</li>
+<li><code>fmt</code>包提供许多用于打印的方法：
+<ul>
+<li><code>Print()/Println()/Printf()</code></li>
+</ul></li>
+<li><code>fmt</code>格式化：
+<ul>
+<li><code>%%</code>：百分号</li>
+<li><code>%s/%d/%f/%b/%o/%x/%p</code>：与其它语言类似</li>
+<li><code>%v</code>与<code>%+v</code>：输出值的原始形式，后者会附加值的字段</li>
+<li><code>%q</code>：输出带有双引号的字符串</li>
+</ul></li>
+</ul>
+<h2 id="bufio"><code>bufio</code></h2>
+<h3 id="bufio接口"><code>bufio</code>接口</h3>
+<ul>
+<li><code>bufio</code>标准库用于缓冲读写，适用于大文件，但是<code>bufio</code>是顺序访问，不像<code>os.File</code>那样是随机访问</li>
+<li><code>bufio.NewReader(io.Reader) *bufio.Reader</code>：将<code>io.Reader</code>转化为带缓冲的<code>Reader</code></li>
+<li><code>bufio.NewWriter(...) ...</code>：将<code>io.Writer</code>转化为带缓冲的<code>Writer</code></li>
+<li><code>bufio.NewReadWriter(...) ...</code>：将<code>io.ReadWriter</code>转化为带缓冲的<code>ReadWriter</code></li>
+<li><code>bufio.NewScanner(io.Reader) *bufio.Scanner</code>：将<code>io.Reader</code>转化为<code>bufio.Scanner</code></li>
+</ul>
+<h3 id="bufio.reader"><code>bufio.Reader</code></h3>
+<ul>
+<li><code>Read(...)...</code>：与<code>*os.File.Read()</code>类似，提供缓冲</li>
+<li><code>ReadByte() (byte, error)</code>：读取一个字节</li>
+<li><code>ReadBytes(delim byte) ([]byte, error)</code>：读取到分隔符<code>delim</code></li>
+<li><code>ReadString(delim byte) (string, error)</code>：读取到分隔符<code>delim</code>，返回<code>string</code></li>
+<li><code>ReadLine() (line []byte, isPrefix bool, error)</code>：读取一行</li>
+<li><code>Peek(n int) ([]byte, error)</code>：预读取<code>n</code>个字节但是不移动指针</li>
+<li><code>Reset(io.Reader)</code>：复用<code>*bufio.Reader</code>对象，绑定到新的<code>io.Reader</code></li>
+</ul>
+<h3 id="bufio.writer"><code>bufio.Writer</code></h3>
+<ul>
+<li>与<code>bufio.Reader</code>的方法相对应</li>
+<li><code>Flush() error</code>：刷盘</li>
+<li><code>Reset(io.Writer)</code>：复用<code>*bufio.Writer</code>对象，绑定到新的<code>io.Writer</code></li>
+</ul>
+<h3 id="bufio.scanner"><code>bufio.Scanner</code></h3>
+<ul>
+<li><code>Scan() bool</code>：按行扫描，若指针没有到<code>EOF</code>则返回<code>true</code></li>
+<li><code>Text() string</code>：获取当行的文本</li>
+<li><code>Err() error</code>：检查扫描中的错误</li>
+<li><code>Split(SplitFunc)</code>：自定义分割函数，内置的分割函数如下
+<ul>
+<li><code>bufio.ScanLines</code>(默认)</li>
+<li><code>bufio.ScanWords</code></li>
+<li><code>bufio.ScanRunes</code></li>
+<li><code>bufio.ScanBytes</code></li>
+</ul></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>I/O API</tag>
+        <tag>Go</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: 错误处理</title>
+    <url>/2025/12/25/go-error/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="错误处理">错误处理</h1>
+<h2 id="级别分类">级别分类</h2>
+<ul>
+<li><code>error</code>：正常的运行时错误，需要处理，若忽略程序也不会崩溃</li>
+<li><code>panic</code>：恐慌，程序应该在处理完问题后立刻退出</li>
+<li><code>fatal</code>：致命错误，程序无法处理并立刻退出</li>
+</ul>
+<h2 id="错误处理的设计">错误处理的设计</h2>
+<ul>
+<li><p><code>Go</code>没有<code>try-catch</code>语句，一切<code>error</code>(如果有)都作为返回值返回</p></li>
+<li><p>因此处理变得清晰：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">res, err := ThrowSomeError()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="comment">// process or:</span></span><br><span class="line">	<span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>但有若干缺点：</p>
+<ul>
+<li>堆栈丢失：标准库的错误信息不包含堆栈，需要引入非标准库</li>
+<li>代码冗余：有极多的<code>if err != nil</code>，不像<code>try-catch</code>那样有统一的结构化处理</li>
+</ul></li>
+<li><p>但实际上也有一些优点：</p>
+<ul>
+<li><p>性能高：没有<code>try-catch</code>开销</p></li>
+<li><p>虽然错误信息不包含堆栈，但<code>error</code>本质就是返回值，可以一层一层向上调试找到</p></li>
+<li><p><code>error</code>作为值，更多时候作为返回值，能增强可读性，知道错误出自哪里</p></li>
+<li><p>编译时检查减轻处理负担：编译器或静态检查要求必须接收函数的返回值，当一个函数有可能抛出<code>error</code>时，编译器会提醒显示接收并处理(或<code>return</code>)</p>
+<p>而使用结构化处理的语言则总会遇到：当发生错误但没有显式处理时，直接使用<code>try-catch</code>块包围，带来性能损耗、难以定位</p>
+<p>它们更难受的问题在于，容易遗漏运行时错误而没有处理</p></li>
+</ul></li>
+<li><p>与另一个将错误作为返回值的语言<code>rust</code>对比，<code>rust</code>提供了语法糖来处理错误，因此同样作为返回值却没有引起很大的讨论</p></li>
+</ul>
+<h2 id="error"><code>error</code></h2>
+<h3 id="声明error">声明<code>error</code></h3>
+<ul>
+<li><p><code>error</code>是预定义的类型</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="type">error</span> <span class="keyword">interface</span> &#123;</span><br><span class="line">	Error() <span class="type">string</span> <span class="comment">// 获取错误信息</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>errors</code>是错误处理的工具包</p></li>
+<li><p>创建错误：<code>errors.New(msg string)</code></p>
+<p>也可以通过<code>fmt</code>创建：<code>fmt.Errorf(msg string, ...any)</code>传入格式化信息</p>
+<p>在没有链式调用的前提下，它们返回内置的<code>errorString</code>结构体</p></li>
+<li><p><code>error</code>理应是一个常量(哨兵错误)，但在设计上却是通过<code>var</code>声明的，是一个变量</p>
+<p>为了可维护性，一般将常用的<code>error</code>当作全局变量预先声明</p></li>
+<li><p>自定义<code>error</code>：<code>error</code>是一个接口，只要类型实现了<code>Error()</code>，就是一个<code>error</code></p></li>
+</ul>
+<h3 id="链式错误">链式错误</h3>
+<ul>
+<li>链式错误是<code>Go 1.13+</code>提供的用于获取链式调用信息的错误</li>
+<li>通过<code>fmt.Errorf("%w", err)</code>可以包装一个错误并返回一个实现了<code>Unwrap()</code>的<code>error</code>，它返回的对象本质是内置的<code>wrapErrors</code></li>
+<li>因为<code>wrapErrors</code>不是预定义的，它是包私有的，所以只能通过<code>errors.Unwrap(error)</code>解包，如果传入的<code>error</code>没有实现<code>Unwrap()</code>则返回<code>nil</code></li>
+<li><code>errors.Is(err, target error) bool</code>：判断<code>err</code>的链式错误中是否包含<code>target</code>，即省去了自己写<code>for</code>的过程</li>
+<li><code>errors.As(err error, target any) bool</code>：判断<code>err</code>的链式错误中是否包含匹配<code>target</code>的类型错误，即在<code>Is</code>的基础上传递的<code>target</code>变为指针的指针并赋值，将第一个匹配成功的错误赋值给<code>target</code>并返回<code>true</code>
+<ul>
+<li><code>target</code>必须实现<code>error</code></li>
+<li><code>target</code>必须是指针的指针</li>
+</ul></li>
+<li><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;errors&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// Is: 判断是否包含</span></span><br><span class="line">	tgt := Myerr&#123;<span class="string">&quot;msg&quot;</span>&#125;</span><br><span class="line">	<span class="keyword">if</span> errors.Is(err, tgt) &#123;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// As: 判断是否有对应类型的错误并赋值</span></span><br><span class="line">	<span class="comment">// 传入指针的指针，才可在函数内修改外部的错误变量</span></span><br><span class="line">	<span class="keyword">var</span> tgt *Myerr</span><br><span class="line">	<span class="keyword">if</span> errors.As(err, &amp;tgt) &#123;</span><br><span class="line">		fmt.Print(tgt.String())</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="平级错误">平级错误</h3>
+<ul>
+<li>通过<code>errors.Join(...error) error</code>创建一个封装了<code>[]error</code>的错误，它的返回值不是链式错误，而是<code>joinError</code></li>
+<li><code>joinError</code>实现了<code>Unwrap() []error</code>，<code>errors.Is()</code>与<code>errors.As()</code>都有单独处理它们的分支，所以可以像链式错误那样使用它们</li>
+<li>但是<code>errors.Unwrap()</code>中不包含单独的判断，所以只会返回<code>nil</code></li>
+</ul>
+<h3 id="github.compkgerrors"><code>github.com/pkg/errors</code></h3>
+<ul>
+<li>这是另一个官方的<code>errors</code>包，但没有加入标准库</li>
+<li>它会自动记录栈信息</li>
+<li>但实际上，它的链式调用已被标准库替代，而堆栈记录已经被许多第三方依赖所吸收，早已处于归档状态</li>
+</ul>
+<h2 id="panic"><code>panic</code></h2>
+<h3 id="创建">创建</h3>
+<ul>
+<li><p><code>panic(string)</code>内置函数用于自定义<code>panic</code>，但并不常用</p></li>
+<li><p>仅有在程序真的不会继续执行的时候，才使用<code>panic()</code>，或者使用日志框架</p>
+<p>例如数据库连接失败时，使用<code>panic()</code></p></li>
+<li><p><code>panic</code>会进行善后，比如执行事先定义的<code>defer</code>语句</p>
+<p><code>defer</code>语句按先进后出的顺序执行</p></li>
+<li><p>关于<code>defer</code>：<code>defer</code>后跟函数的参数是会被预计算的</p></li>
+</ul>
+<h3 id="恢复">恢复</h3>
+<ul>
+<li><code>recover()</code>可用于恢复<code>panic</code>并不退出程序</li>
+<li><code>recover()</code>必须在<code>defer</code>块中执行</li>
+<li><code>panic</code>向上传递，即向调用者方向传递，因此如果在<code>defer</code>块内的闭包函数调用<code>recover()</code>是无效的</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>exception</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: 泛型</title>
+    <url>/2025/12/25/go-generics/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="go的泛型"><code>Go</code>的泛型</h1>
+<h2 id="通用接口">通用接口</h2>
+<ul>
+<li><p><code>Go</code>的泛型在<code>1.18</code>引入，同时为了服务泛型，更改了<code>interface</code>的定义为“一系列类型的集合”</p></li>
+<li><p>类型集用于约束或简化声明泛型参数<code>T</code>所能表示的类型</p></li>
+<li><p>示例：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> SignedIntType <span class="keyword">interface</span> &#123;</span><br><span class="line">	<span class="type">int8</span> | <span class="type">int16</span> | <span class="type">int</span> | <span class="type">int32</span> | <span class="type">int64</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>并集：通过<code>|</code>获得两个类型集的并集</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> IntType <span class="keyword">interface</span> &#123;</span><br><span class="line">	SignedIntType | UnsignedIntType</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>交集：通过换行来分隔多个类型以获取交集</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> EmptyType <span class="keyword">interface</span> &#123;</span><br><span class="line">	SignedIntType</span><br><span class="line">	UnsignedIntType</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>空集：空集不是空接口，空集只能通过交集运算获得，而空接口<code>interface{}</code>或<code>any</code>可以表示所有类型</p></li>
+<li><p>使用<code>type</code>声明的新类型：即使底层类型被包含在一个类型集中，只要这个新类型不在这个类型集中，就无法用作该泛型的参数</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> A <span class="keyword">interface</span> &#123;</span><br><span class="line">	<span class="type">int8</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// TinyInt is not a A !</span></span><br><span class="line"><span class="keyword">type</span> TinyInt <span class="type">int8</span></span><br></pre></td></tr></table></figure></li>
+<li><p>底层类型声明：可以使用<code>~</code>解决上述问题</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> A <span class="keyword">interface</span> &#123;</span><br><span class="line">	~<span class="type">int8</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// TinyInt is a A</span></span><br><span class="line"><span class="keyword">type</span> TinyInt <span class="type">int8</span></span><br></pre></td></tr></table></figure>
+<p><code>~int8</code>表示只要一个类型的底层类型是<code>int8</code>，那么这个类型就属于这个类型集</p></li>
+<li><p>需要记住：方法集是一个类型(一般接口)，类型集不是一个类型(通用接口)</p>
+<ul>
+<li>类型集不能通过类型断言(因为不是一个类型)，但是泛型参数<code>T</code>可以(因为<code>T</code>是类型)</li>
+<li>类型集本身不能作为泛型实参，它本身不是一个类型而是一个类型集</li>
+<li>方法集可以作为泛型实参，它本身是一个接口类型</li>
+</ul></li>
+<li><p>不兼容类型之间不能相并(不能使用<code>|</code>)，它们只能通过换行获取交集</p>
+<ul>
+<li><code>comparable</code>不能和其它类型相并</li>
+<li>方法集之间不能相并</li>
+</ul></li>
+</ul>
+<h2 id="声明泛型参数">声明泛型参数</h2>
+<ul>
+<li><p>泛型函数：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Func</span>[<span class="title">T</span> <span class="title">any</span>]<span class="params">(a T, ...)</span></span> (...) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>新类型：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;io&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> (</span><br><span class="line">	NewType[T <span class="type">int</span> | <span class="type">float64</span>] []T</span><br><span class="line">	NewType[T <span class="type">int</span> | <span class="type">float64</span>] <span class="keyword">struct</span> &#123;</span><br><span class="line">		a T</span><br><span class="line">	&#125;</span><br><span class="line">	NewType[T <span class="type">int</span> | <span class="type">float64</span>, S <span class="type">string</span> | <span class="type">rune</span>] <span class="keyword">struct</span> &#123;</span><br><span class="line">		k T</span><br><span class="line">		v S</span><br><span class="line">	&#125;</span><br><span class="line">	NewType[T ATypeInterface] []T</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Write</span>[<span class="title">W</span> <span class="title">io</span>.<span class="title">Writer</span>]<span class="params">(w W, bs []<span class="type">byte</span>)</span></span> (<span class="type">int</span>, <span class="type">error</span>) &#123;</span><br><span class="line">	<span class="keyword">return</span> w.Write(bs)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>当针对引用类型需要使用泛型时，推荐将<code>T</code>作为基本数据类型，然后使用<code>[]T</code>、<code>map[T]T1</code>、<code>chan T</code></p></li>
+<li><p>声明泛型参数时不能使用交集运算，可以临时使用并集运算</p></li>
+<li><p>方法(有接收器的函数)不能定义泛型参数，但接收者可以携带泛型参数并供方法使用</p></li>
+<li><p>匿名结构体和匿名函数不支持临时定义泛型参数，但可以使用外部定义的泛型参数</p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>generics</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: map</title>
+    <url>/2025/12/24/go-map/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="映射表">映射表</h1>
+<ul>
+<li>在<code>Go</code>中，
+<code>map</code>作为关键字而不是标准库提供，并且十分简洁，底层使用哈希的方式实现</li>
+<li>除了通过<code>map[keytype]valuetype{...}</code>的方式创建，还可通过<code>make(Type, cap)</code>分配容量并创建</li>
+<li>访问<code>map</code>元素与访问数组类似，<code>obj[key]</code>，不同的是返回两个值<code>val, exist</code>，如果不存在则返回值类型对应的零值</li>
+<li>新增或覆盖：<code>obj[key] = value</code></li>
+<li>删除键值对：使用内置函数<code>delete(map, key)</code></li>
+<li>映射表是一个<code>iterable</code>，可以使用<code>for range</code>遍历</li>
+<li>同切片一样可以使用<code>clear()</code>清空表(<code>Go 1.21+</code>)</li>
+<li>和其它内置的非<code>sync</code>类型一样，都是非并发安全的</li>
+<li>go<code>没有内置的</code>set<code>类型，因为</code>map[key]struct{}<code>完全可以作为</code>set`来使用，一个空结构体不会占用任何内存</li>
+<li><code>maps</code>：<code>maps</code>是标准库中的映射表工具库，但内部函数较少，许多和<code>slices</code>库和<a
+href="/source/_posts/go-strings.md#strings"><code>strings</code></a>库的函数类似，也提供了<a
+href="/source/_posts/go-iterator.md#maps">迭代器函数</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>data structure</tag>
+        <tag>hash</tag>
+        <tag>Go</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: 字符串</title>
+    <url>/2025/12/24/go-strings/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="字符串">字符串</h1>
+<h2 id="特性">特性</h2>
+<ul>
+<li><code>string</code>是一个值类型，意味着可以是空串但不是<code>nil</code></li>
+<li><code>string</code>是一个不可变的<code>byte</code>数组，是不可变类型</li>
+<li><code>string</code>对象本身可以被取地址，但它的元素不允许</li>
+<li>并且由于本质是字节数组，通过数组访问符<code>[]</code>访问只能得到<code>byte</code>而不是<code>rune</code>并且也没有<code>char</code>类型</li>
+<li><code>string</code>与<code>[]byte</code>和<code>[N]byte</code>可以相互转换，要修改<code>string</code>需要先转换为字节数组，为了内存安全，转换这一行为会分配新的内存给字节数组</li>
+<li>原始字符串：用反引号包围</li>
+</ul>
+<h2 id="字符串操作">字符串操作</h2>
+<ul>
+<li><p>由于字符串本质是字节数组，许多数组/切片的操作用于<code>string</code>是很容易理解的</p></li>
+<li><p>拼接：<code>Go</code>内置了<code>+</code>和<code>+=</code>字符串运算</p></li>
+<li><p>字符串可以直接通过切片符获取子串，但本质是获取字节数组的切片</p></li>
+<li><p><code>len()</code>：本质是求字节数组的长度，大部分情况字符是<code>ASCII</code>码因此只需要一个字节</p></li>
+<li><p><code>copy()</code>：拷贝操作</p></li>
+<li><p>按字符处理：先转换成<code>[]rune</code>，即<code>int32</code>序列再处理</p></li>
+<li><p>按字符遍历：<code>range</code>的最小单位就是<code>int32</code>，因此：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> _, ch := <span class="keyword">range</span> str &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的遍历是按<code>rune</code>遍历的</p></li>
+</ul>
+<h2 id="strings"><code>strings</code></h2>
+<ul>
+<li><code>strings</code>是内置的字符串工具包，用于处理<code>utf8</code>字符串</li>
+</ul>
+<h3 id="创建与拷贝">创建与拷贝</h3>
+<ul>
+<li><code>Repeat(s string, cnt int) string</code>：按次数拷贝字符串</li>
+<li><code>Clone(string) string</code>：拷贝字符串，若不为空则分配内存并返回新的字符串对象</li>
+<li><code>Builder</code>结构体：用于通过消耗更小的内存来构建复杂字符串(相比使用<code>+</code>)
+<ul>
+<li>实现了<code>io.Writer, io.ByteWriter, io.StringWriter</code>接口：通过<code>WriteXxx()</code>方法构建字符串，</li>
+<li><code>Grow(n int)</code>：预分配内存</li>
+<li><code>Reset()</code>：重置<code>Builder</code></li>
+<li><code>String()</code>执行构建</li>
+<li><code>Builder</code>不能作为参数传递</li>
+</ul></li>
+<li><code>Join([]string, rep string) string</code>：拼接字符串切片，分隔串为<code>rep</code>，比<code>+</code>性能更好</li>
+</ul>
+<h3 id="比较">比较</h3>
+<ul>
+<li><code>Compare(a, b string) int</code>：按字符比较两个字符串，返回<code>1</code>，<code>0</code>，<code>-1</code></li>
+<li><code>EqualFold(s, t string) bool</code>：忽略大小写情况下是否相等</li>
+</ul>
+<h3 id="包含与匹配">包含与匹配</h3>
+<ul>
+<li><code>Contains(s, substr string) bool</code>：判断前者是否包含<code>substr</code>子串</li>
+<li><code>ContainsAny(s, chs string) bool</code>：判断前者的字符集是否包含<code>chs</code>字符集</li>
+<li><code>Count(s, substr string) int</code>：前者包含多少次后者</li>
+<li><code>HasPrefix(s, prefix string) bool</code>：判断前者是否有前缀<code>prefix</code></li>
+<li><code>HasSuffix(s, suffix string) bool</code>：判断前者是否有后缀<code>suffix</code></li>
+<li><code>Index(s, substr string) int</code>：返回子串第一次出现的位置</li>
+<li><code>IndexAny(s, chs string) int</code>：返回字符集第一次出现的位置</li>
+<li><code>IndexRune(s, chs rune) int</code>：返回指定<code>unicode</code>字符第一次出现的位置</li>
+<li><code>IndexLastXxx</code>：上述三者都有<code>Last</code>版本</li>
+</ul>
+<h3 id="分割">分割</h3>
+<ul>
+<li><p><code>Fields(s string) []string</code>：按空格分割字符串，类似<code>split</code></p></li>
+<li><p><code>FieldsFunc(s string, f func(rune) bool) []string</code>：按函数<code>f</code>的返回值决定是否分割</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 等价于`Fileds(s)`:</span></span><br><span class="line">FiledsFunc(s, <span class="function"><span class="keyword">func</span><span class="params">(ch <span class="type">rune</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> ch == <span class="string">&#x27; &#x27;</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p><code>Split(s, sep string) []string</code>：按子串<code>sep</code>分割</p></li>
+<li><p><code>SplitN(s, sep string, n int) []string</code>：按子串<code>sep</code>分割，返回值最多<code>n</code>个元素</p></li>
+<li><p><code>SplitAfter(s, sep string)</code>：与<code>Split</code>类似但是会保留分隔子串在每个元素的结尾</p></li>
+<li><p><code>SplitAfterN(...)</code></p></li>
+</ul>
+<h3 id="删除与替换">删除与替换</h3>
+<ul>
+<li><p><code>Cut(s, sep string) (before, after string, found bool)</code>：删除<code>s</code>中第一次出现的<code>sep</code>，<code>before</code>表示子串位置之前的串，<code>after</code>表示子串位置后的串</p></li>
+<li><p><code>Map(mapping func(rune) rune, s string) string</code>：遍历替换<code>unicode</code>字符，若<code>mapping</code>返回<code>-1</code>则不进行替换而是直接删除该<code>unicode</code>字符</p></li>
+<li><p><code>Replace(s, old, new string, n int) string</code>：将<code>s</code>中的<code>old</code>子串替换为<code>new</code>串，共能替换<code>n</code>次，<code>n</code>为负数时表示无限次</p></li>
+<li><p><code>ReplaceAll(s, old, new string) string</code>：等价于<code>Replace(s, old, new, -1)</code></p></li>
+<li><p><code>ToUpper()</code>与<code>ToLower()</code></p></li>
+<li><p><code>Trim(s, cutset string) string</code>：删除两端只包含<code>cutset</code>字符集的子串</p></li>
+<li><p><code>TrimLeft()</code>与<code>TrimRight()</code></p></li>
+<li><p><code>TrimPrefix(s, substr string) string</code>与<code>TrimSuffix(...)</code>：与上述四者不同，删除完全匹配<code>substr</code>子串的前缀或后缀</p></li>
+<li><p><code>TrimSpace(s string)</code></p></li>
+<li><p><code>TrimFunc(s string, f func(rune) bool)</code></p></li>
+<li><p><code>*Replacer</code>：提前指定替换规则后复用，通过<code>NewReplacer(oldnew ...string) *Replacer</code>创建</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;strings&quot;</span></span><br><span class="line"><span class="keyword">var</span> rep = strings.NewReplacer(old1, new1, old2, new2)</span><br><span class="line">str = rep.Replace(str)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="strconv"><code>strconv</code></h2>
+<ul>
+<li><code>strconv</code>提供基本数据类型与字符串之间转换的工具函数</li>
+<li><code>Atoi(s string) (int, error)</code>：字符串转整型</li>
+<li><code>Itoa(x int) (string, error)</code>：整型转字符串</li>
+<li><code>ParseBool(string)</code>与<code>FormatBool(bool)</code>：布尔值转换</li>
+<li><code>ParseFloat(string, bitSize int)</code>：字符串转浮点型，<code>bitSize</code>为位数</li>
+<li><code>FormatFloat(float64, fmt byte, prec, bitSize int)</code>：字符串转浮点型，<code>bitSize</code>为位数
+<ul>
+<li><code>fmt</code>：格式化类型</li>
+<li><code>prec</code>：精度</li>
+<li><code>bitzise</code>：位数
+<!-- TODO: Add fmt, prec definition --></li>
+</ul></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>string</tag>
+        <tag>Go</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: 切片(Slice)</title>
+    <url>/2025/12/24/go-slice/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="slice"><code>Slice</code></h1>
+<h2 id="创建切片">创建切片</h2>
+<h3 id="数组与切片的区别">数组与切片的区别</h3>
+<ul>
+<li>数组是值类型，编译时确定大小且拷贝时拷贝值，可以通过<code>[...]type{val1, val2}</code>编译器自动推断长度</li>
+<li>切片是引用类型，切片必须基于一个数组获得，对切片的操作会影响数组本身，因此也会影响同样共享该数组的切片</li>
+</ul>
+<h3 id="切割">切割</h3>
+<ul>
+<li><p>数组切割是一个语法糖，类似其它语言的切片语法，返回切片类型</p></li>
+<li><p>话虽如此，<code>go</code>的切片比较简单，只支持自然数索引：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">ns := [...]<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br><span class="line">ns[<span class="number">1</span>:]         <span class="comment">// [1, 4)</span></span><br><span class="line">ns[:]          <span class="comment">// [0, 4)</span></span><br><span class="line">ns[:<span class="built_in">len</span>(ns)<span class="number">-1</span>] <span class="comment">// [0, 3)</span></span><br></pre></td></tr></table></figure></li>
+<li><p>切片分割：与数组分割类似，数组和切片在默认时容量都是底层数组的长度减去<code>start</code></p></li>
+<li><p>更常用的是完整的<code>start:end:max</code>表达式来防止切片影响原切片：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">ns := [...]<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br><span class="line">ns1 := ns[:]</span><br><span class="line"><span class="comment">// 指定容量为 max-start, 一般指定 max=end 即可</span></span><br><span class="line">ns2 := ns1[<span class="number">1</span>:<span class="number">2</span>:<span class="number">2</span>]</span><br><span class="line"><span class="comment">// 如果不指定容量则因没有爆容量而影响原切片</span></span><br><span class="line"><span class="built_in">append</span>(ns2, <span class="number">1</span>, <span class="number">2</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="使用make预分配空间">使用<code>make()</code>预分配空间</h3>
+<ul>
+<li><p>直接使用<code>[]type</code>创建无法预先指定其底层数组的空间</p></li>
+<li><p>使用<code>make()</code>是常用的方法：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">ns := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="built_in">len</span>, <span class="built_in">cap</span>)</span><br></pre></td></tr></table></figure>
+<p><code>len</code>表示已经确认存在的值，并初始化为零值，<code>cap</code>为底层数组的容量</p></li>
+<li><p>实际上<code>len</code>与<code>cap</code>是切片的基本组成属性</p></li>
+</ul>
+<h3 id="自动扩容">自动扩容</h3>
+<ul>
+<li><p><code>slice</code>本身会自动扩容，重新分配到新的内存并指向它</p></li>
+<li><p>因此当基于数组/切片分割获取切片时，需要注意，在没有重新分配时对切片进行修改会影响原数组，在拼接后如果超出容量则不会影响原数组</p>
+<p>最好的习惯是使用完整的<code>start:end:cap</code></p></li>
+</ul>
+<h3 id="切片转数组与解包">切片转数组与解包</h3>
+<ul>
+<li><code>Go 1.17</code>支持<code>[LEN](s[:LEN])</code>长度匹配的转换</li>
+<li><code>Go 1.20</code>支持<code>[LEN](s)</code>省略切片符，要求<code>len(s)&gt;=LEN</code></li>
+<li>转换行为在内存上创建新的数组副本</li>
+<li>切片能通过后跟<code>...</code>解包，通常也用于作为可变参数传递</li>
+</ul>
+<h2 id="切片常用操作">切片常用操作</h2>
+<h3 id="内置函数">内置函数</h3>
+<ul>
+<li><code>len(slice) int</code>：获取长度</li>
+<li><code>cap(slice) int</code>：获取容量</li>
+<li><code>append(slice []Type, elems ... Type)</code>：拼接切片，返回新切片对象并共用底层数组，不改变原切片</li>
+<li><code>copy(dst []Type, src []Type) int</code>：拷贝数组，返回实际复制的元素个数，即<code>min(len(dts), len(src))</code></li>
+</ul>
+<h3 id="衍生操作">衍生操作</h3>
+<ul>
+<li>删除指定元素：<code>s = append(s[:i], s[i+1:]...)</code></li>
+<li>删除连续元素：<code>s = append(s[:start], s[end:]...)</code></li>
+<li>插入指定元素：<code>s = append(s[:i], append([]T{v}, s[i:]...)...)</code></li>
+</ul>
+<h3 id="slices"><code>slices</code></h3>
+<ul>
+<li><code>Go 1.21</code>时推出了<code>slices</code>标准库，具有大量切片常用操作，且和<a
+href="/source/_posts/go-strings.md#strings"><code>strings</code></a>内的大部分操作相似，也包括排序函数和<a
+href="/source/_posts/go-iterator.md#slices">迭代器函数</a>等</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>data structure</tag>
+        <tag>Go</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: 组合式编程</title>
+    <url>/2025/12/24/go-composition/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="组合式编程">组合式编程</h1>
+<h2 id="函数声明">函数声明</h2>
+<ul>
+<li><p><code>Go</code>是类型后置的，它的函数声明：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(r Receiver)</span></span> Func(a Type1, b Type2, ...) (ret1 Type1, ret2 Type2, ...) &#123;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>其中，<code>r Receiver</code>是可选项，表示接收者，这个方法只能由<code>Receiver</code>类型的对象调用，在函数内可以通过<code>r</code>访问它的其它属性和其它方法</p></li>
+<li><p>函数签名：支持可变(变长)参数<code>... Type</code></p></li>
+<li><p>返回值：支持多返回值以及返回值提前命名(命名可选)，可以直接在函数体使用且<code>return</code>可以省略返回值</p></li>
+<li><p>通常习惯使用<code>r *Receiver</code>指针接收者代替值接收者，对于复杂的类型也经常使用指针类型</p>
+<p><code>r</code>本质是调用它的对象的副本，使用指针类型才能实现真正对内容进行修改，且不需要过多的拷贝</p></li>
+<li><p>但值接收者有它的好处，因为只修改副本所以天生并发同步</p></li>
+<li><p>无论是值接收者还是指针接收者，值和指针都可以直接通过<code>.</code>访问，<code>go</code>编译器会自动展开为<code>(&amp;val).</code>与<code>(*ptr).</code>(编译器只会自动处理一层解引用与取地址)</p>
+<p>应该遵循一致性的声明，统一用值接收者或者统一用指针接收者</p></li>
+<li><p>函数签名相同而接收者不同时，不会发生冲突</p>
+<p><code>Go</code>不支持函数重载，因此接收者相同，函数名相同，签名不同时，也会发生冲突</p></li>
+<li><p>值接收者方法一定无法修改原有的值，即使：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(r Receiver)</span></span> SetA(a <span class="type">int32</span>) &#123; r.a = a &#125;</span><br><span class="line"><span class="keyword">var</span> a = A&#123; a: <span class="number">1</span> &#125;</span><br><span class="line">(&amp;a).SetA(<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>会被自动解引用：<code>(*(&amp;a)).SetA(2)</code></p>
+<p>只能通过指针接收者方法修改内部值</p></li>
+</ul>
+<h2 id="可见性">可见性</h2>
+<ul>
+<li><p><code>Go</code>的可见性设计极简，因为其抛弃了继承，只有包内包外，公有私有几种情况</p></li>
+<li><p>命名首字母为大写的类型/字段/函数/接口为公有，所有包可访问</p></li>
+<li><p>命名首字母为小写的类型/字段/函数/接口为私有，仅包内可访问，包内指的是相同包名(因此也不包含子目录的文件)</p></li>
+<li><p>预声明类型没有可见性的问题，在任意地方可见，例如<code>error</code>等</p>
+<p>它们可以找到定义是因为那些只是方便查阅而留下的</p></li>
+</ul>
+<h2 id="结构体">结构体</h2>
+<h3 id="特点">特点</h3>
+<ul>
+<li><code>Go</code>不是一个传统<code>OOP</code>的语言，它更鼓励使用组合式编程，<code>rust</code>的<code>traits</code>系统也是类似</li>
+<li><code>Go</code>抛弃了类与继承，结构体不能包含任何方法，也不能继承自其它结构体，也没有一般意义上的构造方法</li>
+<li>结构体更多通过组合的方式构造一个复杂的结构体，和其它传统<code>OOP</code>语言的组合类似，通过转发的方式调用成员属性的成员方法</li>
+</ul>
+<h3 id="可选参数实现">可选参数实现</h3>
+<ul>
+<li><p>与<code>Java</code>一样，<code>Go</code>不支持可选参数，但<code>Go</code>还不支持函数重载，甚至不支持在声明结构体类型时提供默认值</p></li>
+<li><p>但通过一定的包装，如<code>Java</code>可以通过封装<code>builder</code>实现可选参数，<code>Go</code>则是通过可变参数实现可选参数</p></li>
+<li><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span> &#123;</span><br><span class="line">	a, b, c <span class="type">int32</span></span><br><span class="line">	d       <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> AOption <span class="function"><span class="keyword">func</span><span class="params">(*A)</span></span> <span class="comment">// 接受*A返回空的函数</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">WithA</span><span class="params">(aa <span class="type">int32</span>)</span></span> AOption &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">func</span><span class="params">(a *A)</span></span> &#123;</span><br><span class="line">		a.a = aa</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...(其它属性的With实现)</span></span><br><span class="line"><span class="comment">// 构造函数, 接受可变参数 ...AOption</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewA</span><span class="params">(opts ...AOption)</span></span> *A &#123;</span><br><span class="line">	<span class="comment">// 提供默认值</span></span><br><span class="line">	ret := &amp;A&#123;</span><br><span class="line">		a: <span class="number">1</span>,</span><br><span class="line">		b: <span class="number">2</span>,</span><br><span class="line">		c: <span class="number">3</span>,</span><br><span class="line">		d: <span class="string">&quot;abc&quot;</span>,</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> _, opt := <span class="keyword">range</span> opts &#123;</span><br><span class="line">		opt(ret)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ret</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = NewA(WithA(<span class="number">3</span>), WithD(<span class="string">&quot;Hello World!&quot;</span>))</span><br></pre></td></tr></table></figure></li>
+<li><p>第三方库<code>go-optioner</code>可以快速生成选项函数的实现</p></li>
+<li><p>与<code>builder</code>模式类似，不需要对每个类都使用复杂的选项模式</p></li>
+<li><p>更复杂的实现可以避免不同类型的<code>WithXxx()</code>方法因函数名相同而冲突的问题，例如引入<code>builder</code>模式声明类型<code>XxxBuilder</code>并作为接收者</p></li>
+</ul>
+<h3 id="类型嵌入">类型嵌入</h3>
+<ul>
+<li><p><code>Go</code>通过在结构体声明内声明一个不含属性名的类型，可实现小程度的继承，但本质是组合：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span> &#123;</span><br><span class="line">	B <span class="comment">// 必须是通过`type`声明的命名类型</span></span><br><span class="line">	c <span class="type">int32</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>在实例化时，只需要指定：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">a := A&#123;</span><br><span class="line">	B: B&#123;&#125;,</span><br><span class="line">	c: <span class="number">2</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>类型嵌入的特性：外部类型可以直接通过<code>.</code>访问嵌入类型的属性</p>
+<p>这能一定程度模拟继承的一些特性并减小重复代码，但也会带来继承的缺点：破坏封装</p>
+<p>但由于本质是组合，修改嵌入类型，不会过多地影响外部类型</p></li>
+<li><p>此外，嵌入类型作为接收者的方法都会自动提升为外部类型的方法，但是要注意函数签名冲突(因为不允许函数重载)与属性冲突</p>
+<p>函数签名相同时，外部类型的方法会覆盖嵌入类型的同名(签名)方法</p></li>
+</ul>
+<h3 id="属性标签">属性标签</h3>
+<ul>
+<li>属性标签是元信息，可用于反射、序列化等，详见反射章节</li>
+<li><code>gopls</code>提供了快速生成<code>tags</code>的<code>codeActions</code></li>
+</ul>
+<h3 id="空结构体">空结构体</h3>
+<ul>
+<li><p>空结构体不占用任何内存</p></li>
+<li><p>因此可以作为<code>chan</code>信号量或<code>set</code>的实现：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">sign := <span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">done := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Set <span class="keyword">map</span>[<span class="type">string</span>]<span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">set := <span class="built_in">make</span>(Set)</span><br><span class="line">set[<span class="string">&quot;key&quot;</span>] = <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="基本接口">基本接口</h2>
+<h3 id="声明语句">声明语句</h3>
+<ul>
+<li><p>接口是<code>Go</code>实现多态、松耦合的基础</p></li>
+<li><p>在引入泛型之前，<code>Go</code>的接口的定义是一系列方法的集合</p>
+<p>在引入泛型的同时，<code>Go</code>的接口定义改为：一系列类型的集合</p>
+<p>这个更改是向后兼容的，即新版本的编译器完全可以编译并运行老版本的接口代码</p>
+<p>本节介绍基本接口，即旧定义的接口</p></li>
+<li><p>接口不能被实例化，但可以被声明为类型，这是多态的特性</p></li>
+<li><p>声明：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> AInterface <span class="keyword">interface</span> &#123;</span><br><span class="line">	A(<span class="type">int32</span>) in32</span><br><span class="line">	B()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="接口实现">接口实现</h3>
+<ul>
+<li><p><code>Go</code>的接口实现采用非侵入式设计，即不需要像<code>Java</code>那样显式声明<code>implements AInterface</code></p></li>
+<li><p>实现了接口的类型，意味着这个接口的方法集合是以这个类型作为接收者的方法集合的子集，一个类型如果没有完全实现一个接口的所有方法而被用作这个接口的一个实例，会被静态检查查出：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> AInt <span class="keyword">interface</span> &#123;</span><br><span class="line">	A()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span> &#123;</span><br><span class="line">	a <span class="type">int32</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a A)</span></span> A() &#123; <span class="comment">// 非侵入式(隐式) A 实现了 AInt</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a *A)</span></span> A() &#123; <span class="comment">// *A 实现了 AInt</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>需要注意的是，指针接收者和值接收者方法虽然都可在被调用时由编译器自动展开，但指针接收者实现并不意味着值可以作为这个接口的实例来使用，类型<code>T</code>的方法集只包含接收者为<code>T</code>的方法</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> AInt <span class="keyword">interface</span> &#123;</span><br><span class="line">	A()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> A <span class="keyword">struct</span> &#123;</span><br><span class="line">	a <span class="type">int32</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a *A)</span></span> A() &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	a AInt = A&#123;a: <span class="number">1</span>&#125;  <span class="comment">// error</span></span><br><span class="line">	b AInt = &amp;A&#123;a: <span class="number">1</span>&#125; <span class="comment">// ok</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>而值接收者的实现意味着指针可以作为这个接口的实例来使用，类型<code>*T</code>的方法集包含接收者为<code>T</code>和<code>*T</code>的方法</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a A)</span></span> A() &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a AInt = &amp;A&#123;a: <span class="number">1</span>&#125; <span class="comment">// ok</span></span><br></pre></td></tr></table></figure>
+<p>导致这种不对称设计的原因是<code>iface</code>的实现，接口的底层实现分离了类型信息和数据信息，即使自动取地址，其数据也是一份拷贝(如果实现者是<code>T</code>而不是<code>*T</code>)</p></li>
+<li><p><code>*T</code>的方法集包含<code>T</code>和<code>*T</code>的，不允许<code>T</code>和<code>*T</code>同时实现同一个接口，但允许<code>T</code>实现接口然后<code>*T</code>只覆盖部分方法</p>
+<p>但正如之前所说，最好的风格是针对一个类型只使用值接收者、或者只使用指针接收者</p></li>
+<li><p>接口继承：通过包含另一个接口，表示本接口实现了被包含的接口</p></li>
+<li><p>接口的定义一般放在消费方，由于非侵入性，实现方所在文件不需要接口的定义</p></li>
+<li><p>包级别的早期检查：虽然通过静态检查可以检测在使用时一个类型是否实现了一个接口，在一些接口分离的大型项目中，可以添加：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> _ SomeInterface = (*SomeType)(<span class="literal">nil</span>)</span><br></pre></td></tr></table></figure>
+<p>提前检查一个类型是否实现了一个接口</p></li>
+<li><p>空接口(<code>eface</code>)：<code>type any = interface{}</code></p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>CP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Go: 基本语法</title>
+    <url>/2025/12/23/go-beginner/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="go基本语法"><code>Go</code>基本语法</h1>
+<h2 id="包管理">包管理</h2>
+<ul>
+<li><p><code>package</code>关键字表示当前文件属于哪个包，主函数文件想要当作入口文件，必须声明<code>package main</code>，包名设计和路径不同，不像<code>java</code>通过<code>.</code>分隔，而是单纯的一个字段表示包名，但仍然是一个目录对应一个包，不会进行递归扫描</p>
+<p>不强制目录名和包名相同，导入后使用的是<code>package</code>后声明的字段而不是目录名，但一般目录名和包名相同</p></li>
+<li><p><code>import</code>是导入其它包的关键字，这里引入的是用<code>/</code>分隔的包含包所在网址或本地项目路径的绝对包名</p>
+<p>因此如果导入多个不同路径的同时，它们包含一个相同的包名，会发生冲突，需要重命名</p></li>
+<li><p><code>import</code>可以通过<code>()</code>对导入进行分组，也可以重命名：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	strs <span class="string">&quot;strings&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Print(<span class="string">&quot;Hello world!&quot;</span>)</span><br><span class="line">	strs.Split(<span class="string">&quot;a,b,c&quot;</span>, <span class="string">&quot;,&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>import</code>起别名时可以用<code>_</code>表示匿名引入，只加载其中的<code>init</code>函数</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> _ <span class="string">&quot;mysql-driver-go&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>内部包：<code>Go</code>约定，在命名为<code>internal</code>包内的函数无法被外部包导入</p>
+<p>可以导入内部包的文件，只有该内部包<strong>直接父目录的所有子文件</strong></p></li>
+</ul>
+<h2 id="数据类型">数据类型</h2>
+<h3 id="值类型">值类型</h3>
+<ul>
+<li><p>整型：</p>
+<ul>
+<li><code>uint8/16/32/64</code>：无符号整k型</li>
+<li><code>int8/16/32/64</code></li>
+<li><code>uint</code>和<code>int</code>：至少<code>32</code>位的整型</li>
+<li><code>byte</code>：等价于<code>uint8</code></li>
+<li><code>uintptr</code>：保证足够大以至于能存储任何指针</li>
+</ul></li>
+<li><p>浮点型：<code>float32/64</code></p></li>
+<li><p>复数：<code>complex64/128</code>，本质为两个<code>float32/64</code>的封装</p></li>
+<li><p>字符型：</p>
+<ul>
+<li><p><code>byte/uint8</code>：可存储<code>ASCII</code>码</p></li>
+<li><p><code>rune</code>：等价于<code>int32</code>，可存储<code>utf8</code>字符，用<code>rune</code>来在语义上区分整型和字符，也可表示一个<code>Unicode</code></p></li>
+<li><p><code>string</code>：字符序列，可视为一个只读<code>[]byte</code>，它同样可以表示<code>utf8</code>(编码为<code>byte</code>序列后)字符串</p>
+<p><code>string</code>是一个不可变类型</p></li>
+</ul></li>
+<li><p>布尔型：<code>bool</code></p></li>
+<li><p>数组类型：<code>[n]Type</code>，其中<code>n</code>必须是编译时可确定的</p>
+<p>数组也是一种值类型</p></li>
+<li><p>结构体：<code>struct {}</code>自定义类类型，是值类型</p></li>
+<li><p>指针类型：<code>*Type</code>，指针类型的对象可通过<code>&amp;</code>作用于对象来创建，同时可以不使用解引用符访问值的属性和方法</p>
+<p>因此解引用符<code>*</code>更多作用于右值，此时解出来的是副本</p>
+<p>通过使用指针，可以实现类似引用类型的效果</p></li>
+</ul>
+<h3 id="引用类型">引用类型</h3>
+<ul>
+<li><p>切片类型：<code>[]Type</code>，是可变长的序列</p></li>
+<li><p>映射类型：<code>map[keyType]valueType</code></p></li>
+<li><p>方法：<code>func(T...) R</code>自定义方法</p></li>
+<li><p>通道类型：<code>Go</code>擅于多线程场景，通道是<code>Go</code>提供的线程间通信手段</p>
+<ul>
+<li><code>chan Type</code>：双向通道，<code>chan</code>表明它是一个通道，<code>Type</code>是通道传输的数据的类型</li>
+<li><code>chan&lt;- Type</code>：只写通道</li>
+<li><code>&lt;-chan Type</code>：只读通道</li>
+</ul></li>
+<li><p>接口：<code>interface {}</code>自定义接口类型</p></li>
+<li><p>任意类型(别名)：<code>any = interface{}</code></p></li>
+<li><p>可比较类型(别名)：<code>comparable = interface{ comparable }</code></p>
+<p><code>comparable</code>应该作为函数参数的类型以限制形参，而不是用来定义一个变量</p>
+<p>所有基本数据类型、以及由可比较类型组成的数组、以及由可比较类型组成的<code>struct</code>都是<code>comparable</code>的</p></li>
+<li><p><code>Go</code>的引用类型只有切片、映射、方法、通道、接口五种，它们像指针那样共享同一份堆中的数据，拷贝的是地址</p></li>
+<li><p>使用类型断言：<code>obj.(type)</code>获取<code>obj</code>的类型，<code>obj.(Type)</code>返回<code>(value, ok)</code></p></li>
+</ul>
+<h3 id="字面量">字面量</h3>
+<ul>
+<li><p><code>true</code>和<code>false</code></p></li>
+<li><p>整型可使用<code>_</code>分割加强可读性</p></li>
+<li><p><code>iota</code>：是预定义的字面量，<strong>只在<code>const</code>块下生效</strong>，表示<strong>自增的自然数序列</strong>，即<code>0-idx</code></p>
+<p><code>const</code>组的一个特性是：后续没有显式赋值的常量会延用最近使用的表达式，因此只需要第一项指定为<code>iota</code>，后续可默认生成</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	a = <span class="literal">iota</span>     <span class="comment">// 0</span></span><br><span class="line">	b            <span class="comment">// 延用 iota, 为1</span></span><br><span class="line">	c = <span class="literal">iota</span> * <span class="number">2</span> <span class="comment">// 2 * 2</span></span><br><span class="line">	d            <span class="comment">// 延用 iota * 2, 为3 * 2</span></span><br><span class="line">	e = <span class="number">1</span></span><br><span class="line">	f = <span class="literal">iota</span> <span class="comment">// 5</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>实际上，<code>iota</code>并不算很好的命名，目前只有<code>Cpp</code>与<code>APL</code>以及<code>Go</code>在使用</p>
+<p>一种场景是：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	a = <span class="number">1</span> &lt;&lt; <span class="literal">iota</span></span><br><span class="line">	b <span class="comment">// 1 &lt;&lt; 1</span></span><br><span class="line">	c <span class="comment">// 1 &lt;&lt; 2</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li><p><strong><code>nil</code></strong>：空值，它不是类型，而是用于初始化指针类型、内置引用类型的零值</p></li>
+<li><p>数组/切片字面量：一维数组如下，高维数组类似</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">a := [<span class="number">5</span>]<span class="type">int32</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;</span><br><span class="line"><span class="comment">// 可以通过 idx:value 局部赋值</span></span><br><span class="line"><span class="comment">// 0-idx</span></span><br><span class="line">b := [<span class="number">5</span>]<span class="type">int32</span>&#123;<span class="number">1</span>: <span class="number">2</span>, <span class="number">4</span>: <span class="number">5</span>&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>结构体字面量：结构体字面量有若干种写法</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 一个类型的字面量是紧跟该类型后的大括号</span></span><br><span class="line"><span class="keyword">var</span> a AStruct = AStruct&#123;</span><br><span class="line">	<span class="number">1</span>, <span class="comment">// 如果不带字段名, 则按顺序赋值, 且必须全部手动赋值</span></span><br><span class="line">	<span class="number">2</span>, <span class="comment">// 所有属性值需要紧跟 &#x27;,&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 可以指定字段名, 此时顺序无影响</span></span><br><span class="line"><span class="comment">// 此时会将所有未手动赋值的属性赋为零值</span></span><br><span class="line"><span class="keyword">var</span> b BStruct = BStruct&#123;</span><br><span class="line">	a: <span class="number">1</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 匿名结构体习惯使用 := 赋值</span></span><br><span class="line">a := <span class="keyword">struct</span> &#123;</span><br><span class="line">	a <span class="type">int32</span></span><br><span class="line">	b <span class="type">int32</span></span><br><span class="line">&#125;&#123;</span><br><span class="line">	<span class="number">1</span>,</span><br><span class="line">	<span class="number">2</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 允许混合声明, 指定字段必须放在最后</span></span><br><span class="line"><span class="comment">// 但这是不好的代码习惯</span></span><br><span class="line">b := <span class="keyword">struct</span> &#123;</span><br><span class="line">	a <span class="type">int32</span></span><br><span class="line">	b <span class="type">int32</span></span><br><span class="line">&#125;&#123;</span><br><span class="line">	<span class="number">1</span>,</span><br><span class="line">	a: <span class="number">2</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>new()</code>与<code>make()</code>：用于值类型和引用类型的内存分配</p>
+<ul>
+<li><p><code>new(Type) *Type</code>：<code>new</code>只能用于创建值类型，且使用零值初始化，返回指针</p>
+<p>不常用，更常用的是先创建一个值类型的值然后取地址</p></li>
+<li><p><code>make(Type, ...int) Type</code>：<code>make</code>专门用于为映射、切片、通道这三个内置引用类型分配内存，并返回它们的<strong>值</strong>引用</p>
+<p>这三种类型对应的<code>make</code>函数格式不同，根据第一个参数解析后续的参数</p></li>
+</ul></li>
+</ul>
+<h2 id="声明语句">声明语句</h2>
+<h3 id="变量声明">变量声明</h3>
+<ul>
+<li><p><code>Go</code>是静态强类型语言，虽然可以使用<code>var</code>与<code>const</code>，但是最终需要编译时确定类型，即指定类型或指定初始值必须含一</p></li>
+<li><p>根据字面量动态推断类型：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">a := <span class="number">1</span></span><br><span class="line"><span class="keyword">const</span> b = <span class="number">1</span> <span class="comment">// const变量只能进行一次初始化</span></span><br><span class="line">c := <span class="number">1</span>      <span class="comment">// 等价于 var c = 1</span></span><br></pre></td></tr></table></figure>
+<p>短变量赋值语句只能在函数作用域内使用</p></li>
+<li><p>指定数据类型：<code>Go</code>是类型后置的，如果使用<code>var</code>声明变量不附带初始值，则必须指定类型</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> a <span class="type">int</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> b <span class="type">int</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>类型后置能带来一系列优点，首先是可以抛弃<code>void</code>而不影响观感，最重要的是方法签名和<strong>函数类型易于阅读</strong></p></li>
+<li><p>变量分组：通过<code>()</code>对变量进行分组能提高可读性</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	a <span class="type">int32</span></span><br><span class="line">	b <span class="type">float32</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	a = <span class="number">1</span></span><br><span class="line">	b</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li><p>多返回值：<code>Go</code>支持多返回值以及函数多返回值</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">a, b := <span class="number">1</span>, <span class="number">2</span></span><br><span class="line">a, b := b, a <span class="comment">// swap</span></span><br><span class="line">a, b = <span class="function"><span class="keyword">func</span><span class="params">()</span></span> (<span class="type">int32</span>, <span class="type">int32</span>) &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>, <span class="number">2</span></span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="类型声明">类型声明</h3>
+<ul>
+<li><p>类型声明(创建新类型)使用<code>type TypeName OriginTypeName</code>，基于其它类型创建新类型(两者类型的头信息不同)</p>
+<p>所有在之前数据类型小节讲述的类型以及自定义的类型都可以作为<code>OriginTypeName</code></p></li>
+<li><p>与<code>var</code>和<code>const</code>类似，<code>type</code>关键字也可以使用<code>type ()</code>分组声明</p>
+<p>同一个<code>type</code>分组的类型声明，遵循先后顺序，且在前语句声明的类型可以在后语句立刻使用，需要注意循环引用</p>
+<p><code>Go</code>的引用类型不像<code>Java</code>的引用类型，其更相似的是指针类型，使用指针类型可以实现循环引用</p></li>
+<li><p>示例-数组：<code>type IntArr5 [5]int32</code></p></li>
+<li><p>示例-切片：<code>type IntSlice []int32</code></p></li>
+<li><p>示例-结构体：结构体是一系列属性的集合</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> StructName <span class="keyword">struct</span> &#123;</span><br><span class="line">	a <span class="type">int64</span></span><br><span class="line">	b <span class="type">int32</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>示例-接口：接口是一系列方法的集合</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> InterfaceName <span class="keyword">interface</span> &#123;</span><br><span class="line">	A() <span class="type">int</span></span><br><span class="line">	B(a <span class="type">int32</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>示例-通道：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> (</span><br><span class="line">	DEIntChan <span class="keyword">chan</span> <span class="type">int32</span></span><br><span class="line">	RIntChan  &lt;-<span class="keyword">chan</span> <span class="type">int32</span></span><br><span class="line">	WIntChan  <span class="keyword">chan</span>&lt;- <span class="type">int32</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li><p>示例-函数：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> RetIntFunc <span class="function"><span class="keyword">func</span><span class="params">()</span></span> <span class="type">int32</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="类型别名">类型别名</h3>
+<ul>
+<li><p>类型别名使用<code>type TypeName = OriginTypeName</code>，使用<code>=</code>后，这个类型是类型别名，两者等价</p>
+<p>别名，意味着<code>OriginTypeName</code>必须已经声明，而不能是匿名的（如匿名结构体、匿名接口），但函数类型是允许的</p></li>
+<li><p>类型别名可以和类型声明放进同一个<code>type</code>分组里</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> (</span><br><span class="line">	RetIntFunc = <span class="function"><span class="keyword">func</span><span class="params">()</span></span> <span class="type">int32</span> <span class="comment">// ok</span></span><br><span class="line">	StrcutA    = <span class="keyword">struct</span> &#123;     <span class="comment">// error</span></span><br><span class="line">		a <span class="type">int32</span></span><br><span class="line">	&#125;</span><br><span class="line">	StructB <span class="keyword">struct</span> &#123;</span><br><span class="line">		a <span class="type">int32</span></span><br><span class="line">	&#125;</span><br><span class="line">	StructC = StructB</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li><p>同一个<code>type</code>分组里，类型别名的位置没有任何影响，即使其引用的原类型在同一分组内的后面定义</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> (</span><br><span class="line">	A = B</span><br><span class="line"></span><br><span class="line">	B <span class="type">int32</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="运算与表达式">运算与表达式</h2>
+<h3 id="运算">运算</h3>
+<ul>
+<li>大多数运算符和其它语言类似</li>
+<li>不含前缀<code>++</code>或前缀<code>--</code>，且后缀<code>++</code>和后缀<code>--</code>都不具有返回值，即它们变成了原子操作</li>
+<li>不支持三元表达式</li>
+<li>条件表达式不需要小括号括住，且条件表达式必须返回布尔值，其它类型不会自动隐式地转换为布尔值</li>
+</ul>
+<h3 id="条件控制">条件控制</h3>
+<ul>
+<li><p><code>if</code>表达式与其它语言类似</p></li>
+<li><p><code>switch</code>表达式则有较大不同：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// switch 后可跟简单的计算语句</span></span><br><span class="line"><span class="comment">// 特殊的是这些语句需要以 ; 结尾</span></span><br><span class="line"><span class="keyword">switch</span> t := nbr; &#123;</span><br><span class="line"><span class="comment">// case 语句后面跟条件表达式</span></span><br><span class="line"><span class="keyword">case</span> t == <span class="number">1</span>:</span><br><span class="line">	stmt</span><br><span class="line"><span class="comment">// 和其它语言不同, 默认情况下,</span></span><br><span class="line"><span class="comment">// 每个条件块执行结束结束即退出(默认break)</span></span><br><span class="line"><span class="comment">// 如果想继续执行下一分支则应使用 fallthrough</span></span><br><span class="line"><span class="keyword">case</span> t == <span class="number">2</span>:</span><br><span class="line">	stmt</span><br><span class="line">	<span class="keyword">fallthrough</span></span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">	default_stmt</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>虽然支持<code>label</code>和<code>goto</code>语句，但是尽量不用<code>goto</code>，倒是可以结合<code>break</code>和<code>continue</code>使用标签</p></li>
+</ul>
+<h3 id="循环控制">循环控制</h3>
+<ul>
+<li><p>没有<code>while</code>表达式，全部使用<code>for</code>：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> init_stmt; expr; post_stmt &#123;</span><br><span class="line">	for_stmt</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> expr &#123;</span><br><span class="line">	while_stmt</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> &#123; <span class="comment">// 不带表达式默认为 true</span></span><br><span class="line">	while_true_stmt</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>for-range</code>：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> idx, val := <span class="keyword">range</span> iterable &#123;</span><br><span class="line">	stmt</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>不支持省略<code>if</code>、<code>for</code>语句的大括号</p></li>
+<li><p>不支持左大括号换行</p></li>
+<li><p>大部分风格可以由格式化工具如<code>goimport</code>和<code>gofumpt</code>决定，不需要过多注意</p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>beginner</tag>
+        <tag>Go</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>编译原理: 语法分析</title>
     <url>/2025/12/03/compilers-syntax/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -1560,8 +3366,8 @@ id="集成bean-validation-api">集成<code>Bean Validation API</code></h2>
         <category>Spring framework</category>
       </categories>
       <tags>
-        <tag>Java</tag>
         <tag>validation</tag>
+        <tag>Java</tag>
         <tag>Spring</tag>
       </tags>
   </entry>
@@ -1786,8 +3592,8 @@ id="dispatcherservlet的配置"><code>DispatcherServlet</code>的配置</h3>
         <category>Spring framework</category>
       </categories>
       <tags>
-        <tag>Java</tag>
         <tag>webapp</tag>
+        <tag>Java</tag>
         <tag>Spring</tag>
         <tag>MVC</tag>
       </tags>
@@ -1882,8 +3688,8 @@ id="jakarta-ee-validation-api"><code>Jakarta EE Validation API</code></h1>
         <category>Java EE</category>
       </categories>
       <tags>
-        <tag>Java</tag>
         <tag>validation</tag>
+        <tag>Java</tag>
         <tag>security</tag>
       </tags>
   </entry>
@@ -2284,8 +4090,8 @@ id="entitymanager与entitymanagerfactory"><code>EntityManager</code>与<code>Ent
         <category>Java EE</category>
       </categories>
       <tags>
-        <tag>Java</tag>
         <tag>webapp</tag>
+        <tag>Java</tag>
         <tag>tomcat</tag>
       </tags>
   </entry>
@@ -2642,9 +4448,9 @@ id="servlet接口与httpservlet实现类"><code>Servlet</code>接口与<code>Htt
         <category>Java EE</category>
       </categories>
       <tags>
+        <tag>webapp</tag>
         <tag>Java</tag>
         <tag>Servlet</tag>
-        <tag>webapp</tag>
       </tags>
   </entry>
   <entry>
@@ -4023,8 +5829,8 @@ id="callablet接口与异步线程池"><code>Callable&lt;T&gt;</code>接口与�
         <category>Java SE</category>
       </categories>
       <tags>
+        <tag>concurrent</tag>
         <tag>Java</tag>
-        <tag>multithreading</tag>
       </tags>
   </entry>
   <entry>
@@ -6403,8 +8209,8 @@ Checked --&gt; ...</code></pre></li>
         <category>Java SE</category>
       </categories>
       <tags>
-        <tag>Java</tag>
         <tag>exception</tag>
+        <tag>Java</tag>
       </tags>
   </entry>
   <entry>
@@ -6917,8 +8723,8 @@ i = 1; i &lt;= n; ++i) { for (int j = 1; j &lt;= m; ++j) { a[i + 1][j]
         <category>Java SE</category>
       </categories>
       <tags>
-        <tag>Java</tag>
         <tag>generics</tag>
+        <tag>Java</tag>
       </tags>
   </entry>
   <entry>
@@ -7456,7 +9262,7 @@ subp1 = subp.add_parsers(name=‘init’) subp1.add_argument(‘-a’)</p>
       <categories>
         <category>Programming</category>
         <category>Python</category>
-        <category>Std library</category>
+        <category>Spec &amp; Stdlib</category>
       </categories>
       <tags>
         <tag>CLI</tag>
@@ -16053,7 +17859,7 @@ value\Big(0+\big(n_1+(n_1+1)\big)+n_2+\dots+(n_{k-1}+1)+n\Big)\end{align}$</span
       <categories>
         <category>Programming</category>
         <category>Python</category>
-        <category>Std library</category>
+        <category>Spec &amp; Stdlib</category>
       </categories>
       <tags>
         <tag>data structure</tag>
@@ -19330,8 +21136,8 @@ exp3
 <p>如图，使用<code>html</code>语法，写出一个四行两列的、边界值为2的、内容<code>'11'</code>被设置为占据四行且居中的表格</p>
 <h3 id="图片">图片</h3>
 通过<code>&lt;img /&gt;</code>标签可以定义并放缩图片：
-<style>.sbwhaptvlgqj{zoom:33%;}</style>
-<img src="/2023/10/03/markdown-beginner/image_example.png" class="sbwhaptvlgqj">
+<style>.kwxkfprwbvku{zoom:33%;}</style>
+<img src="/2023/10/03/markdown-beginner/image_example.png" class="kwxkfprwbvku">
 <p>图片可以缩放，即在前方的<code>html</code>标签内加上<code>style="zoom:num%"</code>，<code>num</code>为缩放比例</p>
 <h3 id="链接">链接</h3>
 <p><code>&lt;a id="111"&gt;&lt;/a&gt;</code>：这条元素定义了一个<code>id</code>为<code>'111'</code>的锚点，在文章内部可以通过<code>[点击](#111)</code>链接跳转到这个锚点，例如本文在目录处设定了一个<code>'HOME'</code>锚点，您可以<a

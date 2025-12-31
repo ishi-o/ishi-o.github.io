@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Go: 错误处理">
+<meta property="og:url" content="https://ishi-o.github.io/2025/12/25/go-error/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-12-25T11:37:12.000Z">
+<meta property="article:modified_time" content="2025-12-31T09:51:32.604Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="Go">
+<meta property="article:tag" content="exception">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/12/25/go-error/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/12/25/go-error/","path":"2025/12/25/go-error/","title":"Go: 错误处理"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Go: 错误处理 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">错误处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BA%A7%E5%88%AB%E5%88%86%E7%B1%BB"><span class="nav-number">1.1.</span> <span class="nav-text">级别分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.2.</span> <span class="nav-text">错误处理的设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#error"><span class="nav-number">1.3.</span> <span class="nav-text">error</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A3%B0%E6%98%8Eerror"><span class="nav-number">1.3.1.</span> <span class="nav-text">声明error</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E5%BC%8F%E9%94%99%E8%AF%AF"><span class="nav-number">1.3.2.</span> <span class="nav-text">链式错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B3%E7%BA%A7%E9%94%99%E8%AF%AF"><span class="nav-number">1.3.3.</span> <span class="nav-text">平级错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#github.compkgerrors"><span class="nav-number">1.3.4.</span> <span class="nav-text">github.com&#x2F;pkg&#x2F;errors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#panic"><span class="nav-number">1.4.</span> <span class="nav-text">panic</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA"><span class="nav-number">1.4.1.</span> <span class="nav-text">创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%81%A2%E5%A4%8D"><span class="nav-number">1.4.2.</span> <span class="nav-text">恢复</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">152</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/25/go-io/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-25</time>
+        <br>
+      Go: I/O
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/31/go-sqlx/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-31</time>
+        <br>
+      Go: sqlx
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/28/go-gin-middleware/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-28</time>
+        <br>
+      Gin: 中间件
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/30/go-serializing/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-30</time>
+        <br>
+      Go: 序列化与反序列化
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/12/25/go-error/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Go: 错误处理 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Go: 错误处理
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-12-25 11:37:12" itemprop="dateCreated datePublished" datetime="2025-12-25T11:37:12+00:00">2025-12-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-31 09:51:32" itemprop="dateModified" datetime="2025-12-31T09:51:32+00:00">2025-12-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Go/Spec-Stdlib/" itemprop="url" rel="index"><span itemprop="name">Spec & Stdlib</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>4 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="错误处理">错误处理</h1>
+<h2 id="级别分类">级别分类</h2>
+<ul>
+<li><code>error</code>：正常的运行时错误，需要处理，若忽略程序也不会崩溃</li>
+<li><code>panic</code>：恐慌，程序应该在处理完问题后立刻退出</li>
+<li><code>fatal</code>：致命错误，程序无法处理并立刻退出</li>
+</ul>
+<h2 id="错误处理的设计">错误处理的设计</h2>
+<ul>
+<li><p><code>Go</code>没有<code>try-catch</code>语句，一切<code>error</code>(如果有)都作为返回值返回</p></li>
+<li><p>因此处理变得清晰：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">res, err := ThrowSomeError()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="comment">// process or:</span></span><br><span class="line">	<span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>但有若干缺点：</p>
+<ul>
+<li>堆栈丢失：标准库的错误信息不包含堆栈，需要引入非标准库</li>
+<li>代码冗余：有极多的<code>if err != nil</code>，不像<code>try-catch</code>那样有统一的结构化处理</li>
+</ul></li>
+<li><p>但实际上也有一些优点：</p>
+<ul>
+<li><p>性能高：没有<code>try-catch</code>开销</p></li>
+<li><p>虽然错误信息不包含堆栈，但<code>error</code>本质就是返回值，可以一层一层向上调试找到</p></li>
+<li><p><code>error</code>作为值，更多时候作为返回值，能增强可读性，知道错误出自哪里</p></li>
+<li><p>编译时检查减轻处理负担：编译器或静态检查要求必须接收函数的返回值，当一个函数有可能抛出<code>error</code>时，编译器会提醒显示接收并处理(或<code>return</code>)</p>
+<p>而使用结构化处理的语言则总会遇到：当发生错误但没有显式处理时，直接使用<code>try-catch</code>块包围，带来性能损耗、难以定位</p>
+<p>它们更难受的问题在于，容易遗漏运行时错误而没有处理</p></li>
+</ul></li>
+<li><p>与另一个将错误作为返回值的语言<code>rust</code>对比，<code>rust</code>提供了语法糖来处理错误，因此同样作为返回值却没有引起很大的讨论</p></li>
+</ul>
+<h2 id="error"><code>error</code></h2>
+<h3 id="声明error">声明<code>error</code></h3>
+<ul>
+<li><p><code>error</code>是预定义的类型</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="type">error</span> <span class="keyword">interface</span> &#123;</span><br><span class="line">	Error() <span class="type">string</span> <span class="comment">// 获取错误信息</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>errors</code>是错误处理的工具包</p></li>
+<li><p>创建错误：<code>errors.New(msg string)</code></p>
+<p>也可以通过<code>fmt</code>创建：<code>fmt.Errorf(msg string, ...any)</code>传入格式化信息</p>
+<p>在没有链式调用的前提下，它们返回内置的<code>errorString</code>结构体</p></li>
+<li><p><code>error</code>理应是一个常量(哨兵错误)，但在设计上却是通过<code>var</code>声明的，是一个变量</p>
+<p>为了可维护性，一般将常用的<code>error</code>当作全局变量预先声明</p></li>
+<li><p>自定义<code>error</code>：<code>error</code>是一个接口，只要类型实现了<code>Error()</code>，就是一个<code>error</code></p></li>
+</ul>
+<h3 id="链式错误">链式错误</h3>
+<ul>
+<li>链式错误是<code>Go 1.13+</code>提供的用于获取链式调用信息的错误</li>
+<li>通过<code>fmt.Errorf("%w", err)</code>可以包装一个错误并返回一个实现了<code>Unwrap()</code>的<code>error</code>，它返回的对象本质是内置的<code>wrapErrors</code></li>
+<li>因为<code>wrapErrors</code>不是预定义的，它是包私有的，所以只能通过<code>errors.Unwrap(error)</code>解包，如果传入的<code>error</code>没有实现<code>Unwrap()</code>则返回<code>nil</code></li>
+<li><code>errors.Is(err, target error) bool</code>：判断<code>err</code>的链式错误中是否包含<code>target</code>，即省去了自己写<code>for</code>的过程</li>
+<li><code>errors.As(err error, target any) bool</code>：判断<code>err</code>的链式错误中是否包含匹配<code>target</code>的类型错误，即在<code>Is</code>的基础上传递的<code>target</code>变为指针的指针并赋值，将第一个匹配成功的错误赋值给<code>target</code>并返回<code>true</code>
+<ul>
+<li><code>target</code>必须实现<code>error</code></li>
+<li><code>target</code>必须是指针的指针</li>
+</ul></li>
+<li><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;errors&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// Is: 判断是否包含</span></span><br><span class="line">	tgt := Myerr&#123;<span class="string">&quot;msg&quot;</span>&#125;</span><br><span class="line">	<span class="keyword">if</span> errors.Is(err, tgt) &#123;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// As: 判断是否有对应类型的错误并赋值</span></span><br><span class="line">	<span class="comment">// 传入指针的指针，才可在函数内修改外部的错误变量</span></span><br><span class="line">	<span class="keyword">var</span> tgt *Myerr</span><br><span class="line">	<span class="keyword">if</span> errors.As(err, &amp;tgt) &#123;</span><br><span class="line">		fmt.Print(tgt.String())</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="平级错误">平级错误</h3>
+<ul>
+<li>通过<code>errors.Join(...error) error</code>创建一个封装了<code>[]error</code>的错误，它的返回值不是链式错误，而是<code>joinError</code></li>
+<li><code>joinError</code>实现了<code>Unwrap() []error</code>，<code>errors.Is()</code>与<code>errors.As()</code>都有单独处理它们的分支，所以可以像链式错误那样使用它们</li>
+<li>但是<code>errors.Unwrap()</code>中不包含单独的判断，所以只会返回<code>nil</code></li>
+</ul>
+<h3 id="github.compkgerrors"><code>github.com/pkg/errors</code></h3>
+<ul>
+<li>这是另一个官方的<code>errors</code>包，但没有加入标准库</li>
+<li>它会自动记录栈信息</li>
+<li>但实际上，它的链式调用已被标准库替代，而堆栈记录已经被许多第三方依赖所吸收，早已处于归档状态</li>
+</ul>
+<h2 id="panic"><code>panic</code></h2>
+<h3 id="创建">创建</h3>
+<ul>
+<li><p><code>panic(string)</code>内置函数用于自定义<code>panic</code>，但并不常用</p></li>
+<li><p>仅有在程序真的不会继续执行的时候，才使用<code>panic()</code>，或者使用日志框架</p>
+<p>例如数据库连接失败时，使用<code>panic()</code></p></li>
+<li><p><code>panic</code>会进行善后，比如执行事先定义的<code>defer</code>语句</p>
+<p><code>defer</code>语句按先进后出的顺序执行</p></li>
+<li><p>关于<code>defer</code>：<code>defer</code>后跟函数的参数是会被预计算的</p></li>
+</ul>
+<h3 id="恢复">恢复</h3>
+<ul>
+<li><code>recover()</code>可用于恢复<code>panic</code>并不退出程序</li>
+<li><code>recover()</code>必须在<code>defer</code>块中执行</li>
+<li><code>panic</code>向上传递，即向调用者方向传递，因此如果在<code>defer</code>块内的闭包函数调用<code>recover()</code>是无效的</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/25/go-io/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-25</time>
+        <br>
+      Go: I/O
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/31/go-sqlx/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-31</time>
+        <br>
+      Go: sqlx
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/28/go-gin-middleware/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-28</time>
+        <br>
+      Gin: 中间件
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/30/go-serializing/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-30</time>
+        <br>
+      Go: 序列化与反序列化
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/Go/" rel="tag"># Go</a>
+              <a href="/tags/exception/" rel="tag"># exception</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/12/25/go-generics/" rel="prev" title="Go: 泛型">
+                  <i class="fa fa-angle-left"></i> Go: 泛型
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/12/25/go-io/" rel="next" title="Go: I&#x2F;O">
+                  Go: I/O <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">263k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">15:56</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

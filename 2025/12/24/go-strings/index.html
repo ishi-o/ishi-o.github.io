@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Go: 字符串">
+<meta property="og:url" content="https://ishi-o.github.io/2025/12/24/go-strings/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-12-24T18:13:16.000Z">
+<meta property="article:modified_time" content="2025-12-31T09:51:32.604Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="Go">
+<meta property="article:tag" content="string">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2025/12/24/go-strings/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2025/12/24/go-strings/","path":"2025/12/24/go-strings/","title":"Go: 字符串"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Go: 字符串 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.</span> <span class="nav-text">字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E6%80%A7"><span class="nav-number">1.1.</span> <span class="nav-text">特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C"><span class="nav-number">1.2.</span> <span class="nav-text">字符串操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#strings"><span class="nav-number">1.3.</span> <span class="nav-text">strings</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E4%B8%8E%E6%8B%B7%E8%B4%9D"><span class="nav-number">1.3.1.</span> <span class="nav-text">创建与拷贝</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%94%E8%BE%83"><span class="nav-number">1.3.2.</span> <span class="nav-text">比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%85%E5%90%AB%E4%B8%8E%E5%8C%B9%E9%85%8D"><span class="nav-number">1.3.3.</span> <span class="nav-text">包含与匹配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%89%B2"><span class="nav-number">1.3.4.</span> <span class="nav-text">分割</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E4%B8%8E%E6%9B%BF%E6%8D%A2"><span class="nav-number">1.3.5.</span> <span class="nav-text">删除与替换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#strconv"><span class="nav-number">1.4.</span> <span class="nav-text">strconv</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">152</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/27/go-viper/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-27</time>
+        <br>
+      Go: Viper配置管理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/28/go-gin-response/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-28</time>
+        <br>
+      Gin: 响应处理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/31/go-sqlx/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-31</time>
+        <br>
+      Go: sqlx
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/25/go-io/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-25</time>
+        <br>
+      Go: I/O
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2025/12/24/go-strings/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Go: 字符串 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Go: 字符串
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2025-12-24 18:13:16" itemprop="dateCreated datePublished" datetime="2025-12-24T18:13:16+00:00">2025-12-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-12-31 09:51:32" itemprop="dateModified" datetime="2025-12-31T09:51:32+00:00">2025-12-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Go/Spec-Stdlib/" itemprop="url" rel="index"><span itemprop="name">Spec & Stdlib</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>4 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="字符串">字符串</h1>
+<h2 id="特性">特性</h2>
+<ul>
+<li><code>string</code>是一个值类型，意味着可以是空串但不是<code>nil</code></li>
+<li><code>string</code>是一个不可变的<code>byte</code>数组，是不可变类型</li>
+<li><code>string</code>对象本身可以被取地址，但它的元素不允许</li>
+<li>并且由于本质是字节数组，通过数组访问符<code>[]</code>访问只能得到<code>byte</code>而不是<code>rune</code>并且也没有<code>char</code>类型</li>
+<li><code>string</code>与<code>[]byte</code>和<code>[N]byte</code>可以相互转换，要修改<code>string</code>需要先转换为字节数组，为了内存安全，转换这一行为会分配新的内存给字节数组</li>
+<li>原始字符串：用反引号包围</li>
+</ul>
+<h2 id="字符串操作">字符串操作</h2>
+<ul>
+<li><p>由于字符串本质是字节数组，许多数组/切片的操作用于<code>string</code>是很容易理解的</p></li>
+<li><p>拼接：<code>Go</code>内置了<code>+</code>和<code>+=</code>字符串运算</p></li>
+<li><p>字符串可以直接通过切片符获取子串，但本质是获取字节数组的切片</p></li>
+<li><p><code>len()</code>：本质是求字节数组的长度，大部分情况字符是<code>ASCII</code>码因此只需要一个字节</p></li>
+<li><p><code>copy()</code>：拷贝操作</p></li>
+<li><p>按字符处理：先转换成<code>[]rune</code>，即<code>int32</code>序列再处理</p></li>
+<li><p>按字符遍历：<code>range</code>的最小单位就是<code>int32</code>，因此：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> _, ch := <span class="keyword">range</span> str &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的遍历是按<code>rune</code>遍历的</p></li>
+</ul>
+<h2 id="strings"><code>strings</code></h2>
+<ul>
+<li><code>strings</code>是内置的字符串工具包，用于处理<code>utf8</code>字符串</li>
+</ul>
+<h3 id="创建与拷贝">创建与拷贝</h3>
+<ul>
+<li><code>Repeat(s string, cnt int) string</code>：按次数拷贝字符串</li>
+<li><code>Clone(string) string</code>：拷贝字符串，若不为空则分配内存并返回新的字符串对象</li>
+<li><code>Builder</code>结构体：用于通过消耗更小的内存来构建复杂字符串(相比使用<code>+</code>)
+<ul>
+<li>实现了<code>io.Writer, io.ByteWriter, io.StringWriter</code>接口：通过<code>WriteXxx()</code>方法构建字符串，</li>
+<li><code>Grow(n int)</code>：预分配内存</li>
+<li><code>Reset()</code>：重置<code>Builder</code></li>
+<li><code>String()</code>执行构建</li>
+<li><code>Builder</code>不能作为参数传递</li>
+</ul></li>
+<li><code>Join([]string, rep string) string</code>：拼接字符串切片，分隔串为<code>rep</code>，比<code>+</code>性能更好</li>
+</ul>
+<h3 id="比较">比较</h3>
+<ul>
+<li><code>Compare(a, b string) int</code>：按字符比较两个字符串，返回<code>1</code>，<code>0</code>，<code>-1</code></li>
+<li><code>EqualFold(s, t string) bool</code>：忽略大小写情况下是否相等</li>
+</ul>
+<h3 id="包含与匹配">包含与匹配</h3>
+<ul>
+<li><code>Contains(s, substr string) bool</code>：判断前者是否包含<code>substr</code>子串</li>
+<li><code>ContainsAny(s, chs string) bool</code>：判断前者的字符集是否包含<code>chs</code>字符集</li>
+<li><code>Count(s, substr string) int</code>：前者包含多少次后者</li>
+<li><code>HasPrefix(s, prefix string) bool</code>：判断前者是否有前缀<code>prefix</code></li>
+<li><code>HasSuffix(s, suffix string) bool</code>：判断前者是否有后缀<code>suffix</code></li>
+<li><code>Index(s, substr string) int</code>：返回子串第一次出现的位置</li>
+<li><code>IndexAny(s, chs string) int</code>：返回字符集第一次出现的位置</li>
+<li><code>IndexRune(s, chs rune) int</code>：返回指定<code>unicode</code>字符第一次出现的位置</li>
+<li><code>IndexLastXxx</code>：上述三者都有<code>Last</code>版本</li>
+</ul>
+<h3 id="分割">分割</h3>
+<ul>
+<li><p><code>Fields(s string) []string</code>：按空格分割字符串，类似<code>split</code></p></li>
+<li><p><code>FieldsFunc(s string, f func(rune) bool) []string</code>：按函数<code>f</code>的返回值决定是否分割</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 等价于`Fileds(s)`:</span></span><br><span class="line">FiledsFunc(s, <span class="function"><span class="keyword">func</span><span class="params">(ch <span class="type">rune</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> ch == <span class="string">&#x27; &#x27;</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p><code>Split(s, sep string) []string</code>：按子串<code>sep</code>分割</p></li>
+<li><p><code>SplitN(s, sep string, n int) []string</code>：按子串<code>sep</code>分割，返回值最多<code>n</code>个元素</p></li>
+<li><p><code>SplitAfter(s, sep string)</code>：与<code>Split</code>类似但是会保留分隔子串在每个元素的结尾</p></li>
+<li><p><code>SplitAfterN(...)</code></p></li>
+</ul>
+<h3 id="删除与替换">删除与替换</h3>
+<ul>
+<li><p><code>Cut(s, sep string) (before, after string, found bool)</code>：删除<code>s</code>中第一次出现的<code>sep</code>，<code>before</code>表示子串位置之前的串，<code>after</code>表示子串位置后的串</p></li>
+<li><p><code>Map(mapping func(rune) rune, s string) string</code>：遍历替换<code>unicode</code>字符，若<code>mapping</code>返回<code>-1</code>则不进行替换而是直接删除该<code>unicode</code>字符</p></li>
+<li><p><code>Replace(s, old, new string, n int) string</code>：将<code>s</code>中的<code>old</code>子串替换为<code>new</code>串，共能替换<code>n</code>次，<code>n</code>为负数时表示无限次</p></li>
+<li><p><code>ReplaceAll(s, old, new string) string</code>：等价于<code>Replace(s, old, new, -1)</code></p></li>
+<li><p><code>ToUpper()</code>与<code>ToLower()</code></p></li>
+<li><p><code>Trim(s, cutset string) string</code>：删除两端只包含<code>cutset</code>字符集的子串</p></li>
+<li><p><code>TrimLeft()</code>与<code>TrimRight()</code></p></li>
+<li><p><code>TrimPrefix(s, substr string) string</code>与<code>TrimSuffix(...)</code>：与上述四者不同，删除完全匹配<code>substr</code>子串的前缀或后缀</p></li>
+<li><p><code>TrimSpace(s string)</code></p></li>
+<li><p><code>TrimFunc(s string, f func(rune) bool)</code></p></li>
+<li><p><code>*Replacer</code>：提前指定替换规则后复用，通过<code>NewReplacer(oldnew ...string) *Replacer</code>创建</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;strings&quot;</span></span><br><span class="line"><span class="keyword">var</span> rep = strings.NewReplacer(old1, new1, old2, new2)</span><br><span class="line">str = rep.Replace(str)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="strconv"><code>strconv</code></h2>
+<ul>
+<li><code>strconv</code>提供基本数据类型与字符串之间转换的工具函数</li>
+<li><code>Atoi(s string) (int, error)</code>：字符串转整型</li>
+<li><code>Itoa(x int) (string, error)</code>：整型转字符串</li>
+<li><code>ParseBool(string)</code>与<code>FormatBool(bool)</code>：布尔值转换</li>
+<li><code>ParseFloat(string, bitSize int)</code>：字符串转浮点型，<code>bitSize</code>为位数</li>
+<li><code>FormatFloat(float64, fmt byte, prec, bitSize int)</code>：字符串转浮点型，<code>bitSize</code>为位数
+<ul>
+<li><code>fmt</code>：格式化类型</li>
+<li><code>prec</code>：精度</li>
+<li><code>bitzise</code>：位数
+<!-- TODO: Add fmt, prec definition --></li>
+</ul></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/27/go-viper/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-27</time>
+        <br>
+      Go: Viper配置管理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/28/go-gin-response/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-28</time>
+        <br>
+      Gin: 响应处理
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/31/go-sqlx/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-31</time>
+        <br>
+      Go: sqlx
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/12/25/go-io/" rel="bookmark">
+        <time class="popular-posts-time">2025-12-25</time>
+        <br>
+      Go: I/O
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/string/" rel="tag"># string</a>
+              <a href="/tags/Go/" rel="tag"># Go</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/12/24/go-slice/" rel="prev" title="Go: 切片(Slice)">
+                  <i class="fa fa-angle-left"></i> Go: 切片(Slice)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/12/24/go-map/" rel="next" title="Go: map">
+                  Go: map <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">263k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">15:56</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
