@@ -26,7 +26,7 @@
 <meta property="og:site_name" content="Ishio">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-05-19T00:00:00.000Z">
-<meta property="article:modified_time" content="2025-12-31T10:10:18.786Z">
+<meta property="article:modified_time" content="2026-08-14T11:42:01.052Z">
 <meta property="article:author" content="ishio">
 <meta property="article:tag" content="beginner">
 <meta property="article:tag" content="linux">
@@ -179,18 +179,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">152</span>
+          <span class="site-state-item-count">154</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-count">66</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-count">103</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -234,10 +234,10 @@
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2023/12/08/vscode/" rel="bookmark">
-        <time class="popular-posts-time">2023-12-08</time>
+      <a class="popular-posts-link" href="/2025/06/17/docker/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-17</time>
         <br>
-      VS Code: 较为轻量的IDE
+      Docker-Compose: 容器部署
       </a>
     </li>
   </ul>
@@ -296,7 +296,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-12-31 10:10:18" itemprop="dateModified" datetime="2025-12-31T10:10:18+00:00">2025-12-31</time>
+      <time title="Modified: 2026-08-14 11:42:01" itemprop="dateModified" datetime="2026-08-14T11:42:01+00:00">2026-08-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -360,15 +360,15 @@
 <h3 id="wsl配置"><code>WSL</code>配置</h3>
 <ul>
 <li><p>安装<code>wsl</code>：一键式安装</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">管理员powershell(会将wsl2作为默认版本)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装后需要重启电脑</span></span><br><span class="line">wsl --install</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重启后会安装默认的Ubuntu20发行版并要求创建新的用户名和密码</span></span><br></pre></td></tr></table></figure></li>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 管理员powershell(会将wsl2作为默认版本)</span></span><br><span class="line"><span class="comment"># 安装后需要重启电脑</span></span><br><span class="line">wsl --install</span><br><span class="line"><span class="comment"># 重启后会安装默认的Ubuntu20发行版并要求创建新的用户名和密码</span></span><br></pre></td></tr></table></figure></li>
 <li><p>安装<code>wsl</code>：手动配置</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">管理员powershell</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启用wsl</span></span><br><span class="line">dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启用虚拟机平台</span></span><br><span class="line">dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 管理员powershell</span></span><br><span class="line"><span class="comment"># 启用wsl</span></span><br><span class="line">dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart</span><br><span class="line"><span class="comment"># 启用虚拟机平台</span></span><br><span class="line">dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart</span><br></pre></td></tr></table></figure>
 <p>然后安装<code>WSL2 Linux kernel update package for x64 machines</code>
 最后在<code>powershell</code>执行启用<code>wsl2</code></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl --set-default-version 2</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl --set-default-version 2</span><br></pre></td></tr></table></figure></li>
 <li><p>安装<code>Linux</code>发行版：在<code>Microsoft Store</code>中搜索即可
 或通过命令行安装：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看Microsoft Store里的所有发行版</span></span><br><span class="line">wsl --list --online   # wsl -l -o</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装对应发行版(实例名称为默认的发行版名称)</span></span><br><span class="line">wsl --install -d &lt;Distro-name&gt;</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看Microsoft Store里的所有发行版</span></span><br><span class="line">wsl --list --online   <span class="comment"># wsl -l -o</span></span><br><span class="line"><span class="comment"># 安装对应发行版(实例名称为默认的发行版名称)</span></span><br><span class="line">wsl --install -d &lt;Distro-name&gt;</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h3 id="wsl常用命令"><code>WSL</code>常用命令</h3>
 <ul>
@@ -418,10 +418,10 @@
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2023/12/08/vscode/" rel="bookmark">
-        <time class="popular-posts-time">2023-12-08</time>
+      <a class="popular-posts-link" href="/2025/06/17/docker/" rel="bookmark">
+        <time class="popular-posts-time">2025-06-17</time>
         <br>
-      VS Code: 较为轻量的IDE
+      Docker-Compose: 容器部署
       </a>
     </li>
   </ul>
@@ -466,7 +466,7 @@
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2025</span>
+    <span itemprop="copyrightYear">2026</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
@@ -477,13 +477,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="Word count total">263k</span>
+    <span title="Word count total">276k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">15:56</span>
+    <span title="Reading time total">16:42</span>
   </span>
 </div>
 

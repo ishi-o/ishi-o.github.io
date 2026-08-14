@@ -26,7 +26,7 @@
 <meta property="og:site_name" content="Ishio">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-01-11T00:00:00.000Z">
-<meta property="article:modified_time" content="2025-12-31T10:10:18.792Z">
+<meta property="article:modified_time" content="2026-08-14T11:42:01.059Z">
 <meta property="article:author" content="ishio">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="command">
@@ -178,18 +178,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">152</span>
+          <span class="site-state-item-count">154</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-count">66</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-count">103</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -295,7 +295,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-12-31 10:10:18" itemprop="dateModified" datetime="2025-12-31T10:10:18+00:00">2025-12-31</time>
+      <time title="Modified: 2026-08-14 11:42:01" itemprop="dateModified" datetime="2026-08-14T11:42:01+00:00">2026-08-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -346,13 +346,13 @@
 <h3 id="获取进程信息">获取进程信息</h3>
 <p>跟进进程(<code>process</code>)是很重要的任务，包括查看、终止、执行者和执行时间等等…</p>
 <p><code>ps</code>命令就是用来获得进程信息的：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">不带选项情况下,获得当前终端、在当前瞬间、且进程属主为当前用户的进程的:</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">PID  TTY(所处终端) TIME(占用的CPU时间)  CMD(命令名)</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">ps</span></span><br><span class="line">ps options:</span><br><span class="line"> -A/-e  # 获取所有进程</span><br><span class="line"> -a   # 获取除无终端进程、控制进程外的所有进程</span><br><span class="line"> -f   # 获取详细信息,以Unix风格输出</span><br><span class="line"> -u   # 获取详细信息,以BSD风格输出</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不带选项情况下,获得当前终端、在当前瞬间、且进程属主为当前用户的进程的:</span></span><br><span class="line"><span class="comment"># PID  TTY(所处终端) TIME(占用的CPU时间)  CMD(命令名)</span></span><br><span class="line">$ ps</span><br><span class="line">ps options:</span><br><span class="line"> -A/-e  <span class="comment"># 获取所有进程</span></span><br><span class="line"> -a   <span class="comment"># 获取除无终端进程、控制进程外的所有进程</span></span><br><span class="line"> -f   <span class="comment"># 获取详细信息,以Unix风格输出</span></span><br><span class="line"> -u   <span class="comment"># 获取详细信息,以BSD风格输出</span></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
 <h3 id="监测进程信息">监测进程信息</h3>
 <p><code>ps</code>用于获取瞬时的进程信息，而<code>top</code>用于监测一个时段的信息：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">top  # 实时获取进程信息,每过一段时间会更新</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">top  <span class="comment"># 实时获取进程信息,每过一段时间会更新</span></span><br></pre></td></tr></table></figure>
 <h3 id="结束进程">结束进程</h3>
 <p>用<code>kill</code>来杀死进程：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kill PID # 杀死PID指向的进程</span><br><span class="line"></span><br><span class="line">pkill CMD # 杀死命令名为CMD的进程,支持正则表达式</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> PID <span class="comment"># 杀死PID指向的进程</span></span><br><span class="line"></span><br><span class="line">pkill CMD <span class="comment"># 杀死命令名为CMD的进程,支持正则表达式</span></span><br></pre></td></tr></table></figure>
 <h2 id="磁盘空间">磁盘空间</h2>
 
     </div>
@@ -437,7 +437,7 @@
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2025</span>
+    <span itemprop="copyrightYear">2026</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
@@ -448,13 +448,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="Word count total">263k</span>
+    <span title="Word count total">276k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">15:56</span>
+    <span title="Reading time total">16:42</span>
   </span>
 </div>
 

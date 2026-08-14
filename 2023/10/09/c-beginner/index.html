@@ -26,7 +26,7 @@
 <meta property="og:site_name" content="Ishio">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-10-09T00:00:00.000Z">
-<meta property="article:modified_time" content="2025-12-31T10:10:18.787Z">
+<meta property="article:modified_time" content="2026-08-14T11:42:01.054Z">
 <meta property="article:author" content="ishio">
 <meta property="article:tag" content="beginner">
 <meta name="twitter:card" content="summary">
@@ -177,18 +177,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">152</span>
+          <span class="site-state-item-count">154</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-count">66</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">99</span>
+        <span class="site-state-item-count">103</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -294,7 +294,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2025-12-31 10:10:18" itemprop="dateModified" datetime="2025-12-31T10:10:18+00:00">2025-12-31</time>
+      <time title="Modified: 2026-08-14 11:42:01" itemprop="dateModified" datetime="2026-08-14T11:42:01+00:00">2026-08-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -341,7 +341,7 @@
 <h3 id="介绍">介绍</h3>
 <p>在编译一个.c文件时，最开始的操作便是预处理，它会将包含的文件展开，把使用过宏的地方替换为宏定义的语句，删除注释等等…</p>
 <p>可以用<code>gcc</code>生成一个预处理后的文件(后缀为.i)</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">-E选项表示在预处理后停止，-C表示保留库函数里的注释，-o表示自定义输出文件的名称</span></span><br><span class="line">gcc -E -C file.c -o file.i</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -E选项表示在预处理后停止，-C表示保留库函数里的注释，-o表示自定义输出文件的名称</span></span><br><span class="line">gcc -E -C file.c -o file.i</span><br></pre></td></tr></table></figure>
 <h3 id="宏">宏</h3>
 <p>宏，如其名，它将一串命令序列转换为简短的语句，用短短几个单词即可以实现强大复杂的功能</p>
 <p>预处理器对宏实际的操作是把参数作为<strong>字符串</strong>来替换并把这条替换后的语句<strong>插入</strong>程序控制流里</p>
@@ -383,7 +383,7 @@
 <h3 id="介绍-1">介绍</h3>
 <p><code>C</code>语言的编译过程即将高级语言转换为汇编语言的过程，它会将所有语句转换为汇编指令，并且会优化源代码</p>
 <p>可以用<code>gcc</code>生成一个编译后的文件(后缀为.s)</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -S file.i -o file.s</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -S file.i -o file.s</span><br></pre></td></tr></table></figure>
 <p>可以发现生成后的文件已经是汇编代码了</p>
 <h3 id="c语言语法">C语言语法</h3>
 <p>在这个阶段，开始涉及<code>C</code>语言的各种语法</p>
@@ -805,7 +805,7 @@ href="#形参">形参</a>指针拥有一般指针变量的性质：例如可以�
 <h3 id="介绍-2">介绍</h3>
 <p>汇编即把汇编代码转换为机器语言(二进制机器码)的过程</p>
 <p>可以用<code>gcc</code>生成一个汇编后的文件(后缀为.o)</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -c file.s -o file.o</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -c file.s -o file.o</span><br></pre></td></tr></table></figure>
 <h3 id="汇编语言">汇编语言</h3>
 <h4 id="介绍-3">介绍</h4>
 <p>汇编语言(<code>assemble language,即asm</code>)<strong>面向机器</strong>，将许多长串的二进制码编写为一套<strong>短小精炼</strong>的命令语句，它帮助我们在寄存器、IO出口和存贮器间传递数据；将命令变为二进制码让机器听懂等。如果读者常使用IDA，则对汇编语言会有所了解</p>
@@ -1082,7 +1082,7 @@ size(返回所占数据区的字节总数)
 <p>之前提到预处理将展开库函数，事实上，这个过程导入的只有原型，真正的实现在链接库里</p>
 <p>而链接即把机器码和其它文件，库文件，启动文件链接起来的过程，将会生成一个可执行文件</p>
 <p>可以用<code>gcc</code>生成一个链接后的文件，已经到最后步骤了，需要做的事情很少</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc file.o -o file.out</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc file.o -o file.out</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -1165,7 +1165,7 @@ size(返回所占数据区的字节总数)
 
   <div class="copyright">
     &copy; 
-    <span itemprop="copyrightYear">2025</span>
+    <span itemprop="copyrightYear">2026</span>
     <span class="with-love">
       <i class="fa fa-heart"></i>
     </span>
@@ -1176,13 +1176,13 @@ size(返回所占数据区的字节总数)
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="Word count total">263k</span>
+    <span title="Word count total">276k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">15:56</span>
+    <span title="Reading time total">16:42</span>
   </span>
 </div>
 
