@@ -3,7 +3,8 @@
   <entry>
     <title>实现一个最小可用的 LSP Server</title>
     <url>/2026/08/15/nvim-lsp-server/</url>
-    <content><![CDATA[<span id="more"></span>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
 <h1 id="实现一个最小可用的-lsp-server">实现一个最小可用的 LSP
 Server</h1>
 <p>LSP（Language Server Protocol）名称中虽然带有
@@ -4036,23 +4037,6 @@ $$</span></p></li>
       </tags>
   </entry>
   <entry>
-    <title>Spring framework: Security</title>
-    <url>/2025/07/14/spring-security/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-]]></content>
-      <categories>
-        <category>Programming</category>
-        <category>Java</category>
-        <category>Spring framework</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>security</tag>
-        <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Spring framework: Validation API</title>
     <url>/2025/07/14/spring-validation/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -4111,6 +4095,23 @@ id="集成bean-validation-api">集成<code>Bean Validation API</code></h2>
       <tags>
         <tag>validation</tag>
         <tag>Java</tag>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring framework: Security</title>
+    <url>/2025/07/14/spring-security/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Java</category>
+        <category>Spring framework</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>security</tag>
         <tag>Spring</tag>
       </tags>
   </entry>
@@ -7545,6 +7546,59 @@ class="math inline">≤</span>序号数量的一半</strong>，因为响应报�
       </tags>
   </entry>
   <entry>
+    <title>树的算法: 寻找树的重心</title>
+    <url>/2025/04/30/algo-tree-gravity/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h3 id="概述">概述</h3>
+<ul>
+<li>针对于无根树(所有结点均可作为根结点且对答案没有影响)，以树的重心为根结点能在分治思想中减少递归层次
+其定义为：删除树的重心后，剩下的若干个<strong>连通分支各自的结点数不超过总结点数的一半</strong>
+为表述方便，下称树的结点数<span
+class="math inline">→</span>树的大小、向上/向下表示以一个确定的结点为根结点的情况下形成的有向树的方向、一个结点的子树<span
+class="math inline">→</span>以该结点为根结点的有向树中，该结点的子树</li>
+<li>树的重心的性质有：
+<ul>
+<li>树的重心有<span
+class="math inline">1 ∼ 2</span>个，若有两个重心则它们相邻</li>
+<li>在无权树中，所有点到某点的距离和中，到树的重心的距离和是最小的(若有两个重心则到它们的距离和相等)</li>
+<li>合并两棵无根树，则新树的重心在两棵旧树重心之间的路径上
+直接连接两个原有重心(而不是其它结点)能够最快速度找到新树的重心(两个原有重心之一、或两个都是)</li>
+<li>若上述两棵无根树中的一棵为平凡树，则新树重心不仅在旧树重心和该平凡树之间的路径上，而且离旧树重心最多一条边</li>
+</ul></li>
+</ul>
+<h3 id="算法结构">算法结构</h3>
+<ul>
+<li><p>考虑以任意结点为根结点(转化为有根树)，要求树中某个分支结点的子树大小，其向下子树大小只需要<strong>深搜</strong>即可
+而其向上子树(只有一个、不包括该结点)大小为<strong>总结点数减去其向下子树(包括该结点)大小</strong>
+因此对于所有结点，均可用这种方法求出其子树大小，然后根据定义(记录子树的最大值)求重心(<strong>所有结点子树大小最大值中最小的那个不超过总结点数的一半</strong>)即可</p></li>
+<li><p>时间复杂度<span
+class="math inline"><em>O</em>(<em>n</em>)</span></p>
+<p>```c++ // 随意选择初始结点作为根结点, 这里选择结点1 //
+采用链式前向星存树(且为了方便、边的next为0时表示空) int i, size[VN],
+w[VN], g[2]; // 分别表示 向下子树大小、所有子树大小的最大值、重心编号
+void getCenter(int pos, int fa) { // 表示当前遍历的结点、当前结点的爹 //
+该函数只会访问每个结点一次, 初始时设置当前结点的大小为1(后续更新),
+表示包括其本身 size[pos] = 1; w[pos] = 0; //
+当前没有计算出任何子树的大小, 最大值自然为0 for (i = head[pos]; i; i =
+edge[i].next) { if (edge[i].to != fa) { // 不计算向上子树
+getCenter(edge[i].to, pos); // 深搜计算出size[edge[i].to] size[pos] +=
+size[edge[i].to]; w[pos] = max(w[pos], size[edge[i].to]); //
+向下子树的最大值 } } w[pos] = max(w[pos], VN - size[pos]); //
+再和向上子树大小比 if (w[pos] &lt;= (VN &gt;&gt; 1)) { g[g[0] != 0] =
+pos; // 记录该重心 } }</p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Algorithm</category>
+        <category>Tree Algo</category>
+      </categories>
+      <tags>
+        <tag>algorithm</tag>
+        <tag>tree</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>树的算法: LCA（最近公共祖先）</title>
     <url>/2025/04/30/algo-tree-lca/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -7615,59 +7669,6 @@ class="math inline"><em>O</em>(log<em>n</em>)</span></li>
       <tags>
         <tag>algorithm</tag>
         <tag>LCA</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>树的算法: 寻找树的重心</title>
-    <url>/2025/04/30/algo-tree-gravity/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-<h3 id="概述">概述</h3>
-<ul>
-<li>针对于无根树(所有结点均可作为根结点且对答案没有影响)，以树的重心为根结点能在分治思想中减少递归层次
-其定义为：删除树的重心后，剩下的若干个<strong>连通分支各自的结点数不超过总结点数的一半</strong>
-为表述方便，下称树的结点数<span
-class="math inline">→</span>树的大小、向上/向下表示以一个确定的结点为根结点的情况下形成的有向树的方向、一个结点的子树<span
-class="math inline">→</span>以该结点为根结点的有向树中，该结点的子树</li>
-<li>树的重心的性质有：
-<ul>
-<li>树的重心有<span
-class="math inline">1 ∼ 2</span>个，若有两个重心则它们相邻</li>
-<li>在无权树中，所有点到某点的距离和中，到树的重心的距离和是最小的(若有两个重心则到它们的距离和相等)</li>
-<li>合并两棵无根树，则新树的重心在两棵旧树重心之间的路径上
-直接连接两个原有重心(而不是其它结点)能够最快速度找到新树的重心(两个原有重心之一、或两个都是)</li>
-<li>若上述两棵无根树中的一棵为平凡树，则新树重心不仅在旧树重心和该平凡树之间的路径上，而且离旧树重心最多一条边</li>
-</ul></li>
-</ul>
-<h3 id="算法结构">算法结构</h3>
-<ul>
-<li><p>考虑以任意结点为根结点(转化为有根树)，要求树中某个分支结点的子树大小，其向下子树大小只需要<strong>深搜</strong>即可
-而其向上子树(只有一个、不包括该结点)大小为<strong>总结点数减去其向下子树(包括该结点)大小</strong>
-因此对于所有结点，均可用这种方法求出其子树大小，然后根据定义(记录子树的最大值)求重心(<strong>所有结点子树大小最大值中最小的那个不超过总结点数的一半</strong>)即可</p></li>
-<li><p>时间复杂度<span
-class="math inline"><em>O</em>(<em>n</em>)</span></p>
-<p>```c++ // 随意选择初始结点作为根结点, 这里选择结点1 //
-采用链式前向星存树(且为了方便、边的next为0时表示空) int i, size[VN],
-w[VN], g[2]; // 分别表示 向下子树大小、所有子树大小的最大值、重心编号
-void getCenter(int pos, int fa) { // 表示当前遍历的结点、当前结点的爹 //
-该函数只会访问每个结点一次, 初始时设置当前结点的大小为1(后续更新),
-表示包括其本身 size[pos] = 1; w[pos] = 0; //
-当前没有计算出任何子树的大小, 最大值自然为0 for (i = head[pos]; i; i =
-edge[i].next) { if (edge[i].to != fa) { // 不计算向上子树
-getCenter(edge[i].to, pos); // 深搜计算出size[edge[i].to] size[pos] +=
-size[edge[i].to]; w[pos] = max(w[pos], size[edge[i].to]); //
-向下子树的最大值 } } w[pos] = max(w[pos], VN - size[pos]); //
-再和向上子树大小比 if (w[pos] &lt;= (VN &gt;&gt; 1)) { g[g[0] != 0] =
-pos; // 记录该重心 } }</p></li>
-</ul>
-]]></content>
-      <categories>
-        <category>Algorithm</category>
-        <category>Tree Algo</category>
-      </categories>
-      <tags>
-        <tag>algorithm</tag>
-        <tag>tree</tag>
       </tags>
   </entry>
   <entry>
@@ -18919,8 +18920,8 @@ value\Big(0+\big(n_1+(n_1+1)\big)+n_2+\dots+(n_{k-1}+1)+n\Big)\end{align}$</span
         <category>DP</category>
       </categories>
       <tags>
-        <tag>beginner</tag>
         <tag>algorithm</tag>
+        <tag>beginner</tag>
         <tag>dp</tag>
       </tags>
   </entry>
@@ -22273,8 +22274,8 @@ exp3
 <p>如图，使用<code>html</code>语法，写出一个四行两列的、边界值为2的、内容<code>'11'</code>被设置为占据四行且居中的表格</p>
 <h3 id="图片">图片</h3>
 通过<code>&lt;img /&gt;</code>标签可以定义并放缩图片：
-<style>.tomppapeovyc{zoom:33%;}</style>
-<img src="/2023/10/03/markdown-beginner/image_example.png" class="tomppapeovyc">
+<style>.jbemfbbgmkel{zoom:33%;}</style>
+<img src="/2023/10/03/markdown-beginner/image_example.png" class="jbemfbbgmkel">
 <p>图片可以缩放，即在前方的<code>html</code>标签内加上<code>style="zoom:num%"</code>，<code>num</code>为缩放比例</p>
 <h3 id="链接">链接</h3>
 <p><code>&lt;a id="111"&gt;&lt;/a&gt;</code>：这条元素定义了一个<code>id</code>为<code>'111'</code>的锚点，在文章内部可以通过<code>[点击](#111)</code>链接跳转到这个锚点，例如本文在目录处设定了一个<code>'HOME'</code>锚点，您可以<a

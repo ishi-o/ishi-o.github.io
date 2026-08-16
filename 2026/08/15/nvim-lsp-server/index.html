@@ -20,15 +20,13 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="实现一个最小可用的 LSP Server LSP（Language Server Protocol）名称中虽然带有 “Language”，但它本质上是一套基于 JSON-RPC 2.0 的补全&#x2F;诊断&#x2F;跳转协议，服务的对象不限于编程语言。这篇笔记总结 一个最小可用的 LSP server 需要暴露哪些 endpoint，以及 Neovim 侧如何用 Lua 接入。协议细节与实现语言无关。 文中会以">
-<meta property="og:type" content="article">
+    <meta property="og:type" content="article">
 <meta property="og:title" content="实现一个最小可用的 LSP Server">
 <meta property="og:url" content="https://ishi-o.github.io/2026/08/15/nvim-lsp-server/index.html">
 <meta property="og:site_name" content="Ishio">
-<meta property="og:description" content="实现一个最小可用的 LSP Server LSP（Language Server Protocol）名称中虽然带有 “Language”，但它本质上是一套基于 JSON-RPC 2.0 的补全&#x2F;诊断&#x2F;跳转协议，服务的对象不限于编程语言。这篇笔记总结 一个最小可用的 LSP server 需要暴露哪些 endpoint，以及 Neovim 侧如何用 Lua 接入。协议细节与实现语言无关。 文中会以">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-08-15T00:00:00.000Z">
-<meta property="article:modified_time" content="2026-08-16T07:01:48.702Z">
+<meta property="article:modified_time" content="2026-08-16T07:05:50.358Z">
 <meta property="article:author" content="ishio">
 <meta property="article:tag" content="codex">
 <meta property="article:tag" content="lsp">
@@ -305,7 +303,7 @@ Server</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">Edited on</span>
-      <time title="Modified: 2026-08-16 07:01:48" itemprop="dateModified" datetime="2026-08-16T07:01:48+00:00">2026-08-16</time>
+      <time title="Modified: 2026-08-16 07:05:50" itemprop="dateModified" datetime="2026-08-16T07:05:50+00:00">2026-08-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -349,7 +347,8 @@ Server</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class
     
     
     
-    <div class="post-body" itemprop="articleBody"><span id="more"></span>
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
 <h1 id="实现一个最小可用的-lsp-server">实现一个最小可用的 LSP
 Server</h1>
 <p>LSP（Language Server Protocol）名称中虽然带有
