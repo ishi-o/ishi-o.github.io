@@ -728,6 +728,156 @@ Kubernetes 创建 Runner Pod。</li>
       </tags>
   </entry>
   <entry>
+    <title>Go: Cron Job</title>
+    <url>/2026/04/10/cronjob-go/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="go-定时任务实现方案"><code>Go</code>: 定时任务实现方案</h1>
+<h2 id="k8s-cronjob"><code>K8s CronJob</code></h2>
+<ul>
+<li><code>k8s</code>的基础能力较强，通过<code>k8s</code>的<code>CronJob</code>，可以实现稳定可靠的定时任务，<code>Go</code>的实现也较为简单</li>
+<li>使用<code>k8s</code>适用于大部分没有复杂依赖的定时任务，包括数据库定时更新、日志转储、消息定时推送等</li>
+<li>可以在<code>Go</code>中进行简单的抽象，实现使用一个容器负责所有任务的定时执行，通过类似<code>profile</code>以及<code>expr</code>区分不同任务的执行时机</li>
+<li>也可以不引入标签，把每个任务暴露为子命令，由<code>CronJob</code>直接覆盖容器的<code>args</code>来指定执行的任务</li>
+</ul>
+<h3 id="简单示例">简单示例</h3>
+<ul>
+<li><p><code>Job</code>抽象</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> job</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Job <span class="keyword">interface</span> &#123;</span><br><span class="line">	Run() <span class="type">error</span></span><br><span class="line">	Profile() <span class="type">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> jobs []Job</span><br><span class="line"></span><br><span class="line"><span class="comment">// RegisterJob register a job that will be detected once the app start</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">RegisterJob</span><span class="params">(j Job)</span></span> &#123;</span><br><span class="line">	jobs = <span class="built_in">append</span>(jobs, j)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>Job</code>执行</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> job</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line">	<span class="string">&quot;strings&quot;</span></span><br><span class="line">	<span class="string">&quot;sync&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;github.com/expr-lang/expr&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Run</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> (</span><br><span class="line">		wg      sync.WaitGroup</span><br><span class="line">		profile = os.Getenv(<span class="string">&quot;PROFILE&quot;</span>)</span><br><span class="line">		env     = <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">bool</span>&#123;&#125;</span><br><span class="line">	)</span><br><span class="line">	<span class="keyword">for</span> p := <span class="keyword">range</span> strings.SplitSeq(profile, <span class="string">&quot;,&quot;</span>) &#123;</span><br><span class="line">		env[strings.TrimSpace(p)] = <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> _, j := <span class="keyword">range</span> jobs &#123;</span><br><span class="line">		wg.Add(<span class="number">1</span>)</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(j Job)</span></span> &#123;</span><br><span class="line">			<span class="keyword">defer</span> wg.Done()</span><br><span class="line">			program, err := expr.Compile(j.Profile(),</span><br><span class="line">				expr.Env(env),</span><br><span class="line">				expr.AllowUndefinedVariables())</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				fmt.Println(err.Error())</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">			output, err := expr.Run(program, env)</span><br><span class="line">			<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">				fmt.Println(err.Error())</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> match, ok := output.(<span class="type">bool</span>); ok &amp;&amp; match &#123;</span><br><span class="line">				<span class="keyword">if</span> err := j.Run(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">					fmt.Println(err.Error())</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;(j)</span><br><span class="line">	&#125;</span><br><span class="line">	wg.Wait()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>Job</code>实现</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> jobs</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;example.com/m/job&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">	job.RegisterJob(&amp;UserDataUpdaterJob&#123;&#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> UserDataUpdaterJob <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(j *UserDataUpdaterJob)</span></span> Run() <span class="type">error</span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">&quot;aaa&quot;</span>)</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(j *UserDataUpdaterJob)</span></span> Profile() <span class="type">string</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;user_data_updater&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>容器入口：<code>init()</code>注册依赖包被导入，之后只需要执行一次<code>job.Run()</code>并退出，由<code>k8s</code>负责按周期创建<code>Pod</code></p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;example.com/m/job&quot;</span></span><br><span class="line">	_ <span class="string">&quot;example.com/m/jobs&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	job.Run()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="cronjob资源配置"><code>CronJob</code>资源配置</h3>
+<ul>
+<li><p>上述容器对应一份<code>CronJob</code>资源，通过环境变量<code>PROFILE</code>指定本次触发的任务：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">batch/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">CronJob</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">example-jobs</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">schedule:</span> <span class="string">&quot;0 3 * * *&quot;</span> <span class="comment"># 每天 3 点触发</span></span><br><span class="line">  <span class="attr">timeZone:</span> <span class="string">Asia/Shanghai</span> <span class="comment"># k8s 1.27+ 支持, 不设置时按 UTC 解释</span></span><br><span class="line">  <span class="attr">concurrencyPolicy:</span> <span class="string">Forbid</span></span><br><span class="line">  <span class="attr">successfulJobsHistoryLimit:</span> <span class="number">3</span></span><br><span class="line">  <span class="attr">failedJobsHistoryLimit:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">jobTemplate:</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">backoffLimit:</span> <span class="number">2</span></span><br><span class="line">      <span class="attr">activeDeadlineSeconds:</span> <span class="number">600</span></span><br><span class="line">      <span class="attr">template:</span></span><br><span class="line">        <span class="attr">spec:</span></span><br><span class="line">          <span class="attr">restartPolicy:</span> <span class="string">Never</span></span><br><span class="line">          <span class="attr">containers:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">jobs</span></span><br><span class="line">              <span class="attr">image:</span> <span class="string">example.com/jobs:latest</span></span><br><span class="line">              <span class="attr">env:</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">PROFILE</span></span><br><span class="line">                  <span class="attr">value:</span> <span class="string">&quot;user_data_updater,log_rotator&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>常用字段：</p>
+<ul>
+<li><code>schedule</code>：标准<code>cron</code>表达式，最小粒度为分钟；<code>k8s 1.27+</code>支持<code>timeZone</code>字段指定时区</li>
+<li><code>concurrencyPolicy</code>：上一次任务还未结束时又到了触发时机的策略，<code>Allow</code>（默认，允许并存）、<code>Forbid</code>（跳过本次）、<code>Replace</code>（终止旧任务并替换）</li>
+<li><code>startingDeadlineSeconds</code>：错过了触发时机（如调度器不可用）时，允许延迟启动的最大秒数，超过则跳过</li>
+<li><code>successfulJobsHistoryLimit</code>与<code>failedJobsHistoryLimit</code>：保留的已完成任务数量，用于排查问题，避免<code>Job</code>与<code>Pod</code>无限堆积</li>
+<li><code>jobTemplate.spec.backoffLimit</code>：单次任务失败后的重试次数</li>
+<li><code>jobTemplate.spec.activeDeadlineSeconds</code>：单次任务的超时时间，防止任务挂死</li>
+</ul></li>
+</ul>
+<h3 id="cron表达式"><code>cron</code>表达式</h3>
+<ul>
+<li><p><code>schedule</code>使用<code>5</code>字段的标准<code>cron</code>表达式，从左至右依次为：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">┌───────── 分钟 (0-59)</span><br><span class="line">│ ┌───────── 小时 (0-23)</span><br><span class="line">│ │ ┌───────── 日 (1-31)</span><br><span class="line">│ │ │ ┌───────── 月 (1-12)</span><br><span class="line">│ │ │ │ ┌───────── 星期 (0-7, 0 与 7 都是周日)</span><br><span class="line">│ │ │ │ │</span><br><span class="line">* * * * *</span><br></pre></td></tr></table></figure></li>
+<li><p>月与星期也可以使用名称，如<code>JAN-DEC</code>、<code>SUN-SAT</code></p></li>
+<li><p>特殊字符：</p>
+<ul>
+<li><code>*</code>：任意值</li>
+<li><code>,</code>：枚举多个值，如<code>0,30</code></li>
+<li><code>-</code>：连续范围，如<code>1-5</code></li>
+<li><code>/</code>：步进，如<code>*/15</code>表示每<code>15</code>分钟</li>
+</ul></li>
+<li><p>常见示例：</p>
+<ul>
+<li><code>0 3 * * *</code>：每天<code>3:00</code></li>
+<li><code>*/30 * * * *</code>：每<code>30</code>分钟</li>
+<li><code>0 3 * * 1-5</code>：工作日的<code>3:00</code></li>
+<li><code>0 0 1 * *</code>：每月<code>1</code>号的<code>0:00</code></li>
+<li><code>30 8 * * 6</code>：每周六的<code>8:30</code></li>
+</ul></li>
+<li><p>一个容易踩坑的语义：当日与星期都被限制（都不是<code>*</code>）时，只要其中一个匹配即触发，是<code>OR</code>的关系而非<code>AND</code>；只想限制其中一个时，另一个必须写成<code>*</code></p></li>
+<li><p>最小粒度为<code>1</code>分钟，秒级调度只能由进程内<code>cron</code>（<code>WithSeconds()</code>）承担</p></li>
+</ul>
+<h3 id="args子命令方式"><code>args</code>子命令方式</h3>
+<ul>
+<li><p>更贴近<code>k8s</code>习惯的方式是不引入标签，把每个任务暴露为子命令，入口按<code>os.Args</code>分发（实际项目通常用<code>cobra</code>注册子命令，还可以为不同任务声明独立的参数）：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;log&quot;</span></span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line"></span><br><span class="line">	<span class="string">&quot;example.com/m/jobs&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(os.Args) &lt; <span class="number">2</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">&quot;missing job name&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">switch</span> os.Args[<span class="number">1</span>] &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">&quot;user-data-updater&quot;</span>:</span><br><span class="line">		<span class="keyword">if</span> err := (&amp;jobs.UserDataUpdaterJob&#123;&#125;).Run(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">			log.Fatal(err)</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		log.Fatalf(<span class="string">&quot;unknown job %s&quot;</span>, os.Args[<span class="number">1</span>])</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>此时<code>CronJob</code>通过覆盖<code>args</code>指定本次执行的任务，一个镜像配合多份几乎相同的资源清单即可：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">jobs</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">example.com/jobs:latest</span></span><br><span class="line">    <span class="attr">args:</span> [<span class="string">&quot;user-data-updater&quot;</span>]</span><br></pre></td></tr></table></figure></li>
+<li><p>与<code>PROFILE</code>方式的对比：</p>
+<ul>
+<li>任务内容直接体现在资源清单中，<code>kubectl get cronjob -o yaml</code>即可看出该<code>CronJob</code>执行什么；<code>PROFILE</code>则需要事先了解标签约定</li>
+<li>每个<code>CronJob</code>只跑一个任务，重试、超时与历史记录的粒度更清晰；<code>PROFILE</code>可以把多个小任务合并在一次触发中执行，节省冷启动开销</li>
+<li><code>PROFILE</code>配合<code>expr</code>可以表达组合条件（如<code>nightly &amp;&amp; prod</code>）；<code>args</code>是一对一的显式指定</li>
+<li>两者不冲突，也可以用<code>args</code>选择任务、用<code>PROFILE</code>补充环境分组</li>
+</ul></li>
+<li><p>多份相似的<code>CronJob</code>清单不需要手工维护，可以用<code>Helm</code>或<code>kustomize</code>模板化，或通过<code>CI/CD</code>的矩阵批量生成</p></li>
+</ul>
+<h2 id="进程内定时任务">进程内定时任务</h2>
+<ul>
+<li><p>对于与服务同生命周期的任务，例如需要共享内存状态、连接池的任务，更适合在进程内调度，通常使用<a
+href="https://github.com/robfig/cron"><code>github.com/robfig/cron/v3</code></a></p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;github.com/robfig/cron/v3&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	c := cron.New() <span class="comment">// 默认 5 字段表达式, 与 k8s 一致</span></span><br><span class="line">	c.AddFunc(<span class="string">&quot;0 3 * * *&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; <span class="comment">/* ... */</span> &#125;)</span><br><span class="line">	c.AddFunc(<span class="string">&quot;@every 10m&quot;</span>, <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; <span class="comment">/* ... */</span> &#125;)</span><br><span class="line">	c.AddJob(<span class="string">&quot;@daily&quot;</span>, &amp;UserDataUpdaterJob&#123;&#125;)</span><br><span class="line">	c.Start()</span><br><span class="line">	<span class="keyword">defer</span> c.Stop()</span><br><span class="line">	<span class="keyword">select</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>cron.New(cron.WithSeconds())</code>：使用<code>6</code>字段表达式，支持秒级精度，<code>k8s</code>做不到这一点</p></li>
+<li><p>预定义表达式：<code>@hourly</code>、<code>@daily</code>、<code>@weekly</code>、<code>@monthly</code>，以及<code>@every &lt;duration&gt;</code>（如<code>@every 1h30m</code>）</p></li>
+<li><p><code>cron.WithChain(cron.Recover(logger))</code>：通过中间件链为任务注入<code>panic</code>恢复与日志</p></li>
+<li><p><code>c.Stop()</code>返回一个<code>context</code>，等待正在执行的任务结束后才会取消，适合优雅退出：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">ctx := c.Stop()</span><br><span class="line">&lt;-ctx.Done()</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="多副本问题">多副本问题</h2>
+<ul>
+<li><code>CronJob</code>每次触发只会创建一个<code>Pod</code>，天然单实例，不存在重复执行</li>
+<li>进程内<code>cron</code>随<code>Deployment</code>水平扩容会为每个副本都调度一次，需要额外处理：
+<ul>
+<li><p>任务本身幂等，允许重复执行（例如覆盖式的缓存刷新）</p></li>
+<li><p>保持单副本并使用<code>Recreate</code>更新策略，避免滚动更新期间新旧副本并存</p></li>
+<li><p>使用分布式锁竞争执行权，例如<code>redis</code>的<code>SET NX</code>：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">ok, err := rdb.SetNX(ctx, <span class="string">&quot;lock:user_data_updater&quot;</span>, hostID, <span class="number">10</span>*time.Minute).Result()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> || !ok &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span> <span class="comment">// 其他副本已在执行</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">defer</span> rdb.Del(ctx, <span class="string">&quot;lock:user_data_updater&quot;</span>)</span><br></pre></td></tr></table></figure></li>
+</ul></li>
+</ul>
+<h2 id="方案对比">方案对比</h2>
+<table>
+<thead>
+<tr class="header">
+<th>维度</th>
+<th><code>K8s CronJob</code></th>
+<th>进程内<code>cron</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>触发精度</td>
+<td>分钟级</td>
+<td>秒级</td>
+</tr>
+<tr class="even">
+<td>部署形态</td>
+<td>独立<code>Pod</code>，与业务服务解耦</td>
+<td>随服务部署，共享进程</td>
+</tr>
+<tr class="odd">
+<td>资源开销</td>
+<td>每次触发冷启动，需重建连接</td>
+<td>常驻内存，复用连接与状态</td>
+</tr>
+<tr class="even">
+<td>多副本</td>
+<td>天然单实例</td>
+<td>需要分布式锁或单副本</td>
+</tr>
+<tr class="odd">
+<td>失败处理</td>
+<td><code>k8s</code>负责重试并保留历史记录</td>
+<td>需要自行实现重试与记录</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>总体而言：无状态、可独立重试的任务交给<code>K8s CronJob</code>，把调度、重试和可观测性都交给基础设施；强依赖服务内部状态的任务留在进程内，但要处理好多副本下的重复执行问题</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>3P Framework</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>k8s</tag>
+        <tag>cron</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Go: sqlx</title>
     <url>/2025/12/31/go-sqlx/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -4037,6 +4187,23 @@ $$</span></p></li>
       </tags>
   </entry>
   <entry>
+    <title>Spring framework: Security</title>
+    <url>/2025/07/14/spring-security/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Java</category>
+        <category>Spring framework</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>security</tag>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spring framework: Validation API</title>
     <url>/2025/07/14/spring-validation/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -4095,23 +4262,6 @@ id="集成bean-validation-api">集成<code>Bean Validation API</code></h2>
       <tags>
         <tag>validation</tag>
         <tag>Java</tag>
-        <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Spring framework: Security</title>
-    <url>/2025/07/14/spring-security/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-]]></content>
-      <categories>
-        <category>Programming</category>
-        <category>Java</category>
-        <category>Spring framework</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>security</tag>
         <tag>Spring</tag>
       </tags>
   </entry>
@@ -22274,8 +22424,8 @@ exp3
 <p>如图，使用<code>html</code>语法，写出一个四行两列的、边界值为2的、内容<code>'11'</code>被设置为占据四行且居中的表格</p>
 <h3 id="图片">图片</h3>
 通过<code>&lt;img /&gt;</code>标签可以定义并放缩图片：
-<style>.jbemfbbgmkel{zoom:33%;}</style>
-<img src="/2023/10/03/markdown-beginner/image_example.png" class="jbemfbbgmkel">
+<style>.rknlrinyxnyd{zoom:33%;}</style>
+<img src="/2023/10/03/markdown-beginner/image_example.png" class="rknlrinyxnyd">
 <p>图片可以缩放，即在前方的<code>html</code>标签内加上<code>style="zoom:num%"</code>，<code>num</code>为缩放比例</p>
 <h3 id="链接">链接</h3>
 <p><code>&lt;a id="111"&gt;&lt;/a&gt;</code>：这条元素定义了一个<code>id</code>为<code>'111'</code>的锚点，在文章内部可以通过<code>[点击](#111)</code>链接跳转到这个锚点，例如本文在目录处设定了一个<code>'HOME'</code>锚点，您可以<a
