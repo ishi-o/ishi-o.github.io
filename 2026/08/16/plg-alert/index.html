@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="PLG: 部署与飞书告警实践">
+<meta property="og:url" content="https://ishi-o.github.io/2026/08/16/plg-alert/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-08-16T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-16T14:34:26.376Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="beginner">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2026/08/16/plg-alert/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2026/08/16/plg-alert/","path":"2026/08/16/plg-alert/","title":"PLG: 部署与飞书告警实践"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>PLG: 部署与飞书告警实践 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#plg-%E9%83%A8%E7%BD%B2%E4%B8%8E%E9%A3%9E%E4%B9%A6%E5%91%8A%E8%AD%A6%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.</span> <span class="nav-text">PLG:
+部署与飞书告警实践</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7%E6%A0%88%E7%9A%84-ci-%E9%83%A8%E7%BD%B2"><span class="nav-number">1.1.</span> <span class="nav-text">监控栈的 CI 部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E5%BD%A2%E6%80%81"><span class="nav-number">1.1.1.</span> <span class="nav-text">整体形态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%86%E9%92%A5%E6%B3%A8%E5%85%A5"><span class="nav-number">1.1.2.</span> <span class="nav-text">密钥注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E5%B8%83%E4%B8%8E%E8%87%AA%E6%84%88"><span class="nav-number">1.1.3.</span> <span class="nav-text">发布与自愈</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%8A%E8%AD%A6%E5%8D%B3%E4%BB%A3%E7%A0%81"><span class="nav-number">1.2.</span> <span class="nav-text">告警即代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#grafana-%E7%BB%9F%E4%B8%80%E5%91%8A%E8%AD%A6"><span class="nav-number">1.2.1.</span> <span class="nav-text">Grafana 统一告警</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%91%8A%E8%AD%A6%E8%A7%84%E5%88%99%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.2.</span> <span class="nav-text">告警规则的结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A3%9E%E4%B9%A6%E5%91%8A%E8%AD%A6%E9%93%BE%E8%B7%AF"><span class="nav-number">1.3.</span> <span class="nav-text">飞书告警链路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%94%E7%B3%BB%E7%82%B9webhook-%E8%87%AA%E5%BB%BA%E6%9C%BA%E5%99%A8%E4%BA%BA"><span class="nav-number">1.3.1.</span> <span class="nav-text">联系点：webhook +
+自建机器人</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E7%9F%A5%E7%AD%96%E7%95%A5"><span class="nav-number">1.3.2.</span> <span class="nav-text">通知策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E7%9F%A5%E6%A8%A1%E6%9D%BF"><span class="nav-number">1.3.3.</span> <span class="nav-text">通知模板</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A3%9E%E4%B9%A6%E7%99%BB%E5%BD%95oauth"><span class="nav-number">1.4.</span> <span class="nav-text">飞书登录(OAuth)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E8%B7%AF%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.</span> <span class="nav-text">链路总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">161</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">109</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/16/plg/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-16</time>
+        <br>
+      PLG: Prometheus + Loki + Grafana 可观测体系
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/16/helm/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-16</time>
+        <br>
+      Helm: Kubernetes 的包管理器
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/04/20/k8s/" rel="bookmark">
+        <time class="popular-posts-time">2026-04-20</time>
+        <br>
+      Kubernetes: 生产级的分布式集群部署
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/16/k8s-production-tricks/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-16</time>
+        <br>
+      Kubernetes: 生产级配置技巧
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2026/08/16/plg-alert/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="PLG: 部署与飞书告警实践 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PLG: 部署与飞书告警实践
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-08-16 00:00:00 / Modified: 14:34:26" itemprop="dateCreated datePublished" datetime="2026-08-16T00:00:00+00:00">2026-08-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tools-Utilities/" itemprop="url" rel="index"><span itemprop="name">Tools & Utilities</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tools-Utilities/Container/" itemprop="url" rel="index"><span itemprop="name">Container</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>6 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="plg-部署与飞书告警实践"><code>PLG</code>:
+部署与飞书告警实践</h1>
+<p>上一篇梳理了 <code>PLG</code>
+各组件的基础配置，本篇记录如何把整套体系以 <code>git</code> +
+<code>helm</code> + <code>CI</code>
+的方式部署进集群，并把告警送达飞书群，所有做法都是生产环境的通用玩法</p>
+<h2 id="监控栈的-ci-部署">监控栈的 <code>CI</code> 部署</h2>
+<h3 id="整体形态">整体形态</h3>
+<ul>
+<li><p>监控栈是一个 <code>umbrella chart</code>：聚合
+<code>kube-prometheus-stack</code>(含
+<code>Prometheus</code>/<code>Alertmanager</code>)+ <code>loki</code> +
+<code>promtail</code> + <code>grafana</code> 依赖，环境差异全部放在
+<code>values-*.yaml</code> 中</p></li>
+<li><p>部署不走手工命令，而是 <code>GitHub Actions</code> 在
+<code>push</code> 到 <code>main</code>
+时按路径触发，路径过滤保证只有监控配置变更才触发部署：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">main</span></span><br><span class="line">    <span class="attr">paths:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/monitoring/**</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/istio/**</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/ingress/**</span></span><br></pre></td></tr></table></figure></li>
+<li><p>多集群、多产品通过 <code>matrix</code> 展开，每个条目指定
+<code>chart</code>、命名空间、<code>values</code> 文件与
+<code>kubeconfig</code> 上下文：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">strategy:</span></span><br><span class="line">  <span class="attr">matrix:</span></span><br><span class="line">    <span class="attr">product:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">monitoring</span></span><br><span class="line">        <span class="attr">namespace:</span> <span class="string">monitoring</span></span><br><span class="line">        <span class="attr">values:</span> <span class="string">values-kingboat-aliyun.yaml</span></span><br><span class="line">    <span class="attr">cluster:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">kingboat-aliyun</span></span><br><span class="line">        <span class="attr">runner:</span> <span class="string">kingboat-runner-mini</span> <span class="comment"># 自托管 runner，持有集群访问权</span></span><br><span class="line">        <span class="attr">context:</span> <span class="string">kingboat-aliyun</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="密钥注入">密钥注入</h3>
+<ul>
+<li><p>密钥永远不进 <code>git</code>：<code>values</code>
+文件里写占位符，<code>CI</code> 用 <code>envsubst</code>
+在发布时替换</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># values 文件中的占位</span></span><br><span class="line"><span class="attr">grafana:</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="attr">BOT_GRAFANA_WEBHOOK_TOKEN:</span> <span class="string">$BOT_GRAFANA_WEBHOOK_TOKEN</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">envsubst <span class="string">&#x27;$FEISHU_APP_ID $FEISHU_APP_SECRET $BOT_GRAFANA_WEBHOOK_TOKEN&#x27;</span> \</span><br><span class="line">  &lt; charts/monitoring/values-kingboat-aliyun.yaml &gt; <span class="variable">$values_file</span></span><br></pre></td></tr></table></figure></li>
+<li><p>简单值直接用 <code>--set</code> 注入(如 <code>Cloudflare</code>
+<code>Token</code>)，不必经过 <code>values</code> 文件</p></li>
+</ul>
+<h3 id="发布与自愈">发布与自愈</h3>
+<ul>
+<li><p>统一使用
+<code>helm upgrade --install --create-namespace</code>，并对”上一个操作未完成”的常见冲突做<strong>自动回滚
++ 重试</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> retry <span class="keyword">in</span> &#123;1..3&#125;; <span class="keyword">do</span></span><br><span class="line">  res=$(helm -n monitoring upgrade --install --create-namespace monitoring \</span><br><span class="line">    ./charts/monitoring -f <span class="string">&quot;<span class="variable">$values_file</span>&quot;</span> \</span><br><span class="line">    --<span class="built_in">set</span> cloudflare.apiToken=<span class="variable">$CF_TOKEN</span> 2&gt;&amp;1)</span><br><span class="line">  [[ $? -eq 0 ]] &amp;&amp; <span class="built_in">exit</span> 0</span><br><span class="line">  <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$res</span>&quot;</span> = *<span class="string">&quot;another operation (install/upgrade/rollback) is in progress&quot;</span>* ]]; <span class="keyword">then</span></span><br><span class="line">    helm -n monitoring rollback monitoring <span class="comment"># 卡住的发布先回滚再重试</span></span><br><span class="line">    <span class="built_in">continue</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">  <span class="built_in">sleep</span> 10</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">exit</span> 1</span><br></pre></td></tr></table></figure></li>
+<li><p><code>runner</code> 通过 <code>kubeconfig</code>
+<code>secret</code> 切换目标集群上下文，一个 <code>runner</code>
+可以发布多个集群</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">azure/k8s-set-context@v4</span></span><br><span class="line">  <span class="attr">with:</span></span><br><span class="line">    <span class="attr">method:</span> <span class="string">kubeconfig</span></span><br><span class="line">    <span class="attr">kubeconfig:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.KUBECONFIG</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">context:</span> <span class="string">$&#123;&#123;</span> <span class="string">matrix.cluster.context</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="告警即代码">告警即代码</h2>
+<h3 id="grafana-统一告警"><code>Grafana</code> 统一告警</h3>
+<ul>
+<li><p>选择 <code>Grafana</code>
+统一告警(<code>Unified Alerting</code>)而非 <code>Alertmanager</code>
+作为告警出口：规则、联系点、通知策略都住在 <code>Grafana</code>
+里，与仪表盘共享数据源与标签体系，<code>Alertmanager</code> 仅作为
+<code>kube-prometheus-stack</code> 的兜底保留</p></li>
+<li><p>告警规则不进 <code>Grafana</code> 界面手点，而是写成
+<code>ConfigMap</code>，打上约定标签，由 <code>Grafana sidecar</code>
+全命名空间监听并同步进 <code>Grafana</code>，改动走 <code>git</code>
+评审：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-status-alert</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">monitoring</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">grafana_alert:</span> <span class="string">&quot;1&quot;</span> <span class="comment"># sidecar 按该标签发现告警资源</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">pod-status-alert.yaml:</span> <span class="string">|</span></span><br><span class="line"><span class="string">    apiVersion: 1</span></span><br><span class="line"><span class="string">    ...</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># values 中开启 sidecar 的告警同步，搜索全命名空间</span></span><br><span class="line"><span class="attr">grafana:</span></span><br><span class="line">  <span class="attr">sidecar:</span></span><br><span class="line">    <span class="attr">alerts:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">searchNamespace:</span> <span class="string">ALL</span></span><br></pre></td></tr></table></figure></li>
+<li><p>同一文件描述四类资源：<code>groups</code>(规则)、<code>contactPoints</code>(联系点)、<code>policies</code>(通知策略)、<code>templates</code>(通知模板)</p></li>
+</ul>
+<h3 id="告警规则的结构">告警规则的结构</h3>
+<ul>
+<li><p>规则按 <code>group</code> 组织，<code>folder</code> 决定在
+<code>Grafana</code> 中的目录归属，<code>interval</code>
+是评估周期：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">groups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Kubernetes</span></span><br><span class="line">    <span class="attr">folder:</span> <span class="string">Infra</span></span><br><span class="line">    <span class="attr">interval:</span> <span class="string">1m</span> <span class="comment"># 每分钟评估一次</span></span><br><span class="line">    <span class="attr">rules:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uid:</span> <span class="string">a9a96a82-f6f5-4bfe-a18e-6f1ac6c9e72f</span></span><br><span class="line">        <span class="attr">title:</span> <span class="string">服务健康状态</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">不健康服务增多</span> <span class="comment"># 指向起决定作用的表达式 refId</span></span><br><span class="line">        <span class="attr">data:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">refId:</span> <span class="string">不健康服务</span></span><br><span class="line">            <span class="attr">datasourceUid:</span> <span class="string">prometheus</span> <span class="comment"># 查询 Prometheus</span></span><br><span class="line">            <span class="attr">model:</span></span><br><span class="line">              <span class="attr">expr:</span> <span class="string">|</span></span><br><span class="line"><span class="string">                sum by (namespace, pod, phase) (</span></span><br><span class="line"><span class="string">                  kube_pod_status_phase&#123;namespace !~ &#x27;staging|arc-.*&#x27;, phase=~&quot;Pending|Unknown|Failed&quot;&#125; == 1</span></span><br><span class="line"><span class="string">                  and on (namespace, pod) ((time() - kube_pod_created) &gt; 180)</span></span><br><span class="line"><span class="string">                )</span></span><br><span class="line"><span class="string"></span>          <span class="bullet">-</span> <span class="attr">refId:</span> <span class="string">不健康服务增多</span></span><br><span class="line">            <span class="attr">datasourceUid:</span> <span class="string">__expr__</span> <span class="comment"># 表达式阶段做阈值判断</span></span><br><span class="line">            <span class="attr">model:</span></span><br><span class="line">              <span class="attr">type:</span> <span class="string">threshold</span></span><br><span class="line">              <span class="attr">expression:</span> <span class="string">不健康服务</span></span><br><span class="line">              <span class="attr">conditions:</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">evaluator:</span></span><br><span class="line">                    <span class="attr">params:</span> [<span class="number">0</span>]</span><br><span class="line">                    <span class="attr">type:</span> <span class="string">gt</span> <span class="comment"># 结果 &gt; 0 即触发</span></span><br><span class="line">        <span class="attr">for:</span> <span class="string">5m</span> <span class="comment"># 持续满足 5 分钟才真正触发，抑制抖动</span></span><br><span class="line">        <span class="attr">noDataState:</span> <span class="string">OK</span> <span class="comment"># 无数据视为正常</span></span><br><span class="line">        <span class="attr">annotations:</span></span><br><span class="line">          <span class="attr">summary:</span> <span class="string">命名空间</span> &#123;&#123; <span class="string">$labels.namespace</span> &#125;&#125; <span class="string">下</span> <span class="string">Pod</span> &#123;&#123; <span class="string">$labels.pod</span> &#125;&#125; <span class="string">处于</span> &#123;&#123; <span class="string">$labels.phase</span> &#125;&#125; <span class="string">状态</span></span><br><span class="line">        <span class="attr">labels:</span></span><br><span class="line">          <span class="attr">product:</span> <span class="string">infra</span> <span class="comment"># 供通知模板与策略路由使用</span></span><br></pre></td></tr></table></figure></li>
+<li><p>注意三个工程细节：</p>
+<ul>
+<li><code>PromQL</code> 里先做过滤与降噪：排除 <code>staging</code>
+等低价值命名空间、只看存活超过 <code>3</code> 分钟的
+<code>Pod</code></li>
+<li><code>for: 5m</code> + <code>noDataState: OK</code>
+是防告警风暴的两道闸</li>
+<li><code>labels.product</code> 是整条告警链路的路由键，从
+<code>values</code>
+按产品开关(<code>alerts.&lt;product&gt;.enabled</code>)决定渲染哪些规则</li>
+</ul></li>
+</ul>
+<h2 id="飞书告警链路">飞书告警链路</h2>
+<h3 id="联系点webhook-自建机器人">联系点：<code>webhook</code> +
+自建机器人</h3>
+<ul>
+<li><p><code>Grafana</code>
+原生不支持飞书，与其等官方支持，不如加一层<strong>自建转发服务</strong>：联系点配置为普通
+<code>webhook</code>，指向自建的机器人服务，由它把 <code>Grafana</code>
+的告警 payload 转成飞书群消息</p></li>
+<li><p>好处是格式完全自主、鉴权自己掌控、以后接任何新 <code>IM</code>
+都只改这一个服务：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">contactPoints:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">服务端告警群</span></span><br><span class="line">    <span class="attr">receivers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uid:</span> <span class="string">80192ad5-0865-4075-a69a-eeccccbf82d8</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">webhook</span></span><br><span class="line">        <span class="attr">settings:</span></span><br><span class="line">          <span class="attr">url:</span> <span class="string">https://bot.example.com/grafana/webhook</span> <span class="comment"># 自建机器人</span></span><br><span class="line">          <span class="attr">httpMethod:</span> <span class="string">POST</span></span><br><span class="line">          <span class="attr">authorization_scheme:</span> <span class="string">Bearer</span> <span class="comment"># 出口鉴权，防止伪造告警</span></span><br><span class="line">          <span class="attr">authorization_credentials:</span> <span class="string">$BOT_GRAFANA_WEBHOOK_TOKEN</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>Bearer Token</code> 通过环境变量注入
+<code>Grafana</code>(<code>grafana.env</code>)，再由
+<code>envsubst</code> 在 <code>CI</code> 阶段填充，全程不落
+<code>git</code></p></li>
+</ul>
+<h3 id="通知策略">通知策略</h3>
+<ul>
+<li><p>策略决定”谁收到什么、多久提醒一次”，<code>repeat_interval</code>
+是防轰炸的关键参数：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">policies:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">receiver:</span> <span class="string">grafana-default-email</span> <span class="comment"># 兜底接收器</span></span><br><span class="line">    <span class="attr">group_by:</span> [<span class="string">&#x27;...&#x27;</span>]</span><br><span class="line">    <span class="attr">repeat_interval:</span> <span class="string">5m</span> <span class="comment"># 未恢复告警每 5 分钟重复提醒</span></span><br><span class="line">    <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">receiver:</span> <span class="string">服务端告警群</span> <span class="comment"># 全部告警转发到飞书群</span></span><br><span class="line">        <span class="attr">continue:</span> <span class="literal">true</span> <span class="comment"># 继续匹配后续路由，便于后续按产品分流</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="通知模板">通知模板</h3>
+<ul>
+<li><p>模板用 <code>Grafana</code> 的 <code>Go template</code>
+语法，自定义标题与正文，把关键信息(<code>product</code>/<code>application</code>
+标签、当前数值、图表与静默链接)组织成飞书消息卡片的字段：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">templates:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;kingboat.title&quot;</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      &#123;&#123;- if len .Alerts.Firing -&#125;&#125;</span></span><br><span class="line"><span class="string">        🚨🚨🚨 有 &#123;&#123; len .Alerts.Firing &#125;&#125; 条告警规则正在触发</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if and (len .Alerts.Firing) (len .Alerts.Resolved) -&#125;&#125;; &#123;&#123; end -&#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if len .Alerts.Resolved -&#125;&#125;</span></span><br><span class="line"><span class="string">        ✅✅✅ 有 &#123;&#123; len .Alerts.Resolved &#125;&#125; 条告警规则已经恢复</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string"></span>  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;kingboat.message&quot;</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      - 产品名称: &#123;&#123; .Labels.product &#125;&#125;</span></span><br><span class="line"><span class="string">      - 产品应用: &#123;&#123; or (or .Labels.application .Labels.pod) &quot;没有数据&quot; &#125;&#125;</span></span><br><span class="line"><span class="string">      - 告警规则: &#123;&#123; .Labels.alertname &#125;&#125;</span></span><br><span class="line"><span class="string">      - 当前数值: &#123;&#123; range $k, $v := .Values &#125;&#125;&#123;&#123; $k &#125;&#125;=&#123;&#123; $v &#125;&#125; &#123;&#123; end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if .DashboardURL &#125;&#125;</span></span><br><span class="line"><span class="string">      - 查看图表: [点击查看](&#123;&#123; .DashboardURL &#125;&#125;)</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if .SilenceURL &#125;&#125;</span></span><br><span class="line"><span class="string">      - 抑制告警: [点击抑制](&#123;&#123; .SilenceURL &#125;&#125;)</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>.Labels.application</code> 正是 <code>Prometheus</code>
+抓取配置里 <code>relabel</code>
+出来的服务名标签——<strong>采集端打的标签决定通知端的信息量</strong>，这是整条链路设计的一体性所在</p></li>
+</ul>
+<h2 id="飞书登录oauth">飞书登录(<code>OAuth</code>)</h2>
+<ul>
+<li><p><code>Grafana</code> 的登录同样接入飞书，用
+<code>generic_oauth</code> 对接飞书开放平台的 <code>OAuth</code>
+端点，账号体系与公司 <code>IM</code> 统一：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">grafana.ini:</span></span><br><span class="line">  <span class="attr">auth.generic_oauth:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">飞书</span></span><br><span class="line">    <span class="attr">client_id:</span> <span class="string">$FEISHU_APP_ID</span> <span class="comment"># CI 注入</span></span><br><span class="line">    <span class="attr">client_secret:</span> <span class="string">$FEISHU_APP_SECRET</span></span><br><span class="line">    <span class="attr">auth_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/authorize</span></span><br><span class="line">    <span class="attr">token_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/token</span></span><br><span class="line">    <span class="attr">api_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/userinfo</span></span><br><span class="line">    <span class="attr">login_attribute_path:</span> <span class="string">name</span></span><br><span class="line">    <span class="attr">role_attribute_path:</span> <span class="string">name</span> <span class="string">==</span> <span class="string">&#x27;someone&#x27;</span> <span class="string">&amp;&amp;</span> <span class="string">&#x27;Admin&#x27;</span> <span class="string">||</span> <span class="string">&#x27;Viewer&#x27;</span> <span class="comment"># 按用户名映射角色</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>role_attribute_path</code>
+实现”白名单管理员、其余只读”，避免给全员开编辑权限</p></li>
+</ul>
+<h2 id="链路总结">链路总结</h2>
+<p><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Pod/Envoy 指标 ──&gt; Prometheus(注解发现/relabel 打标) ──┐</span><br><span class="line">容器日志 ──&gt; Promtail(CRI 解析) ──&gt; Loki(S3/分级保留) ──┤</span><br><span class="line">                                                      v</span><br><span class="line">                                   Grafana(数据源/仪表盘/告警，全部 ConfigMap + sidecar 供给)</span><br><span class="line">                                                      |</span><br><span class="line">                            告警规则(interval/for/labels.product)</span><br><span class="line">                                                      v</span><br><span class="line">                            通知策略(repeat_interval) ─&gt; 联系点(webhook + Bearer)</span><br><span class="line">                                                      v</span><br><span class="line">                                   自建机器人 ──&gt; 飞书群卡片(title/message 模板)</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/16/plg/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-16</time>
+        <br>
+      PLG: Prometheus + Loki + Grafana 可观测体系
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/16/helm/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-16</time>
+        <br>
+      Helm: Kubernetes 的包管理器
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/04/20/k8s/" rel="bookmark">
+        <time class="popular-posts-time">2026-04-20</time>
+        <br>
+      Kubernetes: 生产级的分布式集群部署
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/08/16/k8s-production-tricks/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-16</time>
+        <br>
+      Kubernetes: 生产级配置技巧
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/beginner/" rel="tag"># beginner</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/15/nvim-lsp-server/" rel="prev" title="实现一个最小可用的 LSP Server">
+                  <i class="fa fa-angle-left"></i> 实现一个最小可用的 LSP Server
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/08/16/plg/" rel="next" title="PLG: Prometheus + Loki + Grafana 可观测体系">
+                  PLG: Prometheus + Loki + Grafana 可观测体系 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">293k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">17:47</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

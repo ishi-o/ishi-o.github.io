@@ -1,6 +1,724 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Helm: Kubernetes 的包管理器</title>
+    <url>/2026/08/16/helm/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="helm"><code>Helm</code></h1>
+<h2 id="快速入门">快速入门</h2>
+<h3 id="简介">简介</h3>
+<ul>
+<li><strong><code>Helm</code></strong> 是 <code>k8s</code>
+官方推荐的包管理器，定位类似于
+<code>apt</code>/<code>brew</code>：把一组相互关联的 <code>k8s</code>
+资源(<code>Deployment</code>、<code>Service</code>、<code>Ingress</code>…)打包为
+<strong><code>Chart</code></strong>，一条命令完成安装、升级与回滚</li>
+<li>相比手写一堆 <code>yaml</code> 再
+<code>kubectl apply</code>，<code>helm</code> 解决了三个问题：
+<ul>
+<li><strong>参数化</strong>：同一份模板通过不同的 <code>values</code>
+部署到不同环境，而不是复制出多份几乎相同的 <code>yaml</code></li>
+<li><strong>生命周期</strong>：<code>Release</code>
+记录每次发布的版本与清单，升级失败可一键回滚到任意历史版本</li>
+<li><strong>复用</strong>：第三方应用(<code>mongodb</code>、<code>prometheus</code>…)直接复用社区
+<code>Chart</code>，不必自己从零编写</li>
+</ul></li>
+<li><a href="https://helm.sh/docs">官方文档</a></li>
+</ul>
+<h3 id="核心概念">核心概念</h3>
+<ul>
+<li><strong><code>Chart</code></strong>：一个应用完整的模板集合，即
+<code>helm</code> 的”包”</li>
+<li><strong><code>Release</code></strong>：<code>Chart</code>
+的一次安装实例，同一 <code>Chart</code>
+可以在同一集群安装多次，每次都是独立的 <code>Release</code>，靠
+<code>Release</code> 名称区分</li>
+<li><strong><code>Repo</code></strong>：存放 <code>Chart</code>
+的仓库，类似 <code>docker hub</code>，每个仓库由一个
+<code>index.yaml</code> 索引</li>
+</ul>
+<h2 id="chart-结构"><code>Chart</code> 结构</h2>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">my-chart/</span><br><span class="line">├── Chart.yaml          # Chart 的元信息与依赖声明</span><br><span class="line">├── values.yaml         # 默认参数，渲染模板时的兜底值</span><br><span class="line">├── values-prod.yaml    # 环境覆盖文件，可选</span><br><span class="line">├── Chart.lock          # 依赖锁文件，由 dependency update 生成</span><br><span class="line">├── charts/             # 依赖的子 Chart，由 dependency update 下载</span><br><span class="line">├── templates/</span><br><span class="line">│   ├── _helpers.tpl    # 命名模板(下划线开头不渲染为资源)，沉淀命名规范</span><br><span class="line">│   ├── deployment.yaml</span><br><span class="line">│   ├── service.yaml</span><br><span class="line">│   └── NOTES.txt       # 安装成功后打印的使用说明</span><br><span class="line">└── .helmignore         # 打包时忽略的文件，类似 .gitignore</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong><code>Chart.yaml</code></strong> 关键字段：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v2</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">my-chart</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">Helm</span> <span class="string">Chart</span> <span class="string">for</span> <span class="string">my</span> <span class="string">app</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">application</span> <span class="comment"># application(可部署)/library(仅提供模板)</span></span><br><span class="line"><span class="attr">version:</span> <span class="number">0.0</span><span class="number">.0</span> <span class="comment"># Chart 自身版本，生产实践可固定为 0.0.0 交给 CI 注入</span></span><br><span class="line"><span class="attr">appVersion:</span> <span class="string">&quot;1.0.0&quot;</span> <span class="comment"># 内含应用的版本，仅作描述，不参与渲染</span></span><br><span class="line"><span class="attr">dependencies:</span> <span class="comment"># 依赖的子 Chart</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">mongodb</span> <span class="comment"># 上游 Chart 名称</span></span><br><span class="line">    <span class="attr">version:</span> <span class="number">15.6</span><span class="number">.1</span> <span class="comment"># 依赖版本</span></span><br><span class="line">    <span class="attr">repository:</span> <span class="string">https://charts.bitnami.com/bitnami</span> <span class="comment"># 上游仓库</span></span><br><span class="line">    <span class="attr">alias:</span> <span class="string">mongodb</span> <span class="comment"># 别名，同一依赖可按别名多次引入</span></span><br><span class="line">    <span class="attr">condition:</span> <span class="string">mongodb.enabled</span> <span class="comment"># 根据 values 开关决定是否渲染</span></span><br></pre></td></tr></table></figure></li>
+<li><p>命名规范：<code>Chart</code>
+名称小写字母与数字；<code>version</code> 与 <code>appVersion</code>
+是两个独立概念，前者是模板的版本，后者是应用的版本</p></li>
+</ul>
+<h2 id="常用命令">常用命令</h2>
+<h3 id="安装与升级">安装与升级</h3>
+<ul>
+<li><code>helm install [release] [chart] -n [ns] --create-namespace -f values-prod.yaml</code>：安装一个
+<code>Release</code>，命名空间不存在时自动创建</li>
+<li><code>helm upgrade [release] [chart] -f values-prod.yaml</code>：升级已存在的
+<code>Release</code>
+<ul>
+<li><code>--install</code>：常与 <code>upgrade</code> 合用为
+<code>helm upgrade --install</code>(可缩写
+<code>-i</code>)，不存在则安装、存在则升级，是 <code>CI</code>
+中的标准写法</li>
+<li><code>--atomic</code>：升级失败自动回滚到上一版本，生产发布必备</li>
+<li><code>--wait</code>：等待所有资源就绪才返回，配合探针保证发布串行化</li>
+<li><code>--timeout 10m</code>：<code>--wait</code> 的超时时间</li>
+</ul></li>
+<li><code>helm uninstall [release] -n [ns]</code>：卸载
+<code>Release</code>，删除其管理的所有资源(<code>Secret</code>/<code>PVC</code>
+等是否保留取决于资源的安装顺序注解)</li>
+</ul>
+<h3 id="查询与回滚">查询与回滚</h3>
+<ul>
+<li><code>helm list -n [ns] -a</code>：列出
+<code>Release</code>，<code>-a</code> 包含已卸载的</li>
+<li><code>helm history [release]</code>：查看发布历史与状态</li>
+<li><code>helm rollback [release] [revision]</code>：回滚到指定版本，不指定版本则回退一个</li>
+<li><code>helm get values [release]</code>：查看当前生效的
+<code>values</code>；<code>helm get manifest [release]</code>：查看实际渲染进集群的清单，排查”模板到底渲染了什么”的第一入口</li>
+<li><code>helm status [release]</code>：查看 <code>Release</code>
+状态</li>
+</ul>
+<h3 id="本地调试">本地调试</h3>
+<ul>
+<li><code>helm create [name]</code>：生成一个带示例模板的
+<code>Chart</code> 骨架</li>
+<li><code>helm lint</code>：静态检查 <code>Chart</code> 的规范问题</li>
+<li><code>helm template [chart] -f values-prod.yaml</code>：本地渲染模板并打印结果，<strong>不接触集群</strong>，调试模板最常用的命令
+<ul>
+<li><code>--show-only templates/deployment.yaml</code>：只看单个文件的渲染结果</li>
+<li><code>--debug</code>：渲染报错时输出完整堆栈</li>
+</ul></li>
+<li><code>helm diff upgrade [release] [chart]</code>(需安装
+<code>helm-diff</code>
+插件)：升级前预览集群内清单与待应用清单的差异，<code>Code Review</code>
+的好帮手</li>
+</ul>
+<h3 id="依赖与仓库">依赖与仓库</h3>
+<ul>
+<li><code>helm dependency update</code>：按 <code>Chart.yaml</code>
+下载依赖到 <code>charts/</code> 并生成 <code>Chart.lock</code></li>
+<li><code>helm dependency build</code>：按 <code>Chart.lock</code>
+锁定的版本下载，保证可复现构建，<code>CI</code> 中应使用此命令</li>
+<li><code>helm repo add [name] [url]</code> /
+<code>helm repo update</code>：添加仓库并刷新索引</li>
+<li><code>helm package [chart]</code>：打包为
+<code>.tgz</code>；<code>helm push</code> 推送到仓库</li>
+</ul>
+<h2 id="模板语法">模板语法</h2>
+<h3 id="对象与取值">对象与取值</h3>
+<ul>
+<li><p>渲染上下文的顶层对象用 <code>.</code> 访问，常用的有：</p>
+<ul>
+<li><code>.Values</code>：合并后的参数(默认 <code>values.yaml</code> +
+<code>-f</code> 文件 + <code>--set</code>)</li>
+<li><code>.Release.Name</code> /
+<code>.Release.Namespace</code>：<code>Release</code>
+的名称与命名空间，是资源命名的第一来源</li>
+<li><code>.Chart.Name</code> /
+<code>.Chart.AppVersion</code>：<code>Chart</code> 元信息</li>
+<li><code>.Files</code> / <code>.Capabilities</code>：访问
+<code>Chart</code> 内文件、查询集群版本</li>
+</ul></li>
+<li><p><code>&#123;&#123; &#125;&#125;</code>
+输出值，<code>&#123;&#123;- &#125;&#125;</code>
+去掉前侧空白，<code>&#123;&#123; -&#125;&#125;</code>
+去掉后侧空白，常用于压缩渲染结果中的空行</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> &#123;&#123; <span class="string">.Release.Name</span> &#125;&#125; <span class="comment"># 资源一律以 Release 命名，同一 Chart 可多实例部署</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="常用函数与管道">常用函数与管道</h3>
+<ul>
+<li><p>函数通过管道 <code>|</code> 串联，最常用的组合是
+<strong><code>toYaml | nindent</code></strong>：把一段
+<code>values</code> 结构原样转成 <code>yaml</code>
+并整体缩进，是”参数块透传”的标准写法</p></li>
+<li><p><code>nindent</code> 比 <code>indent</code>
+多一个前置换行，避免值被拼接到上一行尾部，<strong>优先使用
+<code>nindent</code></strong></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">tolerations:</span></span><br><span class="line">  &#123;&#123;<span class="bullet">-</span> <span class="string">.Values.tolerations</span> <span class="string">|</span> <span class="string">toYaml</span> <span class="string">|</span> <span class="string">nindent</span> <span class="number">8</span> &#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>其他高频函数：</p>
+<ul>
+<li><code>quote</code>：加引号，数字类值(<code>cpu: 2</code>)必须加，否则被渲染为数字而校验失败</li>
+<li><code>default</code>：兜底默认值，<code>&#123;&#123; .Values.replicas | default 1 &#125;&#125;</code></li>
+<li><code>required</code>：缺失即报错并中断渲染，用于强制用户提供关键参数</li>
+<li><code>upper</code> / <code>replace</code>：转换 <code>values</code>
+键名，如把 <code>feishu-app-id</code> 转成环境变量名
+<code>FEISHU_APP_ID</code></li>
+<li><code>randAlphaNum 5</code>：随机字符串，配合注解实现”每次发布强制滚动重启”</li>
+<li><code>printf</code>：格式化字符串，<code>&#123;&#123; printf "%s-%s" .Release.Namespace .Release.Name &#125;&#125;</code></li>
+</ul></li>
+</ul>
+<h3 id="控制结构">控制结构</h3>
+<ul>
+<li><p><code>if/else if/else</code>：条件渲染，判空用
+<code>not (empty .Values.x)</code>
+而非直接判布尔(<code>0</code>、<code>""</code>、空列表都是假值，容易误判)</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line">&#123;&#123;<span class="bullet">-</span> <span class="string">if</span> <span class="string">not</span> <span class="string">(empty</span> <span class="string">.Values.secrets)</span> &#125;&#125;</span><br><span class="line"><span class="attr">env:</span></span><br><span class="line">  &#123;&#123;<span class="bullet">-</span> <span class="string">range</span> <span class="string">$key</span>, <span class="string">$value</span> <span class="string">:=</span> <span class="string">.Values.secrets</span> &#125;&#125;</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> &#123;&#123; <span class="string">$key</span> <span class="string">|</span> <span class="string">upper</span> <span class="string">|</span> <span class="string">replace</span> <span class="string">&quot;-&quot;</span> <span class="string">&quot;_&quot;</span> &#125;&#125;</span><br><span class="line">    <span class="attr">valueFrom:</span></span><br><span class="line">      <span class="attr">secretKeyRef:</span></span><br><span class="line">        <span class="attr">name:</span> &#123;&#123; <span class="string">$.Release.Name</span> &#125;&#125;<span class="string">-secrets</span></span><br><span class="line">        <span class="attr">key:</span> &#123;&#123; <span class="string">$key</span> &#125;&#125;</span><br><span class="line">  &#123;&#123;<span class="bullet">-</span> <span class="string">end</span> &#125;&#125;</span><br><span class="line">&#123;&#123;<span class="bullet">-</span> <span class="string">end</span> &#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>range</code>：遍历列表或字典，<code>range $idx, $bucket := .Values.storage.buckets</code>
+同时取下标与值</p></li>
+<li><p><code>with</code>：切换作用域，<code>with .Values.gateway</code>
+内部直接用 <code>.hosts</code>；作用域内访问顶层需用根对象
+<code>$</code>(如 <code>$.Release.Name</code>)</p></li>
+<li><p><code>hasKey</code>：判断键是否存在，<code>&#123;&#123; if and (not .Values.hpa.enabled) (hasKey .Values "replicas") &#125;&#125;</code></p></li>
+</ul>
+<h3 id="命名模板">命名模板</h3>
+<ul>
+<li><p>复杂的命名规则(截断长度、拼接 <code>Chart</code> 名与
+<code>Release</code> 名)沉淀在 <code>_helpers.tpl</code> 中，用
+<code>define</code> 定义、<code>include</code> 调用</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># templates/_helpers.tpl</span></span><br><span class="line">&#123;&#123;<span class="bullet">-</span> <span class="string">define</span> <span class="string">&quot;my-chart.fullname&quot;</span> <span class="string">-</span>&#125;&#125;</span><br><span class="line">&#123;&#123;<span class="bullet">-</span> <span class="string">if</span> <span class="string">.Values.fullnameOverride</span> &#125;&#125;</span><br><span class="line">&#123;&#123;<span class="bullet">-</span> <span class="string">.Values.fullnameOverride</span> <span class="string">|</span> <span class="string">trunc</span> <span class="number">63</span> <span class="string">|</span> <span class="string">trimSuffix</span> <span class="string">&quot;-&quot;</span> &#125;&#125;</span><br><span class="line">&#123;&#123;<span class="bullet">-</span> <span class="string">else</span> &#125;&#125;</span><br><span class="line">&#123;&#123;<span class="bullet">-</span> <span class="string">printf</span> <span class="string">&quot;%s-%s&quot;</span> <span class="string">.Release.Name</span> <span class="string">(include</span> <span class="string">&quot;my-chart.name&quot;</span> <span class="string">.)</span> <span class="string">|</span> <span class="string">trunc</span> <span class="number">63</span> <span class="string">|</span> <span class="string">trimSuffix</span> <span class="string">&quot;-&quot;</span> &#125;&#125;</span><br><span class="line">&#123;&#123;<span class="bullet">-</span> <span class="string">end</span> &#125;&#125;</span><br><span class="line">&#123;&#123;<span class="bullet">-</span> <span class="string">end</span> &#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>include</code> 比 <code>template</code> 多了管道能力(可接
+<code>| nindent</code>)，统一用 <code>include</code> 即可</p></li>
+<li><p>资源间的引用(<code>Deployment</code> 引用 <code>Secret</code>
+名、<code>PVC</code> 名)一律通过同一命名模板或同一 <code>printf</code>
+表达式生成，避免改一处漏一处</p></li>
+</ul>
+<h2 id="values-管理策略"><code>values</code> 管理策略</h2>
+<ul>
+<li>覆盖优先级从低到高：<code>values.yaml</code> → <code>-f</code>
+指定的文件(后者覆盖前者) →
+<code>--set</code>/<code>--set-string</code></li>
+<li><code>--set</code> 适合 <code>CI</code> 中注入动态值(镜像
+<code>tag</code>、版本号)；复杂结构用文件管理，<code>--set</code>
+写嵌套极易出错</li>
+<li>数字与特殊字符类值用 <code>--set-string</code>
+强制为字符串，避免类型漂移</li>
+<li>环境差异组织为 <code>values-staging.yaml</code> /
+<code>values-prod.yaml</code>，公共默认值留在
+<code>values.yaml</code>，覆盖文件只写差异项</li>
+<li>未使用的参数显式置空(<code>~</code>)，模板中用 <code>if</code>
+判断空值决定是否渲染，保持渲染输出最小化</li>
+<li>敏感信息不进 <code>values</code> 文件与 <code>git</code>，由
+<code>CI</code> 在发布时从密钥管理系统注入，模板中用
+<code>secretKeyRef</code> 引用</li>
+</ul>
+<h2 id="发布编排hooks">发布编排(<code>Hooks</code>)</h2>
+<ul>
+<li><p><code>helm</code> 在发布生命周期的固定时点执行带
+<code>helm.sh/hook</code>
+注解的资源，解决”先有鸡还是先有蛋”的顺序问题：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">&quot;helm.sh/hook&quot;:</span> <span class="string">pre-install,pre-upgrade</span> <span class="comment"># 在主资源之前执行</span></span><br><span class="line">    <span class="attr">&quot;helm.sh/hook-weight&quot;:</span> <span class="string">&quot;-5&quot;</span> <span class="comment"># 数值越小越先执行，默认 0</span></span><br><span class="line">    <span class="attr">&quot;helm.sh/hook-delete-policy&quot;:</span> <span class="string">before-hook-creation</span> <span class="comment"># 重复执行前先删旧 Job(默认行为)</span></span><br></pre></td></tr></table></figure></li>
+<li><p>常用钩子时点：</p>
+<ul>
+<li><code>pre-install</code>/<code>pre-upgrade</code>：主资源创建前，适合创建前置依赖，如私有镜像的拉取凭证(<code>Secret</code>
+必须先于第一个 <code>Pod</code> 存在)</li>
+<li><code>post-install</code>/<code>post-upgrade</code>：主资源就绪后，适合数据库迁移、数据初始化等任务</li>
+<li><code>pre-delete</code>/<code>post-delete</code>：卸载前后，适合清理外部资源</li>
+</ul></li>
+<li><p>钩子资源须是能”跑完”的类型(<code>Job</code>、<code>Secret</code>
+等)，<code>Job</code> 类钩子配合 <code>restartPolicy: Never</code> +
+<code>backoffLimit</code> 快速失败</p></li>
+</ul>
+<h2 id="工程实践">工程实践</h2>
+<ul>
+<li><strong><code>umbrella chart</code> 封装第三方依赖</strong>：不直接
+<code>install</code> 社区 <code>Chart</code>，而是声明为依赖并打上
+<code>alias</code> 与 <code>condition</code>，统一在自家
+<code>values</code>
+里覆盖上游参数，升级只改一处版本号，定制与追踪都集中在一个仓库</li>
+<li><strong>版本交给 <code>CI</code></strong>：自建 <code>Chart</code>
+的 <code>version</code> 固定为 <code>0.0.0</code>，由 <code>CI</code>
+发布时注入，发布产物天然可回溯到 <code>commit</code></li>
+<li><strong>一切命名源于
+<code>Release</code></strong>：资源名、<code>Secret</code>
+名、<code>PVC</code> 名统一用
+<code>.Release.Name</code>/<code>.Release.Namespace</code> 生成，同一
+<code>Chart</code> 即可在同一集群多实例部署</li>
+<li><strong>用命名空间表达环境</strong>：模板以
+<code>.Release.Namespace</code> 推导默认
+<code>nodeSelector</code>/<code>tolerations</code>
+等，<code>values</code> 不配置则自动按环境隔离，用户仅在需要时覆盖</li>
+<li><strong>互斥渲染避免冲突</strong>：存在依赖互斥的字段(如
+<code>HPA</code> 与
+<code>spec.replicas</code>)在模板层做条件互斥，不依赖使用者自觉</li>
+<li><strong>发布命令标准化</strong>：<code>CI</code> 统一使用
+<code>helm upgrade --install --atomic --wait</code>，失败自动回滚，配合
+<code>helm diff</code> 在合并请求中展示变更</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Tools &amp; Utilities</category>
+        <category>Container</category>
+      </categories>
+      <tags>
+        <tag>beginner</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Kubernetes: 生产级配置技巧</title>
+    <url>/2026/08/16/k8s-production-tricks/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="生产级配置技巧">生产级配置技巧</h1>
+<p>以下都是生产环境中的普遍做法(见 <code>Kubernetes</code>
+一文的「<code>Charts</code>
+实践」)，多数解决的是文档不会明说、但线上一定会踩的坑</p>
+<h2 id="优雅停机">优雅停机</h2>
+<ul>
+<li><p><code>Pod</code>
+收到终止信号后，<code>Service</code>/<code>Istio</code>
+的端点列表传播存在延迟，若容器立即退出，仍会有少量请求被路由到已死的
+<code>Pod</code></p></li>
+<li><p>解决方式是<strong>让容器先睡一会儿再退出</strong>，用
+<code>preStop</code> 钩子桥接端点传播延迟，同时放宽
+<code>terminationGracePeriodSeconds</code> 给应用留足清理时间</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">terminationGracePeriodSeconds:</span> <span class="number">60</span> <span class="comment"># 给 preStop + 应用关闭留足时间(默认仅 30s)</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">app</span></span><br><span class="line">      <span class="attr">lifecycle:</span></span><br><span class="line">        <span class="attr">preStop:</span></span><br><span class="line">          <span class="attr">exec:</span></span><br><span class="line">            <span class="attr">command:</span> [<span class="string">&quot;sh&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;sleep 15&quot;</span>] <span class="comment"># 等待 LB/网格端点列表更新，期间继续处理存量请求</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="hpa-与-replicas-的冲突"><code>HPA</code> 与
+<code>replicas</code> 的冲突</h2>
+<ul>
+<li><p><code>Deployment</code> 的 <code>spec.replicas</code> 与
+<code>HPA</code> 会互相打架：<code>HPA</code> 扩容后，下一次
+<code>apply</code> 会把副本数改回 <code>yaml</code> 里的值</p></li>
+<li><p>解决方式是在模板层做互斥：<strong>仅当 <code>HPA</code>
+未启用时才渲染 <code>replicas</code> 字段</strong>，启用
+<code>HPA</code> 后副本数完全交给自动扩缩</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spec:</span></span><br><span class="line">  &#123;&#123;<span class="bullet">-</span> <span class="string">if</span> <span class="string">and</span> <span class="string">(not</span> <span class="string">.Values.hpa.enabled)</span> <span class="string">(hasKey</span> <span class="string">.Values</span> <span class="string">&quot;replicas&quot;</span><span class="string">)</span> &#125;&#125;</span><br><span class="line">  <span class="attr">replicas:</span> &#123;&#123; <span class="string">.Values.replicas</span> &#125;&#125;</span><br><span class="line">  &#123;&#123;<span class="bullet">-</span> <span class="string">end</span> &#125;&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="配置变更也触发滚动重启">配置变更也触发滚动重启</h2>
+<ul>
+<li><p>滚动更新只比较 <code>Pod</code>
+模板哈希，若仅改了环境变量之外的间接配置(如依赖的配置中心)，<code>helm upgrade</code>
+后 <code>Pod</code> 不会重建，容易造成“升级了但没生效”</p></li>
+<li><p>解决方式是注入一个<strong>每次渲染都变化的随机注解</strong>，强制每次发布都滚动重启</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">annotations:</span></span><br><span class="line">        <span class="attr">rollme:</span> &#123;&#123; <span class="string">randAlphaNum</span> <span class="number">5</span> <span class="string">|</span> <span class="string">quote</span> &#125;&#125; <span class="comment"># 每次 helm upgrade 都变化，强制重建 Pod</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="job-与-sidecar-的死锁"><code>Job</code> 与 <code>sidecar</code>
+的死锁</h2>
+<ul>
+<li><p>被注入 <code>Istio</code> <code>sidecar</code> 的
+<code>Job</code> 可能永远不结束：业务容器退出后，<code>Envoy</code>
+<code>sidecar</code> 仍在运行，<code>Pod</code> 无法到达
+<code>Completed</code> 状态</p></li>
+<li><p>解决方式是给任务类 <code>Pod</code>
+<strong>显式关闭注入</strong></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">annotations:</span></span><br><span class="line">        <span class="attr">sidecar.istio.io/inject:</span> <span class="string">&quot;false&quot;</span> <span class="comment"># 数据库迁移等一次性 Job 不需要网格能力</span></span><br><span class="line">  <span class="attr">backoffLimit:</span> <span class="number">2</span> <span class="comment"># 快速失败，避免反复重试污染数据</span></span><br></pre></td></tr></table></figure></li>
+<li><p>同理，<code>CronJob</code> 若只是访问数据库或外部
+<code>API</code>，也应关闭注入以避免资源浪费与完成阻塞</p></li>
+</ul>
+<h2 id="探针的节奏控制">探针的节奏控制</h2>
+<ul>
+<li><p>探针不是越灵敏越好：<code>periodSeconds</code> 过短 + 应用
+<code>GC</code>
+停顿会导致误判重启，形成<strong>重启风暴</strong>(流量涌入冷启动应用 →
+更慢 → 更多失败)</p></li>
+<li><p>生产实践：存活探针放宽到 <code>60s</code> 一次，就绪探针保持
+<code>15s</code>，<code>timeoutSeconds: 10</code> 容忍慢响应</p></li>
+<li><p><code>Spring Boot</code> 应用直接使用 <code>actuator</code>
+的分层健康端点，避免把依赖检查混入存活探针</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">livenessProbe:</span></span><br><span class="line">  <span class="attr">httpGet:</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">/actuator/health/liveness</span> <span class="comment"># 只关心进程是否活着</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line">  <span class="attr">initialDelaySeconds:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">periodSeconds:</span> <span class="number">60</span> <span class="comment"># 放宽节奏，避免 GC 停顿引发误杀</span></span><br><span class="line">  <span class="attr">timeoutSeconds:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">readinessProbe:</span></span><br><span class="line">  <span class="attr">httpGet:</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">/actuator/health/readiness</span> <span class="comment"># 关心依赖是否就绪</span></span><br><span class="line">    <span class="attr">port:</span> <span class="number">8080</span></span><br><span class="line">  <span class="attr">initialDelaySeconds:</span> <span class="number">10</span></span><br><span class="line">  <span class="attr">periodSeconds:</span> <span class="number">15</span></span><br><span class="line">  <span class="attr">timeoutSeconds:</span> <span class="number">10</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="免注解的指标采集">免注解的指标采集</h2>
+<ul>
+<li><p>不部署 <code>ServiceMonitor</code> 时，<code>Prometheus</code>
+可通过 <code>Pod</code> 注解自动发现抓取目标，应用零配置接入监控</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">annotations:</span></span><br><span class="line">        <span class="attr">prometheus.io/scrape:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">        <span class="attr">prometheus.io/port:</span> <span class="string">&quot;8080&quot;</span></span><br><span class="line">        <span class="attr">prometheus.io/path:</span> <span class="string">&quot;/actuator/prometheus&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="容器感知的-jvm-调优">容器感知的 <code>JVM</code> 调优</h2>
+<ul>
+<li><p><code>JVM</code> 默认按宿主机内存分配堆，在容器里会严重超配；同时
+<code>CPU limit</code> 会被 <code>JVM</code> 识别为核心数，影响
+<code>GC</code> 线程数</p></li>
+<li><p>生产实践：<code>requests</code> 与 <code>limits</code>
+设为相同值保证资源独占，再用环境变量覆盖 <code>JVM</code> 行为</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">resources:</span></span><br><span class="line">  <span class="attr">requests:</span></span><br><span class="line">    <span class="attr">cpu:</span> <span class="string">&quot;2&quot;</span></span><br><span class="line">    <span class="attr">memory:</span> <span class="string">4Gi</span></span><br><span class="line">  <span class="attr">limits:</span> <span class="comment"># 与 requests 一致，避免 CPU 限流引发长尾延迟</span></span><br><span class="line">    <span class="attr">cpu:</span> <span class="string">&quot;2&quot;</span></span><br><span class="line">    <span class="attr">memory:</span> <span class="string">4Gi</span></span><br><span class="line"><span class="attr">env:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">JAVA_TOOL_OPTIONS</span></span><br><span class="line">    <span class="attr">value:</span> <span class="string">&gt;-</span></span><br><span class="line"><span class="string">      -XX:ActiveProcessorCount=2 -XX:MaxDirectMemorySize=128M</span></span><br><span class="line"><span class="string">      -XX:InitialRAMPercentage=50 -XX:MinRAMPercentage=75 -XX:MaxRAMPercentage=75</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>ActiveProcessorCount</code> 显式指定核心数，不受
+<code>CPU</code> 配额干扰</li>
+<li><code>RAMPercentage</code> 按容器内存的百分比分配堆，替代写死的
+<code>-Xmx</code></li>
+</ul></li>
+</ul>
+<h2 id="helm-hook-编排发布顺序"><code>helm hook</code> 编排发布顺序</h2>
+<ul>
+<li><p>私有镜像的拉取凭证必须在第一个 <code>Pod</code>
+创建前就绪，否则首个 <code>Deployment</code> 会卡在
+<code>ImagePullBackOff</code></p></li>
+<li><p>用 <code>pre-install</code>/<code>pre-upgrade</code>
+钩子提前创建，<code>hook-weight</code>
+保证其先于其他钩子资源执行；数据库迁移等任务则用
+<code>post-install</code> 钩子跟上，<code>weight</code>
+决定多个任务的先后</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Secret</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">kubernetes.io/dockerconfigjson</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-app-regcred</span></span><br><span class="line">  <span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">&quot;helm.sh/hook&quot;:</span> <span class="string">pre-install,pre-upgrade</span> <span class="comment"># 在 Deployment 之前创建</span></span><br><span class="line">    <span class="attr">&quot;helm.sh/hook-weight&quot;:</span> <span class="string">&quot;-5&quot;</span> <span class="comment"># 数值越小越先执行</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="string">.dockerconfigjson:</span> &#123;&#123; <span class="string">template</span> <span class="string">&quot;imagePullSecret&quot;</span> <span class="string">.</span> &#125;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">batch/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Job</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-app-migration</span></span><br><span class="line">  <span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">&quot;helm.sh/hook&quot;:</span> <span class="string">post-install,post-upgrade</span> <span class="comment"># 应用就绪后执行数据库迁移</span></span><br><span class="line">    <span class="attr">&quot;helm.sh/hook-weight&quot;:</span> <span class="string">&quot;0&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>凭证 <code>Secret</code> 需要在使用它的每个命名空间各放一份(如
+<code>cert-manager</code>
+拉取镜像的命名空间)，模板中渲染多份即可</p></li>
+</ul>
+<h2 id="对象存储挂载为本地盘">对象存储挂载为本地盘</h2>
+<ul>
+<li><p>通过各云厂商的 <code>CSI</code> 驱动，把对象存储桶直接挂载为
+<code>PV</code>，应用像读写本地目录一样访问
+<code>OSS</code>/<code>GCS</code>，无需引入 <code>SDK</code></p></li>
+<li><p><code>GCS</code> 的方式最简单，注解即可启用 <code>GKE</code>
+托管的 <code>gcsfuse</code> <code>sidecar</code>，还能单独限制
+<code>sidecar</code> 资源</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">annotations:</span></span><br><span class="line">        <span class="attr">gke-gcsfuse/volumes:</span> <span class="string">&quot;true&quot;</span> <span class="comment"># 让 GKE 注入 gcsfuse sidecar</span></span><br><span class="line">        <span class="attr">gke-gcsfuse/cpu-limit:</span> <span class="string">&quot;250m&quot;</span></span><br><span class="line">        <span class="attr">gke-gcsfuse/memory-limit:</span> <span class="string">&quot;256Mi&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>OSS</code> 需要手写静态
+<code>PV</code>，两个细节：<strong>每个桶用独立的
+<code>storageClassName</code></strong>
+防止默认供给器抢占绑定；<code>PVC</code> 用
+<strong><code>selector</code> 按标签钉死</strong>要绑定的
+<code>PV</code></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolume</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-app-oss-csi-pv-0</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">alicloud-pvname:</span> <span class="string">my-app-oss-0</span> <span class="comment"># 供 PVC selector 匹配</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">storageClassName:</span> <span class="string">my-app-csi-oss-0</span> <span class="comment"># 每桶唯一，避免被动态供给拦截</span></span><br><span class="line">  <span class="attr">accessModes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">ReadWriteMany</span></span><br><span class="line">  <span class="attr">persistentVolumeReclaimPolicy:</span> <span class="string">Retain</span></span><br><span class="line">  <span class="attr">csi:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">ossplugin.csi.alibabacloud.com</span></span><br><span class="line">    <span class="attr">volumeHandle:</span> <span class="string">my-app-oss-csi-pv-0</span></span><br><span class="line">    <span class="attr">volumeAttributes:</span></span><br><span class="line">      <span class="attr">bucket:</span> <span class="string">my-bucket</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">oss-cn-hangzhou-internal.aliyuncs.com</span></span><br><span class="line">      <span class="attr">akId:</span> <span class="string">&quot;&lt;access-key&gt;&quot;</span></span><br><span class="line">      <span class="attr">akSecret:</span> <span class="string">&quot;&lt;secret-key&gt;&quot;</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolumeClaim</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-app-pvc-0</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">storageClassName:</span> <span class="string">my-app-csi-oss-0</span></span><br><span class="line">  <span class="attr">accessModes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">ReadWriteMany</span></span><br><span class="line">  <span class="attr">resources:</span></span><br><span class="line">    <span class="attr">requests:</span></span><br><span class="line">      <span class="attr">storage:</span> <span class="string">10Gi</span> <span class="comment"># 对象存储不校验，仅作形式声明</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">alicloud-pvname:</span> <span class="string">my-app-oss-0</span> <span class="comment"># 按标签绑定指定 PV</span></span><br></pre></td></tr></table></figure></li>
+<li><p>有状态监控组件(如 <code>Prometheus</code>)重装时应保留数据：手写
+<code>PV</code>
+直接引用<strong>已存在的云盘</strong>(<code>volumeHandle</code> 填云盘
+<code>ID</code>)，配合
+<code>persistentVolumeReclaimPolicy: Retain</code>，删除
+<code>chart</code> 重装后数据仍在</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolume</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">monitoring</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">storageClassName:</span> <span class="string">monitoring</span></span><br><span class="line">  <span class="attr">accessModes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">ReadWriteOnce</span></span><br><span class="line">  <span class="attr">capacity:</span></span><br><span class="line">    <span class="attr">storage:</span> <span class="string">500Gi</span></span><br><span class="line">  <span class="attr">csi:</span></span><br><span class="line">    <span class="attr">driver:</span> <span class="string">udisk.csi.ucloud.cn</span></span><br><span class="line">    <span class="attr">volumeHandle:</span> <span class="string">&quot;&lt;已有云盘 ID&gt;&quot;</span> <span class="comment"># 复用存量云盘</span></span><br><span class="line">  <span class="attr">persistentVolumeReclaimPolicy:</span> <span class="string">Retain</span> <span class="comment"># PVC 删除后保留云盘与数据</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="出站默认拒绝与元数据防护">出站默认拒绝与元数据防护</h2>
+<ul>
+<li><p>应用被 <code>SSRF</code>
+攻击时，攻击者最先尝试的就是云厂商的元数据服务地址，拿到的是<strong>临时云凭证</strong>，可直接操纵云资源</p></li>
+<li><p>生产实践：<code>NetworkPolicy</code> 默认拒绝所有出站，仅放行
+<code>DNS</code>，并显式排除元数据网段</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">NetworkPolicy</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-app</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">podSelector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">my-app</span></span><br><span class="line">  <span class="attr">policyTypes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">Egress</span></span><br><span class="line">  <span class="attr">egress:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">to:</span> <span class="comment"># 放行集群 DNS</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">namespaceSelector:</span></span><br><span class="line">            <span class="attr">matchLabels:</span></span><br><span class="line">              <span class="attr">kubernetes.io/metadata.name:</span> <span class="string">kube-system</span></span><br><span class="line">          <span class="attr">podSelector:</span></span><br><span class="line">            <span class="attr">matchLabels:</span></span><br><span class="line">              <span class="attr">k8s-app:</span> <span class="string">kube-dns</span></span><br><span class="line">        <span class="attr">ports:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">UDP</span></span><br><span class="line">            <span class="attr">port:</span> <span class="number">53</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">to:</span> <span class="comment"># 放行其余公网，但屏蔽元数据网段</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">ipBlock:</span></span><br><span class="line">            <span class="attr">cidr:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">/0</span></span><br><span class="line">            <span class="attr">except:</span></span><br><span class="line">              <span class="bullet">-</span> <span class="number">100.64</span><span class="number">.0</span><span class="number">.0</span><span class="string">/10</span> <span class="comment"># 阿里云等 CG-NAT 网段(含 metadata 100.100.100.200)</span></span><br><span class="line">              <span class="bullet">-</span> <span class="number">169.254</span><span class="number">.0</span><span class="number">.0</span><span class="string">/16</span> <span class="comment"># link-local(含 AWS/GCP/Azure 169.254.169.254)</span></span><br></pre></td></tr></table></figure></li>
+<li><p>在此之上可为特殊角色开白名单，例如调试用的 <code>admin</code>
+shell <code>Pod</code> 只允许访问 <code>API Server</code>
+端口，不开内网通行证</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">egress:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">to:</span> <span class="comment"># 仅允许访问 apiserver</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">ipBlock:</span></span><br><span class="line">          <span class="attr">cidr:</span> <span class="number">10.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">/8</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">443</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">        <span class="attr">port:</span> <span class="number">6443</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="应用内嵌调试终端">应用内嵌调试终端</h2>
+<ul>
+<li><p>让应用持有专属 <code>ServiceAccount</code> 与最小
+<code>RBAC</code>(创建 <code>Job</code>、<code>pods/exec</code>、读写
+<code>Secret</code>)，即可在网页里一键拉起带完整工具链的调试
+<code>Pod</code>，进容器排查线上问题</p></li>
+<li><p>关键是<strong>权限最小化</strong>：<code>Role</code>
+只授予单个命名空间内的少量动词，调试 <code>Pod</code> 再用
+<code>NetworkPolicy</code> 隔离</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Role</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-app-shell</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;batch&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;jobs&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>, <span class="string">&quot;create&quot;</span>, <span class="string">&quot;delete&quot;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;pods&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;pods/exec&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;create&quot;</span>, <span class="string">&quot;get&quot;</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 应用 Pod 将自身命名空间下发给调试 Pod，无需硬编码</span></span><br><span class="line"><span class="attr">env:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">TOOLS_SHELL_POD_NAMESPACE</span></span><br><span class="line">    <span class="attr">valueFrom:</span></span><br><span class="line">      <span class="attr">fieldRef:</span> <span class="comment"># Downward API：把 Pod 自身信息注入环境变量</span></span><br><span class="line">        <span class="attr">fieldPath:</span> <span class="string">metadata.namespace</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="网关证书的域名数量上限">网关证书的域名数量上限</h2>
+<ul>
+<li><p><code>Istio</code> <code>Gateway</code> 的单个
+<code>server</code> 块在证书 <code>SAN</code> 数量上有实际上限(约
+<code>100</code> 个域名)，域名多时会直接报错</p></li>
+<li><p>解决方式是<strong>按 <code>99</code> 个一组拆分
+<code>server</code> 块</strong>，每组配独立的证书
+<code>Secret</code>，模板层用循环批量生成</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">servers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">port:</span></span><br><span class="line">      <span class="attr">number:</span> <span class="number">443</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">https</span></span><br><span class="line">      <span class="attr">protocol:</span> <span class="string">HTTPS</span></span><br><span class="line">    <span class="attr">tls:</span></span><br><span class="line">      <span class="attr">mode:</span> <span class="string">SIMPLE</span></span><br><span class="line">      <span class="attr">credentialName:</span> <span class="string">my-app-tls-1</span> <span class="comment"># 第一组证书</span></span><br><span class="line">    <span class="attr">hosts:</span> <span class="comment"># ≤ 99 个域名</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">a.example.com</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">port:</span></span><br><span class="line">      <span class="attr">number:</span> <span class="number">443</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">https-2</span> <span class="comment"># 端口相同，name 必须不同</span></span><br><span class="line">      <span class="attr">protocol:</span> <span class="string">HTTPS</span></span><br><span class="line">    <span class="attr">tls:</span></span><br><span class="line">      <span class="attr">mode:</span> <span class="string">SIMPLE</span></span><br><span class="line">      <span class="attr">credentialName:</span> <span class="string">my-app-tls-2</span> <span class="comment"># 第二组证书</span></span><br><span class="line">    <span class="attr">hosts:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">b.example.com</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="入口层的最小暴露面">入口层的最小暴露面</h2>
+<ul>
+<li><p>业务不需要的端点一律在网关层直接
+<code>404</code>，而不是靠应用代码防御：管理端点(<code>/actuator/*</code>)只放行健康检查，文档路由(<code>/docs</code>)按环境开关</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">http:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">match:</span> <span class="comment"># 禁用文档路由</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uri:</span></span><br><span class="line">          <span class="attr">prefix:</span> <span class="string">/docs</span></span><br><span class="line">    <span class="attr">directResponse:</span> <span class="comment"># 不经过后端直接返回</span></span><br><span class="line">      <span class="attr">status:</span> <span class="number">404</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">match:</span> <span class="comment"># 仅放行健康检查</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uri:</span></span><br><span class="line">          <span class="attr">exact:</span> <span class="string">/actuator/health</span></span><br><span class="line">    <span class="attr">route:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">destination:</span></span><br><span class="line">          <span class="attr">host:</span> <span class="string">my-app</span></span><br><span class="line">          <span class="attr">port:</span></span><br><span class="line">            <span class="attr">number:</span> <span class="number">80</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">match:</span> <span class="comment"># 其余管理端点全部 404</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uri:</span></span><br><span class="line">          <span class="attr">prefix:</span> <span class="string">/actuator</span></span><br><span class="line">    <span class="attr">directResponse:</span></span><br><span class="line">      <span class="attr">status:</span> <span class="number">404</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">route:</span> <span class="comment"># 正常业务流量</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">destination:</span></span><br><span class="line">          <span class="attr">host:</span> <span class="string">my-app</span></span><br><span class="line">          <span class="attr">port:</span></span><br><span class="line">            <span class="attr">number:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure></li>
+<li><p>多产品共用一套部署时，可在网关层按域名路由并<strong>注入产品标识
+<code>Header</code></strong>，后端无感知区分租户</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">http:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">match:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">headers:</span></span><br><span class="line">          <span class="string">&quot;:authority&quot;</span><span class="string">:</span> <span class="comment"># Envoy 的 Host 头</span></span><br><span class="line">            <span class="attr">exact:</span> <span class="string">product-a.example.com</span></span><br><span class="line">    <span class="attr">route:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">destination:</span></span><br><span class="line">          <span class="attr">host:</span> <span class="string">my-app</span></span><br><span class="line">          <span class="attr">port:</span></span><br><span class="line">            <span class="attr">number:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">headers:</span></span><br><span class="line">          <span class="attr">request:</span></span><br><span class="line">            <span class="attr">set:</span></span><br><span class="line">              <span class="attr">X-Product:</span> <span class="string">&quot;a&quot;</span> <span class="comment"># 后端读取该 Header 区分产品</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="全链路请求-id-透传">全链路请求 <code>ID</code> 透传</h2>
+<ul>
+<li><p>外部客户端带来的 <code>X-Request-Id</code>
+默认不会在网关处保留，导致跨服务的日志无法串联</p></li>
+<li><p>用 <code>EnvoyFilter</code>
+直接修改网关配置，让网关<strong>透传外部请求
+<code>ID</code></strong>，全链路日志与 <code>trace</code> 得以对齐</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">EnvoyFilter</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">ingress-preserve-request-id</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">workloadSelector:</span></span><br><span class="line">    <span class="attr">labels:</span></span><br><span class="line">      <span class="attr">istio:</span> <span class="string">ingress</span> <span class="comment"># 作用于 ingress gateway Pod</span></span><br><span class="line">  <span class="attr">configPatches:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">applyTo:</span> <span class="string">NETWORK_FILTER</span></span><br><span class="line">      <span class="attr">match:</span></span><br><span class="line">        <span class="attr">context:</span> <span class="string">GATEWAY</span></span><br><span class="line">        <span class="attr">listener:</span></span><br><span class="line">          <span class="attr">filterChain:</span></span><br><span class="line">            <span class="attr">filter:</span></span><br><span class="line">              <span class="attr">name:</span> <span class="string">envoy.filters.network.http_connection_manager</span></span><br><span class="line">      <span class="attr">patch:</span></span><br><span class="line">        <span class="attr">operation:</span> <span class="string">MERGE</span></span><br><span class="line">        <span class="attr">value:</span></span><br><span class="line">          <span class="attr">typed_config:</span></span><br><span class="line">            <span class="attr">&quot;@type&quot;:</span> <span class="string">type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager</span></span><br><span class="line">            <span class="attr">preserve_external_request_id:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="环境即命名空间">环境即命名空间</h2>
+<ul>
+<li><p>用污点 + 容忍度把节点按环境隔离：<code>staging</code>
+命名空间的发布只调度到 <code>staging</code>
+节点，互不抢资源；命名空间统一打上 <code>istio-injection</code>
+标签，新服务自动入网格</p></li>
+<li><p>模板层以 <code>Release.Namespace</code>
+推导默认值，用户不配置则自动隔离</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 节点打污点: kubectl taint node node1 kingboat.io/environment=production:NoSchedule</span></span><br><span class="line"><span class="attr">tolerations:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">kingboat.io/environment</span></span><br><span class="line">    <span class="attr">operator:</span> <span class="string">Equal</span></span><br><span class="line">    <span class="attr">value:</span> &#123;&#123; <span class="string">.Release.Namespace</span> <span class="string">|</span> <span class="string">quote</span> &#125;&#125; <span class="comment"># 容忍度跟随命名空间，自动匹配环境节点</span></span><br><span class="line">    <span class="attr">effect:</span> <span class="string">NoSchedule</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Namespace</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">staging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">istio-injection:</span> <span class="string">enabled</span> <span class="comment"># 命名空间内新建 Pod 自动注入 sidecar</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Tools &amp; Utilities</category>
+        <category>Container</category>
+      </categories>
+      <tags>
+        <tag>beginner</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PLG: Prometheus + Loki + Grafana 可观测体系</title>
+    <url>/2026/08/16/plg/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="plg"><code>PLG</code></h1>
+<h2 id="快速入门">快速入门</h2>
+<h3 id="简介">简介</h3>
+<ul>
+<li><p><strong><code>PLG</code></strong> 指以
+<strong><code>Prometheus</code> + <code>Loki</code> +
+<code>Grafana</code></strong>
+为核心的可观测性体系，分别负责<strong>指标</strong>、<strong>日志</strong>与<strong>可视化/告警</strong>，采集日志还需要
+<strong><code>Promtail</code></strong>，四者的关系：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">应用/容器 ──(pull 指标)──&gt; Prometheus ──┐</span><br><span class="line">应用/容器 ──(tail 日志)──&gt; Promtail ──push──&gt; Loki ──┐</span><br><span class="line">                                                  ├──&gt; Grafana(查询/仪表盘/告警)</span><br></pre></td></tr></table></figure></li>
+<li><p>相比 <code>ELK</code> 全文索引的重量级方案，<code>Loki</code>
+只对<strong>标签</strong>建索引、日志正文压缩存储，以极低的成本换来”够用”的日志检索能力，与
+<code>k8s</code> 的标签体系天然契合</p></li>
+<li><p><code>Grafana</code>
+是唯一面向用户的入口：指标与日志统一查询、仪表盘与告警规则统一管理，且全部资源支持<strong>配置化供给</strong>(<code>provisioning</code>)，可以像管理应用一样用
+<code>git</code> + <code>helm</code> 管理监控体系</p></li>
+</ul>
+<h2 id="prometheus"><code>Prometheus</code></h2>
+<h3 id="简介-1">简介</h3>
+<ul>
+<li><strong><code>pull</code> 模型</strong>：<code>Prometheus</code>
+主动周期性抓取(<code>scrape</code>)目标的 <code>/metrics</code>
+端点，而非等待推送，天然适合 <code>k8s</code> 的自注册环境</li>
+<li>数据以时序形式本地存储(<code>TSDB</code>)，配合 <code>PromQL</code>
+做聚合查询</li>
+<li>基本配置结构：<code>scrape_configs</code>
+定义一组抓取任务(<code>job</code>)，每个任务通过<strong>服务发现</strong>找到目标，再通过
+<code>relabel</code> 改写标签</li>
+</ul>
+<h3 id="服务发现与注解发现">服务发现与注解发现</h3>
+<ul>
+<li><p><code>k8s</code> 环境用 <code>kubernetes_sd_configs</code>
+发现目标，<code>role</code> 可选
+<code>pod</code>/<code>service</code>/<code>endpoints</code> 等</p></li>
+<li><p>生产实践是<strong>注解驱动</strong>：应用只在
+<code>Service</code>/<code>Pod</code> 上打 <code>prometheus.io/*</code>
+注解即可被发现，零额外配置</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">additionalScrapeConfigs:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">job_name:</span> <span class="string">kubernetes-service-endpoints</span></span><br><span class="line">    <span class="attr">kubernetes_sd_configs:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">role:</span> <span class="string">endpoints</span></span><br><span class="line">    <span class="attr">relabel_configs:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">source_labels:</span> [<span class="string">__meta_kubernetes_service_annotation_prometheus_io_scrape</span>]</span><br><span class="line">        <span class="attr">action:</span> <span class="string">keep</span> <span class="comment"># 只保留声明了注解的 Service</span></span><br><span class="line">        <span class="attr">regex:</span> <span class="literal">true</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">source_labels:</span> [<span class="string">__meta_kubernetes_service_annotation_prometheus_io_port</span>]</span><br><span class="line">        <span class="attr">action:</span> <span class="string">replace</span></span><br><span class="line">        <span class="attr">target_label:</span> <span class="string">__address__</span></span><br><span class="line">        <span class="attr">regex:</span> <span class="string">(.+)(?::\d+);(\d+)</span> <span class="comment"># 用注解端口替换默认地址</span></span><br><span class="line">        <span class="attr">replacement:</span> <span class="string">$1:$2</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">source_labels:</span> [<span class="string">__meta_kubernetes_service_name</span>]</span><br><span class="line">        <span class="attr">action:</span> <span class="string">replace</span></span><br><span class="line">        <span class="attr">target_label:</span> <span class="string">application</span> <span class="comment"># 服务名映射为 application 标签，告警信息直接可用</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>Istio</code>
+网格的指标同样可以低成本接入：按容器端口名过滤，抓取
+<code>sidecar</code> 暴露的 <code>Envoy</code> 指标</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">job_name:</span> <span class="string">envoy-stats</span></span><br><span class="line">  <span class="attr">metrics_path:</span> <span class="string">/stats/prometheus</span></span><br><span class="line">  <span class="attr">kubernetes_sd_configs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">role:</span> <span class="string">pod</span></span><br><span class="line">  <span class="attr">relabel_configs:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">source_labels:</span> [<span class="string">__meta_kubernetes_pod_container_port_name</span>]</span><br><span class="line">      <span class="attr">action:</span> <span class="string">keep</span></span><br><span class="line">      <span class="attr">regex:</span> <span class="string">.*-envoy-prom</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="存储">存储</h3>
+<ul>
+<li><p>数据目录挂在 <code>PVC</code>
+上即可持久化；重装时应<strong>复用已有云盘</strong>：<code>PVC</code>
+通过 <code>volumeName</code> + <code>selector</code> 钉死既有的
+<code>PV</code>，监控历史不因重装丢失</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">storageSpec:</span></span><br><span class="line">  <span class="attr">volumeClaimTemplate:</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">selector:</span></span><br><span class="line">        <span class="attr">matchLabels:</span></span><br><span class="line">          <span class="attr">app.kubernetes.io/name:</span> <span class="string">monitoring</span></span><br><span class="line">      <span class="attr">storageClassName:</span> <span class="string">monitoring</span></span><br><span class="line">      <span class="attr">volumeName:</span> <span class="string">monitoring</span> <span class="comment"># 直接绑定已有 PV</span></span><br><span class="line">      <span class="attr">resources:</span></span><br><span class="line">        <span class="attr">requests:</span></span><br><span class="line">          <span class="attr">storage:</span> <span class="string">300Gi</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="promtail"><code>Promtail</code></h2>
+<h3 id="简介-2">简介</h3>
+<ul>
+<li><code>Promtail</code> 是 <code>Loki</code> 官方采集代理，以
+<code>DaemonSet</code> 跑在每个节点，<code>tail</code> 容器日志文件并
+<code>push</code> 给 <code>Loki</code></li>
+<li>采集时把 <code>k8s</code> 元数据(命名空间、<code>Pod</code>
+名、标签)作为日志的标签附上，这就是 <code>Loki</code>
+查询的主要维度</li>
+</ul>
+<h3 id="基本配置">基本配置</h3>
+<p><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">config:</span></span><br><span class="line">  <span class="attr">clients:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">url:</span> <span class="string">http://loki-write-headless:3100/loki/api/v1/push</span> <span class="comment"># 推送地址</span></span><br><span class="line">  <span class="attr">snippets:</span></span><br><span class="line">    <span class="attr">pipelineStages:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">cri:</span> &#123;&#125; <span class="comment"># 解析 CRI 日志格式(containerd 运行时的标准格式，拆出时间戳/级别/正文)</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>pipelineStages</code> 是加工管道，常用阶段：
+<ul>
+<li><code>cri</code>/<code>docker</code>：解析容器运行时日志头</li>
+<li><code>regex</code>：正则提取字段，配合 <code>labels</code>
+阶段提升为标签(标签基数要克制，高基数值不要做标签)</li>
+<li><code>timestamp</code>/<code>multiline</code>：修正时间戳、合并多行日志(如
+<code>Java</code> 堆栈)</li>
+</ul></li>
+<li>简单可扩展模式下的 <code>Loki</code> 有多个写入副本，推送地址用
+<code>headless service</code>(<code>loki-write-headless</code>)让客户端负载均衡到所有
+<code>write</code> 实例</li>
+</ul>
+<h2 id="loki"><code>Loki</code></h2>
+<h3 id="简介-3">简介</h3>
+<ul>
+<li><code>Loki</code>
+只索引标签，日志正文按块(<code>chunk</code>)压缩存储到对象存储，查询时按标签定位再过滤正文(<code>LogQL</code>)</li>
+<li><code>LogQL</code>
+速记：<code>{namespace="production", app=~"api.+"}</code>
+选流，<code>| json</code> 解析正文，<code>| line_format</code>
+格式化，指标查询再套聚合如 <code>rate(...[5m])</code></li>
+</ul>
+<h3 id="部署模式">部署模式</h3>
+<ul>
+<li><code>单体模式</code>(<code>单体</code>
+<code>SingleBinary</code>)：所有组件一个进程，小规模够用</li>
+<li><code>简单可扩展模式</code>(<code>SimpleScalable</code>)：拆为
+<code>read</code>/<code>write</code>/<code>backend</code>
+三组，<code>read</code>/<code>write</code>
+可独立扩容，日志量大时的性价比之选；注意两条数据面都要配持久化，且
+<code>write</code> 的 <code>PVC</code> 开启随 <code>StatefulSet</code>
+删除(<code>enableStatefulSetAutoDeletePVC</code>)</li>
+</ul>
+<h3 id="关键配置">关键配置</h3>
+<ul>
+<li><p>存储与索引结构，对象存储放 <code>chunk</code>，<code>TSDB</code>
+索引按天滚动：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">loki:</span></span><br><span class="line">  <span class="attr">storage:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">s3</span></span><br><span class="line">    <span class="attr">bucketNames:</span></span><br><span class="line">      <span class="attr">chunks:</span> <span class="string">loki-chunks</span> <span class="comment"># 日志块</span></span><br><span class="line">      <span class="attr">ruler:</span> <span class="string">loki-ruler</span></span><br><span class="line">      <span class="attr">admin:</span> <span class="string">loki-admin</span></span><br><span class="line">    <span class="attr">s3:</span></span><br><span class="line">      <span class="attr">s3:</span> <span class="string">s3://loki</span></span><br><span class="line">      <span class="attr">endpoint:</span> <span class="string">http://s3.internal</span> <span class="comment"># 兼容 S3 协议即可(各云厂商对象存储均可)</span></span><br><span class="line">  <span class="attr">schemaConfig:</span></span><br><span class="line">    <span class="attr">configs:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">from:</span> <span class="number">2024-01-01</span></span><br><span class="line">        <span class="attr">store:</span> <span class="string">tsdb</span></span><br><span class="line">        <span class="attr">object_store:</span> <span class="string">s3</span></span><br><span class="line">        <span class="attr">schema:</span> <span class="string">v13</span></span><br><span class="line">        <span class="attr">index:</span></span><br><span class="line">          <span class="attr">period:</span> <span class="string">24h</span></span><br></pre></td></tr></table></figure></li>
+<li><p>保留策略：全局保留 +
+<strong>按流精细覆盖</strong>，低价值环境短保留，成本立省</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">limits_config:</span></span><br><span class="line">  <span class="attr">retention_period:</span> <span class="string">744h</span> <span class="comment"># 默认保留 31 天</span></span><br><span class="line">  <span class="attr">retention_stream:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">selector:</span> <span class="string">&#x27;&#123;namespace=&quot;staging&quot;&#125;&#x27;</span></span><br><span class="line">      <span class="attr">priority:</span> <span class="number">1</span></span><br><span class="line">      <span class="attr">period:</span> <span class="string">168h</span> <span class="comment"># staging 只留 7 天</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">selector:</span> <span class="string">&#x27;&#123;app=~&quot;.+job.+&quot;&#125;&#x27;</span></span><br><span class="line">      <span class="attr">priority:</span> <span class="number">2</span></span><br><span class="line">      <span class="attr">period:</span> <span class="string">168h</span> <span class="comment"># 任务类 Pod 日志也只留 7 天</span></span><br><span class="line"><span class="attr">compactor:</span></span><br><span class="line">  <span class="attr">retention_enabled:</span> <span class="literal">true</span> <span class="comment"># 老版本用 tableManager，新版统一由 compactor 执行删除</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="grafana"><code>Grafana</code></h2>
+<h3 id="数据源">数据源</h3>
+<ul>
+<li><p>数据源用 <code>provisioning</code>
+配置，不做手工点击；<code>uid</code> 显式固定，仪表盘与告警规则都靠
+<code>uid</code> 引用数据源</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">datasources:</span></span><br><span class="line">  <span class="attr">datasources.yaml:</span></span><br><span class="line">    <span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">datasources:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Prometheus</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">prometheus</span></span><br><span class="line">        <span class="attr">uid:</span> <span class="string">prometheus</span></span><br><span class="line">        <span class="attr">url:</span> <span class="string">http://monitoring-kube-prometheus-prometheus:9090</span></span><br><span class="line">        <span class="attr">isDefault:</span> <span class="literal">true</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Loki</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">loki</span></span><br><span class="line">        <span class="attr">uid:</span> <span class="string">loki</span></span><br><span class="line">        <span class="attr">url:</span> <span class="string">http://loki-read-headless:3100</span></span><br><span class="line">        <span class="attr">jsonData:</span></span><br><span class="line">          <span class="attr">timeout:</span> <span class="number">60</span></span><br><span class="line">          <span class="attr">maxLines:</span> <span class="number">1000</span> <span class="comment"># 限制单次查询行数，防止误查打爆浏览器</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="仪表盘与配置即代码">仪表盘与配置即代码</h3>
+<ul>
+<li><p>仪表盘 <code>json</code> 放进 <code>ConfigMap</code>，打上标签(如
+<code>grafana_dashboard: "1"</code>)，由 <code>Grafana</code> 的
+<strong><code>sidecar</code></strong>(<code>k8s-sidecar</code>)监听全集群的同标签
+<code>ConfigMap</code>，自动加载与更新</p></li>
+<li><p>目录归类用注解指定，文件结构即目录结构：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">grafana-logs</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">grafana_dashboard:</span> <span class="string">&quot;1&quot;</span> <span class="comment"># sidecar 按该标签发现</span></span><br><span class="line">  <span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">k8s-sidecar-target-directory:</span> <span class="string">&quot;/tmp/dashboards/Logs&quot;</span> <span class="comment"># 归入 Logs 目录</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">logs.json:</span> <span class="string">|</span></span><br><span class="line">    &#123; <span class="attr">&quot;title&quot;:</span> <span class="string">&quot;Logs&quot;</span>, <span class="string">...</span> &#125; <span class="comment"># 仪表盘 JSON 全文</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">sidecar:</span></span><br><span class="line">  <span class="attr">dashboards:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">provider:</span></span><br><span class="line">      <span class="attr">foldersFromFilesStructure:</span> <span class="literal">true</span> <span class="comment"># 按文件结构生成目录</span></span><br><span class="line">  <span class="attr">datasources:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></li>
+<li><p>社区仪表盘(<code>grafana.com</code> 的
+<code>gnetId</code>)可直接导入 <code>json</code> 后沉淀为
+<code>ConfigMap</code>，再做定制</p></li>
+<li><p>这套”标签 +
+<code>sidecar</code>“的模式同样用于<strong>告警规则</strong>，见下一篇的告警实践</p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Tools &amp; Utilities</category>
+        <category>Container</category>
+      </categories>
+      <tags>
+        <tag>beginner</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PLG: 部署与飞书告警实践</title>
+    <url>/2026/08/16/plg-alert/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="plg-部署与飞书告警实践"><code>PLG</code>:
+部署与飞书告警实践</h1>
+<p>上一篇梳理了 <code>PLG</code>
+各组件的基础配置，本篇记录如何把整套体系以 <code>git</code> +
+<code>helm</code> + <code>CI</code>
+的方式部署进集群，并把告警送达飞书群，所有做法都是生产环境的通用玩法</p>
+<h2 id="监控栈的-ci-部署">监控栈的 <code>CI</code> 部署</h2>
+<h3 id="整体形态">整体形态</h3>
+<ul>
+<li><p>监控栈是一个 <code>umbrella chart</code>：聚合
+<code>kube-prometheus-stack</code>(含
+<code>Prometheus</code>/<code>Alertmanager</code>)+ <code>loki</code> +
+<code>promtail</code> + <code>grafana</code> 依赖，环境差异全部放在
+<code>values-*.yaml</code> 中</p></li>
+<li><p>部署不走手工命令，而是 <code>GitHub Actions</code> 在
+<code>push</code> 到 <code>main</code>
+时按路径触发，路径过滤保证只有监控配置变更才触发部署：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">main</span></span><br><span class="line">    <span class="attr">paths:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/monitoring/**</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/istio/**</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/ingress/**</span></span><br></pre></td></tr></table></figure></li>
+<li><p>多集群、多产品通过 <code>matrix</code> 展开，每个条目指定
+<code>chart</code>、命名空间、<code>values</code> 文件与
+<code>kubeconfig</code> 上下文：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">strategy:</span></span><br><span class="line">  <span class="attr">matrix:</span></span><br><span class="line">    <span class="attr">product:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">monitoring</span></span><br><span class="line">        <span class="attr">namespace:</span> <span class="string">monitoring</span></span><br><span class="line">        <span class="attr">values:</span> <span class="string">values-kingboat-aliyun.yaml</span></span><br><span class="line">    <span class="attr">cluster:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">kingboat-aliyun</span></span><br><span class="line">        <span class="attr">runner:</span> <span class="string">kingboat-runner-mini</span> <span class="comment"># 自托管 runner，持有集群访问权</span></span><br><span class="line">        <span class="attr">context:</span> <span class="string">kingboat-aliyun</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="密钥注入">密钥注入</h3>
+<ul>
+<li><p>密钥永远不进 <code>git</code>：<code>values</code>
+文件里写占位符，<code>CI</code> 用 <code>envsubst</code>
+在发布时替换</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># values 文件中的占位</span></span><br><span class="line"><span class="attr">grafana:</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="attr">BOT_GRAFANA_WEBHOOK_TOKEN:</span> <span class="string">$BOT_GRAFANA_WEBHOOK_TOKEN</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">envsubst <span class="string">&#x27;$FEISHU_APP_ID $FEISHU_APP_SECRET $BOT_GRAFANA_WEBHOOK_TOKEN&#x27;</span> \</span><br><span class="line">  &lt; charts/monitoring/values-kingboat-aliyun.yaml &gt; <span class="variable">$values_file</span></span><br></pre></td></tr></table></figure></li>
+<li><p>简单值直接用 <code>--set</code> 注入(如 <code>Cloudflare</code>
+<code>Token</code>)，不必经过 <code>values</code> 文件</p></li>
+</ul>
+<h3 id="发布与自愈">发布与自愈</h3>
+<ul>
+<li><p>统一使用
+<code>helm upgrade --install --create-namespace</code>，并对”上一个操作未完成”的常见冲突做<strong>自动回滚
++ 重试</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> retry <span class="keyword">in</span> &#123;1..3&#125;; <span class="keyword">do</span></span><br><span class="line">  res=$(helm -n monitoring upgrade --install --create-namespace monitoring \</span><br><span class="line">    ./charts/monitoring -f <span class="string">&quot;<span class="variable">$values_file</span>&quot;</span> \</span><br><span class="line">    --<span class="built_in">set</span> cloudflare.apiToken=<span class="variable">$CF_TOKEN</span> 2&gt;&amp;1)</span><br><span class="line">  [[ $? -eq 0 ]] &amp;&amp; <span class="built_in">exit</span> 0</span><br><span class="line">  <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$res</span>&quot;</span> = *<span class="string">&quot;another operation (install/upgrade/rollback) is in progress&quot;</span>* ]]; <span class="keyword">then</span></span><br><span class="line">    helm -n monitoring rollback monitoring <span class="comment"># 卡住的发布先回滚再重试</span></span><br><span class="line">    <span class="built_in">continue</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">  <span class="built_in">sleep</span> 10</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">exit</span> 1</span><br></pre></td></tr></table></figure></li>
+<li><p><code>runner</code> 通过 <code>kubeconfig</code>
+<code>secret</code> 切换目标集群上下文，一个 <code>runner</code>
+可以发布多个集群</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">azure/k8s-set-context@v4</span></span><br><span class="line">  <span class="attr">with:</span></span><br><span class="line">    <span class="attr">method:</span> <span class="string">kubeconfig</span></span><br><span class="line">    <span class="attr">kubeconfig:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.KUBECONFIG</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">context:</span> <span class="string">$&#123;&#123;</span> <span class="string">matrix.cluster.context</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="告警即代码">告警即代码</h2>
+<h3 id="grafana-统一告警"><code>Grafana</code> 统一告警</h3>
+<ul>
+<li><p>选择 <code>Grafana</code>
+统一告警(<code>Unified Alerting</code>)而非 <code>Alertmanager</code>
+作为告警出口：规则、联系点、通知策略都住在 <code>Grafana</code>
+里，与仪表盘共享数据源与标签体系，<code>Alertmanager</code> 仅作为
+<code>kube-prometheus-stack</code> 的兜底保留</p></li>
+<li><p>告警规则不进 <code>Grafana</code> 界面手点，而是写成
+<code>ConfigMap</code>，打上约定标签，由 <code>Grafana sidecar</code>
+全命名空间监听并同步进 <code>Grafana</code>，改动走 <code>git</code>
+评审：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-status-alert</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">monitoring</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">grafana_alert:</span> <span class="string">&quot;1&quot;</span> <span class="comment"># sidecar 按该标签发现告警资源</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">pod-status-alert.yaml:</span> <span class="string">|</span></span><br><span class="line"><span class="string">    apiVersion: 1</span></span><br><span class="line"><span class="string">    ...</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># values 中开启 sidecar 的告警同步，搜索全命名空间</span></span><br><span class="line"><span class="attr">grafana:</span></span><br><span class="line">  <span class="attr">sidecar:</span></span><br><span class="line">    <span class="attr">alerts:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">searchNamespace:</span> <span class="string">ALL</span></span><br></pre></td></tr></table></figure></li>
+<li><p>同一文件描述四类资源：<code>groups</code>(规则)、<code>contactPoints</code>(联系点)、<code>policies</code>(通知策略)、<code>templates</code>(通知模板)</p></li>
+</ul>
+<h3 id="告警规则的结构">告警规则的结构</h3>
+<ul>
+<li><p>规则按 <code>group</code> 组织，<code>folder</code> 决定在
+<code>Grafana</code> 中的目录归属，<code>interval</code>
+是评估周期：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">groups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Kubernetes</span></span><br><span class="line">    <span class="attr">folder:</span> <span class="string">Infra</span></span><br><span class="line">    <span class="attr">interval:</span> <span class="string">1m</span> <span class="comment"># 每分钟评估一次</span></span><br><span class="line">    <span class="attr">rules:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uid:</span> <span class="string">a9a96a82-f6f5-4bfe-a18e-6f1ac6c9e72f</span></span><br><span class="line">        <span class="attr">title:</span> <span class="string">服务健康状态</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">不健康服务增多</span> <span class="comment"># 指向起决定作用的表达式 refId</span></span><br><span class="line">        <span class="attr">data:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">refId:</span> <span class="string">不健康服务</span></span><br><span class="line">            <span class="attr">datasourceUid:</span> <span class="string">prometheus</span> <span class="comment"># 查询 Prometheus</span></span><br><span class="line">            <span class="attr">model:</span></span><br><span class="line">              <span class="attr">expr:</span> <span class="string">|</span></span><br><span class="line"><span class="string">                sum by (namespace, pod, phase) (</span></span><br><span class="line"><span class="string">                  kube_pod_status_phase&#123;namespace !~ &#x27;staging|arc-.*&#x27;, phase=~&quot;Pending|Unknown|Failed&quot;&#125; == 1</span></span><br><span class="line"><span class="string">                  and on (namespace, pod) ((time() - kube_pod_created) &gt; 180)</span></span><br><span class="line"><span class="string">                )</span></span><br><span class="line"><span class="string"></span>          <span class="bullet">-</span> <span class="attr">refId:</span> <span class="string">不健康服务增多</span></span><br><span class="line">            <span class="attr">datasourceUid:</span> <span class="string">__expr__</span> <span class="comment"># 表达式阶段做阈值判断</span></span><br><span class="line">            <span class="attr">model:</span></span><br><span class="line">              <span class="attr">type:</span> <span class="string">threshold</span></span><br><span class="line">              <span class="attr">expression:</span> <span class="string">不健康服务</span></span><br><span class="line">              <span class="attr">conditions:</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">evaluator:</span></span><br><span class="line">                    <span class="attr">params:</span> [<span class="number">0</span>]</span><br><span class="line">                    <span class="attr">type:</span> <span class="string">gt</span> <span class="comment"># 结果 &gt; 0 即触发</span></span><br><span class="line">        <span class="attr">for:</span> <span class="string">5m</span> <span class="comment"># 持续满足 5 分钟才真正触发，抑制抖动</span></span><br><span class="line">        <span class="attr">noDataState:</span> <span class="string">OK</span> <span class="comment"># 无数据视为正常</span></span><br><span class="line">        <span class="attr">annotations:</span></span><br><span class="line">          <span class="attr">summary:</span> <span class="string">命名空间</span> &#123;&#123; <span class="string">$labels.namespace</span> &#125;&#125; <span class="string">下</span> <span class="string">Pod</span> &#123;&#123; <span class="string">$labels.pod</span> &#125;&#125; <span class="string">处于</span> &#123;&#123; <span class="string">$labels.phase</span> &#125;&#125; <span class="string">状态</span></span><br><span class="line">        <span class="attr">labels:</span></span><br><span class="line">          <span class="attr">product:</span> <span class="string">infra</span> <span class="comment"># 供通知模板与策略路由使用</span></span><br></pre></td></tr></table></figure></li>
+<li><p>注意三个工程细节：</p>
+<ul>
+<li><code>PromQL</code> 里先做过滤与降噪：排除 <code>staging</code>
+等低价值命名空间、只看存活超过 <code>3</code> 分钟的
+<code>Pod</code></li>
+<li><code>for: 5m</code> + <code>noDataState: OK</code>
+是防告警风暴的两道闸</li>
+<li><code>labels.product</code> 是整条告警链路的路由键，从
+<code>values</code>
+按产品开关(<code>alerts.&lt;product&gt;.enabled</code>)决定渲染哪些规则</li>
+</ul></li>
+</ul>
+<h2 id="飞书告警链路">飞书告警链路</h2>
+<h3 id="联系点webhook-自建机器人">联系点：<code>webhook</code> +
+自建机器人</h3>
+<ul>
+<li><p><code>Grafana</code>
+原生不支持飞书，与其等官方支持，不如加一层<strong>自建转发服务</strong>：联系点配置为普通
+<code>webhook</code>，指向自建的机器人服务，由它把 <code>Grafana</code>
+的告警 payload 转成飞书群消息</p></li>
+<li><p>好处是格式完全自主、鉴权自己掌控、以后接任何新 <code>IM</code>
+都只改这一个服务：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">contactPoints:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">服务端告警群</span></span><br><span class="line">    <span class="attr">receivers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uid:</span> <span class="string">80192ad5-0865-4075-a69a-eeccccbf82d8</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">webhook</span></span><br><span class="line">        <span class="attr">settings:</span></span><br><span class="line">          <span class="attr">url:</span> <span class="string">https://bot.example.com/grafana/webhook</span> <span class="comment"># 自建机器人</span></span><br><span class="line">          <span class="attr">httpMethod:</span> <span class="string">POST</span></span><br><span class="line">          <span class="attr">authorization_scheme:</span> <span class="string">Bearer</span> <span class="comment"># 出口鉴权，防止伪造告警</span></span><br><span class="line">          <span class="attr">authorization_credentials:</span> <span class="string">$BOT_GRAFANA_WEBHOOK_TOKEN</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>Bearer Token</code> 通过环境变量注入
+<code>Grafana</code>(<code>grafana.env</code>)，再由
+<code>envsubst</code> 在 <code>CI</code> 阶段填充，全程不落
+<code>git</code></p></li>
+</ul>
+<h3 id="通知策略">通知策略</h3>
+<ul>
+<li><p>策略决定”谁收到什么、多久提醒一次”，<code>repeat_interval</code>
+是防轰炸的关键参数：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">policies:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">receiver:</span> <span class="string">grafana-default-email</span> <span class="comment"># 兜底接收器</span></span><br><span class="line">    <span class="attr">group_by:</span> [<span class="string">&#x27;...&#x27;</span>]</span><br><span class="line">    <span class="attr">repeat_interval:</span> <span class="string">5m</span> <span class="comment"># 未恢复告警每 5 分钟重复提醒</span></span><br><span class="line">    <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">receiver:</span> <span class="string">服务端告警群</span> <span class="comment"># 全部告警转发到飞书群</span></span><br><span class="line">        <span class="attr">continue:</span> <span class="literal">true</span> <span class="comment"># 继续匹配后续路由，便于后续按产品分流</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="通知模板">通知模板</h3>
+<ul>
+<li><p>模板用 <code>Grafana</code> 的 <code>Go template</code>
+语法，自定义标题与正文，把关键信息(<code>product</code>/<code>application</code>
+标签、当前数值、图表与静默链接)组织成飞书消息卡片的字段：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">templates:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;kingboat.title&quot;</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      &#123;&#123;- if len .Alerts.Firing -&#125;&#125;</span></span><br><span class="line"><span class="string">        🚨🚨🚨 有 &#123;&#123; len .Alerts.Firing &#125;&#125; 条告警规则正在触发</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if and (len .Alerts.Firing) (len .Alerts.Resolved) -&#125;&#125;; &#123;&#123; end -&#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if len .Alerts.Resolved -&#125;&#125;</span></span><br><span class="line"><span class="string">        ✅✅✅ 有 &#123;&#123; len .Alerts.Resolved &#125;&#125; 条告警规则已经恢复</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string"></span>  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;kingboat.message&quot;</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      - 产品名称: &#123;&#123; .Labels.product &#125;&#125;</span></span><br><span class="line"><span class="string">      - 产品应用: &#123;&#123; or (or .Labels.application .Labels.pod) &quot;没有数据&quot; &#125;&#125;</span></span><br><span class="line"><span class="string">      - 告警规则: &#123;&#123; .Labels.alertname &#125;&#125;</span></span><br><span class="line"><span class="string">      - 当前数值: &#123;&#123; range $k, $v := .Values &#125;&#125;&#123;&#123; $k &#125;&#125;=&#123;&#123; $v &#125;&#125; &#123;&#123; end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if .DashboardURL &#125;&#125;</span></span><br><span class="line"><span class="string">      - 查看图表: [点击查看](&#123;&#123; .DashboardURL &#125;&#125;)</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if .SilenceURL &#125;&#125;</span></span><br><span class="line"><span class="string">      - 抑制告警: [点击抑制](&#123;&#123; .SilenceURL &#125;&#125;)</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>.Labels.application</code> 正是 <code>Prometheus</code>
+抓取配置里 <code>relabel</code>
+出来的服务名标签——<strong>采集端打的标签决定通知端的信息量</strong>，这是整条链路设计的一体性所在</p></li>
+</ul>
+<h2 id="飞书登录oauth">飞书登录(<code>OAuth</code>)</h2>
+<ul>
+<li><p><code>Grafana</code> 的登录同样接入飞书，用
+<code>generic_oauth</code> 对接飞书开放平台的 <code>OAuth</code>
+端点，账号体系与公司 <code>IM</code> 统一：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">grafana.ini:</span></span><br><span class="line">  <span class="attr">auth.generic_oauth:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">飞书</span></span><br><span class="line">    <span class="attr">client_id:</span> <span class="string">$FEISHU_APP_ID</span> <span class="comment"># CI 注入</span></span><br><span class="line">    <span class="attr">client_secret:</span> <span class="string">$FEISHU_APP_SECRET</span></span><br><span class="line">    <span class="attr">auth_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/authorize</span></span><br><span class="line">    <span class="attr">token_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/token</span></span><br><span class="line">    <span class="attr">api_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/userinfo</span></span><br><span class="line">    <span class="attr">login_attribute_path:</span> <span class="string">name</span></span><br><span class="line">    <span class="attr">role_attribute_path:</span> <span class="string">name</span> <span class="string">==</span> <span class="string">&#x27;someone&#x27;</span> <span class="string">&amp;&amp;</span> <span class="string">&#x27;Admin&#x27;</span> <span class="string">||</span> <span class="string">&#x27;Viewer&#x27;</span> <span class="comment"># 按用户名映射角色</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>role_attribute_path</code>
+实现”白名单管理员、其余只读”，避免给全员开编辑权限</p></li>
+</ul>
+<h2 id="链路总结">链路总结</h2>
+<p><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">Pod/Envoy 指标 ──&gt; Prometheus(注解发现/relabel 打标) ──┐</span><br><span class="line">容器日志 ──&gt; Promtail(CRI 解析) ──&gt; Loki(S3/分级保留) ──┤</span><br><span class="line">                                                      v</span><br><span class="line">                                   Grafana(数据源/仪表盘/告警，全部 ConfigMap + sidecar 供给)</span><br><span class="line">                                                      |</span><br><span class="line">                            告警规则(interval/for/labels.product)</span><br><span class="line">                                                      v</span><br><span class="line">                            通知策略(repeat_interval) ─&gt; 联系点(webhook + Bearer)</span><br><span class="line">                                                      v</span><br><span class="line">                                   自建机器人 ──&gt; 飞书群卡片(title/message 模板)</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>Tools &amp; Utilities</category>
+        <category>Container</category>
+      </categories>
+      <tags>
+        <tag>beginner</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>实现一个最小可用的 LSP Server</title>
     <url>/2026/08/15/nvim-lsp-server/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -725,6 +1443,886 @@ Kubernetes 创建 Runner Pod。</li>
         <tag>github-actions</tag>
         <tag>workflow</tag>
         <tag>cicd</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Kubernetes: 生产级的分布式集群部署</title>
+    <url>/2026/04/20/k8s/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="kubernetes"><code>Kubernetes</code></h1>
+<h2 id="快速入门">快速入门</h2>
+<h3 id="简介">简介</h3>
+<ul>
+<li><strong><code>Kubernetes</code></strong>(简称
+<strong><code>k8s</code></strong>)是一个开源的容器编排平台。相比于<code>Docker</code>，它能够在<strong>集群级别</strong>自动化地管理容器的部署、扩缩容和运维，但学习成本也相对更高</li>
+<li>除了基础的容器调度与自愈能力，<code>k8s</code>原生支持<strong>服务发现、负载均衡、滚动更新与配置管理</strong>等服务治理，配合
+<strong><code>Istio</code></strong>
+等服务网格组件，可以<strong>替代传统的<code>RPC</code>框架</strong>，将流量治理、可观测性、安全等能力下沉至基础设施层</li>
+<li><a href="https://kubernetes.io/docs">官方文档</a></li>
+</ul>
+<h3 id="工具介绍">工具介绍</h3>
+<ul>
+<li>对本地环境，<code>minikube</code> 提供了一种 <code>k8s</code>
+的单节点集群方案
+<ul>
+<li><code>minikube start --driver=docker</code>：用 <code>docker</code>
+驱动启动一个 <code>minikube</code> 容器(集群)，让它接管
+<code>docker</code></li>
+<li><code>minikube status</code>：查看集群状态</li>
+<li><code>minikube stop</code>：停止集群</li>
+<li><code>minikube delete</code>：删除集群</li>
+<li><code>minikube dashboard</code>：快速开启一个由
+<code>minikube</code> 管理的
+<code>dashboard</code>(管理容器的可视化网页)</li>
+</ul></li>
+<li><code>k3s</code> 是一个轻量级的 <code>k8s</code>
+发行版，单个二进制文件即包含全部组件，内存占用约
+<code>512MB</code>，适合低配机器、边缘设备与 <code>CI</code>
+环境，也可作为本地方案的另一选择
+<ul>
+<li><code>curl -sfL https://get.k3s.io | sh -</code>：一条命令安装并启动，自带
+<code>containerd</code>、<code>Flannel</code> 网络、本地存储与
+<code>Service LoadBalancer</code>，开箱即用</li>
+<li><code>k3s kubectl get node</code>：内置了
+<code>kubectl</code>，无需单独安装</li>
+<li>凭证位于 <code>/etc/rancher/k3s/k3s.yaml</code>，让外部
+<code>kubectl</code>/<code>helm</code> 使用需
+<code>export KUBECONFIG=/etc/rancher/k3s/k3s.yaml</code></li>
+<li><code>k3s-killall.sh</code> /
+<code>k3s-uninstall.sh</code>：停止/彻底卸载</li>
+<li><code>k3d</code> 在 <code>docker</code> 容器里运行
+<code>k3s</code>，可以像 <code>minikube</code>
+一样快速创建和销毁多节点集群，兼顾轻量与隔离</li>
+</ul></li>
+<li><code>kubectl</code> 是和 <code>k8s</code> 集群交互的命令行工具
+<ul>
+<li><code>kubectl [command] [kind] [name] [flags]</code>
+是一般的命令格式，其中 <code>kind</code> 是 <code>k8s API</code>
+定义的类型</li>
+<li><code>kubectl get pod/service/node</code>：获取
+<code>pod</code>/<code>service</code>/<code>node</code>
+等的简短状态</li>
+<li><code>kubectl logs [podname]</code>：查看日志</li>
+<li><code>kubectl exec -it [podname] -- /bin/sh</code>：进入容器(<code>--interactive --tty</code>)</li>
+<li><code>kubectl apply [-f x.yaml]...</code>：应用配置</li>
+</ul></li>
+<li><code>helm</code> 是 <code>k8s</code> 的包管理器，替代了
+<code>apply</code> 并提供更好的管理方式
+<ul>
+<li><code>Chart</code>：一个完整应用所需的全部配置，在其目录下
+<ul>
+<li><code>Chart.yaml</code>：一个 <code>Chart</code> 的定义</li>
+<li><code>values-*.yaml</code>：所有环境变量的定义，默认查找
+<code>values.yaml</code> 文件</li>
+<li><code>templates/</code>：<code>go tmpl</code>
+文件所在目录，定义应用的配置模板</li>
+<li><code>Chart.lock</code>：锁文件，由
+<code>helm dependency build</code> 根据 <code>Chart.yaml</code> 所依赖的
+<code>chart</code> 的版本生成</li>
+<li><code>charts/</code>：本 <code>chart</code> 依赖的子
+<code>charts</code></li>
+</ul></li>
+<li><code>Release</code>：一个 <code>Chart</code>
+在集群中的运行实例</li>
+<li><code>Repo</code>：类似 <code>docker hub</code>，每个仓库有一个
+<code>index.yaml</code></li>
+</ul></li>
+</ul>
+<h2 id="核心字段">核心字段</h2>
+<h3
+id="apiversion与kind"><code>apiVersion</code>与<code>kind</code></h3>
+<ul>
+<li><p><code>k8s</code>使用声明式管理，所有集群的状态通过<code>yaml</code>来定义</p></li>
+<li><p><strong><code>apiVersion</code></strong>：<code>api</code>版本定义，格式为<code>GROUP/VERSION</code>，一般来说<code>v1</code>是稳定版本，但存在特例</p>
+<ul>
+<li>核心组(<code>v1</code>)：基础资源，包含<code>Pod</code>、<code>Service</code>、<code>ConfigMap</code>、<code>Secret</code>、<code>Namespace</code></li>
+<li><code>apps/v1</code>：工作负载管理，包含<code>Deployment</code>、<code>StatefulSet</code>、<code>DaemonSet</code>、<code>ReplicaSet</code></li>
+<li><code>batch/v1</code>：批处理任务，包含<code>Job</code>、<code>CronJob</code></li>
+<li><code>networking.k8s.io/v1</code>：网络配置，包含<code>Ingress</code>、<code>NetworkPolicy</code></li>
+<li><code>rbac.authorization.k8s.io/v1</code>：<code>RBAC</code>权限控制，包含<code>Role</code>、<code>RoleBinding</code>、<code>ClusterRole</code>、<code>ClusterRoleBinding</code></li>
+<li><code>storage.k8s.io/v1</code>：存储管理，包含<code>StorageClass</code>、<code>VolumeAttachment</code></li>
+<li><code>autoscaling/v2</code>：自动扩缩容，包含<code>HorizontalPodAutoscaler</code>(<code>v1</code>已废弃，生产使用<code>v2</code>)</li>
+<li><code>apiextensions.k8s.io/v1</code>：自定义资源，包含<code>CustomResourceDefinition</code>(CRD)，不常用</li>
+<li><code>networking.istio.io/v1</code>：<code>Istio</code>
+网络配置，包含<code>VirtualService</code>、<code>DestinationRule</code>、<code>Gateway</code>、<code>ServiceEntry</code></li>
+<li><code>security.istio.io/v1</code>：<code>Istio</code>
+安全配置，包含<code>AuthorizationPolicy</code>、<code>PeerAuthentication</code></li>
+<li><code>telemetry.istio.io/v1</code>：<code>Istio</code>
+可观测性配置，包含<code>Telemetry</code></li>
+<li>使用<code>kubectl explain [kind]</code>查看资源对应的<code>apiVersion</code>和字段说明</li>
+<li>使用<code>kubectl api-resources</code>查看所有资源及其所属<code>API</code>组</li>
+</ul></li>
+<li><p><strong><code>kind</code></strong>：资源类型，如<code>Pod</code>、<code>Deployment</code>、<code>Service</code></p>
+<ul>
+<li><code>Pod</code>：最小部署单元，包含一个或多个容器，适用于临时调试、手动运行任务</li>
+<li><code>Deployment</code>：管理无状态应用，支持滚动更新和回滚，最常用的控制器</li>
+<li><code>StatefulSet</code>：管理有状态应用(如数据库)，提供稳定的网络标识和持久存储</li>
+<li><code>DaemonSet</code>：在每个节点上运行一个 <code>Pod</code>
+副本，适用于日志收集、监控代理</li>
+<li><code>ReplicaSet</code>：维护 <code>Pod</code>
+副本数量，<code>Deployment</code> 底层依赖，通常不直接使用</li>
+<li><code>Job</code>：一次性任务，执行完成后退出</li>
+<li><code>CronJob</code>：定时任务，按 <code>Cron</code>
+表达式周期性执行</li>
+<li><code>Service</code>：为 <code>Pod</code>
+提供稳定的访问入口，支持负载均衡</li>
+<li><code>Ingress</code>：七层负载均衡，基于域名和路径路由到不同
+<code>Service</code></li>
+<li><code>ConfigMap</code>：存储非敏感配置数据，以键值对形式挂载到
+<code>Pod</code></li>
+<li><code>Secret</code>：存储敏感信息(密码、密钥)，<code>base64</code>
+编码存储，本身并不加密也不安全，只是因为敏感信息通常存在特殊字符甚至是二进制数据，而<code>k8s</code>传输数据使用<code>json</code>，因此通常转为<code>base64</code>，而<code>Secret</code>则是在<code>ConfigMap</code>的基础上添加一层<code>base64</code>编码校验的资源类型</li>
+<li><code>StorageClass</code>：存储模板，定义动态供给方式和存储参数</li>
+<li><code>PVC(PersistentVolumeClaim)</code>：命名空间级别的存储声明，由用户创建，引用
+<code>StorageClass</code> 动态供给</li>
+<li><code>PV(PersistentVolume)</code>：集群级别的存储资源，云环境通常由
+<code>StorageClass</code> 动态创建</li>
+<li><code>NetworkPolicy</code>：网络策略，限制 <code>Pod</code>
+间的网络通信</li>
+<li><code>LimitRange</code>：资源限制范围，限制 <code>Pod</code>
+的资源使用上下限</li>
+<li><code>ResourceQuota</code>：资源配额，限制命名空间的总资源使用量</li>
+<li><code>HorizontalPodAutoscaler</code>：自动扩缩容，根据
+CPU/内存使用率调整 <code>Pod</code> 副本数</li>
+<li><code>Namespace</code>：资源隔离，不同命名空间的资源相互独立</li>
+</ul></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-1</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="metadata"><code>metadata</code></h3>
+<ul>
+<li><p><strong><code>metadata.name</code></strong>：适用于所有资源，资源名称在命名空间内唯一，DNS
+解析时会用到(如 Service 的
+<code>name.namespace.svc.cluster.local</code>)</p></li>
+<li><p><strong><code>metadata.labels</code></strong>：适用于所有资源，键值对标签用于资源筛选和关联，Service
+通过 labels 匹配 Pod，Deployment 通过 labels 管理 Pod</p></li>
+<li><p><strong><code>metadata.namespace</code></strong>：适用于所有资源，指定资源所属命名空间，默认为
+<code>default</code>，系统组件在 <code>kube-system</code></p></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-pod</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="spec"><code>spec</code></h3>
+<ul>
+<li><p><strong><code>spec.selector</code></strong>：适用于
+Deployment、StatefulSet、DaemonSet、Job、Service，选择器匹配 Pod 的
+labels，决定控制器管理哪些 Pod，必须与
+<code>spec.template.metadata.labels</code> 匹配</p></li>
+<li><p><strong><code>spec.template</code></strong>：适用于
+Deployment、StatefulSet、DaemonSet、Job、CronJob，Pod 模板定义要创建的
+Pod 的完整配置，包含 <code>metadata.labels</code> 和
+<code>spec.containers</code></p></li>
+<li><p><strong><code>spec.replicas</code></strong>：适用于
+Deployment、StatefulSet，期望的 Pod 副本数量，默认为 1</p></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-deployment</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">3</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="containers-与-volumes"><code>containers</code> 与
+<code>volumes</code></h3>
+<ul>
+<li><p><strong><code>spec.containers</code></strong>：适用于
+<code>Pod</code>、<code>Deployment</code>、<code>StatefulSet</code>、<code>DaemonSet</code>、<code>Job</code>、<code>CronJob</code>，容器列表，每个容器包含以下字段：</p>
+<ul>
+<li><code>name</code>：容器名称</li>
+<li><code>image</code>：镜像名称和标签</li>
+<li><code>ports.containerPort</code>：容器暴露的端口</li>
+<li><code>resources.requests</code>：最小资源需求(<code>CPU</code>、内存)，调度依据</li>
+<li><code>resources.limits</code>：最大资源限制(<code>CPU</code>、内存)，防止资源争抢</li>
+<li><code>volumeMounts</code>：存储卷挂载路径</li>
+<li><code>env</code>：环境变量配置</li>
+<li><code>livenessProbe</code>：存活探针，检测容器是否存活，失败则重启容器
+<ul>
+<li><code>initialDelaySeconds</code>：首次探测延迟</li>
+<li><code>periodSeconds</code>：探测间隔</li>
+<li><code>failureThreshold</code>：失败阈值，允许的最大连续探测失败次数，超出此阈值将重启pod</li>
+<li><code>successThreshold</code>：成功阈值，将该pod视为健康的最小连续探测成功次数，存活探针的成功阈值必须是1</li>
+<li>探测方式：<code>httpGet</code>(指定 <code>path</code> 和
+<code>port</code>)、<code>tcpSocket</code>(指定
+<code>port</code>)、<code>exec</code>(指定 <code>command</code>)</li>
+</ul></li>
+<li><code>readinessProbe</code>：就绪探针，检测容器是否就绪，失败则从
+<code>Service</code> 摘除。参数与 <code>livenessProbe</code>
+相同，但失败后不会重启容器，只是暂时停止流量进入</li>
+</ul></li>
+<li><p><strong><code>spec.volumes</code></strong>：适用于
+<code>Pod</code>、<code>Deployment</code>、<code>StatefulSet</code>、<code>DaemonSet</code>、<code>Job</code>、<code>CronJob</code>，存储卷定义，常用类型：</p>
+<ul>
+<li><code>emptyDir</code>：临时存储，<code>Pod</code>
+删除时数据丢失，适用于缓存、临时文件</li>
+<li><code>configMap</code>：挂载 <code>ConfigMap</code>，需指定
+<code>name</code>，可选择挂载特定 <code>items</code> 或全部键值对。支持
+<code>optional: true</code>(<code>ConfigMap</code> 不存在时不阻塞启动)和
+<code>defaultMode</code>(文件权限，默认 <code>0644</code>)</li>
+<li><code>secret</code>：挂载 <code>Secret</code>，参数与
+<code>ConfigMap</code> 类似，额外支持 <code>secretName</code> 指定
+<code>Secret</code> 名称。常用于挂载 <code>TLS</code>
+证书(<code>secret.items</code> 指定 <code>tls.crt</code> 和
+<code>tls.key</code>)或数据库密码</li>
+<li><code>persistentVolumeClaim</code>：挂载 <code>PVC</code>，需指定
+<code>claimName</code>，支持 <code>readOnly: true</code>
+设置只读挂载。<code>PVC</code> 绑定的 <code>PV</code>
+可以是静态供给(管理员预先创建)或动态供给(通过 <code>StorageClass</code>
+自动创建)</li>
+</ul></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br><span class="line">      <span class="attr">ports:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">resources:</span></span><br><span class="line">        <span class="attr">requests:</span></span><br><span class="line">          <span class="attr">memory:</span> <span class="string">&quot;64Mi&quot;</span></span><br><span class="line">          <span class="attr">cpu:</span> <span class="string">&quot;250m&quot;</span></span><br><span class="line">        <span class="attr">limits:</span></span><br><span class="line">          <span class="attr">memory:</span> <span class="string">&quot;128Mi&quot;</span></span><br><span class="line">          <span class="attr">cpu:</span> <span class="string">&quot;500m&quot;</span></span><br><span class="line">      <span class="attr">volumeMounts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">config</span></span><br><span class="line">          <span class="attr">mountPath:</span> <span class="string">/etc/config</span></span><br><span class="line">          <span class="attr">readOnly:</span> <span class="literal">true</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">cache</span></span><br><span class="line">          <span class="attr">mountPath:</span> <span class="string">/var/cache</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">tls</span></span><br><span class="line">          <span class="attr">mountPath:</span> <span class="string">/etc/tls</span></span><br><span class="line">          <span class="attr">readOnly:</span> <span class="literal">true</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">data</span></span><br><span class="line">          <span class="attr">mountPath:</span> <span class="string">/var/data</span></span><br><span class="line">      <span class="attr">livenessProbe:</span></span><br><span class="line">        <span class="attr">httpGet:</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">/health</span></span><br><span class="line">          <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">initialDelaySeconds:</span> <span class="number">30</span></span><br><span class="line">        <span class="attr">periodSeconds:</span> <span class="number">10</span></span><br><span class="line">        <span class="attr">failureThreshold:</span> <span class="number">3</span></span><br><span class="line">      <span class="attr">readinessProbe:</span></span><br><span class="line">        <span class="attr">httpGet:</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">/ready</span></span><br><span class="line">          <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">initialDelaySeconds:</span> <span class="number">5</span></span><br><span class="line">        <span class="attr">periodSeconds:</span> <span class="number">5</span></span><br><span class="line">        <span class="attr">failureThreshold:</span> <span class="number">3</span></span><br><span class="line">        <span class="attr">successThreshold:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">config</span></span><br><span class="line">      <span class="attr">configMap:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">my-config</span></span><br><span class="line">        <span class="attr">defaultMode:</span> <span class="number">0644</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">cache</span></span><br><span class="line">      <span class="attr">emptyDir:</span> &#123;&#125;</span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">tls</span></span><br><span class="line">      <span class="attr">secret:</span></span><br><span class="line">        <span class="attr">secretName:</span> <span class="string">my-tls-secret</span></span><br><span class="line">        <span class="attr">items:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">tls.crt</span></span><br><span class="line">            <span class="attr">path:</span> <span class="string">cert.pem</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">tls.key</span></span><br><span class="line">            <span class="attr">path:</span> <span class="string">key.pem</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">data</span></span><br><span class="line">      <span class="attr">persistentVolumeClaim:</span></span><br><span class="line">        <span class="attr">claimName:</span> <span class="string">my-pvc</span></span><br><span class="line">        <span class="attr">readOnly:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="service-独有字段"><code>Service</code> 独有字段</h3>
+<ul>
+<li><p><strong><code>spec.type</code></strong>：服务类型，可选值：</p>
+<ul>
+<li><code>ClusterIP</code>：默认值，仅在集群内部可访问</li>
+<li><code>NodePort</code>：通过节点端口暴露，范围
+<code>30000-32767</code>，但问题在于限制端口且不支持域名，用户不方便访问且会暴露服务IP，仅适用于开发测试</li>
+<li><code>LoadBalancer</code>：配合云厂商负载均衡器使用，适用于生产环境的对外提供服务</li>
+<li><code>ExternalName</code>：映射到外部域名，相当于<code>DNS</code>层面的代理，方便内部服务访问外部第三方服务</li>
+</ul></li>
+<li><p><strong><code>spec.externalTrafficPolicy</code></strong>：外部流量策略，仅
+<code>NodePort</code>/<code>LoadBalancer</code> 有效</p>
+<ul>
+<li><code>Cluster</code>(默认)：流量经 <code>kube-proxy</code>
+转发，可跨节点负载均衡，但会做一次 <code>SNAT</code>，丢失客户端真实
+<code>IP</code></li>
+<li><code>Local</code>：流量只转发到本节点的
+<code>Pod</code>，保留客户端真实 <code>IP</code>，但本节点无
+<code>Pod</code> 时流量会被丢弃，需配合探针摘除不健康节点</li>
+</ul></li>
+<li><p><strong><code>spec.ports</code></strong>：端口配置列表，每个端口包含：</p>
+<ul>
+<li><code>port</code>：<code>Service</code>
+暴露的端口，供集群内部访问</li>
+<li><code>targetPort</code>：<code>Pod</code> 容器端口</li>
+<li><code>nodePort</code>：节点端口(仅 <code>NodePort</code> 类型，范围
+<code>30000-32767</code>)</li>
+<li><code>protocol</code>：协议，默认 <code>TCP</code></li>
+<li><code>name</code>：端口名称，多端口时必须指定</li>
+</ul></li>
+<li><p><strong><code>spec.clusterIP</code></strong>：虚拟
+<code>IP</code> 地址，设置为 <code>None</code> 时为
+<code>Headless Service</code>，无头服务是指，该<code>Service</code>不会做负载均衡，在<code>DNS</code>解析它管理的<code>pod</code>的地址时会直接指向其管理的<code>pod IP</code>，通常用于有状态服务，例如数据库服务等</p></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-service</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">NodePort</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">targetPort:</span> <span class="number">80</span></span><br><span class="line">      <span class="attr">nodePort:</span> <span class="number">30080</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="ingress-独有字段"><code>Ingress</code> 独有字段</h3>
+<ul>
+<li><p><strong><code>spec.rules</code></strong>：路由规则列表，基于域名和路径转发到不同
+<code>Service</code></p>
+<ul>
+<li><strong><code>host</code></strong>：域名，如
+<code>api.example.com</code>（可选，不指定则匹配所有域名）</li>
+<li><strong><code>http.paths</code></strong>：路径规则列表
+<ul>
+<li><strong><code>path</code></strong>：匹配路径，如
+<code>/api</code>、<code>/</code></li>
+<li><strong><code>pathType</code></strong>：路径匹配类型
+<ul>
+<li><code>Exact</code>：精确匹配</li>
+<li><code>Prefix</code>：前缀匹配</li>
+<li><code>ImplementationSpecific</code>：由
+<code>Ingress Controller</code> 决定</li>
+</ul></li>
+<li><strong><code>backend</code></strong>：后端服务配置
+<ul>
+<li><strong><code>service.name</code></strong>：<code>Service</code>
+名称</li>
+<li><strong><code>service.port.number</code></strong>：<code>Service</code>
+端口号</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p><strong><code>spec.tls</code></strong>：<code>TLS</code>
+证书配置，支持 <code>HTTPS</code></p></li>
+<li><p><strong><code>spec.ingressClassName</code></strong>：指定
+<code>Ingress Controller</code> 的名称，对应 <code>IngressClass</code>
+资源的名称，通常不需要自己创建</p>
+<ul>
+<li><code>nginx</code>：<code>Nginx Ingress Controller</code>
+安装时自动创建</li>
+<li><code>istio</code>：<code>Istio Gateway</code> 安装时自动创建</li>
+</ul></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Ingress</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-ingress</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">ingressClassName:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">rules:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">host:</span> <span class="string">api.example.com</span></span><br><span class="line">      <span class="attr">http:</span></span><br><span class="line">        <span class="attr">paths:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">path:</span> <span class="string">/</span></span><br><span class="line">            <span class="attr">pathType:</span> <span class="string">Prefix</span></span><br><span class="line">            <span class="attr">backend:</span></span><br><span class="line">              <span class="attr">service:</span></span><br><span class="line">                <span class="attr">name:</span> <span class="string">api-service</span></span><br><span class="line">                <span class="attr">port:</span></span><br><span class="line">                  <span class="attr">number:</span> <span class="number">80</span></span><br><span class="line">  <span class="attr">tls:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">hosts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">api.example.com</span></span><br><span class="line">      <span class="attr">secretName:</span> <span class="string">tls-secret</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="configmap-与-secret-独有字段"><code>ConfigMap</code> 与
+<code>Secret</code> 独有字段</h3>
+<ul>
+<li><p><strong><code>data</code></strong>：键值对配置数据，<code>Secret</code>
+的值需 <code>base64</code> 编码</p></li>
+<li><p><strong><code>stringData</code></strong>：仅 <code>Secret</code>
+支持，明文写入自动转 <code>base64</code></p></li>
+<li><p><strong><code>type</code></strong>：仅 <code>Secret</code>
+支持，类型标识</p>
+<ul>
+<li><code>Opaque</code>：默认</li>
+<li><code>kubernetes.io/dockerconfigjson</code>：镜像拉取凭证</li>
+<li><code>kubernetes.io/tls</code>：<code>TLS</code> 证书</li>
+</ul></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-config</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">key1:</span> <span class="string">value1</span></span><br><span class="line">  <span class="attr">key2:</span> <span class="string">value2</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="pv-与-pvc-独有字段"><code>PV</code> 与 <code>PVC</code>
+独有字段</h3>
+<ul>
+<li><p><strong>供给模式</strong>：</p>
+<ul>
+<li>静态供给：管理员手动创建 <code>PV</code>，用户创建 <code>PVC</code>
+绑定已有 <code>PV</code>，适用于本地存储、<code>NFS</code>
+等无动态供给的场景</li>
+<li>动态供给：用户创建 <code>PVC</code> 并引用
+<code>StorageClass</code>，<code>Provisioner</code> 自动创建
+<code>PV</code> 并绑定，云环境推荐方式</li>
+</ul></li>
+<li><p><strong><code>spec.capacity.storage</code></strong>：仅
+<code>PV</code>，存储大小，如 <code>10Gi</code></p></li>
+<li><p><strong><code>spec.accessModes</code></strong>：访问模式</p>
+<ul>
+<li><code>ReadWriteOnce</code>：单节点读写</li>
+<li><code>ReadWriteMany</code>：多节点读写</li>
+<li><code>ReadOnlyMany</code>：多节点只读</li>
+</ul></li>
+<li><p><strong><code>spec.storageClassName</code></strong>：存储类名称，用于
+<code>PV</code> 和 <code>PVC</code> 绑定</p></li>
+<li><p><strong><code>spec.resources.requests.storage</code></strong>：仅
+<code>PVC</code>，请求的存储大小</p></li>
+<li><p><strong><code>spec.volumeMode</code></strong>：卷模式</p>
+<ul>
+<li><code>Filesystem</code>：默认值，文件系统模式</li>
+<li><code>Block</code>：块设备模式</li>
+</ul></li>
+<li><p><strong><code>spec.persistentVolumeReclaimPolicy</code></strong>：仅
+<code>PV</code>，回收策略</p>
+<ul>
+<li><code>Retain</code>：保留数据，需手动清理</li>
+<li><code>Recycle</code>：回收数据，已废弃</li>
+<li><code>Delete</code>：删除存储资源</li>
+</ul></li>
+<li><p>示例(动态供给)：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolumeClaim</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-pvc</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">accessModes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">ReadWriteOnce</span></span><br><span class="line">  <span class="attr">resources:</span></span><br><span class="line">    <span class="attr">requests:</span></span><br><span class="line">      <span class="attr">storage:</span> <span class="string">10Gi</span></span><br><span class="line">  <span class="attr">storageClassName:</span> <span class="string">standard</span> <span class="comment"># 引用 StorageClass 动态创建 PV</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="storageclass-独有字段"><code>StorageClass</code> 独有字段</h3>
+<ul>
+<li><strong><code>provisioner</code></strong>：存储供给器，决定使用哪种存储后端
+<ul>
+<li>云厂商：<code>kubernetes.io/aws-ebs</code>、<code>kubernetes.io/gce-pd</code>、<code>kubernetes.io/azure-disk</code></li>
+<li>第三方：<code>nfs-client</code>、<code>rbd.csi.ceph.com</code>（Ceph）</li>
+<li>本地存储：<code>kubernetes.io/no-provisioner</code></li>
+</ul></li>
+<li><strong><code>parameters</code></strong>：存储参数，传递给供给器的配置
+<ul>
+<li>AWS
+EBS：<code>type: gp2</code>（存储类型）、<code>zone: us-east-1a</code>（可用区）、<code>fsType: ext4</code></li>
+<li>GCE
+PD：<code>type: pd-standard</code>、<code>replication-type: regional-pd</code></li>
+<li>Ceph RBD：<code>pool: rbd</code>、<code>cluster: ceph</code></li>
+</ul></li>
+<li><strong><code>reclaimPolicy</code></strong>：回收策略，<code>PVC</code>
+删除时 <code>PV</code> 的处理方式
+<ul>
+<li><code>Delete</code>：删除 <code>PV</code> 和底层存储（默认）</li>
+<li><code>Retain</code>：保留 <code>PV</code> 和数据，需手动清理</li>
+<li><code>Recycle</code>：已废弃，执行 <code>rm -rf /volume/*</code>
+后重用</li>
+</ul></li>
+<li><strong><code>volumeBindingMode</code></strong>：绑定模式，控制
+<code>PV</code> 创建和绑定的时机
+<ul>
+<li><code>Immediate</code>：立即创建并绑定（默认）</li>
+<li><code>WaitForFirstConsumer</code>：延迟到第一个 <code>Pod</code>
+调度后再创建，确保 <code>PV</code> 与 <code>Pod</code> 在同一可用区</li>
+</ul></li>
+<li><strong><code>allowVolumeExpansion</code></strong>：是否允许动态扩容（<code>true</code>/<code>false</code>）
+<ul>
+<li>需要存储后端支持，AWS EBS、GCE PD 支持，NFS 不支持</li>
+</ul></li>
+<li><strong><code>mountOptions</code></strong>：挂载选项，传递给
+<code>mount</code> 命令
+<ul>
+<li>例如：<code>["hard", "nfsvers=4.1", "noatime"]</code>（NFS
+选项）</li>
+</ul></li>
+<li><strong><code>allowedTopologies</code></strong>：限制
+<code>PV</code> 创建的拓扑位置（如可用区）
+<ul>
+<li>配合 <code>WaitForFirstConsumer</code> 使用，确保存储与
+<code>Pod</code> 在同一区域</li>
+</ul></li>
+<li>示例：</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">storage.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StorageClass</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">standard</span></span><br><span class="line"><span class="attr">provisioner:</span> <span class="string">kubernetes.io/aws-ebs</span></span><br><span class="line"><span class="attr">parameters:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">gp2</span></span><br><span class="line">  <span class="attr">zone:</span> <span class="string">us-east-1a</span></span><br><span class="line"><span class="attr">reclaimPolicy:</span> <span class="string">Delete</span></span><br><span class="line"><span class="attr">volumeBindingMode:</span> <span class="string">WaitForFirstConsumer</span></span><br><span class="line"><span class="attr">allowVolumeExpansion:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">mountOptions:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">debug</span></span><br><span class="line"><span class="attr">allowedTopologies:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">matchLabelExpressions:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">topology.kubernetes.io/zone</span></span><br><span class="line">        <span class="attr">values:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">us-east-1a</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">us-east-1b</span></span><br></pre></td></tr></table></figure>
+<h3 id="deployment-独有字段"><code>Deployment</code> 独有字段</h3>
+<ul>
+<li><p><strong><code>spec.strategy</code></strong>：更新策略</p>
+<ul>
+<li><code>RollingUpdate</code>：滚动更新，逐步替换 <code>Pod</code></li>
+<li><code>Recreate</code>：重建，先删除旧 <code>Pod</code> 再创建新
+<code>Pod</code></li>
+</ul></li>
+<li><p><strong><code>spec.strategy.rollingUpdate.maxSurge</code></strong>：滚动更新时最多超出期望副本数的数量，控制更新过程中可以多创建多少个新
+<code>Pod</code>，可以是数字或百分比</p></li>
+<li><p><strong><code>spec.strategy.rollingUpdate.maxUnavailable</code></strong>：滚动更新时最多不可用的副本数，控制更新过程中最多有多少个旧
+<code>Pod</code>
+可以不可用，可以是数字或百分比，设置为<code>0</code>同时使<code>maxSurge&gt;0</code>可保证不停机更新</p></li>
+<li><p><strong><code>maxSurge</code> 与 <code>maxUnavailable</code>
+配合使用场景</strong>：</p>
+<ul>
+<li><code>maxSurge: 25%</code> +
+<code>maxUnavailable: 0</code>：先创建新
+<code>Pod</code>，确认就绪后再删除旧
+<code>Pod</code>，零停机但资源占用高</li>
+<li><code>maxSurge: 0</code> +
+<code>maxUnavailable: 25%</code>：先删除旧 <code>Pod</code> 再创建新
+<code>Pod</code>，资源占用低但会有短暂不可用</li>
+<li><code>maxSurge: 1</code> +
+<code>maxUnavailable: 1</code>：平衡更新速度和资源占用，最常用配置</li>
+</ul></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-deployment</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">3</span></span><br><span class="line">  <span class="attr">strategy:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">RollingUpdate</span></span><br><span class="line">    <span class="attr">rollingUpdate:</span></span><br><span class="line">      <span class="attr">maxSurge:</span> <span class="number">1</span></span><br><span class="line">      <span class="attr">maxUnavailable:</span> <span class="number">0</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="statefulset-独有字段"><code>StatefulSet</code> 独有字段</h3>
+<ul>
+<li><p><strong><code>spec.serviceName</code></strong>：关联的
+<code>Headless Service</code> 名称，用于 <code>Pod</code>
+网络标识</p></li>
+<li><p><strong><code>spec.podManagementPolicy</code></strong>：<code>Pod</code>
+管理策略</p>
+<ul>
+<li><code>OrderedReady</code>：默认值，按顺序逐个启动或删除
+<code>Pod</code></li>
+<li><code>Parallel</code>：并行启动或删除 <code>Pod</code></li>
+</ul></li>
+<li><p><strong><code>spec.updateStrategy</code></strong>：更新策略</p>
+<ul>
+<li><code>RollingUpdate</code>：滚动更新</li>
+<li><code>OnDelete</code>：手动删除 <code>Pod</code> 后更新</li>
+</ul></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StatefulSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-statefulset</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">serviceName:</span> <span class="string">my-headless-service</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">3</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nginx</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="job-与-cronjob-独有字段"><code>Job</code> 与
+<code>CronJob</code> 独有字段</h3>
+<ul>
+<li><p><strong><code>spec.completions</code></strong>：仅
+<code>Job</code>，完成次数，默认为 1</p></li>
+<li><p><strong><code>spec.parallelism</code></strong>：仅
+<code>Job</code>，并行 <code>Pod</code> 数量，默认为 1</p></li>
+<li><p><strong><code>spec.backoffLimit</code></strong>：仅
+<code>Job</code>，失败重试次数，默认为 6</p></li>
+<li><p><strong><code>spec.schedule</code></strong>：仅
+<code>CronJob</code>，<code>Cron</code> 表达式，如
+<code>0 * * * *</code>(每小时)</p></li>
+<li><p><strong><code>spec.concurrencyPolicy</code></strong>：仅
+<code>CronJob</code>，并发策略</p>
+<ul>
+<li><code>Allow</code>：允许并发</li>
+<li><code>Forbid</code>：禁止并发</li>
+<li><code>Replace</code>：替换旧任务</li>
+</ul></li>
+<li><p><strong><code>spec.successfulJobsHistoryLimit</code></strong>：仅
+<code>CronJob</code>，保留成功 <code>Job</code> 数量，默认为 3</p></li>
+<li><p><strong><code>spec.failedJobsHistoryLimit</code></strong>：仅
+<code>CronJob</code>，保留失败 <code>Job</code> 数量，默认为 1</p></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">batch/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">CronJob</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-cronjob</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">schedule:</span> <span class="string">&quot;0 * * * *&quot;</span></span><br><span class="line">  <span class="attr">concurrencyPolicy:</span> <span class="string">Forbid</span></span><br><span class="line">  <span class="attr">successfulJobsHistoryLimit:</span> <span class="number">3</span></span><br><span class="line">  <span class="attr">failedJobsHistoryLimit:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">jobTemplate:</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">template:</span></span><br><span class="line">        <span class="attr">spec:</span></span><br><span class="line">          <span class="attr">containers:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">job</span></span><br><span class="line">              <span class="attr">image:</span> <span class="string">busybox</span></span><br><span class="line">              <span class="attr">command:</span> [<span class="string">&quot;echo&quot;</span>, <span class="string">&quot;hello&quot;</span>]</span><br><span class="line">          <span class="attr">restartPolicy:</span> <span class="string">OnFailure</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="健康检查字段">健康检查字段</h3>
+<ul>
+<li><p><strong><code>spec.containers[].livenessProbe</code></strong>：适用于
+<code>Pod</code>、<code>Deployment</code>、<code>StatefulSet</code>、<code>DaemonSet</code>、<code>Job</code>、<code>CronJob</code>，存活探针，检测容器是否存活，失败则重启容器</p></li>
+<li><p><strong><code>spec.containers[].readinessProbe</code></strong>：适用于
+<code>Pod</code>、<code>Deployment</code>、<code>StatefulSet</code>、<code>DaemonSet</code>、<code>Job</code>、<code>CronJob</code>，就绪探针，检测容器是否就绪，失败则从
+<code>Service</code> 摘除</p></li>
+<li><p><strong><code>spec.containers[].startupProbe</code></strong>：适用于
+<code>Pod</code>、<code>Deployment</code>、<code>StatefulSet</code>、<code>DaemonSet</code>、<code>Job</code>、<code>CronJob</code>，启动探针，检测容器是否启动完成，用于慢启动应用</p></li>
+<li><p>探测方式(三种探针通用)：</p>
+<ul>
+<li><code>httpGet</code>：<code>HTTP</code> 请求探测，需指定
+<code>path</code> 和 <code>port</code></li>
+<li><code>tcpSocket</code>：<code>TCP</code> 端口探测，需指定
+<code>port</code></li>
+<li><code>exec</code>：执行命令探测，需指定 <code>command</code></li>
+</ul></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br><span class="line">      <span class="attr">livenessProbe:</span></span><br><span class="line">        <span class="attr">httpGet:</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">/health</span></span><br><span class="line">          <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">initialDelaySeconds:</span> <span class="number">10</span></span><br><span class="line">        <span class="attr">periodSeconds:</span> <span class="number">5</span></span><br><span class="line">      <span class="attr">readinessProbe:</span></span><br><span class="line">        <span class="attr">httpGet:</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">/ready</span></span><br><span class="line">          <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">initialDelaySeconds:</span> <span class="number">5</span></span><br><span class="line">        <span class="attr">periodSeconds:</span> <span class="number">3</span></span><br><span class="line">      <span class="attr">startupProbe:</span></span><br><span class="line">        <span class="attr">httpGet:</span></span><br><span class="line">          <span class="attr">path:</span> <span class="string">/health</span></span><br><span class="line">          <span class="attr">port:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">failureThreshold:</span> <span class="number">30</span></span><br><span class="line">        <span class="attr">periodSeconds:</span> <span class="number">10</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="节点调度字段">节点调度字段</h3>
+<ul>
+<li><p><strong><code>spec.nodeSelector</code></strong>：适用于
+Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，简单的节点选择器，通过标签匹配节点</p></li>
+<li><p><strong><code>spec.nodeName</code></strong>：适用于
+Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，直接指定节点名称，跳过调度器</p></li>
+<li><p><strong><code>spec.tolerations</code></strong>：适用于
+Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，容忍度，允许 Pod
+调度到有污点的节点</p></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">nodeSelector:</span></span><br><span class="line">    <span class="attr">disktype:</span> <span class="string">ssd</span></span><br><span class="line">  <span class="attr">tolerations:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">&quot;key1&quot;</span></span><br><span class="line">      <span class="attr">operator:</span> <span class="string">&quot;Equal&quot;</span></span><br><span class="line">      <span class="attr">value:</span> <span class="string">&quot;value1&quot;</span></span><br><span class="line">      <span class="attr">effect:</span> <span class="string">&quot;NoSchedule&quot;</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="镜像拉取字段">镜像拉取字段</h3>
+<ul>
+<li><p><strong><code>spec.containers[].imagePullPolicy</code></strong>：适用于
+Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，镜像拉取策略，可选值：</p>
+<ul>
+<li><code>Always</code>：每次都拉取镜像</li>
+<li><code>IfNotPresent</code>(默认)：本地不存在时才拉取</li>
+<li><code>Never</code>：从不拉取，只使用本地镜像</li>
+</ul></li>
+<li><p><strong><code>spec.imagePullSecrets</code></strong>：适用于
+Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，拉取私有镜像的凭证，存储在
+Secret 中</p></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">imagePullSecrets:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">my-registry-secret</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br><span class="line">      <span class="attr">imagePullPolicy:</span> <span class="string">IfNotPresent</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="环境变量字段">环境变量字段</h3>
+<ul>
+<li><p><strong><code>spec.containers[].env</code></strong>：适用于
+Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，环境变量列表，支持直接赋值和引用
+ConfigMap/Secret</p></li>
+<li><p><strong><code>spec.containers[].envFrom</code></strong>：适用于
+Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，从 ConfigMap 或
+Secret 批量导入环境变量</p></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br><span class="line">      <span class="attr">env:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">ENV_VAR_1</span></span><br><span class="line">          <span class="attr">value:</span> <span class="string">&quot;value1&quot;</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">DB_PASSWORD</span></span><br><span class="line">          <span class="attr">valueFrom:</span></span><br><span class="line">            <span class="attr">secretKeyRef:</span></span><br><span class="line">              <span class="attr">name:</span> <span class="string">my-secret</span></span><br><span class="line">              <span class="attr">key:</span> <span class="string">password</span></span><br><span class="line">      <span class="attr">envFrom:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">configMapRef:</span></span><br><span class="line">            <span class="attr">name:</span> <span class="string">my-config</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="重启策略字段">重启策略字段</h3>
+<ul>
+<li><p><strong><code>spec.restartPolicy</code></strong>：适用于
+Pod，重启策略，可选值：</p>
+<ul>
+<li><code>Always</code>(默认)：容器退出后总是重启</li>
+<li><code>OnFailure</code>：容器异常退出时重启</li>
+<li><code>Never</code>：从不重启</li>
+</ul></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">restartPolicy:</span> <span class="string">OnFailure</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="服务账户字段">服务账户字段</h3>
+<ul>
+<li><p><strong><code>spec.serviceAccountName</code></strong>：适用于
+Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，指定 Pod 使用的
+ServiceAccount，用于访问 API Server</p></li>
+<li><p><strong><code>spec.automountServiceAccountToken</code></strong>：适用于
+Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，是否自动挂载
+ServiceAccount Token，默认为 <code>true</code></p></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">serviceAccountName:</span> <span class="string">my-sa</span></span><br><span class="line">  <span class="attr">automountServiceAccountToken:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="初始化容器字段">初始化容器字段</h3>
+<ul>
+<li><p><strong><code>spec.initContainers</code></strong>：适用于
+Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，初始化容器列表，在主容器启动前按顺序执行，必须全部成功退出后主容器才会启动</p></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">initContainers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">init-db</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">busybox</span></span><br><span class="line">      <span class="attr">command:</span> [<span class="string">&quot;sh&quot;</span>, <span class="string">&quot;-c&quot;</span>, <span class="string">&quot;echo Initializing...&quot;</span>]</span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="优先级字段">优先级字段</h3>
+<ul>
+<li><p><strong><code>spec.priorityClassName</code></strong>：适用于
+Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，优先级类名，高优先级
+Pod 抢占低优先级 Pod 资源</p></li>
+<li><p><strong><code>spec.priority</code></strong>：适用于
+Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，优先级数值，范围
+1000000000 到 -2147483648</p></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">priorityClassName:</span> <span class="string">high-priority</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nginx</span></span><br><span class="line">      <span class="attr">image:</span> <span class="string">nginx:1.21</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="istio"><code>Istio</code></h2>
+<h3 id="简介-1">简介</h3>
+<ul>
+<li><strong><code>Istio</code></strong>
+是最流行的<strong>服务网格</strong>(<code>Service Mesh</code>)实现，将流量治理、安全、可观测性等能力从业务代码中下沉到基础设施层，业务容器无感知</li>
+<li>架构分为两层：
+<ul>
+<li><strong>控制面</strong>(<code>istiod</code>)：负责配置分发(<code>Pilot</code>)、证书签发(<code>CA</code>)，是集群中的单一大脑</li>
+<li><strong>数据面</strong>(<code>Envoy</code>)：以
+<strong><code>sidecar</code></strong> 形式注入到每个
+<code>Pod</code>，通过 <code>iptables</code> 透明劫持出入流量，所有经过
+<code>Pod</code> 的请求都会先经过 <code>Envoy</code> 代理</li>
+</ul></li>
+<li>核心能力：
+<ul>
+<li><strong>流量治理</strong>：按域名/路径/权重路由、灰度发布、重试、超时、熔断、会话保持</li>
+<li><strong>安全</strong>：服务间自动
+<code>mTLS</code>、基于身份的访问控制(<code>AuthorizationPolicy</code>)</li>
+<li><strong>可观测性</strong>：自动生成访问日志、指标(<code>Metrics</code>)与调用链(<code>Tracing</code>)</li>
+</ul></li>
+<li><code>Sidecar</code> 注入方式：
+<ul>
+<li>命名空间标签：<code>kubectl label namespace [ns] istio-injection=enabled</code>，该命名空间下所有新建
+<code>Pod</code> 都会被注入</li>
+<li><code>Pod</code> 级别：在
+<code>spec.template.metadata.annotations</code> 中设置
+<code>sidecar.istio.io/inject: "true"</code>(或 <code>"false"</code>
+排除)</li>
+<li>注入发生在 <code>Pod</code> 创建时，已运行的 <code>Pod</code>
+需要重建才能生效</li>
+</ul></li>
+</ul>
+<h3 id="安装">安装</h3>
+<ul>
+<li><p>推荐使用 <code>helm</code> 安装，分为两个
+<code>chart</code>，依赖顺序不能颠倒：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">helm repo add istio https://istio-release.storage.googleapis.com/charts</span><br><span class="line">kubectl create namespace istio-system</span><br><span class="line">helm install istio-base istio/base -n istio-system</span><br><span class="line">helm install istiod istio/istiod -n istio-system --<span class="built_in">wait</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>base</code> <code>chart</code> 定义了 <code>CRD</code>
+与集群级别的角色等前置资源，<code>istiod</code> <code>chart</code>
+部署控制面本身</p></li>
+<li><p>常用配置(通过 <code>istiod</code> 的 <code>values</code> 覆盖
+<code>meshConfig</code>)：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">istiod:</span></span><br><span class="line">  <span class="attr">meshConfig:</span></span><br><span class="line">    <span class="attr">accessLogFile:</span> <span class="string">/dev/stdout</span> <span class="comment"># 开启访问日志，输出到容器标准输出</span></span><br><span class="line">    <span class="attr">outboundTrafficPolicy:</span></span><br><span class="line">      <span class="attr">mode:</span> <span class="string">ALLOW_ANY</span> <span class="comment"># 未注册外部服务的出站流量默认放行(默认 REGISTRY_ONLY 会拒绝)</span></span><br><span class="line">  <span class="attr">global:</span></span><br><span class="line">    <span class="attr">proxy:</span></span><br><span class="line">      <span class="attr">resources:</span> <span class="comment"># sidecar(Envoy)的资源限制，避免占用过多业务资源</span></span><br><span class="line">        <span class="attr">limits:</span></span><br><span class="line">          <span class="attr">cpu:</span> <span class="string">1000m</span></span><br><span class="line">          <span class="attr">memory:</span> <span class="string">1Gi</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>istioctl</code> 是 <code>Istio</code>
+的命令行工具，常用命令：</p>
+<ul>
+<li><code>istioctl proxy-status</code>：查看所有 <code>sidecar</code> 与
+<code>istiod</code> 的同步状态</li>
+<li><code>istioctl proxy-config route [pod]</code>：查看指定
+<code>sidecar</code> 的实际路由表，排查路由不生效问题</li>
+<li><code>istioctl analyze</code>：静态分析集群内 <code>Istio</code>
+配置的潜在冲突</li>
+</ul></li>
+</ul>
+<h3 id="gateway"><code>Gateway</code></h3>
+<ul>
+<li><p>入口网关，控制<strong>哪些流量可以进入网格</strong>，相当于传统架构的负载均衡器
++ <code>Nginx</code> 的 <code>server</code> 块</p></li>
+<li><p><strong><code>spec.selector</code></strong>：通过标签匹配承载流量的
+<code>ingress gateway</code> <code>Pod</code>(通常部署在
+<code>istio-system</code>)，一个网关 <code>Pod</code> 可被多个
+<code>Gateway</code> 资源复用</p></li>
+<li><p><strong><code>spec.servers</code></strong>：服务器列表，每个包含：</p>
+<ul>
+<li><code>port</code>：监听端口(<code>number</code>、<code>name</code>、<code>protocol</code>)</li>
+<li><code>hosts</code>：监听的域名列表</li>
+<li><code>tls</code>：<code>TLS</code>
+配置，<code>httpsRedirect: true</code> 将 <code>HTTP</code> 重定向到
+<code>HTTPS</code>；<code>mode: SIMPLE</code> 终止
+<code>TLS</code>，证书通过 <code>credentialName</code> 引用
+<code>Secret</code></li>
+</ul></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Gateway</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-gateway</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">istio:</span> <span class="string">ingress</span> <span class="comment"># 匹配 ingress gateway Pod 上的标签</span></span><br><span class="line">  <span class="attr">servers:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span></span><br><span class="line">        <span class="attr">number:</span> <span class="number">80</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">http</span></span><br><span class="line">        <span class="attr">protocol:</span> <span class="string">HTTP</span></span><br><span class="line">      <span class="attr">tls:</span></span><br><span class="line">        <span class="attr">httpsRedirect:</span> <span class="literal">false</span></span><br><span class="line">      <span class="attr">hosts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">api.example.com</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">port:</span></span><br><span class="line">        <span class="attr">number:</span> <span class="number">443</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">https</span></span><br><span class="line">        <span class="attr">protocol:</span> <span class="string">HTTPS</span></span><br><span class="line">      <span class="attr">tls:</span></span><br><span class="line">        <span class="attr">mode:</span> <span class="string">SIMPLE</span></span><br><span class="line">        <span class="attr">credentialName:</span> <span class="string">example-tls</span> <span class="comment"># 引用同命名空间的 kubernetes.io/tls 类型 Secret</span></span><br><span class="line">      <span class="attr">hosts:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">api.example.com</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="virtualservice"><code>VirtualService</code></h3>
+<ul>
+<li><p>路由规则，控制<strong>流量在网格内如何转发</strong>，相当于
+<code>Nginx</code> 的 <code>location</code> 块，需同时被
+<code>Gateway</code>(入口)或 <code>Service</code>(内部)引用</p></li>
+<li><p><strong><code>spec.hosts</code></strong>：匹配的目标域名，网关场景为外部域名，内部场景为
+<code>Service</code> 的 <code>FQDN</code></p></li>
+<li><p><strong><code>spec.gateways</code></strong>：绑定的
+<code>Gateway</code> 名称，内部流量路由可省略(默认
+<code>mesh</code>)</p></li>
+<li><p><strong><code>spec.http</code></strong>：<code>HTTP</code>
+路由规则列表，按顺序首次匹配生效：</p>
+<ul>
+<li><code>match</code>：匹配条件(<code>uri.prefix</code>、<code>headers</code>、<code>port</code>
+等)</li>
+<li><code>route</code>：转发目标，<code>destination.host</code> 指向
+<code>Service</code>，<code>destination.port.number</code> 指向端口</li>
+<li><code>weight</code>：多目标按权重分流，灰度发布的基础</li>
+<li><code>rewrite</code>、<code>timeout</code>、<code>retries</code>、<code>fault</code>(<code>注入延迟/中止做故障演练</code>)</li>
+</ul></li>
+<li><p><strong><code>spec.tcp</code></strong>：<code>TCP</code>
+路由，适用于非 <code>HTTP</code> 协议(如数据库)的端口转发</p></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-vs</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">hosts:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">api.example.com</span></span><br><span class="line">  <span class="attr">gateways:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">my-gateway</span></span><br><span class="line">  <span class="attr">http:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">match:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">uri:</span></span><br><span class="line">            <span class="attr">prefix:</span> <span class="string">/v2</span></span><br><span class="line">      <span class="attr">route:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">destination:</span></span><br><span class="line">            <span class="attr">host:</span> <span class="string">api-v2.default.svc.cluster.local</span></span><br><span class="line">            <span class="attr">port:</span></span><br><span class="line">              <span class="attr">number:</span> <span class="number">80</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">route:</span> <span class="comment"># 兜底规则，其余流量走稳定版本</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">destination:</span></span><br><span class="line">            <span class="attr">host:</span> <span class="string">api-v1.default.svc.cluster.local</span></span><br><span class="line">            <span class="attr">port:</span></span><br><span class="line">              <span class="attr">number:</span> <span class="number">80</span></span><br><span class="line">          <span class="attr">weight:</span> <span class="number">90</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">destination:</span></span><br><span class="line">            <span class="attr">host:</span> <span class="string">canary.default.svc.cluster.local</span></span><br><span class="line">            <span class="attr">port:</span></span><br><span class="line">              <span class="attr">number:</span> <span class="number">80</span></span><br><span class="line">          <span class="attr">weight:</span> <span class="number">10</span> <span class="comment"># 10% 灰度</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="destinationrule"><code>DestinationRule</code></h3>
+<ul>
+<li><p>目标策略，定义<strong>流量到达目标 <code>Service</code>
+后的转发策略</strong>，与 <code>VirtualService</code> 配合使用</p></li>
+<li><p><strong><code>spec.host</code></strong>：作用的
+<code>Service</code>(需与 <code>VirtualService</code> 的
+<code>route.destination.host</code> 一致)</p></li>
+<li><p><strong><code>spec.trafficPolicy</code></strong>：流量策略：</p>
+<ul>
+<li><code>loadBalancer</code>：负载均衡算法，<code>consistentHash</code>(基于源
+<code>IP</code>/指定 <code>Header</code>
+的会话保持)、<code>leastRequest</code>、<code>random</code></li>
+<li><code>connectionPool</code>：连接池限制(<code>tcp</code>/<code>http</code>
+的最大连接数、并发请求数)</li>
+<li><code>outlierDetection</code>：熔断策略，连续错误次数(<code>consecutive5xxErrors</code>)达到阈值后摘除实例</li>
+<li><code>tls</code>：<code>ISTIO_MUTUAL</code> 开启双向
+<code>mTLS</code></li>
+</ul></li>
+<li><p><strong><code>spec.subsets</code></strong>：将同一
+<code>Service</code> 按 <code>Pod</code> 标签划分为不同子集(如
+<code>v1</code>、<code>v2</code>)，供 <code>VirtualService</code> 按
+<code>subset</code> 精确路由</p></li>
+<li><p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">DestinationRule</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">my-dr</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">host:</span> <span class="string">api.default.svc.cluster.local</span></span><br><span class="line">  <span class="attr">trafficPolicy:</span></span><br><span class="line">    <span class="attr">loadBalancer:</span></span><br><span class="line">      <span class="attr">consistentHash:</span></span><br><span class="line">        <span class="attr">useSourceIp:</span> <span class="literal">true</span> <span class="comment"># 基于来源 IP 的会话保持</span></span><br><span class="line">  <span class="attr">subsets:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">stable</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">version:</span> <span class="string">stable</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">canary</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">version:</span> <span class="string">canary</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="serviceentry"><code>ServiceEntry</code></h3>
+<ul>
+<li><p>将<strong>网格外部的服务注册进网格</strong>，让外部服务也能享受
+<code>Istio</code> 的路由、熔断与 <code>mTLS</code>
+能力，是最能体现“替代自建代理”的资源</p></li>
+<li><p>典型场景：将外部 <code>IP</code>/域名伪装成集群内的
+<code>Service</code>，内部服务直接通过 <code>Service</code>
+域名访问外部数据库或第三方 <code>API</code></p></li>
+<li><p><strong><code>spec.hosts</code></strong>：对外暴露的虚拟域名，通常用
+<code>[name].[namespace].svc.cluster.local</code>
+让内部访问无感知</p></li>
+<li><p><strong><code>spec.addresses</code></strong>：为该条目分配的虚拟
+<code>IP</code>(可选)</p></li>
+<li><p><strong><code>spec.ports</code></strong>：端口与协议(<code>HTTP</code>、<code>TCP</code>、<code>MONGO</code>
+等)</p></li>
+<li><p><strong><code>spec.resolution</code></strong>：地址解析方式，<code>STATIC</code>(端点
+<code>IP</code> 固定)、<code>DNS</code>(按域名解析)</p></li>
+<li><p><strong><code>spec.location</code></strong>：<code>MESH_EXTERNAL</code>(外部服务)或
+<code>MESH_INTERNAL</code></p></li>
+<li><p><strong><code>spec.endpoints</code></strong>：实际后端端点列表(<code>address</code>
++ <code>ports</code>)</p></li>
+<li><p>示例(将外部 <code>MongoDB</code> 伪装成集群内
+<code>Service</code>)：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceEntry</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">external-mongo</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">hosts:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">external-mongo.default.svc.cluster.local</span> <span class="comment"># 内部用该域名访问</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">number:</span> <span class="number">27017</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">mongo</span></span><br><span class="line">      <span class="attr">protocol:</span> <span class="string">MONGO</span></span><br><span class="line">  <span class="attr">resolution:</span> <span class="string">STATIC</span></span><br><span class="line">  <span class="attr">location:</span> <span class="string">MESH_EXTERNAL</span></span><br><span class="line">  <span class="attr">endpoints:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">address:</span> <span class="number">10.0</span><span class="number">.0</span><span class="number">.10</span> <span class="comment"># 外部 MongoDB 实际地址</span></span><br><span class="line">      <span class="attr">ports:</span></span><br><span class="line">        <span class="attr">mongo:</span> <span class="number">27017</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="authorizationpolicy"><code>AuthorizationPolicy</code></h3>
+<ul>
+<li><p>访问控制策略，基于<strong>工作负载身份</strong>(而非
+<code>IP</code>)决定谁可以访问谁，默认全部放行，一旦定义则未匹配的请求全部拒绝</p></li>
+<li><p><strong><code>spec.selector</code></strong>：策略作用的
+<code>Pod</code> 标签</p></li>
+<li><p><strong><code>spec.action</code></strong>：<code>ALLOW</code>(白名单)、<code>DENY</code>(黑名单)、<code>CUSTOM</code></p></li>
+<li><p><strong><code>spec.rules[].from.source</code></strong>：请求来源，<code>ipBlocks</code>/<code>remoteIpBlocks</code>(<code>IP</code>
+黑白名单)、<code>principals</code>(对端服务身份)、<code>namespaces</code></p></li>
+<li><p><strong><code>spec.rules[].to.operation</code></strong>：请求目标，<code>methods</code>、<code>paths</code>、<code>ports</code></p></li>
+<li><p>示例(网关层 <code>IP</code> 黑名单)：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">security.istio.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">AuthorizationPolicy</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">ingress-policy</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">istio-system</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">istio:</span> <span class="string">ingress</span></span><br><span class="line">  <span class="attr">action:</span> <span class="string">DENY</span></span><br><span class="line">  <span class="attr">rules:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">from:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">source:</span></span><br><span class="line">            <span class="attr">remoteIpBlocks:</span></span><br><span class="line">              <span class="bullet">-</span> <span class="number">1.2</span><span class="number">.3</span><span class="number">.4</span><span class="string">/32</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="证书管理">证书管理</h3>
+<ul>
+<li><p><code>Gateway</code> 的 <code>HTTPS</code> 证书通常配合
+<strong><code>cert-manager</code></strong> 自动签发与续期，形成
+<code>ClusterIssuer</code> → <code>Certificate</code> →
+<code>Secret</code>(<code>kubernetes.io/tls</code>) →
+<code>Gateway.credentialName</code> 的链路</p></li>
+<li><p><code>HTTP-01</code>
+校验需要真实公网入口，通配符域名(<code>*.example.com</code>)必须使用
+<code>DNS-01</code> 校验，此时需要一个 <code>DNS</code> 服务商的
+<code>API</code> 凭证 <code>Secret</code>(如 <code>Cloudflare</code> 的
+<code>Api Token</code>)</p></li>
+<li><p>示例(<code>DNS-01</code> 通配符证书)：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">cert-manager.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterIssuer</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">letsencrypt-dns</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">acme:</span></span><br><span class="line">    <span class="attr">server:</span> <span class="string">https://acme-v02.api.letsencrypt.org/directory</span></span><br><span class="line">    <span class="attr">email:</span> <span class="string">admin@example.com</span></span><br><span class="line">    <span class="attr">privateKeySecretRef:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">letsencrypt-key</span></span><br><span class="line">    <span class="attr">solvers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">dns01:</span></span><br><span class="line">          <span class="attr">cloudflare:</span></span><br><span class="line">            <span class="attr">apiTokenSecretRef:</span></span><br><span class="line">              <span class="attr">name:</span> <span class="string">cloudflare-token</span></span><br><span class="line">              <span class="attr">key:</span> <span class="string">api-token</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="charts-实践"><code>Charts</code> 实践</h2>
+<p>以上能力在生产实践中通常都会沉淀为一个 <code>helm</code>
+仓库，并按“基础设施 → 应用模板 →
+代理组件”分层组织，这也是大家的普遍做法</p>
+<h3 id="总览">总览</h3>
+<ul>
+<li><strong>基础设施层</strong>：
+<ul>
+<li><code>base</code>：集群初始化，创建基础命名空间与镜像仓库凭证(<code>registry secret</code>)，并托管
+<code>cert-manager</code> 依赖，作为其他所有 <code>chart</code>
+的前置</li>
+<li><code>istio</code>：以 <code>umbrella chart</code> 封装官方
+<code>base</code> + <code>istiod</code> 依赖，统一注入
+<code>meshConfig</code>(访问日志格式、<code>ALLOW_ANY</code>
+出站策略、<code>sidecar</code> 资源限制)，并创建带
+<code>istio-injection</code> 标签的 <code>istio-system</code>
+命名空间</li>
+<li><code>ingress</code>：封装官方 <code>gateway chart</code>(部署
+<code>ingress gateway</code> <code>Pod</code>)，配套
+<code>ClusterIssuer</code>、<code>Cloudflare DNS</code>
+凭证、<code>AuthorizationPolicy</code> <code>IP</code> 黑名单等模板</li>
+<li><code>monitoring</code>：聚合 <code>kube-prometheus-stack</code> +
+<code>loki</code> + <code>promtail</code> + <code>grafana</code> +
+<code>grafana-mcp</code> 依赖，并模板化大量 <code>Grafana</code>
+告警规则(证书过期、<code>Pod</code>
+状态、<code>CPU</code>/内存、<code>JVM</code>、<code>WebSocket</code>
+等)与数据源配置</li>
+</ul></li>
+<li><strong>应用模板层</strong>：
+<ul>
+<li><code>common</code>：最简无状态应用模板，仅 <code>Deployment</code>
++ <code>Service</code> + 镜像凭证</li>
+<li><code>spring-app</code>：功能最全的 <code>Spring</code>
+应用模板，见下文</li>
+<li><code>spring-job</code>：一次性/定时任务模板，仅 <code>Job</code> +
+密钥 + 存储，无 <code>Service</code> 与路由</li>
+</ul></li>
+<li><strong>代理组件层</strong>(纯 <code>Istio</code>
+资源，不包含任何业务镜像)：
+<ul>
+<li><code>simple-proxy</code>：<code>L7</code>
+反向代理，<code>Gateway</code> + <code>VirtualService</code> +
+<code>ServiceEntry</code> + <code>DestinationRule</code>
+四件套，把外部域名流量转发到一组上游，可选 <code>consistentHash</code>
+会话保持，替代自建 <code>Nginx</code></li>
+<li><code>mongo-proxy</code>：<code>L4</code>
+代理，<code>ServiceEntry</code> 将外部 <code>MongoDB</code>
+<code>IP</code> 注册为集群内
+<code>Service</code>，<code>VirtualService</code> 的 <code>tcp</code>
+规则把网关 <code>443</code> 端口转发到 <code>27017</code></li>
+<li><code>mongodb</code>：<code>bitnami mongodb</code> 依赖 +
+<code>mongo-express</code> 管理界面，通过 <code>Istio</code>
+网关暴露</li>
+</ul></li>
+<li><strong>环境特定层</strong>：
+<ul>
+<li><code>github-actions-cache-server</code>：自托管
+<code>GitHub Actions</code> 缓存服务(<code>PVC</code> + <code>HPA</code>
++ <code>Ingress</code>)</li>
+<li><code>aliyun-pod-ip</code>：阿里云
+<code>ack-extend-network-controller</code> 依赖，管理 <code>Pod</code>
+弹性 <code>IP</code></li>
+</ul></li>
+</ul>
+<h3 id="应用模板的设计要点">应用模板的设计要点</h3>
+<p>以 <code>spring-app</code> 为例，一个生产级应用 <code>chart</code>
+通常包含：</p>
+<ul>
+<li><strong>工作负载</strong>：<code>Deployment</code>(探针、资源限制)+
+<code>HPA</code>(<code>CPU</code> 利用率自动扩缩)+
+<code>PDB</code>(保证节点维护时的最小可用副本数)</li>
+<li><strong>流量入口</strong>：<code>Service</code> + <code>Istio</code>
+的
+<code>Gateway</code>/<code>DestinationRule</code>(可选会话保持)，证书由
+<code>cert-manager</code> 自动签发</li>
+<li><strong>安全</strong>：
+<ul>
+<li><code>ServiceAccount</code> + 最小化 <code>RBAC</code>，关闭
+<code>automountServiceAccountToken</code></li>
+<li><code>NetworkPolicy</code> 默认拒绝出站，仅放行
+<code>DNS</code>，并显式屏蔽云厂商 <code>metadata</code>
+网段(<code>169.254.0.0/16</code>、<code>100.64.0.0/10</code>)，防止应用被
+<code>SSRF</code> 后窃取云凭证</li>
+<li>数据库密钥、<code>Cloudflare</code> <code>Token</code> 等以
+<code>Secret</code> 模板管理</li>
+</ul></li>
+<li><strong>多云适配</strong>：同一 <code>chart</code> 通过
+<code>values</code>
+切换对象存储挂载方案(<code>oss</code>/<code>gcs</code>/<code>cos</code>)与
+<code>StorageClass</code>(按云厂商提供不同存储模板)</li>
+<li><strong>环境隔离</strong>：默认注入
+<code>nodeSelector: kingboat.io/environment=&#123;&#123; .Release.Namespace &#125;&#125;</code>
+与对应容忍度，让命名空间与节点环境一一对应，用户可整体覆盖</li>
+<li><strong>生命周期钩子</strong>：<code>post-install</code>/<code>post-upgrade</code>
+<code>Job</code> 执行数据库迁移(<code>schema</code> 变更)等前置任务</li>
+</ul>
+<h3 id="沉淀的最佳实践">沉淀的最佳实践</h3>
+<ul>
+<li><strong><code>umbrella chart</code>
+封装上游依赖</strong>：不直接部署第三方
+<code>chart</code>，而是以依赖(<code>dependencies</code> +
+<code>condition</code>
+开关)的方式包装，统一版本与定制，升级时只需改一处版本号</li>
+<li><strong>版本统一为 <code>0.0.0</code></strong>：由 <code>CI</code>
+在发布时统一注入版本号，避免手工维护，可回溯到具体
+<code>commit</code></li>
+<li><strong>用 <code>Istio</code> 资源替代传统代理</strong>：外部
+<code>MySQL</code>/<code>MongoDB</code>/第三方 <code>API</code>
+的访问入口全部用 <code>ServiceEntry</code> + <code>VirtualService</code>
+建模，业务方看到的是稳定的集群内域名，底层地址变更只需改
+<code>chart</code> 的 <code>values</code></li>
+<li><strong>可观测性即代码</strong>：<code>Grafana</code>
+数据源、告警规则、通知渠道全部模板化在 <code>monitoring</code>
+<code>chart</code> 中，随应用一起评审与发布</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Tools &amp; Utilities</category>
+        <category>Container</category>
+      </categories>
+      <tags>
+        <tag>beginner</tag>
       </tags>
   </entry>
   <entry>
@@ -6492,8 +8090,8 @@ class="math inline"><em>k</em> ∈ [1,<em>n</em>]</span>且不重复，故�
       </categories>
       <tags>
         <tag>algorithm</tag>
-        <tag>tree</tag>
         <tag>data structure</tag>
+        <tag>tree</tag>
       </tags>
   </entry>
   <entry>
@@ -8566,55 +10164,6 @@ id="java.nio.file.attribute"><code>java.nio.file.attribute</code></h3>
       </tags>
   </entry>
   <entry>
-    <title>图的遍历: 链式前向星</title>
-    <url>/2025/04/10/algo-linked-forward-star/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-<h3 id="对顶堆">对顶堆</h3>
-<ul>
-<li><p>对顶堆是用于解决<strong>寻找序列中第<span
-class="math inline"><em>k</em></span>小数</strong>的数据结构，其中序列可动态变化、<span
-class="math inline"><em>k</em></span>可动态变化
-对顶堆较易实现，比实现权值线段树、平衡树有码量上的优势</p></li>
-<li><p>基本组成：一个大顶堆和一个小顶堆(辅助堆)，大顶堆维护前<span
-class="math inline"><em>k</em></span>小的元素(包括<span
-class="math inline"><em>k</em></span>)，小顶堆维护其它元素(即比第<span
-class="math inline"><em>k</em></span>元素大的元素)</p>
-<p>这样，大顶堆的堆顶就是第<span
-class="math inline"><em>k</em></span>个元素、小顶堆的堆顶是第<span
-class="math inline"><em>k</em> + 1</span>个元素
-如果要求寻找序列中第<span
-class="math inline"><em>k</em></span>大的数，则反过来用小顶堆维护前<span
-class="math inline"><em>k</em></span>大的元素、用大顶堆作辅助堆即可</p></li>
-<li><p>每次涉及到动态修改(如插入、修改<span
-class="math inline"><em>k</em></span>值)，需要在操作结束后维护：
-若大顶堆元素超出<span
-class="math inline"><em>k</em></span>个，则将大顶堆的堆顶弹出后插入小顶堆中
-否则将小顶堆堆顶插入大顶堆中</p></li>
-<li><p>插入元素：若插入元素不小于大顶堆堆顶，则插入小顶堆中，否则插入大顶堆中</p></li>
-<li><p>查询第<span
-class="math inline"><em>k</em></span>小元素：返回大顶堆堆顶</p></li>
-<li><p>删除第<span
-class="math inline"><em>k</em></span>小元素：推出大顶堆堆顶和小顶堆堆顶，将后者插入大顶堆中</p></li>
-<li><p>动态修改<span
-class="math inline"><em>k</em></span>值：与维护操作描述一致，若<span
-class="math inline"><em>k</em></span>增大，则推出小顶堆堆顶插入大顶堆中；否则推出大顶堆堆顶插入小顶堆中</p></li>
-<li><p>时间复杂度：查询<span
-class="math inline"><em>O</em>(1)</span>，其余操作<span
-class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
-</ul>
-]]></content>
-      <categories>
-        <category>Algorithm</category>
-        <category>Data Structure</category>
-      </categories>
-      <tags>
-        <tag>algorithm</tag>
-        <tag>tree</tag>
-        <tag>data structure</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数据结构: 对顶堆</title>
     <url>/2025/04/10/algo-minmax-heap/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -8661,6 +10210,55 @@ class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
         <tag>algorithm</tag>
         <tag>data structure</tag>
         <tag>sort</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>图的遍历: 链式前向星</title>
+    <url>/2025/04/10/algo-linked-forward-star/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h3 id="对顶堆">对顶堆</h3>
+<ul>
+<li><p>对顶堆是用于解决<strong>寻找序列中第<span
+class="math inline"><em>k</em></span>小数</strong>的数据结构，其中序列可动态变化、<span
+class="math inline"><em>k</em></span>可动态变化
+对顶堆较易实现，比实现权值线段树、平衡树有码量上的优势</p></li>
+<li><p>基本组成：一个大顶堆和一个小顶堆(辅助堆)，大顶堆维护前<span
+class="math inline"><em>k</em></span>小的元素(包括<span
+class="math inline"><em>k</em></span>)，小顶堆维护其它元素(即比第<span
+class="math inline"><em>k</em></span>元素大的元素)</p>
+<p>这样，大顶堆的堆顶就是第<span
+class="math inline"><em>k</em></span>个元素、小顶堆的堆顶是第<span
+class="math inline"><em>k</em> + 1</span>个元素
+如果要求寻找序列中第<span
+class="math inline"><em>k</em></span>大的数，则反过来用小顶堆维护前<span
+class="math inline"><em>k</em></span>大的元素、用大顶堆作辅助堆即可</p></li>
+<li><p>每次涉及到动态修改(如插入、修改<span
+class="math inline"><em>k</em></span>值)，需要在操作结束后维护：
+若大顶堆元素超出<span
+class="math inline"><em>k</em></span>个，则将大顶堆的堆顶弹出后插入小顶堆中
+否则将小顶堆堆顶插入大顶堆中</p></li>
+<li><p>插入元素：若插入元素不小于大顶堆堆顶，则插入小顶堆中，否则插入大顶堆中</p></li>
+<li><p>查询第<span
+class="math inline"><em>k</em></span>小元素：返回大顶堆堆顶</p></li>
+<li><p>删除第<span
+class="math inline"><em>k</em></span>小元素：推出大顶堆堆顶和小顶堆堆顶，将后者插入大顶堆中</p></li>
+<li><p>动态修改<span
+class="math inline"><em>k</em></span>值：与维护操作描述一致，若<span
+class="math inline"><em>k</em></span>增大，则推出小顶堆堆顶插入大顶堆中；否则推出大顶堆堆顶插入小顶堆中</p></li>
+<li><p>时间复杂度：查询<span
+class="math inline"><em>O</em>(1)</span>，其余操作<span
+class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Algorithm</category>
+        <category>Data Structure</category>
+      </categories>
+      <tags>
+        <tag>algorithm</tag>
+        <tag>data structure</tag>
+        <tag>tree</tag>
       </tags>
   </entry>
   <entry>
@@ -8833,8 +10431,8 @@ query(rs[p], l, r, m + 1, R); return ans; }</p></li>
       </categories>
       <tags>
         <tag>algorithm</tag>
-        <tag>tree</tag>
         <tag>data structure</tag>
+        <tag>tree</tag>
       </tags>
   </entry>
   <entry>
@@ -9555,8 +11153,8 @@ href="https://www.luogu.com.cn/problem/P1966">NOIP 2013 提高组]
       </categories>
       <tags>
         <tag>algorithm</tag>
-        <tag>tree</tag>
         <tag>data structure</tag>
+        <tag>tree</tag>
       </tags>
   </entry>
   <entry>
@@ -22424,8 +24022,8 @@ exp3
 <p>如图，使用<code>html</code>语法，写出一个四行两列的、边界值为2的、内容<code>'11'</code>被设置为占据四行且居中的表格</p>
 <h3 id="图片">图片</h3>
 通过<code>&lt;img /&gt;</code>标签可以定义并放缩图片：
-<style>.bdopcmshbrob{zoom:33%;}</style>
-<img src="/2023/10/03/markdown-beginner/image_example.png" class="bdopcmshbrob">
+<style>.pzovypqoldiz{zoom:33%;}</style>
+<img src="/2023/10/03/markdown-beginner/image_example.png" class="pzovypqoldiz">
 <p>图片可以缩放，即在前方的<code>html</code>标签内加上<code>style="zoom:num%"</code>，<code>num</code>为缩放比例</p>
 <h3 id="链接">链接</h3>
 <p><code>&lt;a id="111"&gt;&lt;/a&gt;</code>：这条元素定义了一个<code>id</code>为<code>'111'</code>的锚点，在文章内部可以通过<code>[点击](#111)</code>链接跳转到这个锚点，例如本文在目录处设定了一个<code>'HOME'</code>锚点，您可以<a
