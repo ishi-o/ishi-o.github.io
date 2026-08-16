@@ -237,9 +237,12 @@
       <categories>
         <category>Tools &amp; Utilities</category>
         <category>Container</category>
+        <category>Helm</category>
       </categories>
       <tags>
-        <tag>beginner</tag>
+        <tag>helm</tag>
+        <tag>kubernetes</tag>
+        <tag>package manager</tag>
       </tags>
   </entry>
   <entry>
@@ -427,151 +430,19 @@ shell <code>Pod</code> 只允许访问 <code>API Server</code>
 标签，新服务自动入网格</p></li>
 <li><p>模板层以 <code>Release.Namespace</code>
 推导默认值，用户不配置则自动隔离</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 节点打污点: kubectl taint node node1 kingboat.io/environment=production:NoSchedule</span></span><br><span class="line"><span class="attr">tolerations:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">kingboat.io/environment</span></span><br><span class="line">    <span class="attr">operator:</span> <span class="string">Equal</span></span><br><span class="line">    <span class="attr">value:</span> &#123;&#123; <span class="string">.Release.Namespace</span> <span class="string">|</span> <span class="string">quote</span> &#125;&#125; <span class="comment"># 容忍度跟随命名空间，自动匹配环境节点</span></span><br><span class="line">    <span class="attr">effect:</span> <span class="string">NoSchedule</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 节点打污点: kubectl taint node node1 example.io/environment=production:NoSchedule</span></span><br><span class="line"><span class="attr">tolerations:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">example.io/environment</span></span><br><span class="line">    <span class="attr">operator:</span> <span class="string">Equal</span></span><br><span class="line">    <span class="attr">value:</span> &#123;&#123; <span class="string">.Release.Namespace</span> <span class="string">|</span> <span class="string">quote</span> &#125;&#125; <span class="comment"># 容忍度跟随命名空间，自动匹配环境节点</span></span><br><span class="line">    <span class="attr">effect:</span> <span class="string">NoSchedule</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Namespace</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">staging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">istio-injection:</span> <span class="string">enabled</span> <span class="comment"># 命名空间内新建 Pod 自动注入 sidecar</span></span><br></pre></td></tr></table></figure></li>
 </ul>
 ]]></content>
       <categories>
         <category>Tools &amp; Utilities</category>
         <category>Container</category>
+        <category>Kubernetes</category>
       </categories>
       <tags>
-        <tag>beginner</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>PLG: 部署与飞书告警实践</title>
-    <url>/2026/08/16/plg-alert/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-<h1 id="plg-部署与飞书告警实践"><code>PLG</code>:
-部署与飞书告警实践</h1>
-<p>上一篇梳理了 <code>PLG</code>
-各组件的基础配置，本篇记录如何把整套体系以 <code>git</code> +
-<code>helm</code> + <code>CI</code>
-的方式部署进集群，并把告警送达飞书群，所有做法都是生产环境的通用玩法</p>
-<h2 id="监控栈的-ci-部署">监控栈的 <code>CI</code> 部署</h2>
-<h3 id="整体形态">整体形态</h3>
-<ul>
-<li><p>监控栈是一个 <code>umbrella chart</code>：聚合
-<code>kube-prometheus-stack</code>(含
-<code>Prometheus</code>/<code>Alertmanager</code>)+ <code>loki</code> +
-<code>promtail</code> + <code>grafana</code> 依赖，环境差异全部放在
-<code>values-*.yaml</code> 中</p></li>
-<li><p>部署不走手工命令，而是 <code>GitHub Actions</code> 在
-<code>push</code> 到 <code>main</code>
-时按路径触发，路径过滤保证只有监控配置变更才触发部署：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">main</span></span><br><span class="line">    <span class="attr">paths:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/monitoring/**</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/istio/**</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/ingress/**</span></span><br></pre></td></tr></table></figure></li>
-<li><p>多集群、多产品通过 <code>matrix</code> 展开，每个条目指定
-<code>chart</code>、命名空间、<code>values</code> 文件与
-<code>kubeconfig</code> 上下文：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">strategy:</span></span><br><span class="line">  <span class="attr">matrix:</span></span><br><span class="line">    <span class="attr">product:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">monitoring</span></span><br><span class="line">        <span class="attr">namespace:</span> <span class="string">monitoring</span></span><br><span class="line">        <span class="attr">values:</span> <span class="string">values-kingboat-aliyun.yaml</span></span><br><span class="line">    <span class="attr">cluster:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">kingboat-aliyun</span></span><br><span class="line">        <span class="attr">runner:</span> <span class="string">kingboat-runner-mini</span> <span class="comment"># 自托管 runner，持有集群访问权</span></span><br><span class="line">        <span class="attr">context:</span> <span class="string">kingboat-aliyun</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="密钥注入">密钥注入</h3>
-<ul>
-<li><p>密钥永远不进 <code>git</code>：<code>values</code>
-文件里写占位符，<code>CI</code> 用 <code>envsubst</code>
-在发布时替换</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># values 文件中的占位</span></span><br><span class="line"><span class="attr">grafana:</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="attr">BOT_GRAFANA_WEBHOOK_TOKEN:</span> <span class="string">$BOT_GRAFANA_WEBHOOK_TOKEN</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">envsubst <span class="string">&#x27;$FEISHU_APP_ID $FEISHU_APP_SECRET $BOT_GRAFANA_WEBHOOK_TOKEN&#x27;</span> \</span><br><span class="line">  &lt; charts/monitoring/values-kingboat-aliyun.yaml &gt; <span class="variable">$values_file</span></span><br></pre></td></tr></table></figure></li>
-<li><p>简单值直接用 <code>--set</code> 注入(如 <code>Cloudflare</code>
-<code>Token</code>)，不必经过 <code>values</code> 文件</p></li>
-</ul>
-<h3 id="发布与自愈">发布与自愈</h3>
-<ul>
-<li><p>统一使用
-<code>helm upgrade --install --create-namespace</code>，并对”上一个操作未完成”的常见冲突做<strong>自动回滚
-+ 重试</strong>：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> retry <span class="keyword">in</span> &#123;1..3&#125;; <span class="keyword">do</span></span><br><span class="line">  res=$(helm -n monitoring upgrade --install --create-namespace monitoring \</span><br><span class="line">    ./charts/monitoring -f <span class="string">&quot;<span class="variable">$values_file</span>&quot;</span> \</span><br><span class="line">    --<span class="built_in">set</span> cloudflare.apiToken=<span class="variable">$CF_TOKEN</span> 2&gt;&amp;1)</span><br><span class="line">  [[ $? -eq 0 ]] &amp;&amp; <span class="built_in">exit</span> 0</span><br><span class="line">  <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$res</span>&quot;</span> = *<span class="string">&quot;another operation (install/upgrade/rollback) is in progress&quot;</span>* ]]; <span class="keyword">then</span></span><br><span class="line">    helm -n monitoring rollback monitoring <span class="comment"># 卡住的发布先回滚再重试</span></span><br><span class="line">    <span class="built_in">continue</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">  <span class="built_in">sleep</span> 10</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">exit</span> 1</span><br></pre></td></tr></table></figure></li>
-<li><p><code>runner</code> 通过 <code>kubeconfig</code>
-<code>secret</code> 切换目标集群上下文，一个 <code>runner</code>
-可以发布多个集群</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">azure/k8s-set-context@v4</span></span><br><span class="line">  <span class="attr">with:</span></span><br><span class="line">    <span class="attr">method:</span> <span class="string">kubeconfig</span></span><br><span class="line">    <span class="attr">kubeconfig:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.KUBECONFIG</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">context:</span> <span class="string">$&#123;&#123;</span> <span class="string">matrix.cluster.context</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="告警即代码">告警即代码</h2>
-<h3 id="grafana-统一告警"><code>Grafana</code> 统一告警</h3>
-<ul>
-<li><p>选择 <code>Grafana</code>
-统一告警(<code>Unified Alerting</code>)而非 <code>Alertmanager</code>
-作为告警出口：规则、联系点、通知策略都住在 <code>Grafana</code>
-里，与仪表盘共享数据源与标签体系，<code>Alertmanager</code> 仅作为
-<code>kube-prometheus-stack</code> 的兜底保留</p></li>
-<li><p>告警规则不进 <code>Grafana</code> 界面手点，而是写成
-<code>ConfigMap</code>，打上约定标签，由 <code>Grafana sidecar</code>
-全命名空间监听并同步进 <code>Grafana</code>，改动走 <code>git</code>
-评审：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-status-alert</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">monitoring</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">grafana_alert:</span> <span class="string">&quot;1&quot;</span> <span class="comment"># sidecar 按该标签发现告警资源</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">pod-status-alert.yaml:</span> <span class="string">|</span></span><br><span class="line"><span class="string">    apiVersion: 1</span></span><br><span class="line"><span class="string">    ...</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># values 中开启 sidecar 的告警同步，搜索全命名空间</span></span><br><span class="line"><span class="attr">grafana:</span></span><br><span class="line">  <span class="attr">sidecar:</span></span><br><span class="line">    <span class="attr">alerts:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">searchNamespace:</span> <span class="string">ALL</span></span><br></pre></td></tr></table></figure></li>
-<li><p>同一文件描述四类资源：<code>groups</code>(规则)、<code>contactPoints</code>(联系点)、<code>policies</code>(通知策略)、<code>templates</code>(通知模板)</p></li>
-</ul>
-<h3 id="告警规则的结构">告警规则的结构</h3>
-<ul>
-<li><p>规则按 <code>group</code> 组织，<code>folder</code> 决定在
-<code>Grafana</code> 中的目录归属，<code>interval</code>
-是评估周期：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">groups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Kubernetes</span></span><br><span class="line">    <span class="attr">folder:</span> <span class="string">Infra</span></span><br><span class="line">    <span class="attr">interval:</span> <span class="string">1m</span> <span class="comment"># 每分钟评估一次</span></span><br><span class="line">    <span class="attr">rules:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uid:</span> <span class="string">a9a96a82-f6f5-4bfe-a18e-6f1ac6c9e72f</span></span><br><span class="line">        <span class="attr">title:</span> <span class="string">服务健康状态</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">不健康服务增多</span> <span class="comment"># 指向起决定作用的表达式 refId</span></span><br><span class="line">        <span class="attr">data:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">refId:</span> <span class="string">不健康服务</span></span><br><span class="line">            <span class="attr">datasourceUid:</span> <span class="string">prometheus</span> <span class="comment"># 查询 Prometheus</span></span><br><span class="line">            <span class="attr">model:</span></span><br><span class="line">              <span class="attr">expr:</span> <span class="string">|</span></span><br><span class="line"><span class="string">                sum by (namespace, pod, phase) (</span></span><br><span class="line"><span class="string">                  kube_pod_status_phase&#123;namespace !~ &#x27;staging|arc-.*&#x27;, phase=~&quot;Pending|Unknown|Failed&quot;&#125; == 1</span></span><br><span class="line"><span class="string">                  and on (namespace, pod) ((time() - kube_pod_created) &gt; 180)</span></span><br><span class="line"><span class="string">                )</span></span><br><span class="line"><span class="string"></span>          <span class="bullet">-</span> <span class="attr">refId:</span> <span class="string">不健康服务增多</span></span><br><span class="line">            <span class="attr">datasourceUid:</span> <span class="string">__expr__</span> <span class="comment"># 表达式阶段做阈值判断</span></span><br><span class="line">            <span class="attr">model:</span></span><br><span class="line">              <span class="attr">type:</span> <span class="string">threshold</span></span><br><span class="line">              <span class="attr">expression:</span> <span class="string">不健康服务</span></span><br><span class="line">              <span class="attr">conditions:</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">evaluator:</span></span><br><span class="line">                    <span class="attr">params:</span> [<span class="number">0</span>]</span><br><span class="line">                    <span class="attr">type:</span> <span class="string">gt</span> <span class="comment"># 结果 &gt; 0 即触发</span></span><br><span class="line">        <span class="attr">for:</span> <span class="string">5m</span> <span class="comment"># 持续满足 5 分钟才真正触发，抑制抖动</span></span><br><span class="line">        <span class="attr">noDataState:</span> <span class="string">OK</span> <span class="comment"># 无数据视为正常</span></span><br><span class="line">        <span class="attr">annotations:</span></span><br><span class="line">          <span class="attr">summary:</span> <span class="string">命名空间</span> &#123;&#123; <span class="string">$labels.namespace</span> &#125;&#125; <span class="string">下</span> <span class="string">Pod</span> &#123;&#123; <span class="string">$labels.pod</span> &#125;&#125; <span class="string">处于</span> &#123;&#123; <span class="string">$labels.phase</span> &#125;&#125; <span class="string">状态</span></span><br><span class="line">        <span class="attr">labels:</span></span><br><span class="line">          <span class="attr">product:</span> <span class="string">infra</span> <span class="comment"># 供通知模板与策略路由使用</span></span><br></pre></td></tr></table></figure></li>
-<li><p>注意三个工程细节：</p>
-<ul>
-<li><code>PromQL</code> 里先做过滤与降噪：排除 <code>staging</code>
-等低价值命名空间、只看存活超过 <code>3</code> 分钟的
-<code>Pod</code></li>
-<li><code>for: 5m</code> + <code>noDataState: OK</code>
-是防告警风暴的两道闸</li>
-<li><code>labels.product</code> 是整条告警链路的路由键，从
-<code>values</code>
-按产品开关(<code>alerts.&lt;product&gt;.enabled</code>)决定渲染哪些规则</li>
-</ul></li>
-</ul>
-<h2 id="飞书告警链路">飞书告警链路</h2>
-<h3 id="联系点webhook-自建机器人">联系点：<code>webhook</code> +
-自建机器人</h3>
-<ul>
-<li><p><code>Grafana</code>
-原生不支持飞书，与其等官方支持，不如加一层<strong>自建转发服务</strong>：联系点配置为普通
-<code>webhook</code>，指向自建的机器人服务，由它把 <code>Grafana</code>
-的告警 payload 转成飞书群消息</p></li>
-<li><p>好处是格式完全自主、鉴权自己掌控、以后接任何新 <code>IM</code>
-都只改这一个服务：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">contactPoints:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">服务端告警群</span></span><br><span class="line">    <span class="attr">receivers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uid:</span> <span class="string">80192ad5-0865-4075-a69a-eeccccbf82d8</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">webhook</span></span><br><span class="line">        <span class="attr">settings:</span></span><br><span class="line">          <span class="attr">url:</span> <span class="string">https://bot.example.com/grafana/webhook</span> <span class="comment"># 自建机器人</span></span><br><span class="line">          <span class="attr">httpMethod:</span> <span class="string">POST</span></span><br><span class="line">          <span class="attr">authorization_scheme:</span> <span class="string">Bearer</span> <span class="comment"># 出口鉴权，防止伪造告警</span></span><br><span class="line">          <span class="attr">authorization_credentials:</span> <span class="string">$BOT_GRAFANA_WEBHOOK_TOKEN</span></span><br></pre></td></tr></table></figure></li>
-<li><p><code>Bearer Token</code> 通过环境变量注入
-<code>Grafana</code>(<code>grafana.env</code>)，再由
-<code>envsubst</code> 在 <code>CI</code> 阶段填充，全程不落
-<code>git</code></p></li>
-</ul>
-<h3 id="通知策略">通知策略</h3>
-<ul>
-<li><p>策略决定”谁收到什么、多久提醒一次”，<code>repeat_interval</code>
-是防轰炸的关键参数：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">policies:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">receiver:</span> <span class="string">grafana-default-email</span> <span class="comment"># 兜底接收器</span></span><br><span class="line">    <span class="attr">group_by:</span> [<span class="string">&#x27;...&#x27;</span>]</span><br><span class="line">    <span class="attr">repeat_interval:</span> <span class="string">5m</span> <span class="comment"># 未恢复告警每 5 分钟重复提醒</span></span><br><span class="line">    <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">receiver:</span> <span class="string">服务端告警群</span> <span class="comment"># 全部告警转发到飞书群</span></span><br><span class="line">        <span class="attr">continue:</span> <span class="literal">true</span> <span class="comment"># 继续匹配后续路由，便于后续按产品分流</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="通知模板">通知模板</h3>
-<ul>
-<li><p>模板用 <code>Grafana</code> 的 <code>Go template</code>
-语法，自定义标题与正文，把关键信息(<code>product</code>/<code>application</code>
-标签、当前数值、图表与静默链接)组织成飞书消息卡片的字段：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">templates:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;kingboat.title&quot;</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      &#123;&#123;- if len .Alerts.Firing -&#125;&#125;</span></span><br><span class="line"><span class="string">        🚨🚨🚨 有 &#123;&#123; len .Alerts.Firing &#125;&#125; 条告警规则正在触发</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if and (len .Alerts.Firing) (len .Alerts.Resolved) -&#125;&#125;; &#123;&#123; end -&#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if len .Alerts.Resolved -&#125;&#125;</span></span><br><span class="line"><span class="string">        ✅✅✅ 有 &#123;&#123; len .Alerts.Resolved &#125;&#125; 条告警规则已经恢复</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string"></span>  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;kingboat.message&quot;</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      - 产品名称: &#123;&#123; .Labels.product &#125;&#125;</span></span><br><span class="line"><span class="string">      - 产品应用: &#123;&#123; or (or .Labels.application .Labels.pod) &quot;没有数据&quot; &#125;&#125;</span></span><br><span class="line"><span class="string">      - 告警规则: &#123;&#123; .Labels.alertname &#125;&#125;</span></span><br><span class="line"><span class="string">      - 当前数值: &#123;&#123; range $k, $v := .Values &#125;&#125;&#123;&#123; $k &#125;&#125;=&#123;&#123; $v &#125;&#125; &#123;&#123; end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if .DashboardURL &#125;&#125;</span></span><br><span class="line"><span class="string">      - 查看图表: [点击查看](&#123;&#123; .DashboardURL &#125;&#125;)</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if .SilenceURL &#125;&#125;</span></span><br><span class="line"><span class="string">      - 抑制告警: [点击抑制](&#123;&#123; .SilenceURL &#125;&#125;)</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br></pre></td></tr></table></figure></li>
-<li><p><code>.Labels.application</code> 正是 <code>Prometheus</code>
-抓取配置里 <code>relabel</code>
-出来的服务名标签——<strong>采集端打的标签决定通知端的信息量</strong>，这是整条链路设计的一体性所在</p></li>
-</ul>
-<h2 id="飞书登录oauth">飞书登录(<code>OAuth</code>)</h2>
-<ul>
-<li><p><code>Grafana</code> 的登录同样接入飞书，用
-<code>generic_oauth</code> 对接飞书开放平台的 <code>OAuth</code>
-端点，账号体系与公司 <code>IM</code> 统一：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">grafana.ini:</span></span><br><span class="line">  <span class="attr">auth.generic_oauth:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">飞书</span></span><br><span class="line">    <span class="attr">client_id:</span> <span class="string">$FEISHU_APP_ID</span> <span class="comment"># CI 注入</span></span><br><span class="line">    <span class="attr">client_secret:</span> <span class="string">$FEISHU_APP_SECRET</span></span><br><span class="line">    <span class="attr">auth_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/authorize</span></span><br><span class="line">    <span class="attr">token_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/token</span></span><br><span class="line">    <span class="attr">api_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/userinfo</span></span><br><span class="line">    <span class="attr">login_attribute_path:</span> <span class="string">name</span></span><br><span class="line">    <span class="attr">role_attribute_path:</span> <span class="string">name</span> <span class="string">==</span> <span class="string">&#x27;someone&#x27;</span> <span class="string">&amp;&amp;</span> <span class="string">&#x27;Admin&#x27;</span> <span class="string">||</span> <span class="string">&#x27;Viewer&#x27;</span> <span class="comment"># 按用户名映射角色</span></span><br></pre></td></tr></table></figure></li>
-<li><p><code>role_attribute_path</code>
-实现”白名单管理员、其余只读”，避免给全员开编辑权限</p></li>
-</ul>
-<h2 id="链路总结">链路总结</h2>
-<p><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">Pod/Envoy 指标 ──&gt; Prometheus(注解发现/relabel 打标) ──┐</span><br><span class="line">容器日志 ──&gt; Promtail(CRI 解析) ──&gt; Loki(S3/分级保留) ──┤</span><br><span class="line">                                                      v</span><br><span class="line">                                   Grafana(数据源/仪表盘/告警，全部 ConfigMap + sidecar 供给)</span><br><span class="line">                                                      |</span><br><span class="line">                            告警规则(interval/for/labels.product)</span><br><span class="line">                                                      v</span><br><span class="line">                            通知策略(repeat_interval) ─&gt; 联系点(webhook + Bearer)</span><br><span class="line">                                                      v</span><br><span class="line">                                   自建机器人 ──&gt; 飞书群卡片(title/message 模板)</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>Tools &amp; Utilities</category>
-        <category>Container</category>
-      </categories>
-      <tags>
-        <tag>beginner</tag>
+        <tag>kubernetes</tag>
+        <tag>istio</tag>
+        <tag>production</tag>
       </tags>
   </entry>
   <entry>
@@ -706,15 +577,155 @@ shell <code>Pod</code> 只允许访问 <code>API Server</code>
 <code>gnetId</code>)可直接导入 <code>json</code> 后沉淀为
 <code>ConfigMap</code>，再做定制</p></li>
 <li><p>这套”标签 +
-<code>sidecar</code>“的模式同样用于<strong>告警规则</strong>，见下一篇的告警实践</p></li>
+<code>sidecar</code>“的供给模式不仅用于仪表盘与数据源，同样适用于<strong>告警规则</strong>等其余
+<code>Grafana</code> 资源</p></li>
 </ul>
 ]]></content>
       <categories>
         <category>Tools &amp; Utilities</category>
-        <category>Container</category>
+        <category>Observability</category>
       </categories>
       <tags>
-        <tag>beginner</tag>
+        <tag>prometheus</tag>
+        <tag>loki</tag>
+        <tag>grafana</tag>
+        <tag>observability</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PLG: 部署与飞书告警实践</title>
+    <url>/2026/08/16/plg-alert/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="plg-部署与飞书告警实践"><code>PLG</code>:
+部署与飞书告警实践</h1>
+<p>本篇记录如何把 <code>PLG</code> 监控体系以 <code>git</code> +
+<code>helm</code> + <code>CI</code>
+的方式部署进集群，并把告警送达飞书群，所有做法都是生产环境的通用玩法</p>
+<h2 id="监控栈的-ci-部署">监控栈的 <code>CI</code> 部署</h2>
+<h3 id="整体形态">整体形态</h3>
+<ul>
+<li><p>监控栈是一个 <code>umbrella chart</code>：聚合
+<code>kube-prometheus-stack</code>(含
+<code>Prometheus</code>/<code>Alertmanager</code>)+ <code>loki</code> +
+<code>promtail</code> + <code>grafana</code> 依赖，环境差异全部放在
+<code>values-*.yaml</code> 中</p></li>
+<li><p>部署不走手工命令，而是 <code>GitHub Actions</code> 在
+<code>push</code> 到 <code>main</code>
+时按路径触发，路径过滤保证只有监控配置变更才触发部署：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">main</span></span><br><span class="line">    <span class="attr">paths:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/monitoring/**</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/istio/**</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/ingress/**</span></span><br></pre></td></tr></table></figure></li>
+<li><p>多集群、多产品通过 <code>matrix</code> 展开，每个条目指定
+<code>chart</code>、命名空间、<code>values</code> 文件与
+<code>kubeconfig</code> 上下文：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">strategy:</span></span><br><span class="line">  <span class="attr">matrix:</span></span><br><span class="line">    <span class="attr">product:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">monitoring</span></span><br><span class="line">        <span class="attr">namespace:</span> <span class="string">monitoring</span></span><br><span class="line">        <span class="attr">values:</span> <span class="string">values-example-prod.yaml</span></span><br><span class="line">    <span class="attr">cluster:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">example-prod</span></span><br><span class="line">        <span class="attr">runner:</span> <span class="string">example-runner</span> <span class="comment"># 自托管 runner，持有集群访问权</span></span><br><span class="line">        <span class="attr">context:</span> <span class="string">example-prod</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="密钥注入">密钥注入</h3>
+<ul>
+<li><p>密钥永远不进 <code>git</code>：<code>values</code>
+文件里写占位符，<code>CI</code> 用 <code>envsubst</code>
+在发布时替换</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># values 文件中的占位</span></span><br><span class="line"><span class="attr">grafana:</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="attr">BOT_GRAFANA_WEBHOOK_TOKEN:</span> <span class="string">$BOT_GRAFANA_WEBHOOK_TOKEN</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">envsubst <span class="string">&#x27;$FEISHU_APP_ID $FEISHU_APP_SECRET $BOT_GRAFANA_WEBHOOK_TOKEN&#x27;</span> \</span><br><span class="line">  &lt; charts/monitoring/values-example-prod.yaml &gt; <span class="variable">$values_file</span></span><br></pre></td></tr></table></figure></li>
+<li><p>简单值直接用 <code>--set</code> 注入(如 <code>Cloudflare</code>
+<code>Token</code>)，不必经过 <code>values</code> 文件</p></li>
+</ul>
+<h3 id="发布与自愈">发布与自愈</h3>
+<ul>
+<li><p>统一使用
+<code>helm upgrade --install --create-namespace</code>，并对”上一个操作未完成”的常见冲突做<strong>自动回滚
++ 重试</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> retry <span class="keyword">in</span> &#123;1..3&#125;; <span class="keyword">do</span></span><br><span class="line">  res=$(helm -n monitoring upgrade --install --create-namespace monitoring \</span><br><span class="line">    ./charts/monitoring -f <span class="string">&quot;<span class="variable">$values_file</span>&quot;</span> \</span><br><span class="line">    --<span class="built_in">set</span> cloudflare.apiToken=<span class="variable">$CF_TOKEN</span> 2&gt;&amp;1)</span><br><span class="line">  [[ $? -eq 0 ]] &amp;&amp; <span class="built_in">exit</span> 0</span><br><span class="line">  <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$res</span>&quot;</span> = *<span class="string">&quot;another operation (install/upgrade/rollback) is in progress&quot;</span>* ]]; <span class="keyword">then</span></span><br><span class="line">    helm -n monitoring rollback monitoring <span class="comment"># 卡住的发布先回滚再重试</span></span><br><span class="line">    <span class="built_in">continue</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">  <span class="built_in">sleep</span> 10</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">exit</span> 1</span><br></pre></td></tr></table></figure></li>
+<li><p><code>runner</code> 通过 <code>kubeconfig</code>
+<code>secret</code> 切换目标集群上下文，一个 <code>runner</code>
+可以发布多个集群</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">azure/k8s-set-context@v4</span></span><br><span class="line">  <span class="attr">with:</span></span><br><span class="line">    <span class="attr">method:</span> <span class="string">kubeconfig</span></span><br><span class="line">    <span class="attr">kubeconfig:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.KUBECONFIG</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">context:</span> <span class="string">$&#123;&#123;</span> <span class="string">matrix.cluster.context</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="告警即代码">告警即代码</h2>
+<h3 id="grafana-统一告警"><code>Grafana</code> 统一告警</h3>
+<ul>
+<li><p>选择 <code>Grafana</code>
+统一告警(<code>Unified Alerting</code>)而非 <code>Alertmanager</code>
+作为告警出口：规则、联系点、通知策略都住在 <code>Grafana</code>
+里，与仪表盘共享数据源与标签体系，<code>Alertmanager</code> 仅作为
+<code>kube-prometheus-stack</code> 的兜底保留</p></li>
+<li><p>告警规则不进 <code>Grafana</code> 界面手点，而是写成
+<code>ConfigMap</code>，打上约定标签，由 <code>Grafana sidecar</code>
+全命名空间监听并同步进 <code>Grafana</code>，改动走 <code>git</code>
+评审：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-status-alert</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">monitoring</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">grafana_alert:</span> <span class="string">&quot;1&quot;</span> <span class="comment"># sidecar 按该标签发现告警资源</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">pod-status-alert.yaml:</span> <span class="string">|</span></span><br><span class="line"><span class="string">    apiVersion: 1</span></span><br><span class="line"><span class="string">    ...</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># values 中开启 sidecar 的告警同步，搜索全命名空间</span></span><br><span class="line"><span class="attr">grafana:</span></span><br><span class="line">  <span class="attr">sidecar:</span></span><br><span class="line">    <span class="attr">alerts:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">searchNamespace:</span> <span class="string">ALL</span></span><br></pre></td></tr></table></figure></li>
+<li><p>同一文件描述四类资源：<code>groups</code>(规则)、<code>contactPoints</code>(联系点)、<code>policies</code>(通知策略)、<code>templates</code>(通知模板)</p></li>
+</ul>
+<h3 id="告警规则的结构">告警规则的结构</h3>
+<ul>
+<li><p>规则按 <code>group</code> 组织，<code>folder</code> 决定在
+<code>Grafana</code> 中的目录归属，<code>interval</code>
+是评估周期：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">groups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Kubernetes</span></span><br><span class="line">    <span class="attr">folder:</span> <span class="string">Infra</span></span><br><span class="line">    <span class="attr">interval:</span> <span class="string">1m</span> <span class="comment"># 每分钟评估一次</span></span><br><span class="line">    <span class="attr">rules:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uid:</span> <span class="string">a9a96a82-f6f5-4bfe-a18e-6f1ac6c9e72f</span></span><br><span class="line">        <span class="attr">title:</span> <span class="string">服务健康状态</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">不健康服务增多</span> <span class="comment"># 指向起决定作用的表达式 refId</span></span><br><span class="line">        <span class="attr">data:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">refId:</span> <span class="string">不健康服务</span></span><br><span class="line">            <span class="attr">datasourceUid:</span> <span class="string">prometheus</span> <span class="comment"># 查询 Prometheus</span></span><br><span class="line">            <span class="attr">model:</span></span><br><span class="line">              <span class="attr">expr:</span> <span class="string">|</span></span><br><span class="line"><span class="string">                sum by (namespace, pod, phase) (</span></span><br><span class="line"><span class="string">                  kube_pod_status_phase&#123;namespace !~ &#x27;staging|dev-.*&#x27;, phase=~&quot;Pending|Unknown|Failed&quot;&#125; == 1</span></span><br><span class="line"><span class="string">                  and on (namespace, pod) ((time() - kube_pod_created) &gt; 180)</span></span><br><span class="line"><span class="string">                )</span></span><br><span class="line"><span class="string"></span>          <span class="bullet">-</span> <span class="attr">refId:</span> <span class="string">不健康服务增多</span></span><br><span class="line">            <span class="attr">datasourceUid:</span> <span class="string">__expr__</span> <span class="comment"># 表达式阶段做阈值判断</span></span><br><span class="line">            <span class="attr">model:</span></span><br><span class="line">              <span class="attr">type:</span> <span class="string">threshold</span></span><br><span class="line">              <span class="attr">expression:</span> <span class="string">不健康服务</span></span><br><span class="line">              <span class="attr">conditions:</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">evaluator:</span></span><br><span class="line">                    <span class="attr">params:</span> [<span class="number">0</span>]</span><br><span class="line">                    <span class="attr">type:</span> <span class="string">gt</span> <span class="comment"># 结果 &gt; 0 即触发</span></span><br><span class="line">        <span class="attr">for:</span> <span class="string">5m</span> <span class="comment"># 持续满足 5 分钟才真正触发，抑制抖动</span></span><br><span class="line">        <span class="attr">noDataState:</span> <span class="string">OK</span> <span class="comment"># 无数据视为正常</span></span><br><span class="line">        <span class="attr">annotations:</span></span><br><span class="line">          <span class="attr">summary:</span> <span class="string">命名空间</span> &#123;&#123; <span class="string">$labels.namespace</span> &#125;&#125; <span class="string">下</span> <span class="string">Pod</span> &#123;&#123; <span class="string">$labels.pod</span> &#125;&#125; <span class="string">处于</span> &#123;&#123; <span class="string">$labels.phase</span> &#125;&#125; <span class="string">状态</span></span><br><span class="line">        <span class="attr">labels:</span></span><br><span class="line">          <span class="attr">product:</span> <span class="string">infra</span> <span class="comment"># 供通知模板与策略路由使用</span></span><br></pre></td></tr></table></figure></li>
+<li><p>注意三个工程细节：</p>
+<ul>
+<li><code>PromQL</code> 里先做过滤与降噪：排除 <code>staging</code>
+等低价值命名空间、只看存活超过 <code>3</code> 分钟的
+<code>Pod</code></li>
+<li><code>for: 5m</code> + <code>noDataState: OK</code>
+是防告警风暴的两道闸</li>
+<li><code>labels.product</code> 是整条告警链路的路由键，从
+<code>values</code>
+按产品开关(<code>alerts.&lt;product&gt;.enabled</code>)决定渲染哪些规则</li>
+</ul></li>
+</ul>
+<h2 id="飞书告警链路">飞书告警链路</h2>
+<h3 id="联系点webhook-自建机器人">联系点：<code>webhook</code> +
+自建机器人</h3>
+<ul>
+<li><p><code>Grafana</code>
+原生不支持飞书，与其等官方支持，不如加一层<strong>自建转发服务</strong>：联系点配置为普通
+<code>webhook</code>，指向自建的机器人服务，由它把 <code>Grafana</code>
+的告警 payload 转成飞书群消息</p></li>
+<li><p>好处是格式完全自主、鉴权自己掌控、以后接任何新 <code>IM</code>
+都只改这一个服务：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">contactPoints:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">服务端告警群</span></span><br><span class="line">    <span class="attr">receivers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uid:</span> <span class="string">80192ad5-0865-4075-a69a-eeccccbf82d8</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">webhook</span></span><br><span class="line">        <span class="attr">settings:</span></span><br><span class="line">          <span class="attr">url:</span> <span class="string">https://bot.example.com/grafana/webhook</span> <span class="comment"># 自建机器人</span></span><br><span class="line">          <span class="attr">httpMethod:</span> <span class="string">POST</span></span><br><span class="line">          <span class="attr">authorization_scheme:</span> <span class="string">Bearer</span> <span class="comment"># 出口鉴权，防止伪造告警</span></span><br><span class="line">          <span class="attr">authorization_credentials:</span> <span class="string">$BOT_GRAFANA_WEBHOOK_TOKEN</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>Bearer Token</code> 通过环境变量注入
+<code>Grafana</code>(<code>grafana.env</code>)，再由
+<code>envsubst</code> 在 <code>CI</code> 阶段填充，全程不落
+<code>git</code></p></li>
+</ul>
+<h3 id="通知策略">通知策略</h3>
+<ul>
+<li><p>策略决定”谁收到什么、多久提醒一次”，<code>repeat_interval</code>
+是防轰炸的关键参数：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">policies:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">receiver:</span> <span class="string">grafana-default-email</span> <span class="comment"># 兜底接收器</span></span><br><span class="line">    <span class="attr">group_by:</span> [<span class="string">&#x27;...&#x27;</span>]</span><br><span class="line">    <span class="attr">repeat_interval:</span> <span class="string">5m</span> <span class="comment"># 未恢复告警每 5 分钟重复提醒</span></span><br><span class="line">    <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">receiver:</span> <span class="string">服务端告警群</span> <span class="comment"># 全部告警转发到飞书群</span></span><br><span class="line">        <span class="attr">continue:</span> <span class="literal">true</span> <span class="comment"># 继续匹配后续路由，便于后续按产品分流</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="通知模板">通知模板</h3>
+<ul>
+<li><p>模板用 <code>Grafana</code> 的 <code>Go template</code>
+语法，自定义标题与正文，把关键信息(<code>product</code>/<code>application</code>
+标签、当前数值、图表与静默链接)组织成飞书消息卡片的字段：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">templates:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;example.title&quot;</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      &#123;&#123;- if len .Alerts.Firing -&#125;&#125;</span></span><br><span class="line"><span class="string">        🚨🚨🚨 有 &#123;&#123; len .Alerts.Firing &#125;&#125; 条告警规则正在触发</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if and (len .Alerts.Firing) (len .Alerts.Resolved) -&#125;&#125;; &#123;&#123; end -&#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if len .Alerts.Resolved -&#125;&#125;</span></span><br><span class="line"><span class="string">        ✅✅✅ 有 &#123;&#123; len .Alerts.Resolved &#125;&#125; 条告警规则已经恢复</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string"></span>  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;example.message&quot;</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      - 产品名称: &#123;&#123; .Labels.product &#125;&#125;</span></span><br><span class="line"><span class="string">      - 产品应用: &#123;&#123; or (or .Labels.application .Labels.pod) &quot;没有数据&quot; &#125;&#125;</span></span><br><span class="line"><span class="string">      - 告警规则: &#123;&#123; .Labels.alertname &#125;&#125;</span></span><br><span class="line"><span class="string">      - 当前数值: &#123;&#123; range $k, $v := .Values &#125;&#125;&#123;&#123; $k &#125;&#125;=&#123;&#123; $v &#125;&#125; &#123;&#123; end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if .DashboardURL &#125;&#125;</span></span><br><span class="line"><span class="string">      - 查看图表: [点击查看](&#123;&#123; .DashboardURL &#125;&#125;)</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if .SilenceURL &#125;&#125;</span></span><br><span class="line"><span class="string">      - 抑制告警: [点击抑制](&#123;&#123; .SilenceURL &#125;&#125;)</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>.Labels.application</code> 正是 <code>Prometheus</code>
+抓取配置里 <code>relabel</code>
+出来的服务名标签——<strong>采集端打的标签决定通知端的信息量</strong>，这是整条链路设计的一体性所在</p></li>
+</ul>
+<h2 id="飞书登录oauth">飞书登录(<code>OAuth</code>)</h2>
+<ul>
+<li><p><code>Grafana</code> 的登录同样接入飞书，用
+<code>generic_oauth</code> 对接飞书开放平台的 <code>OAuth</code>
+端点，账号体系与公司 <code>IM</code> 统一：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">grafana.ini:</span></span><br><span class="line">  <span class="attr">auth.generic_oauth:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">飞书</span></span><br><span class="line">    <span class="attr">client_id:</span> <span class="string">$FEISHU_APP_ID</span> <span class="comment"># CI 注入</span></span><br><span class="line">    <span class="attr">client_secret:</span> <span class="string">$FEISHU_APP_SECRET</span></span><br><span class="line">    <span class="attr">auth_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/authorize</span></span><br><span class="line">    <span class="attr">token_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/token</span></span><br><span class="line">    <span class="attr">api_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/userinfo</span></span><br><span class="line">    <span class="attr">login_attribute_path:</span> <span class="string">name</span></span><br><span class="line">    <span class="attr">role_attribute_path:</span> <span class="string">name</span> <span class="string">==</span> <span class="string">&#x27;someone&#x27;</span> <span class="string">&amp;&amp;</span> <span class="string">&#x27;Admin&#x27;</span> <span class="string">||</span> <span class="string">&#x27;Viewer&#x27;</span> <span class="comment"># 按用户名映射角色</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>role_attribute_path</code>
+实现”白名单管理员、其余只读”，避免给全员开编辑权限</p></li>
+</ul>
+<h2 id="链路总结">链路总结</h2>
+<p><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">Pod/Envoy 指标 ──&gt; Prometheus(注解发现/relabel 打标) ──┐</span><br><span class="line">容器日志 ──&gt; Promtail(CRI 解析) ──&gt; Loki(S3/分级保留) ──┤</span><br><span class="line">                                                      v</span><br><span class="line">                                   Grafana(数据源/仪表盘/告警，全部 ConfigMap + sidecar 供给)</span><br><span class="line">                                                      |</span><br><span class="line">                            告警规则(interval/for/labels.product)</span><br><span class="line">                                                      v</span><br><span class="line">                            通知策略(repeat_interval) ─&gt; 联系点(webhook + Bearer)</span><br><span class="line">                                                      v</span><br><span class="line">                                   自建机器人 ──&gt; 飞书群卡片(title/message 模板)</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>Tools &amp; Utilities</category>
+        <category>Observability</category>
+      </categories>
+      <tags>
+        <tag>grafana</tag>
+        <tag>observability</tag>
+        <tag>alerting</tag>
       </tags>
   </entry>
   <entry>
@@ -876,8 +887,8 @@ CLI、 上下文正则如何编写。这也是 LSP
 ]]></content>
       <categories>
         <category>Tools &amp; Utilities</category>
-        <category>editor</category>
-        <category>neovim</category>
+        <category>Editor</category>
+        <category>Neovim</category>
       </categories>
       <tags>
         <tag>lsp</tag>
@@ -1434,8 +1445,7 @@ Kubernetes 创建 Runner Pod。</li>
 ]]></content>
       <categories>
         <category>Tools &amp; Utilities</category>
-        <category>CICD</category>
-        <category>GitHub Actions</category>
+        <category>CI/CD</category>
       </categories>
       <tags>
         <tag>beginner</tag>
@@ -2291,7 +2301,7 @@ Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，优先级数值，�
 切换对象存储挂载方案(<code>oss</code>/<code>gcs</code>/<code>cos</code>)与
 <code>StorageClass</code>(按云厂商提供不同存储模板)</li>
 <li><strong>环境隔离</strong>：默认注入
-<code>nodeSelector: kingboat.io/environment=&#123;&#123; .Release.Namespace &#125;&#125;</code>
+<code>nodeSelector: example.io/environment=&#123;&#123; .Release.Namespace &#125;&#125;</code>
 与对应容忍度，让命名空间与节点环境一一对应，用户可整体覆盖</li>
 <li><strong>生命周期钩子</strong>：<code>post-install</code>/<code>post-upgrade</code>
 <code>Job</code> 执行数据库迁移(<code>schema</code> 变更)等前置任务</li>
@@ -2319,9 +2329,12 @@ Pod、Deployment、StatefulSet、DaemonSet、Job、CronJob，优先级数值，�
       <categories>
         <category>Tools &amp; Utilities</category>
         <category>Container</category>
+        <category>Kubernetes</category>
       </categories>
       <tags>
         <tag>beginner</tag>
+        <tag>container</tag>
+        <tag>kubernetes</tag>
       </tags>
   </entry>
   <entry>
@@ -2536,8 +2549,8 @@ href="https://github.com/robfig/cron"><code>github.com/robfig/cron/v3</code></a>
         <category>Database</category>
       </categories>
       <tags>
-        <tag>Go</tag>
         <tag>database</tag>
+        <tag>Go</tag>
         <tag>SQL</tag>
       </tags>
   </entry>
@@ -4110,7 +4123,7 @@ href="/source/_posts/go-iterator.md#slices">迭代器函数</a>等</li>
       </categories>
       <tags>
         <tag>Go</tag>
-        <tag>CP</tag>
+        <tag>composition</tag>
       </tags>
   </entry>
   <entry>
@@ -4607,11 +4620,12 @@ class="math inline"><em>M</em></span></li>
 ]]></content>
       <categories>
         <category>SE Courses</category>
-        <category>stat</category>
+        <category>Statistics</category>
       </categories>
       <tags>
         <tag>stat</tag>
         <tag>ML</tag>
+        <tag>unsupervised</tag>
       </tags>
   </entry>
   <entry>
@@ -4657,11 +4671,12 @@ class="math inline"> &lt; <em>x</em>, <em>x</em><sub><em>i</em></sub>&gt;<
 ]]></content>
       <categories>
         <category>SE Courses</category>
-        <category>stat</category>
+        <category>Statistics</category>
       </categories>
       <tags>
         <tag>stat</tag>
         <tag>ML</tag>
+        <tag>svm</tag>
       </tags>
   </entry>
   <entry>
@@ -4848,7 +4863,8 @@ class="math inline"><em>F</em></span>假设检验的<code>p</code>值
         <category>Pytorch</category>
       </categories>
       <tags>
-        <tag>big data</tag>
+        <tag>pytorch</tag>
+        <tag>data</tag>
       </tags>
   </entry>
   <entry>
@@ -4941,10 +4957,11 @@ class="math inline"><em>y</em></span></li>
 ]]></content>
       <categories>
         <category>SE Courses</category>
-        <category>stat</category>
+        <category>Statistics</category>
       </categories>
       <tags>
         <tag>stat</tag>
+        <tag>tree</tag>
         <tag>ML</tag>
       </tags>
   </entry>
@@ -5011,10 +5028,11 @@ class="math inline"><em>f</em><sub><em>j</em></sub>(<em>x</em><sub><em>j</em></s
 ]]></content>
       <categories>
         <category>SE Courses</category>
-        <category>stat</category>
+        <category>Statistics</category>
       </categories>
       <tags>
         <tag>stat</tag>
+        <tag>ML</tag>
       </tags>
   </entry>
   <entry>
@@ -5123,10 +5141,11 @@ class="math inline"><em>p</em></span>的惩罚</p></li>
 ]]></content>
       <categories>
         <category>SE Courses</category>
-        <category>stat</category>
+        <category>Statistics</category>
       </categories>
       <tags>
         <tag>stat</tag>
+        <tag>estimation</tag>
       </tags>
   </entry>
   <entry>
@@ -5227,11 +5246,11 @@ class="math inline"><em>Y</em></span>会参与降维的过程</li>
 ]]></content>
       <categories>
         <category>SE Courses</category>
-        <category>stat</category>
+        <category>Statistics</category>
       </categories>
       <tags>
         <tag>stat</tag>
-        <tag>Regularization</tag>
+        <tag>regularization</tag>
       </tags>
   </entry>
   <entry>
@@ -5330,10 +5349,11 @@ $$</span></p></li>
 ]]></content>
       <categories>
         <category>SE Courses</category>
-        <category>stat</category>
+        <category>Statistics</category>
       </categories>
       <tags>
         <tag>stat</tag>
+        <tag>classification</tag>
       </tags>
   </entry>
   <entry>
@@ -5406,10 +5426,11 @@ class="math inline"><em>ε</em></span>之间互不相关(且假设服从正态�
 ]]></content>
       <categories>
         <category>SE Courses</category>
-        <category>stat</category>
+        <category>Statistics</category>
       </categories>
       <tags>
         <tag>stat</tag>
+        <tag>regression</tag>
       </tags>
   </entry>
   <entry>
@@ -5426,9 +5447,9 @@ class="math inline"><em>ε</em></span>之间互不相关(且假设服从正态�
 <p>运行中的程序称为进程，第一个进程称为<strong>init进程</strong>，</p>
 ]]></content>
       <categories>
+        <category>SE Courses</category>
         <category>OS</category>
         <category>Linux</category>
-        <category>Kernel</category>
       </categories>
       <tags>
         <tag>Linux</tag>
@@ -5601,7 +5622,7 @@ $$</span></p></li>
       <categories>
         <category>Programming</category>
         <category>Java</category>
-        <category>Common Tools</category>
+        <category>3P Framework</category>
       </categories>
       <tags>
         <tag>beginner</tag>
@@ -5669,6 +5690,7 @@ $$</span></p></li>
       </categories>
       <tags>
         <tag>DL</tag>
+        <tag>neural network</tag>
       </tags>
   </entry>
   <entry>
@@ -6740,7 +6762,7 @@ class="math inline">$\begin{align}\frac{1}{1-p}\end{align}$</span></p>
       <tags>
         <tag>DL</tag>
         <tag>ML</tag>
-        <tag>Regularization</tag>
+        <tag>regularization</tag>
       </tags>
   </entry>
   <entry>
@@ -7393,10 +7415,13 @@ dept))\end{align}$</span></p>
 ]]></content>
       <categories>
         <category>Tools &amp; Utilities</category>
-        <category>3P tools</category>
+        <category>3P Tools</category>
+        <category>Docker</category>
       </categories>
       <tags>
         <tag>docker</tag>
+        <tag>container</tag>
+        <tag>compose</tag>
       </tags>
   </entry>
   <entry>
@@ -7494,7 +7519,7 @@ cin &gt;&gt; n &gt;&gt; m &gt;&gt; q; // 输入略 getCenter(1, 0, n); //
       <tags>
         <tag>algorithm</tag>
         <tag>tree</tag>
-        <tag>devide and conquer</tag>
+        <tag>divide and conquer</tag>
       </tags>
   </entry>
   <entry>
@@ -7846,6 +7871,10 @@ class="math inline">$\begin{align}R=\frac{W+T}{T}\end{align}$</span>，周转时
         <category>SE Courses</category>
         <category>OS</category>
       </categories>
+      <tags>
+        <tag>OS</tag>
+        <tag>review</tag>
+      </tags>
   </entry>
   <entry>
     <title>操作系统: 文件系统</title>
@@ -8089,8 +8118,8 @@ class="math inline"><em>k</em> ∈ [1,<em>n</em>]</span>且不重复，故�
       </categories>
       <tags>
         <tag>algorithm</tag>
-        <tag>data structure</tag>
         <tag>tree</tag>
+        <tag>data structure</tag>
       </tags>
   </entry>
   <entry>
@@ -8157,8 +8186,8 @@ class="math inline"><em>k</em> ∈ [1,<em>n</em>]</span>且不重复，故�
 ]]></content>
       <categories>
         <category>Tools &amp; Utilities</category>
-        <category>virtual machine</category>
-        <category>wsl</category>
+        <category>Virtual Machine</category>
+        <category>WSL</category>
       </categories>
       <tags>
         <tag>beginner</tag>
@@ -9004,6 +9033,136 @@ class="math inline">$\begin{align}\frac1{1+5d_{prop}/d_{trans}}\end{align}$</spa
       </tags>
   </entry>
   <entry>
+    <title>计算机网络: 传输层协议</title>
+    <url>/2025/05/01/comp-networking-trsflayer/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h2 id="传输层协议">传输层协议</h2>
+<h3 id="可靠数据传输的组成">可靠数据传输的组成</h3>
+<ul>
+<li><p>处理比特差错：比特差错指，分组能运输到主机，但具有比特位丢失或错误；又分为非响应分组错误和响应分组错误</p>
+<ul>
+<li>通过<strong>重传分组</strong>解决，又因为重传会导致<strong>分组冗余</strong>，故需要给分组添加<strong>编号</strong></li>
+<li>完备的解决方案：
+发送方：发送分组后进入阻塞态，若收到有错误的响应报文，则重传；否则完成委托，等待下一个来自应用层的调用
+接收方：有比特差错或无比特差错但序号错，则响应上一个序号的报文，并丢弃当前收到的报文；否则响应当前序号的报文，并增加确认序号</li>
+</ul></li>
+<li><p>处理丢包：通过<strong>超时重传</strong>解决，超时即一段时间内未收到正确的响应报文，若超时则响应上一个序号的报文；在此处，发送方接收到有错响应报文时，不立刻重传，而是超时再重传
+丢包大概率因为中间路由缓存满而丢弃分组，小概率因为链路中断</p></li>
+<li><p>上述是一次只传输一个分组的情况，称为<strong>停等协议</strong>(发送方在收到响应前进入阻塞)；为了效率，需要实现流水线传输，有以下方案：</p>
+<ul>
+<li><p>回退<code>N</code>步(<code>GBN</code>)协议：只要一切正常，效率就可以大幅提高
+发送方：维护基序号<code>b</code>，发送方可以<strong>一次性发送序号为<code>[b,b+N]</code></strong>内的分组，直到<strong>收到<code>ACK_b</code></strong>，才将<code>b</code>右移，并将新的窗口中未发送的分组发送；否则，一旦<strong>超时，就将窗口内的分组全部重传</strong>
+接收方：接收窗口长度只为<code>1</code>，即接收方<strong>只接收序号为<code>b</code>的分组</strong>，响应策略和停等协议一致(分组出错时响应<code>ACK_b-1</code>)
+即，<strong><code>GBN</code>协议是发送方可以发送多个分组的停等协议</strong>，当<code>N=1</code>时退化为停等协议，其始终等待<code>b</code>号响应报文的策略使其具有自然有序、且每一时刻序号小于<code>b</code>的报文均已可靠传输的性质</p></li>
+<li><p>选择重传(<code>SR</code>)协议：上述接收方的策略可以优化，接收方可以选择<strong>缓存</strong>并自行排序而非丢弃序号错误的分组，相当于将接收方窗口长度拉长，使接收方可以确认所有正确的报文(无论其序号是多少)
+对于发送方的好处是，发送方下次<strong>超时重传时就不需要重传已经确认的分组</strong>，而不是像<code>GBN</code>那样全部重传，发送方的具体策略为：</p>
+<ul>
+<li>一开始全部发送后，对<strong>每个分组都设置定时器</strong>，一次超时事件<strong>只会重传一个分组</strong>(“选择重传”的来历)</li>
+<li>接收到的<code>ACK</code>确认号不是<code>b</code>(一定会落在窗口内)，则进行标记</li>
+<li>接收到的<code>ACK</code>确认号是<code>b</code>，则移动<code>b</code>到下一个没被标记的分组，发送新窗口的未被标记分组</li>
+</ul>
+<p>接收方的具体策略为：</p>
+<ul>
+<li>收到序号不为<code>b</code>的报文：缓存，响应<code>ACK_b</code></li>
+<li>收到序号为<code>b</code>的报文：立刻交付它以及窗口内所有已缓存的报文，移动窗口到下一个没有收到过的序号</li>
+</ul>
+<p>基于序号有限的现实问题，<strong>发送方窗口<span
+class="math inline">=</span>接收方窗口<span
+class="math inline">≤</span>序号数量的一半</strong>，因为响应报文完整/丢失可能导致同步问题：如果接收方窗口长度超过序号数量的一半，那么在一次完美的传输后，<strong>接收方</strong>窗口会<strong>第二次使用相同的序号</strong>，此时若响应报文完整，则发送方会第二次使用相同的序号，此次分组实际是新分组；若<strong>响应报文丢失，则发送方会重传</strong>，此次分组<strong>实际是已确认分组</strong>，但接收方会<strong>误以为是新分组</strong>(因为序号相同)
+长度不超过序号数量的一半就不会有这样的问题</p></li>
+</ul></li>
+</ul>
+<h3 id="tcp性质及功能"><code>TCP</code>性质及功能</h3>
+<ul>
+<li>全双工协议，即双方都可作为发送方或接收方</li>
+<li>面向连接的协议，即双方真正传输数据前需要建立连接、后需要关闭连接</li>
+<li>支持百分百的可靠数据传输，同时有一定的拥塞控制、流量控制、检错功能</li>
+<li>通过端口号来标识进程，为了支持全双工，双方都需要提供<code>IP</code>和端口号</li>
+<li>协商<code>MSS</code>(<code>MSS=MTU+IP头部长+TCP头部长</code>，即<code>MSS</code>本身不包含<code>TCP</code>头部)，以避免<code>IP</code>分组
+<ul>
+<li>主机是边缘设备，在传输层<strong>控制一个<code>TCP</code>分组的长度</strong>可以<strong>避免在发送方被网络层分组</strong>，有效降低网络负载(因为<strong>网络层分组/重组</strong>并保证完整传输相比不分组，<strong>需要更多开销</strong>)</li>
+<li>现代路径发现<code>MSS</code>：为了防止在中途路由被分组，现代设备可以动态发现整个路径所有网段中的最小<code>MTU</code>而不仅仅是本地网段的<code>MTU</code>，进一步避免被网络层分组</li>
+</ul></li>
+</ul>
+<h3 id="tcp协议报文"><code>TCP</code>协议报文</h3>
+<ul>
+<li>第一行字段：源端口号、目的端口号
+<ul>
+<li>每个<strong>端口号共<code>16</code>位</strong>，端口号分为<strong>周知端口号(<code>0~1023</code>)</strong>和非周知端口号(<code>1024~65535</code>)</li>
+<li>周知端口号是给服务器使用的，这样客户端就可以默认向使用该端口号作为目的端口号</li>
+<li>常见的周知端口号：<code>HTTP~80、FTP传输数据~20、FTP传输控制信息~21、Telnet~23、DNS~53</code></li>
+</ul></li>
+<li>第二行字段：<code>32</code>位序号，表示本报文所承载数据段的<strong>首字节编号</strong></li>
+<li>第三行字段：<code>32</code>位确认号，表示本报文所希望的下一个数据段的首字节编号
+小于确认号的序号的报文均已被接收方完整接收</li>
+<li>第四行字段：
+<ul>
+<li><code>4</code>位首部长度：标记首部的字节数，<strong>单位为<code>4</code>个字节</strong></li>
+<li>标记位：<code>URG、ACK、PSH、RST、SYN、FIN</code></li>
+<li><code>16</code>位接收窗口：用于<strong>流量控制</strong>，流量控制用于解决发送方<strong>发送速率</strong>和接收方<strong>接收速率</strong>不匹配问题
+<strong>触发流量控制的事件不是超时</strong>，超时是触发拥塞控制的事件，而流量控制依赖于响应报文的接收窗口，当接收窗口为<code>0</code>时，表示接收方已经无法再接收，发送方随即停止发送，并试探性地发送一个没有数据的报文直到响应报文的接收窗口不为<code>0</code></li>
+</ul></li>
+</ul>
+<h3 id="tcp连接过程"><code>TCP</code>连接过程</h3>
+<ul>
+<li>假设发送方为<code>A</code>、接收方为<code>B</code>，发送方、接收方期望发送的第一个字节编号分别为<code>a、b</code>
+那么三次握手过程为：
+<ul>
+<li>发送方发送报文，其中<code>ACK=0、SYN=1、序列号=a-1</code></li>
+<li>接收方发送报文，其中<code>ACK=1、SYN=1、序列号=b-1、确认号=a</code></li>
+<li>发送方发送报文，其中<code>ACK=1、SYN=0、序列号=a、确认号=b</code>
+这里因为接收方不再发送响应报文，所以发送方下次发送的报文序号仍为<code>a</code></li>
+</ul></li>
+<li>四次挥手过程为：
+<ul>
+<li>主动结束方发送报文，其中<code>FIN=1、ACK=1、序列号=x(上次接收的确认号)、确认号=y(上次接收的序列号+字节数)</code>
+此后主动结束方不会再发送数据报文，但仍能接收数据报文</li>
+<li>被动结束方发送响应报文，其中<code>FIN=0、ACK=1、序列号=y、确认号=x+1</code></li>
+<li>被动结束方发送结束报文，其中<code>FIN=1、ACK=1、序列号=z(被动结束方上次接收报文的确认号)、确认号=x+1</code></li>
+<li>主动结束方发送响应报文，其中<code>FIN=0、ACK=1、序列号=x+1、确认号=z+1</code>
+防止响应报文丢失，主动结束方最后会进入<code>TIME_WAIT</code>，如果响应报文丢失，被动结束方会超时重传，主动结束方则在<code>TIME_WAIT</code>内受理该重传的<code>FIN</code>报文
+注意，这个<code>TIME_WAIT</code>和超时重传是两回事</li>
+</ul></li>
+</ul>
+<h3 id="tcp的附加功能"><code>TCP</code>的附加功能</h3>
+<ul>
+<li><p>流量控制：不再赘述</p></li>
+<li><p>基于序号和确认号在同一份报文内的机制，通常不单独发送响应报文，而是在要发送的数据中<strong>捎带</strong>上确认信息</p></li>
+<li><p>期望<code>RTT</code>(往返时间)：通过对最近<code>RTT</code>采样，并加权重(越近的样本权重越大)计算期望<code>RTT</code>
+方差<code>RTT</code>：测量期望<code>RTT</code>的变化
+重传计时器的时间通常设为：期望<code>RTT</code>+<code>4</code>方差<code>RTT</code>
+在超时事件未发生时，<code>TCP</code>通过它来指导计时器的时间</p></li>
+<li><p>快速重传：每次丢包都等超时后再重传效率过低，因为丢包后，有概率能接收到冗余<code>ACK</code>报文(确认号相同的报文)，发送方可以将这个事件视为丢包的暗示，进行快速重传</p></li>
+<li><p>拥塞起因：发送方的<strong>发送速率</strong>和中间路由<strong>转发速率</strong>不匹配导致数据分组冗余
+拥塞控制：当丢包事件(<strong>超时</strong>或接收到若干个<strong>冗余<code>ACK</code></strong>报文，被认为是丢包)发生时，触发拥塞控制机制，其中超时事件相比冗余<code>ACK</code>事件，更能说明链路拥塞(因为冗余<code>ACK</code>起码能接收到，丢包可能是因为物理链路出问题)
+<code>TCP</code>通过<strong>慢启动</strong>来控制发送速率：</p>
+<ul>
+<li>慢启动状态：初始发送窗口为一个<code>MSS</code>，但以指数增长
+超时事件发生时，重新进入慢启动状态，将触发超时时候的<strong>发送窗口大小的一半</strong>设置为<strong>慢启动阈值</strong>
+冗余<code>ACK</code>事件发生时，执行快速重传，进入快速恢复状态
+指数增长到慢启动阈值(从未发生过超时时，为无穷大)时，进入拥塞避免状态</li>
+<li>拥塞避免状态：谨慎地增加发送窗口长度，可能是线性地增加
+超时事件发生时，进入慢启动状态，并更新慢启动阈值
+冗余<code>ACK</code>事件发生时，需要作出反应但不应过于剧烈，因此将<strong>发送窗口减半</strong>而非重置(通常因为有<code>k</code>个冗余<code>ACK</code>，说明中间链路起码还有转发<code>k</code>个分组的能力，所以还要在减半后加上<code>k</code>个<code>MSS</code>)，并进入快速恢复状态</li>
+<li>快速恢复状态：快速重传后，仍可能收到冗余<code>ACK</code>，每接收一个冗余<code>ACK</code>，相应地增加一个<code>MSS</code>
+超时事件发生时，同上
+当接收到新的<code>ACK</code>而不是冗余<code>ACK</code>时，将发送窗口置为慢启动阈值，进入拥塞避免状态</li>
+</ul>
+<p>因此，进入慢启动状态一定是因为超时发生，且初始为<code>1</code>个<code>MSS</code>
+进入拥塞避免状态是因为在慢启动时超过了慢启动阈值、或在快速恢复时收到新<code>ACK</code>，<strong>初始为慢启动阈值</strong>
+进入快速恢复状态一定是因为收到冗余<code>ACK</code>，处于快速恢复状态的时间较短</p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>SE Courses</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>TCP</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>计算机网络: 网络层协议</title>
     <url>/2025/05/01/comp-networking-iplayer/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -9160,136 +9319,6 @@ class="math inline">8|<em>L</em><sub><em>m</em><em>a</em><em>x</em></sub></span>
         <tag>IPv4</tag>
         <tag>NAT</tag>
         <tag>DHCP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>计算机网络: 传输层协议</title>
-    <url>/2025/05/01/comp-networking-trsflayer/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-<h2 id="传输层协议">传输层协议</h2>
-<h3 id="可靠数据传输的组成">可靠数据传输的组成</h3>
-<ul>
-<li><p>处理比特差错：比特差错指，分组能运输到主机，但具有比特位丢失或错误；又分为非响应分组错误和响应分组错误</p>
-<ul>
-<li>通过<strong>重传分组</strong>解决，又因为重传会导致<strong>分组冗余</strong>，故需要给分组添加<strong>编号</strong></li>
-<li>完备的解决方案：
-发送方：发送分组后进入阻塞态，若收到有错误的响应报文，则重传；否则完成委托，等待下一个来自应用层的调用
-接收方：有比特差错或无比特差错但序号错，则响应上一个序号的报文，并丢弃当前收到的报文；否则响应当前序号的报文，并增加确认序号</li>
-</ul></li>
-<li><p>处理丢包：通过<strong>超时重传</strong>解决，超时即一段时间内未收到正确的响应报文，若超时则响应上一个序号的报文；在此处，发送方接收到有错响应报文时，不立刻重传，而是超时再重传
-丢包大概率因为中间路由缓存满而丢弃分组，小概率因为链路中断</p></li>
-<li><p>上述是一次只传输一个分组的情况，称为<strong>停等协议</strong>(发送方在收到响应前进入阻塞)；为了效率，需要实现流水线传输，有以下方案：</p>
-<ul>
-<li><p>回退<code>N</code>步(<code>GBN</code>)协议：只要一切正常，效率就可以大幅提高
-发送方：维护基序号<code>b</code>，发送方可以<strong>一次性发送序号为<code>[b,b+N]</code></strong>内的分组，直到<strong>收到<code>ACK_b</code></strong>，才将<code>b</code>右移，并将新的窗口中未发送的分组发送；否则，一旦<strong>超时，就将窗口内的分组全部重传</strong>
-接收方：接收窗口长度只为<code>1</code>，即接收方<strong>只接收序号为<code>b</code>的分组</strong>，响应策略和停等协议一致(分组出错时响应<code>ACK_b-1</code>)
-即，<strong><code>GBN</code>协议是发送方可以发送多个分组的停等协议</strong>，当<code>N=1</code>时退化为停等协议，其始终等待<code>b</code>号响应报文的策略使其具有自然有序、且每一时刻序号小于<code>b</code>的报文均已可靠传输的性质</p></li>
-<li><p>选择重传(<code>SR</code>)协议：上述接收方的策略可以优化，接收方可以选择<strong>缓存</strong>并自行排序而非丢弃序号错误的分组，相当于将接收方窗口长度拉长，使接收方可以确认所有正确的报文(无论其序号是多少)
-对于发送方的好处是，发送方下次<strong>超时重传时就不需要重传已经确认的分组</strong>，而不是像<code>GBN</code>那样全部重传，发送方的具体策略为：</p>
-<ul>
-<li>一开始全部发送后，对<strong>每个分组都设置定时器</strong>，一次超时事件<strong>只会重传一个分组</strong>(“选择重传”的来历)</li>
-<li>接收到的<code>ACK</code>确认号不是<code>b</code>(一定会落在窗口内)，则进行标记</li>
-<li>接收到的<code>ACK</code>确认号是<code>b</code>，则移动<code>b</code>到下一个没被标记的分组，发送新窗口的未被标记分组</li>
-</ul>
-<p>接收方的具体策略为：</p>
-<ul>
-<li>收到序号不为<code>b</code>的报文：缓存，响应<code>ACK_b</code></li>
-<li>收到序号为<code>b</code>的报文：立刻交付它以及窗口内所有已缓存的报文，移动窗口到下一个没有收到过的序号</li>
-</ul>
-<p>基于序号有限的现实问题，<strong>发送方窗口<span
-class="math inline">=</span>接收方窗口<span
-class="math inline">≤</span>序号数量的一半</strong>，因为响应报文完整/丢失可能导致同步问题：如果接收方窗口长度超过序号数量的一半，那么在一次完美的传输后，<strong>接收方</strong>窗口会<strong>第二次使用相同的序号</strong>，此时若响应报文完整，则发送方会第二次使用相同的序号，此次分组实际是新分组；若<strong>响应报文丢失，则发送方会重传</strong>，此次分组<strong>实际是已确认分组</strong>，但接收方会<strong>误以为是新分组</strong>(因为序号相同)
-长度不超过序号数量的一半就不会有这样的问题</p></li>
-</ul></li>
-</ul>
-<h3 id="tcp性质及功能"><code>TCP</code>性质及功能</h3>
-<ul>
-<li>全双工协议，即双方都可作为发送方或接收方</li>
-<li>面向连接的协议，即双方真正传输数据前需要建立连接、后需要关闭连接</li>
-<li>支持百分百的可靠数据传输，同时有一定的拥塞控制、流量控制、检错功能</li>
-<li>通过端口号来标识进程，为了支持全双工，双方都需要提供<code>IP</code>和端口号</li>
-<li>协商<code>MSS</code>(<code>MSS=MTU+IP头部长+TCP头部长</code>，即<code>MSS</code>本身不包含<code>TCP</code>头部)，以避免<code>IP</code>分组
-<ul>
-<li>主机是边缘设备，在传输层<strong>控制一个<code>TCP</code>分组的长度</strong>可以<strong>避免在发送方被网络层分组</strong>，有效降低网络负载(因为<strong>网络层分组/重组</strong>并保证完整传输相比不分组，<strong>需要更多开销</strong>)</li>
-<li>现代路径发现<code>MSS</code>：为了防止在中途路由被分组，现代设备可以动态发现整个路径所有网段中的最小<code>MTU</code>而不仅仅是本地网段的<code>MTU</code>，进一步避免被网络层分组</li>
-</ul></li>
-</ul>
-<h3 id="tcp协议报文"><code>TCP</code>协议报文</h3>
-<ul>
-<li>第一行字段：源端口号、目的端口号
-<ul>
-<li>每个<strong>端口号共<code>16</code>位</strong>，端口号分为<strong>周知端口号(<code>0~1023</code>)</strong>和非周知端口号(<code>1024~65535</code>)</li>
-<li>周知端口号是给服务器使用的，这样客户端就可以默认向使用该端口号作为目的端口号</li>
-<li>常见的周知端口号：<code>HTTP~80、FTP传输数据~20、FTP传输控制信息~21、Telnet~23、DNS~53</code></li>
-</ul></li>
-<li>第二行字段：<code>32</code>位序号，表示本报文所承载数据段的<strong>首字节编号</strong></li>
-<li>第三行字段：<code>32</code>位确认号，表示本报文所希望的下一个数据段的首字节编号
-小于确认号的序号的报文均已被接收方完整接收</li>
-<li>第四行字段：
-<ul>
-<li><code>4</code>位首部长度：标记首部的字节数，<strong>单位为<code>4</code>个字节</strong></li>
-<li>标记位：<code>URG、ACK、PSH、RST、SYN、FIN</code></li>
-<li><code>16</code>位接收窗口：用于<strong>流量控制</strong>，流量控制用于解决发送方<strong>发送速率</strong>和接收方<strong>接收速率</strong>不匹配问题
-<strong>触发流量控制的事件不是超时</strong>，超时是触发拥塞控制的事件，而流量控制依赖于响应报文的接收窗口，当接收窗口为<code>0</code>时，表示接收方已经无法再接收，发送方随即停止发送，并试探性地发送一个没有数据的报文直到响应报文的接收窗口不为<code>0</code></li>
-</ul></li>
-</ul>
-<h3 id="tcp连接过程"><code>TCP</code>连接过程</h3>
-<ul>
-<li>假设发送方为<code>A</code>、接收方为<code>B</code>，发送方、接收方期望发送的第一个字节编号分别为<code>a、b</code>
-那么三次握手过程为：
-<ul>
-<li>发送方发送报文，其中<code>ACK=0、SYN=1、序列号=a-1</code></li>
-<li>接收方发送报文，其中<code>ACK=1、SYN=1、序列号=b-1、确认号=a</code></li>
-<li>发送方发送报文，其中<code>ACK=1、SYN=0、序列号=a、确认号=b</code>
-这里因为接收方不再发送响应报文，所以发送方下次发送的报文序号仍为<code>a</code></li>
-</ul></li>
-<li>四次挥手过程为：
-<ul>
-<li>主动结束方发送报文，其中<code>FIN=1、ACK=1、序列号=x(上次接收的确认号)、确认号=y(上次接收的序列号+字节数)</code>
-此后主动结束方不会再发送数据报文，但仍能接收数据报文</li>
-<li>被动结束方发送响应报文，其中<code>FIN=0、ACK=1、序列号=y、确认号=x+1</code></li>
-<li>被动结束方发送结束报文，其中<code>FIN=1、ACK=1、序列号=z(被动结束方上次接收报文的确认号)、确认号=x+1</code></li>
-<li>主动结束方发送响应报文，其中<code>FIN=0、ACK=1、序列号=x+1、确认号=z+1</code>
-防止响应报文丢失，主动结束方最后会进入<code>TIME_WAIT</code>，如果响应报文丢失，被动结束方会超时重传，主动结束方则在<code>TIME_WAIT</code>内受理该重传的<code>FIN</code>报文
-注意，这个<code>TIME_WAIT</code>和超时重传是两回事</li>
-</ul></li>
-</ul>
-<h3 id="tcp的附加功能"><code>TCP</code>的附加功能</h3>
-<ul>
-<li><p>流量控制：不再赘述</p></li>
-<li><p>基于序号和确认号在同一份报文内的机制，通常不单独发送响应报文，而是在要发送的数据中<strong>捎带</strong>上确认信息</p></li>
-<li><p>期望<code>RTT</code>(往返时间)：通过对最近<code>RTT</code>采样，并加权重(越近的样本权重越大)计算期望<code>RTT</code>
-方差<code>RTT</code>：测量期望<code>RTT</code>的变化
-重传计时器的时间通常设为：期望<code>RTT</code>+<code>4</code>方差<code>RTT</code>
-在超时事件未发生时，<code>TCP</code>通过它来指导计时器的时间</p></li>
-<li><p>快速重传：每次丢包都等超时后再重传效率过低，因为丢包后，有概率能接收到冗余<code>ACK</code>报文(确认号相同的报文)，发送方可以将这个事件视为丢包的暗示，进行快速重传</p></li>
-<li><p>拥塞起因：发送方的<strong>发送速率</strong>和中间路由<strong>转发速率</strong>不匹配导致数据分组冗余
-拥塞控制：当丢包事件(<strong>超时</strong>或接收到若干个<strong>冗余<code>ACK</code></strong>报文，被认为是丢包)发生时，触发拥塞控制机制，其中超时事件相比冗余<code>ACK</code>事件，更能说明链路拥塞(因为冗余<code>ACK</code>起码能接收到，丢包可能是因为物理链路出问题)
-<code>TCP</code>通过<strong>慢启动</strong>来控制发送速率：</p>
-<ul>
-<li>慢启动状态：初始发送窗口为一个<code>MSS</code>，但以指数增长
-超时事件发生时，重新进入慢启动状态，将触发超时时候的<strong>发送窗口大小的一半</strong>设置为<strong>慢启动阈值</strong>
-冗余<code>ACK</code>事件发生时，执行快速重传，进入快速恢复状态
-指数增长到慢启动阈值(从未发生过超时时，为无穷大)时，进入拥塞避免状态</li>
-<li>拥塞避免状态：谨慎地增加发送窗口长度，可能是线性地增加
-超时事件发生时，进入慢启动状态，并更新慢启动阈值
-冗余<code>ACK</code>事件发生时，需要作出反应但不应过于剧烈，因此将<strong>发送窗口减半</strong>而非重置(通常因为有<code>k</code>个冗余<code>ACK</code>，说明中间链路起码还有转发<code>k</code>个分组的能力，所以还要在减半后加上<code>k</code>个<code>MSS</code>)，并进入快速恢复状态</li>
-<li>快速恢复状态：快速重传后，仍可能收到冗余<code>ACK</code>，每接收一个冗余<code>ACK</code>，相应地增加一个<code>MSS</code>
-超时事件发生时，同上
-当接收到新的<code>ACK</code>而不是冗余<code>ACK</code>时，将发送窗口置为慢启动阈值，进入拥塞避免状态</li>
-</ul>
-<p>因此，进入慢启动状态一定是因为超时发生，且初始为<code>1</code>个<code>MSS</code>
-进入拥塞避免状态是因为在慢启动时超过了慢启动阈值、或在快速恢复时收到新<code>ACK</code>，<strong>初始为慢启动阈值</strong>
-进入快速恢复状态一定是因为收到冗余<code>ACK</code>，处于快速恢复状态的时间较短</p></li>
-</ul>
-]]></content>
-      <categories>
-        <category>SE Courses</category>
-        <category>Network</category>
-      </categories>
-      <tags>
-        <tag>TCP</tag>
       </tags>
   </entry>
   <entry>
@@ -9968,6 +9997,9 @@ class="math inline">$\begin{align}\frac{丢包数}{分组包数}\end{align}$</sp
         <category>SE Courses</category>
         <category>Network</category>
       </categories>
+      <tags>
+        <tag>network</tag>
+      </tags>
   </entry>
   <entry>
     <title>Java: IO</title>
@@ -10163,55 +10195,6 @@ id="java.nio.file.attribute"><code>java.nio.file.attribute</code></h3>
       </tags>
   </entry>
   <entry>
-    <title>图的遍历: 链式前向星</title>
-    <url>/2025/04/10/algo-linked-forward-star/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-<h3 id="对顶堆">对顶堆</h3>
-<ul>
-<li><p>对顶堆是用于解决<strong>寻找序列中第<span
-class="math inline"><em>k</em></span>小数</strong>的数据结构，其中序列可动态变化、<span
-class="math inline"><em>k</em></span>可动态变化
-对顶堆较易实现，比实现权值线段树、平衡树有码量上的优势</p></li>
-<li><p>基本组成：一个大顶堆和一个小顶堆(辅助堆)，大顶堆维护前<span
-class="math inline"><em>k</em></span>小的元素(包括<span
-class="math inline"><em>k</em></span>)，小顶堆维护其它元素(即比第<span
-class="math inline"><em>k</em></span>元素大的元素)</p>
-<p>这样，大顶堆的堆顶就是第<span
-class="math inline"><em>k</em></span>个元素、小顶堆的堆顶是第<span
-class="math inline"><em>k</em> + 1</span>个元素
-如果要求寻找序列中第<span
-class="math inline"><em>k</em></span>大的数，则反过来用小顶堆维护前<span
-class="math inline"><em>k</em></span>大的元素、用大顶堆作辅助堆即可</p></li>
-<li><p>每次涉及到动态修改(如插入、修改<span
-class="math inline"><em>k</em></span>值)，需要在操作结束后维护：
-若大顶堆元素超出<span
-class="math inline"><em>k</em></span>个，则将大顶堆的堆顶弹出后插入小顶堆中
-否则将小顶堆堆顶插入大顶堆中</p></li>
-<li><p>插入元素：若插入元素不小于大顶堆堆顶，则插入小顶堆中，否则插入大顶堆中</p></li>
-<li><p>查询第<span
-class="math inline"><em>k</em></span>小元素：返回大顶堆堆顶</p></li>
-<li><p>删除第<span
-class="math inline"><em>k</em></span>小元素：推出大顶堆堆顶和小顶堆堆顶，将后者插入大顶堆中</p></li>
-<li><p>动态修改<span
-class="math inline"><em>k</em></span>值：与维护操作描述一致，若<span
-class="math inline"><em>k</em></span>增大，则推出小顶堆堆顶插入大顶堆中；否则推出大顶堆堆顶插入小顶堆中</p></li>
-<li><p>时间复杂度：查询<span
-class="math inline"><em>O</em>(1)</span>，其余操作<span
-class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
-</ul>
-]]></content>
-      <categories>
-        <category>Algorithm</category>
-        <category>Data Structure</category>
-      </categories>
-      <tags>
-        <tag>algorithm</tag>
-        <tag>data structure</tag>
-        <tag>tree</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数据结构: 对顶堆</title>
     <url>/2025/04/10/algo-minmax-heap/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -10258,6 +10241,55 @@ class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
         <tag>algorithm</tag>
         <tag>data structure</tag>
         <tag>sort</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>图的遍历: 链式前向星</title>
+    <url>/2025/04/10/algo-linked-forward-star/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h3 id="对顶堆">对顶堆</h3>
+<ul>
+<li><p>对顶堆是用于解决<strong>寻找序列中第<span
+class="math inline"><em>k</em></span>小数</strong>的数据结构，其中序列可动态变化、<span
+class="math inline"><em>k</em></span>可动态变化
+对顶堆较易实现，比实现权值线段树、平衡树有码量上的优势</p></li>
+<li><p>基本组成：一个大顶堆和一个小顶堆(辅助堆)，大顶堆维护前<span
+class="math inline"><em>k</em></span>小的元素(包括<span
+class="math inline"><em>k</em></span>)，小顶堆维护其它元素(即比第<span
+class="math inline"><em>k</em></span>元素大的元素)</p>
+<p>这样，大顶堆的堆顶就是第<span
+class="math inline"><em>k</em></span>个元素、小顶堆的堆顶是第<span
+class="math inline"><em>k</em> + 1</span>个元素
+如果要求寻找序列中第<span
+class="math inline"><em>k</em></span>大的数，则反过来用小顶堆维护前<span
+class="math inline"><em>k</em></span>大的元素、用大顶堆作辅助堆即可</p></li>
+<li><p>每次涉及到动态修改(如插入、修改<span
+class="math inline"><em>k</em></span>值)，需要在操作结束后维护：
+若大顶堆元素超出<span
+class="math inline"><em>k</em></span>个，则将大顶堆的堆顶弹出后插入小顶堆中
+否则将小顶堆堆顶插入大顶堆中</p></li>
+<li><p>插入元素：若插入元素不小于大顶堆堆顶，则插入小顶堆中，否则插入大顶堆中</p></li>
+<li><p>查询第<span
+class="math inline"><em>k</em></span>小元素：返回大顶堆堆顶</p></li>
+<li><p>删除第<span
+class="math inline"><em>k</em></span>小元素：推出大顶堆堆顶和小顶堆堆顶，将后者插入大顶堆中</p></li>
+<li><p>动态修改<span
+class="math inline"><em>k</em></span>值：与维护操作描述一致，若<span
+class="math inline"><em>k</em></span>增大，则推出小顶堆堆顶插入大顶堆中；否则推出大顶堆堆顶插入小顶堆中</p></li>
+<li><p>时间复杂度：查询<span
+class="math inline"><em>O</em>(1)</span>，其余操作<span
+class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Algorithm</category>
+        <category>Data Structure</category>
+      </categories>
+      <tags>
+        <tag>algorithm</tag>
+        <tag>tree</tag>
+        <tag>data structure</tag>
       </tags>
   </entry>
   <entry>
@@ -10430,8 +10462,8 @@ query(rs[p], l, r, m + 1, R); return ans; }</p></li>
       </categories>
       <tags>
         <tag>algorithm</tag>
-        <tag>data structure</tag>
         <tag>tree</tag>
+        <tag>data structure</tag>
       </tags>
   </entry>
   <entry>
@@ -11152,8 +11184,8 @@ href="https://www.luogu.com.cn/problem/P1966">NOIP 2013 提高组]
       </categories>
       <tags>
         <tag>algorithm</tag>
-        <tag>data structure</tag>
         <tag>tree</tag>
+        <tag>data structure</tag>
       </tags>
   </entry>
   <entry>
@@ -12040,7 +12072,7 @@ href="https://numpy.org/doc/stable/user/basics.broadcasting.html"><code>Broadcas
       </categories>
       <tags>
         <tag>pytorch</tag>
-        <tag>big data</tag>
+        <tag>tensor</tag>
       </tags>
   </entry>
   <entry>
@@ -12063,13 +12095,14 @@ href="https://numpy.org/doc/stable/user/basics.broadcasting.html"><code>Broadcas
 <h2 id="磁盘空间">磁盘空间</h2>
 ]]></content>
       <categories>
+        <category>SE Courses</category>
         <category>OS</category>
         <category>Linux</category>
-        <category>Administrator cmds</category>
       </categories>
       <tags>
         <tag>Linux</tag>
         <tag>command</tag>
+        <tag>monitoring</tag>
       </tags>
   </entry>
   <entry>
@@ -12874,6 +12907,9 @@ class="math inline"><em>I</em> = <em>N</em><em>h</em><em>v</em></span></p>
         <category>SE Courses</category>
         <category>Physics</category>
       </categories>
+      <tags>
+        <tag>physics</tag>
+      </tags>
   </entry>
   <entry>
     <title>MATLAB: 基本语法</title>
@@ -13465,6 +13501,9 @@ E{c^2}=\frac{hv}c\end{align}$</span></li>
         <category>SE Courses</category>
         <category>Physics</category>
       </categories>
+      <tags>
+        <tag>physics</tag>
+      </tags>
   </entry>
   <entry>
     <title>具体数学: 取整函数</title>
@@ -13717,6 +13756,9 @@ class="math inline"><strong>S</strong> = (<em>ω</em><sub><em>c</em></sub>+<
         <category>SE Courses</category>
         <category>Physics</category>
       </categories>
+      <tags>
+        <tag>physics</tag>
+      </tags>
   </entry>
   <entry>
     <title>大学物理: 恒定磁场</title>
@@ -13920,6 +13962,9 @@ v=\sqrt{\frac{2qU}{m}}、r=\frac1B\sqrt{\frac{2mU}{q}}\end{align}$</span></li>
         <category>SE Courses</category>
         <category>Physics</category>
       </categories>
+      <tags>
+        <tag>physics</tag>
+      </tags>
   </entry>
   <entry>
     <title>大学物理: 静电场</title>
@@ -14180,6 +14225,9 @@ class="math inline"><em>P</em><sub><em>n</em></sub> = <em>σ</em><sub><em>�
         <category>SE Courses</category>
         <category>Physics</category>
       </categories>
+      <tags>
+        <tag>physics</tag>
+      </tags>
   </entry>
   <entry>
     <title>大学物理: 经典力学</title>
@@ -14389,6 +14437,9 @@ class="math inline">$\begin{align}E_k=\frac12J\omega^2\end{align}$</span></p></l
         <category>SE Courses</category>
         <category>Physics</category>
       </categories>
+      <tags>
+        <tag>physics</tag>
+      </tags>
   </entry>
   <entry>
     <title>数据结构: 并查集</title>
@@ -15279,8 +15330,8 @@ class="math inline"><em>A</em> ⊕ <em>Ā</em> = <em>全</em>1、<em>A<
 ]]></content>
       <categories>
         <category>Tools &amp; Utilities</category>
-        <category>editor</category>
-        <category>vim</category>
+        <category>Editor</category>
+        <category>Vim</category>
       </categories>
       <tags>
         <tag>beginner</tag>
@@ -16273,7 +16324,7 @@ href="https://www.cnblogs.com/zhuchunlin/p/16485926.html">更多模型/视图</a
       </categories>
       <tags>
         <tag>Qt</tag>
-        <tag>databse</tag>
+        <tag>database</tag>
       </tags>
   </entry>
   <entry>
@@ -16847,8 +16898,8 @@ href="https://link.springer.com/article/10.1007/BF01840446"><code>Myers</code></
 ]]></content>
       <categories>
         <category>Tools &amp; Utilities</category>
-        <category>manager</category>
-        <category>version manager</category>
+        <category>Version Control</category>
+        <category>Git</category>
       </categories>
       <tags>
         <tag>beginner</tag>
@@ -20325,8 +20376,8 @@ a_n\cos \frac\pi lnx\end{align}$</span></li>
 ]]></content>
       <categories>
         <category>Tools &amp; Utilities</category>
-        <category>3P tools</category>
-        <category>regex</category>
+        <category>3P Tools</category>
+        <category>Regex</category>
       </categories>
       <tags>
         <tag>beginner</tag>
@@ -20453,9 +20504,9 @@ a_n\cos \frac\pi lnx\end{align}$</span></li>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="built_in">rm</span> ~/link/    <span class="comment"># 删除/tmp,即源目录的所有文件,链接目录本身会保留</span></span><br><span class="line"><span class="built_in">rm</span> ~/link     <span class="comment"># 这是正确方式,删除链接目录而非其中的文件</span></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
+        <category>SE Courses</category>
         <category>OS</category>
         <category>Linux</category>
-        <category>Administrator cmds</category>
       </categories>
       <tags>
         <tag>beginner</tag>
@@ -20667,8 +20718,8 @@ value\Big(0+\big(n_1+(n_1+1)\big)+n_2+\dots+(n_{k-1}+1)+n\Big)\end{align}$</span
         <category>DP</category>
       </categories>
       <tags>
-        <tag>algorithm</tag>
         <tag>beginner</tag>
+        <tag>algorithm</tag>
         <tag>dp</tag>
       </tags>
   </entry>
@@ -22382,8 +22433,8 @@ class="uri">https://vscodethemes.com/</a>快速预览</li>
 ]]></content>
       <categories>
         <category>Tools &amp; Utilities</category>
-        <category>editor</category>
-        <category>vscode</category>
+        <category>Editor</category>
+        <category>VS Code</category>
       </categories>
       <tags>
         <tag>beginner</tag>
@@ -24021,8 +24072,8 @@ exp3
 <p>如图，使用<code>html</code>语法，写出一个四行两列的、边界值为2的、内容<code>'11'</code>被设置为占据四行且居中的表格</p>
 <h3 id="图片">图片</h3>
 通过<code>&lt;img /&gt;</code>标签可以定义并放缩图片：
-<style>.mwgwououxxma{zoom:33%;}</style>
-<img src="/2023/10/03/markdown-beginner/image_example.png" class="mwgwououxxma">
+<style>.ssucslprvxda{zoom:33%;}</style>
+<img src="/2023/10/03/markdown-beginner/image_example.png" class="ssucslprvxda">
 <p>图片可以缩放，即在前方的<code>html</code>标签内加上<code>style="zoom:num%"</code>，<code>num</code>为缩放比例</p>
 <h3 id="链接">链接</h3>
 <p><code>&lt;a id="111"&gt;&lt;/a&gt;</code>：这条元素定义了一个<code>id</code>为<code>'111'</code>的锚点，在文章内部可以通过<code>[点击](#111)</code>链接跳转到这个锚点，例如本文在目录处设定了一个<code>'HOME'</code>锚点，您可以<a

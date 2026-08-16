@@ -26,9 +26,11 @@
 <meta property="og:site_name" content="Ishio">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-08-16T00:00:00.000Z">
-<meta property="article:modified_time" content="2026-08-16T14:43:47.394Z">
+<meta property="article:modified_time" content="2026-08-16T15:16:24.470Z">
 <meta property="article:author" content="ishio">
-<meta property="article:tag" content="beginner">
+<meta property="article:tag" content="istio">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="production">
 <meta name="twitter:card" content="summary">
 
 
@@ -190,7 +192,7 @@ replicas 的冲突</span></a></li><li class="nav-item nav-level-2"><a class="nav
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">109</span>
+        <span class="site-state-item-count">131</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -234,10 +236,10 @@ replicas 的冲突</span></a></li><li class="nav-item nav-level-2"><a class="nav
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2026/08/16/plg-alert/" rel="bookmark">
-        <time class="popular-posts-time">2026-08-16</time>
+      <a class="popular-posts-link" href="/2026/08/15/nvim-lsp-server/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-15</time>
         <br>
-      PLG: 部署与飞书告警实践
+      实现一个最小可用的 LSP Server
       </a>
     </li>
   </ul>
@@ -290,7 +292,7 @@ replicas 的冲突</span></a></li><li class="nav-item nav-level-2"><a class="nav
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2026-08-16 00:00:00 / Modified: 14:43:47" itemprop="dateCreated datePublished" datetime="2026-08-16T00:00:00+00:00">2026-08-16</time>
+      <time title="Created: 2026-08-16 00:00:00 / Modified: 15:16:24" itemprop="dateCreated datePublished" datetime="2026-08-16T00:00:00+00:00">2026-08-16</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -303,6 +305,10 @@ replicas 的冲突</span></a></li><li class="nav-item nav-level-2"><a class="nav
           , 
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/Tools-Utilities/Container/" itemprop="url" rel="index"><span itemprop="name">Container</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tools-Utilities/Container/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a>
         </span>
     </span>
 
@@ -512,7 +518,7 @@ shell <code>Pod</code> 只允许访问 <code>API Server</code>
 标签，新服务自动入网格</p></li>
 <li><p>模板层以 <code>Release.Namespace</code>
 推导默认值，用户不配置则自动隔离</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 节点打污点: kubectl taint node node1 kingboat.io/environment=production:NoSchedule</span></span><br><span class="line"><span class="attr">tolerations:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">kingboat.io/environment</span></span><br><span class="line">    <span class="attr">operator:</span> <span class="string">Equal</span></span><br><span class="line">    <span class="attr">value:</span> &#123;&#123; <span class="string">.Release.Namespace</span> <span class="string">|</span> <span class="string">quote</span> &#125;&#125; <span class="comment"># 容忍度跟随命名空间，自动匹配环境节点</span></span><br><span class="line">    <span class="attr">effect:</span> <span class="string">NoSchedule</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 节点打污点: kubectl taint node node1 example.io/environment=production:NoSchedule</span></span><br><span class="line"><span class="attr">tolerations:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">key:</span> <span class="string">example.io/environment</span></span><br><span class="line">    <span class="attr">operator:</span> <span class="string">Equal</span></span><br><span class="line">    <span class="attr">value:</span> &#123;&#123; <span class="string">.Release.Namespace</span> <span class="string">|</span> <span class="string">quote</span> &#125;&#125; <span class="comment"># 容忍度跟随命名空间，自动匹配环境节点</span></span><br><span class="line">    <span class="attr">effect:</span> <span class="string">NoSchedule</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Namespace</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">staging</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">istio-injection:</span> <span class="string">enabled</span> <span class="comment"># 命名空间内新建 Pod 自动注入 sidecar</span></span><br></pre></td></tr></table></figure></li>
 </ul>
 
@@ -551,10 +557,10 @@ shell <code>Pod</code> 只允许访问 <code>API Server</code>
       </a>
     </li>
     <li class="popular-posts-item">
-      <a class="popular-posts-link" href="/2026/08/16/plg-alert/" rel="bookmark">
-        <time class="popular-posts-time">2026-08-16</time>
+      <a class="popular-posts-link" href="/2026/08/15/nvim-lsp-server/" rel="bookmark">
+        <time class="popular-posts-time">2026-08-15</time>
         <br>
-      PLG: 部署与飞书告警实践
+      实现一个最小可用的 LSP Server
       </a>
     </li>
   </ul>
@@ -563,15 +569,17 @@ shell <code>Pod</code> 只允许访问 <code>API Server</code>
           </div>
 
           <div class="post-tags">
-              <a href="/tags/beginner/" rel="tag"># beginner</a>
+              <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+              <a href="/tags/istio/" rel="tag"># istio</a>
+              <a href="/tags/production/" rel="tag"># production</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2026/08/16/plg-alert/" rel="prev" title="PLG: 部署与飞书告警实践">
-                  <i class="fa fa-angle-left"></i> PLG: 部署与飞书告警实践
+                <a href="/2026/08/16/plg/" rel="prev" title="PLG: Prometheus + Loki + Grafana 可观测体系">
+                  <i class="fa fa-angle-left"></i> PLG: Prometheus + Loki + Grafana 可观测体系
                 </a>
             </div>
             <div class="post-nav-item">
