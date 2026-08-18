@@ -1,6 +1,228 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Go: 模板</title>
+    <url>/2026/08/18/go-template/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="go的模板"><code>Go</code>的模板</h1>
+<h2 id="基本概念">基本概念</h2>
+<ul>
+<li><p><code>Go</code>通过<code>text/template</code>标准库提供数据驱动的模板，用于生成文本输出，配置文件、邮件正文等都可以使用它</p></li>
+<li><p>模板由普通文本和<code>action</code>组成，普通文本会原样复制到输出，<code>action</code>使用<code>&#123;&#123;</code>和<code>&#125;&#125;</code>包围：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Hello, &#123;&#123;.Name&#125;&#125;!</span><br></pre></td></tr></table></figure></li>
+<li><p><code>Execute()</code>执行模板时会把传入的数据绑定到<code>.</code>，<code>.</code>称为<code>dot</code>，模板执行过程中可以随着<code>with</code>、<code>range</code>等语句切换</p></li>
+<li><p><code>text/template</code>默认不会对输出进行转义，模板作者必须是可信的；生成<code>HTML</code>时应该使用接口相同但带上下文自动转义的<code>html/template</code></p></li>
+<li><p>模板解析成功后可以并发执行，但多个执行过程如果共用同一个<code>io.Writer</code>，输出可能互相交错</p></li>
+</ul>
+<h2 id="执行模板">执行模板</h2>
+<ul>
+<li><p>最基本的流程是创建模板、解析模板文本、传入数据执行：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;os&quot;</span></span><br><span class="line">	<span class="string">&quot;text/template&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Inventory <span class="keyword">struct</span> &#123;</span><br><span class="line">	Material <span class="type">string</span></span><br><span class="line">	Count    <span class="type">uint</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	data := Inventory&#123;Material: <span class="string">&quot;wool&quot;</span>, Count: <span class="number">17</span>&#125;</span><br><span class="line">	tmpl, err := template.New(<span class="string">&quot;inventory&quot;</span>).Parse(</span><br><span class="line">		<span class="string">&quot;&#123;&#123;.Count&#125;&#125; items are made of &#123;&#123;.Material&#125;&#125;&quot;</span>,</span><br><span class="line">	)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> err := tmpl.Execute(os.Stdout, data); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>template.New(name)</code>创建模板对象，<code>name</code>用于标识模板本身，不是模板文件名</p></li>
+<li><p><code>Parse(text)</code>只负责解析模板文本，语法错误会在这里返回</p></li>
+<li><p><code>Execute(writer, data)</code>执行模板并写入<code>writer</code>，执行阶段的字段访问、函数调用、方法调用错误也会通过返回值报告</p></li>
+<li><p><code>template.Must(tmpl, err)</code>在<code>err</code>不为<code>nil</code>时直接<code>panic</code>，适合模板文本固定且程序启动时就应该失败的场景，不适合解析用户输入</p></li>
+</ul>
+<h2 id="数据访问与dot">数据访问与<code>dot</code></h2>
+<ul>
+<li><p>初始的<code>.</code>就是传递给<code>Execute()</code>的<code>data</code>，可以访问结构体字段、<code>map</code>键和无参数方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;.Title&#125;&#125;</span><br><span class="line">&#123;&#123;.User.Name&#125;&#125;</span><br><span class="line">&#123;&#123;.Config.timeout&#125;&#125;</span><br><span class="line">&#123;&#123;.DisplayName&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>结构体字段必须是公有字段；<code>map</code>的键名可以是小写字母开头的标识符</p></li>
+<li><p>方法必须是无参数方法，并且返回一个值，或者返回<code>(value, error)</code>；第二种形式返回非空错误时，模板执行会立即结束</p></li>
+<li><p>访问链可以混合字段、键和方法，例如<code>.User.Profile.Name</code></p></li>
+<li><p>初始的根数据也可以通过<code>$</code>访问。进入<code>range</code>或<code>with</code>后<code>.</code>可能已经改变，但<code>$</code>仍然指向本次执行的根数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;range .Items&#125;&#125;</span><br><span class="line">	&#123;&#123;$.Title&#125;&#125;: &#123;&#123;.Name&#125;&#125;</span><br><span class="line">&#123;&#123;end&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="action与管道"><code>action</code>与管道</h2>
+<h3 id="普通表达式">普通表达式</h3>
+<ul>
+<li><p><code>&#123;&#123;.&#125;&#125;</code>输出当前<code>dot</code>的默认文本表示，<code>&#123;&#123;.Name&#125;&#125;</code>输出字段值</p></li>
+<li><p>可以使用布尔值、字符串、数字、<code>nil</code>、变量、字段、键、方法和函数作为参数：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;&quot;hello&quot;&#125;&#125;</span><br><span class="line">&#123;&#123;42&#125;&#125;</span><br><span class="line">&#123;&#123;.Name&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>注释写在<code>action</code>内部，不会出现在输出中：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;/* 这是一段模板注释 */&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="空白裁剪">空白裁剪</h3>
+<ul>
+<li><p><code>action</code>外部的普通文本默认全部保留，包括换行和缩进；可以在分隔符中加入<code>-</code>来裁剪相邻的空白</p></li>
+<li><p><code>&#123;&#123;-</code>会裁剪<code>action</code>前面普通文本末尾的空格、制表符、回车和换行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">A</span><br><span class="line">  &#123;&#123;- &quot;B&quot;&#125;&#125;</span><br><span class="line">C</span><br></pre></td></tr></table></figure>
+<p>上面的模板会输出<code>AB\nC</code>，左侧的换行和缩进都会被裁剪</p></li>
+<li><p><code>-&#125;&#125;</code>会裁剪<code>action</code>后面普通文本开头的空白：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">A&#123;&#123;&quot;B&quot; -&#125;&#125;</span><br><span class="line">  C</span><br></pre></td></tr></table></figure>
+<p>上面的模板会输出<code>ABC</code>，右侧的换行、制表符和缩进都会被裁剪</p></li>
+<li><p>两侧同时使用可以去掉模板控制语句制造的空行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">A</span><br><span class="line">  &#123;&#123;- &quot;B&quot; -&#125;&#125;</span><br><span class="line">C</span><br></pre></td></tr></table></figure>
+<p>输出为<code>ABC</code></p></li>
+<li><p><code>-</code>旁边的空白是语法的一部分：<code>&#123;&#123;-3&#125;&#125;</code>表示输出负数<code>-3</code>，不是左裁剪；<code>&#123;&#123;- 3&#125;&#125;</code>才表示左裁剪后输出<code>3</code></p></li>
+<li><p>空白裁剪只作用于<code>action</code>两侧原本存在的普通文本，不会修改函数或字段本身产生的字符串内容</p></li>
+</ul>
+<h3 id="管道">管道</h3>
+<ul>
+<li><p>管道使用<code>|</code>连接多个表达式，前一个表达式的结果会作为后一个函数的最后一个参数：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;.Name | printf &quot;Hello, %s!&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的写法等价于调用<code>printf("Hello, %s!", .Name)</code></p></li>
+<li><p>管道适合将格式化逻辑串起来，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;.Title | printf &quot;%q&quot;&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>text/template</code>内置了常用函数：</p>
+<ul>
+<li><code>and</code>、<code>or</code>、<code>not</code>：逻辑运算</li>
+<li><code>eq</code>、<code>ne</code>、<code>lt</code>、<code>le</code>、<code>gt</code>、<code>ge</code>：比较值</li>
+<li><code>len</code>：获取数组、切片、<code>map</code>、字符串等值的长度</li>
+<li><code>index</code>：按索引或键访问数组、切片、字符串、<code>map</code></li>
+<li><code>slice</code>：对数组、切片或字符串进行切片</li>
+<li><code>print</code>、<code>printf</code>、<code>println</code>：格式化输出</li>
+<li><code>call</code>：调用一个函数值</li>
+</ul></li>
+</ul>
+<h3 id="空值">空值</h3>
+<ul>
+<li><p>在<code>if</code>、<code>with</code>和<code>range</code>中，以下值会被当作空值：<code>false</code>、<code>0</code>、<code>nil</code>指针或接口，以及长度为<code>0</code>的数组、切片、<code>map</code>和字符串</p></li>
+<li><p>空值的判断不需要显式调用函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;if .User&#125;&#125;</span><br><span class="line">	欢迎回来，&#123;&#123;.User.Name&#125;&#125;</span><br><span class="line">&#123;&#123;else&#125;&#125;</span><br><span class="line">	请先登录</span><br><span class="line">&#123;&#123;end&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="条件与循环">条件与循环</h2>
+<h3 id="if"><code>if</code></h3>
+<ul>
+<li><p><code>if</code>只在管道结果非空时渲染内容，支持<code>else</code>以及直接连接的<code>else if</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;if eq .Status &quot;success&quot;&#125;&#125;</span><br><span class="line">	成功</span><br><span class="line">&#123;&#123;else if eq .Status &quot;pending&quot;&#125;&#125;</span><br><span class="line">	处理中</span><br><span class="line">&#123;&#123;else&#125;&#125;</span><br><span class="line">	失败</span><br><span class="line">&#123;&#123;end&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>if</code>不会改变<code>.</code>，条件块内仍然可以访问外层数据</p></li>
+</ul>
+<h3 id="range"><code>range</code></h3>
+<ul>
+<li><p><code>range</code>用于遍历数组、切片、<code>map</code>、通道等值：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;range .Items&#125;&#125;</span><br><span class="line">	- &#123;&#123;.Name&#125;&#125;</span><br><span class="line">&#123;&#123;else&#125;&#125;</span><br><span class="line">	暂无数据</span><br><span class="line">&#123;&#123;end&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>循环体中的<code>.</code>会切换为当前元素，因此需要访问根数据时使用<code>$</code></p></li>
+<li><p>可以声明索引和元素变量。对数组、切片和字符串来说，第一个变量是索引；对<code>map</code>来说是键：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;range $index, $item := .Items&#125;&#125;</span><br><span class="line">	&#123;&#123;$index&#125;&#125;: &#123;&#123;$item.Name&#125;&#125;</span><br><span class="line">&#123;&#123;end&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>map</code>的遍历顺序不应依赖；当键是有确定顺序的基本类型时，模板会按键的排序顺序访问</p></li>
+</ul>
+<h3 id="with"><code>with</code></h3>
+<ul>
+<li><p><code>with</code>适合在数据非空时切换<code>.</code>，可以减少重复的字段链：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;with .User.Profile&#125;&#125;</span><br><span class="line">	姓名：&#123;&#123;.Name&#125;&#125;</span><br><span class="line">	邮箱：&#123;&#123;.Email&#125;&#125;</span><br><span class="line">&#123;&#123;else&#125;&#125;</span><br><span class="line">	没有个人资料</span><br><span class="line">&#123;&#123;end&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>with</code>块内的<code>.</code>是<code>.User.Profile</code>，但<code>$</code>仍然是根数据</p></li>
+</ul>
+<h2 id="模板变量">模板变量</h2>
+<ul>
+<li><p>模板变量以<code>$</code>开头，可以保存管道结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;$title := .Title&#125;&#125;</span><br><span class="line">标题：&#123;&#123;$title&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>变量可以在后续通过<code>=</code>重新赋值，但变量的作用域只到当前控制结构的<code>end</code>，或当前模板的结尾</p></li>
+<li><p><code>range</code>可以同时声明变量，因此通常用来获取索引和元素；<code>range</code>的<code>else</code>分支中，这些变量不会被设置为新的循环值</p></li>
+</ul>
+<h2 id="自定义函数">自定义函数</h2>
+<ul>
+<li><p>通过<code>template.FuncMap</code>可以把<code>Go</code>函数暴露给模板：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;strings&quot;</span></span><br><span class="line">	<span class="string">&quot;text/template&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> funcs = template.FuncMap&#123;</span><br><span class="line">	<span class="string">&quot;upper&quot;</span>: strings.ToUpper,</span><br><span class="line">	<span class="string">&quot;join&quot;</span>:  strings.Join,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> tmpl = template.Must(</span><br><span class="line">	template.New(<span class="string">&quot;page&quot;</span>).</span><br><span class="line">		Funcs(funcs).</span><br><span class="line">		Parse(<span class="string">`&#123;&#123;upper .Title&#125;&#125;: &#123;&#123;join .Tags &quot;, &quot;&#125;&#125;`</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li><p>函数必须在<code>Parse()</code>之前通过<code>Funcs()</code>注册，因为解析阶段就需要确认函数名存在</p></li>
+<li><p>函数可以返回一个值，也可以返回<code>(value, error)</code>；如果第二个返回值是非空错误，模板执行会停止并返回这个错误</p></li>
+<li><p>暴露给模板的函数应该保持简单、确定且容易测试，避免在模板函数中修改状态或访问外部资源</p></li>
+<li><p>模板适合展示和格式化，数据查询、权限判断和复杂计算应该在执行前完成，避免把业务逻辑堆积到模板函数中</p></li>
+</ul>
+<h2 id="sprig"><code>Sprig</code></h2>
+<ul>
+<li><a
+href="https://github.com/Masterminds/sprig"><code>Masterminds/sprig</code></a>是一个专门为<code>Go</code>模板提供函数的库，弥补了标准库只提供少量基础函数的不足</li>
+<li><code>Sprig</code>不改变<code>text/template</code>的解析和执行模型，本质上仍然是通过<code>Funcs()</code>向模板注册一组函数</li>
+<li>引入依赖：<code>go get github.com/Masterminds/sprig/v3</code></li>
+</ul>
+<h3 id="注册函数">注册函数</h3>
+<ul>
+<li><p>使用<code>Sprig</code>时，先把函数表注册到模板，再进行<code>Parse()</code>：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;text/template&quot;</span></span><br><span class="line"></span><br><span class="line">	sprig <span class="string">&quot;github.com/Masterminds/sprig/v3&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> tmpl = template.Must(</span><br><span class="line">	template.New(<span class="string">&quot;page&quot;</span>).</span><br><span class="line">		Funcs(sprig.TxtFuncMap()).</span><br><span class="line">		Parse(<span class="string">`&#123;&#123;.Name | upper&#125;&#125;: &#123;&#123;.Tags | join &quot;, &quot;&#125;&#125;`</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li><p><code>TxtFuncMap()</code>适用于<code>text/template</code>，<code>HtmlFuncMap()</code>适用于<code>html/template</code></p></li>
+<li><p><code>Funcs()</code>必须在<code>Parse()</code>之前调用，因为解析阶段就需要确认模板中的函数名存在</p></li>
+<li><p><code>Sprig</code>函数可以和标准库内置函数、自己的<code>FuncMap</code>混合使用；同名函数后注册的定义会覆盖先注册的定义，因此应该避免命名冲突</p></li>
+</ul>
+<h3 id="函数分类">函数分类</h3>
+<ul>
+<li><p>字符串：<code>upper</code>、<code>lower</code>、<code>trim</code>、<code>trimPrefix</code>、<code>trimSuffix</code>、<code>replace</code>、<code>contains</code>、<code>quote</code>、<code>cat</code></p></li>
+<li><p>列表：<code>list</code>、<code>first</code>、<code>last</code>、<code>rest</code>、<code>append</code>、<code>prepend</code>、<code>concat</code>、<code>uniq</code>、<code>without</code>、<code>has</code></p></li>
+<li><p>字典：<code>dict</code>、<code>get</code>、<code>set</code>、<code>hasKey</code>、<code>pluck</code>、<code>merge</code>、<code>mergeOverwrite</code>、<code>dig</code></p></li>
+<li><p>数学与逻辑：<code>add</code>、<code>sub</code>、<code>mul</code>、<code>div</code>、<code>max</code>、<code>min</code>、<code>default</code>、<code>coalesce</code>、<code>ternary</code></p></li>
+<li><p>编码与摘要：<code>toJson</code>、<code>fromJson</code>、<code>b64enc</code>、<code>b64dec</code>、<code>sha256sum</code></p></li>
+<li><p>时间和格式化：<code>now</code>、<code>date</code>、<code>dateModify</code>、<code>ago</code></p>
+<p>上面只是常用函数的分类，具体函数的参数类型仍然要以当前引入的<code>Sprig</code>版本为准；模板函数通常要求参数类型可赋值，不能像动态语言一样任意转换</p></li>
+</ul>
+<h3 id="列表与字典">列表与字典</h3>
+<ul>
+<li><p><code>list</code>可以创建模板列表，<code>dict</code>可以创建字符串键的字典，再结合<code>join</code>、<code>get</code>和<code>hasKey</code>生成配置或消息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;$ports := list 80 443&#125;&#125;</span><br><span class="line">ports: &#123;&#123;join &quot;,&quot; $ports&#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123;$labels := dict &quot;app&quot; .Name &quot;tier&quot; &quot;web&quot;&#125;&#125;</span><br><span class="line">&#123;&#123;if hasKey $labels &quot;app&quot;&#125;&#125;</span><br><span class="line">app: &#123;&#123;get $labels &quot;app&quot;&#125;&#125;</span><br><span class="line">&#123;&#123;end&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>管道可以把多个函数组合起来，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">image: &#123;&#123;.Tag | default &quot;latest&quot; | quote&#125;&#125;</span><br><span class="line">tags: &#123;&#123;.Tags | uniq | join &quot;, &quot;&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>default</code>、<code>coalesce</code>等函数沿用模板的“空值”判断，空字符串、<code>0</code>、<code>false</code>、空列表和<code>nil</code>都可能触发默认分支，不能把“未配置”和“显式配置为零值”混为一谈</p></li>
+<li><p><code>set</code>、<code>merge</code>等字典函数会修改或合并字典；如果同一个字典在多个模板片段之间复用，需要留意它们共享同一份数据带来的副作用</p></li>
+</ul>
+<h3 id="可复现性与安全边界">可复现性与安全边界</h3>
+<ul>
+<li><code>Sprig</code>中有些函数依赖当前时间、随机数或环境变量，这些函数会降低输出的可复现性；配置和构建模板应该谨慎使用</li>
+<li><code>Sprig</code>本身不负责<code>HTML</code>上下文转义；生成<code>HTML</code>时仍然应该使用<code>html/template</code>和合适的函数表，不能因为引入<code>Sprig</code>就把不可信数据标记为安全内容</li>
+<li>不要把完整的函数表无条件暴露给不可信的模板作者；模板源代码本身需要可信，涉及环境、文件或随机性的函数也应按场景限制</li>
+</ul>
+<h2 id="命名模板">命名模板</h2>
+<ul>
+<li><p>可以通过<code>define</code>声明可复用的命名模板，通过<code>template</code>执行它：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;&#123;define &quot;item&quot; -&#125;&#125;</span><br><span class="line">- &#123;&#123;.&#125;&#125;</span><br><span class="line">&#123;&#123;- end&#125;&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123;define &quot;list&quot; -&#125;&#125;</span><br><span class="line">&#123;&#123;range .Items&#125;&#125;&#123;&#123;template &quot;item&quot; .&#125;&#125;</span><br><span class="line">&#123;&#123;end -&#125;&#125;</span><br><span class="line">&#123;&#123;- end&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>&#123;&#123;template "item" .&#125;&#125;</code>会把当前<code>.</code>传给<code>item</code>；如果省略数据参数，命名模板收到的是<code>nil</code></p></li>
+<li><p>解析后通过<code>ExecuteTemplate(writer, name, data)</code>可以执行指定名称的模板：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> output bytes.Buffer</span><br><span class="line"><span class="keyword">if</span> err := tmpl.ExecuteTemplate(&amp;output, <span class="string">&quot;list&quot;</span>, data); err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>多个文件可以通过<code>ParseFiles()</code>、<code>ParseGlob()</code>或<code>ParseFS()</code>解析，适合把页面布局、片段和具体页面拆分到不同文件</p></li>
+</ul>
+<h2 id="从embed.fs加载模板">从<code>embed.FS</code>加载模板</h2>
+<ul>
+<li><p><code>ParseFS()</code>可以直接从<code>io/fs</code>读取模板，配合<code>embed</code>可以把模板文件编译进二进制：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;embed&quot;</span></span><br><span class="line">	<span class="string">&quot;text/template&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">//go:embed templates/*.tmpl</span></span><br><span class="line"><span class="keyword">var</span> templateFS embed.FS</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> tmpl = template.Must(</span><br><span class="line">	template.ParseFS(templateFS, <span class="string">&quot;templates/*.tmpl&quot;</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure></li>
+<li><p>模板文件中的命名模板可以通过<code>ExecuteTemplate()</code>选择执行；直接解析的文件模板通常使用文件的基础名称作为模板名</p></li>
+<li><p>固定模板可以在包初始化时解析并复用，不要在每次请求到来时重复读取和解析文件</p></li>
+</ul>
+<h2 id="处理缺失键与执行错误">处理缺失键与执行错误</h2>
+<ul>
+<li><p>当<code>.</code>是<code>map</code>时，访问不存在的键默认不会在解析阶段报错，执行结果可能是<code>&lt;no value&gt;</code></p></li>
+<li><p>可以通过<code>Option("missingkey=error")</code>让缺失键直接使执行失败：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">tmpl, err := template.New(<span class="string">&quot;config&quot;</span>).</span><br><span class="line">	Option(<span class="string">&quot;missingkey=error&quot;</span>).</span><br><span class="line">	Parse(<span class="string">`name=&#123;&#123;.Name&#125;&#125;`</span>)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p><code>Execute()</code>可能已经写入一部分结果后才遇到错误，因此需要对重要输出先写入<code>bytes.Buffer</code>，确认执行成功后再写入最终的<code>io.Writer</code>：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> output bytes.Buffer</span><br><span class="line"><span class="keyword">if</span> err := tmpl.Execute(&amp;output, data); err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_, err := writer.Write(output.Bytes())</span><br><span class="line"><span class="keyword">return</span> err</span><br></pre></td></tr></table></figure></li>
+<li><p>模板解析错误和执行错误都应该显式处理；只检查<code>Parse()</code>而忽略<code>Execute()</code>的返回值，会把运行时数据错误伪装成成功响应</p></li>
+</ul>
+<h2 id="htmltemplate"><code>html/template</code></h2>
+<ul>
+<li><p><code>html/template</code>和<code>text/template</code>的模板语法基本一致，但会根据输出位置对数据进行上下文转义：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;bytes&quot;</span></span><br><span class="line">	<span class="string">&quot;html/template&quot;</span></span><br><span class="line">	<span class="string">&quot;net/http&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> page = template.Must(template.New(<span class="string">&quot;page&quot;</span>).Parse(<span class="string">`</span></span><br><span class="line"><span class="string">&#123;&#123;define &quot;page&quot;&#125;&#125;</span></span><br><span class="line"><span class="string">&lt;!doctype html&gt;</span></span><br><span class="line"><span class="string">&lt;html&gt;</span></span><br><span class="line"><span class="string">	&lt;head&gt;&lt;title&gt;&#123;&#123;.Title&#125;&#125;&lt;/title&gt;&lt;/head&gt;</span></span><br><span class="line"><span class="string">	&lt;body&gt;&lt;h1&gt;&#123;&#123;.Title&#125;&#125;&lt;/h1&gt;&lt;/body&gt;</span></span><br><span class="line"><span class="string">&lt;/html&gt;</span></span><br><span class="line"><span class="string">&#123;&#123;end&#125;&#125;</span></span><br><span class="line"><span class="string">`</span>))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handler</span><span class="params">(w http.ResponseWriter, r *http.Request, data any)</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> output bytes.Buffer</span><br><span class="line">	<span class="keyword">if</span> err := page.ExecuteTemplate(&amp;output, <span class="string">&quot;page&quot;</span>, data); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		http.Error(w, <span class="string">&quot;render failed&quot;</span>, http.StatusInternalServerError)</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	w.Header().Set(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;text/html; charset=utf-8&quot;</span>)</span><br><span class="line">	_, _ = w.Write(output.Bytes())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>同一个值放在普通文本、<code>HTML</code>属性、<code>URL</code>、<code>CSS</code>或<code>JavaScript</code>上下文中时，<code>html/template</code>会采用不同的转义策略</p></li>
+<li><p><code>text/template</code>不会自动转义，不能用来直接生成包含不可信数据的<code>HTML</code></p></li>
+<li><p><code>template.HTML</code>等安全类型可以让开发者声明一段内容已经安全，但这会绕过对应的自动转义，只能用于已经验证过的可信内容</p></li>
+<li><p>模板源代码本身仍然必须可信：自动转义保护的是执行数据，不是恶意模板作者</p></li>
+</ul>
+<h2 id="常见用法与项目">常见用法与项目</h2>
+<ul>
+<li><p>云原生工具通常复用<code>Go template</code>的语法模型，再注入自己的数据上下文和函数集合；因此同样的<code>&#123;&#123;if&#125;&#125;</code>、<code>&#123;&#123;range&#125;&#125;</code>在不同项目中可用的对象并不完全相同</p></li>
+<li><p><code>Helm</code>：<a
+href="https://github.com/helm/helm"><code>helm/helm</code></a>在<code>Chart</code>的<code>templates/</code>目录中渲染<code>Kubernetes</code>清单，向模板提供<code>.Values</code>、<code>.Release</code>、<code>.Chart</code>等对象，并额外提供<code>include</code>、<code>required</code>、<code>tpl</code>等函数；大量基础辅助函数来自<code>Sprig</code></p>
+<p><code>include</code>、<code>required</code>、<code>tpl</code>是<code>Helm</code>自己的扩展，<code>nindent</code>、<code>toYaml</code>等则来自<code>Helm</code>或其依赖；这些函数都不能直接复制到只有标准库的<code>Go</code>程序中</p></li>
+<li><p><code>kubectl</code>：<code>Kubernetes</code>的<a
+href="https://github.com/kubernetes/kubernetes"><code>kubectl</code></a>支持<code>-o go-template</code>和<code>-o go-template-file</code>，可以直接从资源对象中提取字段：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">kubectl get pods -o go-template=<span class="string">&#x27;&#123;&#123;range .items&#125;&#125;&#123;&#123;.metadata.name&#125;&#125;&#123;&#123;&quot;\n&quot;&#125;&#125;&#123;&#123;end&#125;&#125;&#x27;</span></span><br></pre></td></tr></table></figure></li>
+<li><p>监控告警：<a
+href="https://github.com/prometheus/alertmanager"><code>Prometheus Alertmanager</code></a>和<a
+href="https://github.com/grafana/grafana"><code>Grafana</code></a>都使用<code>Go template</code>语法生成告警标题、正文和通知消息，但<code>.Alerts</code>、<code>.Labels</code>以及查询函数等上下文由各自项目定义</p></li>
+<li><p>配置生成：<a
+href="https://github.com/hashicorp/consul-template"><code>hashicorp/consul-template</code></a>使用模板从<code>Consul</code>、<code>Vault</code>等外部数据源生成配置文件或触发命令，适合需要随外部配置变化自动渲染的场景</p></li>
+</ul>
+<p>这些项目的共同点是复用模板的语法模型，差异则主要来自数据上下文和函数集合；阅读云原生模板时，首先要确认它是标准库模板、<code>Sprig</code>扩展，还是<code>Helm</code>、<code>Grafana</code>等项目的进一步扩展方言</p>
+]]></content>
+      <categories>
+        <category>Programming</category>
+        <category>Go</category>
+        <category>Spec &amp; Stdlib</category>
+      </categories>
+      <tags>
+        <tag>Go</tag>
+        <tag>template</tag>
+        <tag>rendering</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Helm: Kubernetes 的包管理器</title>
     <url>/2026/08/16/helm/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -446,6 +668,142 @@ shell <code>Pod</code> 只允许访问 <code>API Server</code>
       </tags>
   </entry>
   <entry>
+    <title>PLG: 部署与飞书告警实践</title>
+    <url>/2026/08/16/plg-alert/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h1 id="plg-部署与飞书告警实践"><code>PLG</code>:
+部署与飞书告警实践</h1>
+<p>本篇记录如何把 <code>PLG</code> 监控体系以 <code>git</code> +
+<code>helm</code> + <code>CI</code>
+的方式部署进集群，并把告警送达飞书群，所有做法都是生产环境的通用玩法</p>
+<h2 id="监控栈的-ci-部署">监控栈的 <code>CI</code> 部署</h2>
+<h3 id="整体形态">整体形态</h3>
+<ul>
+<li><p>监控栈是一个 <code>umbrella chart</code>：聚合
+<code>kube-prometheus-stack</code>(含
+<code>Prometheus</code>/<code>Alertmanager</code>)+ <code>loki</code> +
+<code>promtail</code> + <code>grafana</code> 依赖，环境差异全部放在
+<code>values-*.yaml</code> 中</p></li>
+<li><p>部署不走手工命令，而是 <code>GitHub Actions</code> 在
+<code>push</code> 到 <code>main</code>
+时按路径触发，路径过滤保证只有监控配置变更才触发部署：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">main</span></span><br><span class="line">    <span class="attr">paths:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/monitoring/**</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/istio/**</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/ingress/**</span></span><br></pre></td></tr></table></figure></li>
+<li><p>多集群、多产品通过 <code>matrix</code> 展开，每个条目指定
+<code>chart</code>、命名空间、<code>values</code> 文件与
+<code>kubeconfig</code> 上下文：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">strategy:</span></span><br><span class="line">  <span class="attr">matrix:</span></span><br><span class="line">    <span class="attr">product:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">monitoring</span></span><br><span class="line">        <span class="attr">namespace:</span> <span class="string">monitoring</span></span><br><span class="line">        <span class="attr">values:</span> <span class="string">values-example-prod.yaml</span></span><br><span class="line">    <span class="attr">cluster:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">example-prod</span></span><br><span class="line">        <span class="attr">runner:</span> <span class="string">example-runner</span> <span class="comment"># 自托管 runner，持有集群访问权</span></span><br><span class="line">        <span class="attr">context:</span> <span class="string">example-prod</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="密钥注入">密钥注入</h3>
+<ul>
+<li><p>密钥永远不进 <code>git</code>：<code>values</code>
+文件里写占位符，<code>CI</code> 用 <code>envsubst</code>
+在发布时替换</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># values 文件中的占位</span></span><br><span class="line"><span class="attr">grafana:</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="attr">BOT_GRAFANA_WEBHOOK_TOKEN:</span> <span class="string">$BOT_GRAFANA_WEBHOOK_TOKEN</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">envsubst <span class="string">&#x27;$FEISHU_APP_ID $FEISHU_APP_SECRET $BOT_GRAFANA_WEBHOOK_TOKEN&#x27;</span> \</span><br><span class="line">  &lt; charts/monitoring/values-example-prod.yaml &gt; <span class="variable">$values_file</span></span><br></pre></td></tr></table></figure></li>
+<li><p>简单值直接用 <code>--set</code> 注入(如 <code>Cloudflare</code>
+<code>Token</code>)，不必经过 <code>values</code> 文件</p></li>
+</ul>
+<h3 id="发布与自愈">发布与自愈</h3>
+<ul>
+<li><p>统一使用
+<code>helm upgrade --install --create-namespace</code>，并对”上一个操作未完成”的常见冲突做<strong>自动回滚
++ 重试</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> retry <span class="keyword">in</span> &#123;1..3&#125;; <span class="keyword">do</span></span><br><span class="line">  res=$(helm -n monitoring upgrade --install --create-namespace monitoring \</span><br><span class="line">    ./charts/monitoring -f <span class="string">&quot;<span class="variable">$values_file</span>&quot;</span> \</span><br><span class="line">    --<span class="built_in">set</span> cloudflare.apiToken=<span class="variable">$CF_TOKEN</span> 2&gt;&amp;1)</span><br><span class="line">  [[ $? -eq 0 ]] &amp;&amp; <span class="built_in">exit</span> 0</span><br><span class="line">  <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$res</span>&quot;</span> = *<span class="string">&quot;another operation (install/upgrade/rollback) is in progress&quot;</span>* ]]; <span class="keyword">then</span></span><br><span class="line">    helm -n monitoring rollback monitoring <span class="comment"># 卡住的发布先回滚再重试</span></span><br><span class="line">    <span class="built_in">continue</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">  <span class="built_in">sleep</span> 10</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">exit</span> 1</span><br></pre></td></tr></table></figure></li>
+<li><p><code>runner</code> 通过 <code>kubeconfig</code>
+<code>secret</code> 切换目标集群上下文，一个 <code>runner</code>
+可以发布多个集群</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">azure/k8s-set-context@v4</span></span><br><span class="line">  <span class="attr">with:</span></span><br><span class="line">    <span class="attr">method:</span> <span class="string">kubeconfig</span></span><br><span class="line">    <span class="attr">kubeconfig:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.KUBECONFIG</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">context:</span> <span class="string">$&#123;&#123;</span> <span class="string">matrix.cluster.context</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="告警即代码">告警即代码</h2>
+<h3 id="grafana-统一告警"><code>Grafana</code> 统一告警</h3>
+<ul>
+<li><p>选择 <code>Grafana</code>
+统一告警(<code>Unified Alerting</code>)而非 <code>Alertmanager</code>
+作为告警出口：规则、联系点、通知策略都住在 <code>Grafana</code>
+里，与仪表盘共享数据源与标签体系，<code>Alertmanager</code> 仅作为
+<code>kube-prometheus-stack</code> 的兜底保留</p></li>
+<li><p>告警规则不进 <code>Grafana</code> 界面手点，而是写成
+<code>ConfigMap</code>，打上约定标签，由 <code>Grafana sidecar</code>
+全命名空间监听并同步进 <code>Grafana</code>，改动走 <code>git</code>
+评审：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-status-alert</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">monitoring</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">grafana_alert:</span> <span class="string">&quot;1&quot;</span> <span class="comment"># sidecar 按该标签发现告警资源</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">pod-status-alert.yaml:</span> <span class="string">|</span></span><br><span class="line"><span class="string">    apiVersion: 1</span></span><br><span class="line"><span class="string">    ...</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># values 中开启 sidecar 的告警同步，搜索全命名空间</span></span><br><span class="line"><span class="attr">grafana:</span></span><br><span class="line">  <span class="attr">sidecar:</span></span><br><span class="line">    <span class="attr">alerts:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">searchNamespace:</span> <span class="string">ALL</span></span><br></pre></td></tr></table></figure></li>
+<li><p>同一文件描述四类资源：<code>groups</code>(规则)、<code>contactPoints</code>(联系点)、<code>policies</code>(通知策略)、<code>templates</code>(通知模板)</p></li>
+</ul>
+<h3 id="告警规则的结构">告警规则的结构</h3>
+<ul>
+<li><p>规则按 <code>group</code> 组织，<code>folder</code> 决定在
+<code>Grafana</code> 中的目录归属，<code>interval</code>
+是评估周期：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">groups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Kubernetes</span></span><br><span class="line">    <span class="attr">folder:</span> <span class="string">Infra</span></span><br><span class="line">    <span class="attr">interval:</span> <span class="string">1m</span> <span class="comment"># 每分钟评估一次</span></span><br><span class="line">    <span class="attr">rules:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uid:</span> <span class="string">a9a96a82-f6f5-4bfe-a18e-6f1ac6c9e72f</span></span><br><span class="line">        <span class="attr">title:</span> <span class="string">服务健康状态</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">不健康服务增多</span> <span class="comment"># 指向起决定作用的表达式 refId</span></span><br><span class="line">        <span class="attr">data:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">refId:</span> <span class="string">不健康服务</span></span><br><span class="line">            <span class="attr">datasourceUid:</span> <span class="string">prometheus</span> <span class="comment"># 查询 Prometheus</span></span><br><span class="line">            <span class="attr">model:</span></span><br><span class="line">              <span class="attr">expr:</span> <span class="string">|</span></span><br><span class="line"><span class="string">                sum by (namespace, pod, phase) (</span></span><br><span class="line"><span class="string">                  kube_pod_status_phase&#123;namespace !~ &#x27;staging|dev-.*&#x27;, phase=~&quot;Pending|Unknown|Failed&quot;&#125; == 1</span></span><br><span class="line"><span class="string">                  and on (namespace, pod) ((time() - kube_pod_created) &gt; 180)</span></span><br><span class="line"><span class="string">                )</span></span><br><span class="line"><span class="string"></span>          <span class="bullet">-</span> <span class="attr">refId:</span> <span class="string">不健康服务增多</span></span><br><span class="line">            <span class="attr">datasourceUid:</span> <span class="string">__expr__</span> <span class="comment"># 表达式阶段做阈值判断</span></span><br><span class="line">            <span class="attr">model:</span></span><br><span class="line">              <span class="attr">type:</span> <span class="string">threshold</span></span><br><span class="line">              <span class="attr">expression:</span> <span class="string">不健康服务</span></span><br><span class="line">              <span class="attr">conditions:</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">evaluator:</span></span><br><span class="line">                    <span class="attr">params:</span> [<span class="number">0</span>]</span><br><span class="line">                    <span class="attr">type:</span> <span class="string">gt</span> <span class="comment"># 结果 &gt; 0 即触发</span></span><br><span class="line">        <span class="attr">for:</span> <span class="string">5m</span> <span class="comment"># 持续满足 5 分钟才真正触发，抑制抖动</span></span><br><span class="line">        <span class="attr">noDataState:</span> <span class="string">OK</span> <span class="comment"># 无数据视为正常</span></span><br><span class="line">        <span class="attr">annotations:</span></span><br><span class="line">          <span class="attr">summary:</span> <span class="string">命名空间</span> &#123;&#123; <span class="string">$labels.namespace</span> &#125;&#125; <span class="string">下</span> <span class="string">Pod</span> &#123;&#123; <span class="string">$labels.pod</span> &#125;&#125; <span class="string">处于</span> &#123;&#123; <span class="string">$labels.phase</span> &#125;&#125; <span class="string">状态</span></span><br><span class="line">        <span class="attr">labels:</span></span><br><span class="line">          <span class="attr">product:</span> <span class="string">infra</span> <span class="comment"># 供通知模板与策略路由使用</span></span><br></pre></td></tr></table></figure></li>
+<li><p>注意三个工程细节：</p>
+<ul>
+<li><code>PromQL</code> 里先做过滤与降噪：排除 <code>staging</code>
+等低价值命名空间、只看存活超过 <code>3</code> 分钟的
+<code>Pod</code></li>
+<li><code>for: 5m</code> + <code>noDataState: OK</code>
+是防告警风暴的两道闸</li>
+<li><code>labels.product</code> 是整条告警链路的路由键，从
+<code>values</code>
+按产品开关(<code>alerts.&lt;product&gt;.enabled</code>)决定渲染哪些规则</li>
+</ul></li>
+</ul>
+<h2 id="飞书告警链路">飞书告警链路</h2>
+<h3 id="联系点webhook-自建机器人">联系点：<code>webhook</code> +
+自建机器人</h3>
+<ul>
+<li><p><code>Grafana</code>
+原生不支持飞书，与其等官方支持，不如加一层<strong>自建转发服务</strong>：联系点配置为普通
+<code>webhook</code>，指向自建的机器人服务，由它把 <code>Grafana</code>
+的告警 payload 转成飞书群消息</p></li>
+<li><p>好处是格式完全自主、鉴权自己掌控、以后接任何新 <code>IM</code>
+都只改这一个服务：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">contactPoints:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">服务端告警群</span></span><br><span class="line">    <span class="attr">receivers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uid:</span> <span class="string">80192ad5-0865-4075-a69a-eeccccbf82d8</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">webhook</span></span><br><span class="line">        <span class="attr">settings:</span></span><br><span class="line">          <span class="attr">url:</span> <span class="string">https://bot.example.com/grafana/webhook</span> <span class="comment"># 自建机器人</span></span><br><span class="line">          <span class="attr">httpMethod:</span> <span class="string">POST</span></span><br><span class="line">          <span class="attr">authorization_scheme:</span> <span class="string">Bearer</span> <span class="comment"># 出口鉴权，防止伪造告警</span></span><br><span class="line">          <span class="attr">authorization_credentials:</span> <span class="string">$BOT_GRAFANA_WEBHOOK_TOKEN</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>Bearer Token</code> 通过环境变量注入
+<code>Grafana</code>(<code>grafana.env</code>)，再由
+<code>envsubst</code> 在 <code>CI</code> 阶段填充，全程不落
+<code>git</code></p></li>
+</ul>
+<h3 id="通知策略">通知策略</h3>
+<ul>
+<li><p>策略决定”谁收到什么、多久提醒一次”，<code>repeat_interval</code>
+是防轰炸的关键参数：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">policies:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">receiver:</span> <span class="string">grafana-default-email</span> <span class="comment"># 兜底接收器</span></span><br><span class="line">    <span class="attr">group_by:</span> [<span class="string">&#x27;...&#x27;</span>]</span><br><span class="line">    <span class="attr">repeat_interval:</span> <span class="string">5m</span> <span class="comment"># 未恢复告警每 5 分钟重复提醒</span></span><br><span class="line">    <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">receiver:</span> <span class="string">服务端告警群</span> <span class="comment"># 全部告警转发到飞书群</span></span><br><span class="line">        <span class="attr">continue:</span> <span class="literal">true</span> <span class="comment"># 继续匹配后续路由，便于后续按产品分流</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="通知模板">通知模板</h3>
+<ul>
+<li><p>模板用 <code>Grafana</code> 的 <code>Go template</code>
+语法，自定义标题与正文，把关键信息(<code>product</code>/<code>application</code>
+标签、当前数值、图表与静默链接)组织成飞书消息卡片的字段：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">templates:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;example.title&quot;</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      &#123;&#123;- if len .Alerts.Firing -&#125;&#125;</span></span><br><span class="line"><span class="string">        🚨🚨🚨 有 &#123;&#123; len .Alerts.Firing &#125;&#125; 条告警规则正在触发</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if and (len .Alerts.Firing) (len .Alerts.Resolved) -&#125;&#125;; &#123;&#123; end -&#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if len .Alerts.Resolved -&#125;&#125;</span></span><br><span class="line"><span class="string">        ✅✅✅ 有 &#123;&#123; len .Alerts.Resolved &#125;&#125; 条告警规则已经恢复</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string"></span>  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;example.message&quot;</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      - 产品名称: &#123;&#123; .Labels.product &#125;&#125;</span></span><br><span class="line"><span class="string">      - 产品应用: &#123;&#123; or (or .Labels.application .Labels.pod) &quot;没有数据&quot; &#125;&#125;</span></span><br><span class="line"><span class="string">      - 告警规则: &#123;&#123; .Labels.alertname &#125;&#125;</span></span><br><span class="line"><span class="string">      - 当前数值: &#123;&#123; range $k, $v := .Values &#125;&#125;&#123;&#123; $k &#125;&#125;=&#123;&#123; $v &#125;&#125; &#123;&#123; end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if .DashboardURL &#125;&#125;</span></span><br><span class="line"><span class="string">      - 查看图表: [点击查看](&#123;&#123; .DashboardURL &#125;&#125;)</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if .SilenceURL &#125;&#125;</span></span><br><span class="line"><span class="string">      - 抑制告警: [点击抑制](&#123;&#123; .SilenceURL &#125;&#125;)</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>.Labels.application</code> 正是 <code>Prometheus</code>
+抓取配置里 <code>relabel</code>
+出来的服务名标签——<strong>采集端打的标签决定通知端的信息量</strong>，这是整条链路设计的一体性所在</p></li>
+</ul>
+<h2 id="飞书登录oauth">飞书登录(<code>OAuth</code>)</h2>
+<ul>
+<li><p><code>Grafana</code> 的登录同样接入飞书，用
+<code>generic_oauth</code> 对接飞书开放平台的 <code>OAuth</code>
+端点，账号体系与公司 <code>IM</code> 统一：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">grafana.ini:</span></span><br><span class="line">  <span class="attr">auth.generic_oauth:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">飞书</span></span><br><span class="line">    <span class="attr">client_id:</span> <span class="string">$FEISHU_APP_ID</span> <span class="comment"># CI 注入</span></span><br><span class="line">    <span class="attr">client_secret:</span> <span class="string">$FEISHU_APP_SECRET</span></span><br><span class="line">    <span class="attr">auth_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/authorize</span></span><br><span class="line">    <span class="attr">token_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/token</span></span><br><span class="line">    <span class="attr">api_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/userinfo</span></span><br><span class="line">    <span class="attr">login_attribute_path:</span> <span class="string">name</span></span><br><span class="line">    <span class="attr">role_attribute_path:</span> <span class="string">name</span> <span class="string">==</span> <span class="string">&#x27;someone&#x27;</span> <span class="string">&amp;&amp;</span> <span class="string">&#x27;Admin&#x27;</span> <span class="string">||</span> <span class="string">&#x27;Viewer&#x27;</span> <span class="comment"># 按用户名映射角色</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>role_attribute_path</code>
+实现”白名单管理员、其余只读”，避免给全员开编辑权限</p></li>
+</ul>
+<h2 id="链路总结">链路总结</h2>
+<p><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">Pod/Envoy 指标 ──&gt; Prometheus(注解发现/relabel 打标) ──┐</span><br><span class="line">容器日志 ──&gt; Promtail(CRI 解析) ──&gt; Loki(S3/分级保留) ──┤</span><br><span class="line">                                                      v</span><br><span class="line">                                   Grafana(数据源/仪表盘/告警，全部 ConfigMap + sidecar 供给)</span><br><span class="line">                                                      |</span><br><span class="line">                            告警规则(interval/for/labels.product)</span><br><span class="line">                                                      v</span><br><span class="line">                            通知策略(repeat_interval) ─&gt; 联系点(webhook + Bearer)</span><br><span class="line">                                                      v</span><br><span class="line">                                   自建机器人 ──&gt; 飞书群卡片(title/message 模板)</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <categories>
+        <category>Tools &amp; Utilities</category>
+        <category>Observability</category>
+      </categories>
+      <tags>
+        <tag>grafana</tag>
+        <tag>alerting</tag>
+        <tag>observability</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>PLG: Prometheus + Loki + Grafana 可观测体系</title>
     <url>/2026/08/16/plg/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -586,146 +944,10 @@ shell <code>Pod</code> 只允许访问 <code>API Server</code>
         <category>Observability</category>
       </categories>
       <tags>
+        <tag>grafana</tag>
+        <tag>observability</tag>
         <tag>prometheus</tag>
         <tag>loki</tag>
-        <tag>grafana</tag>
-        <tag>observability</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>PLG: 部署与飞书告警实践</title>
-    <url>/2026/08/16/plg-alert/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-<h1 id="plg-部署与飞书告警实践"><code>PLG</code>:
-部署与飞书告警实践</h1>
-<p>本篇记录如何把 <code>PLG</code> 监控体系以 <code>git</code> +
-<code>helm</code> + <code>CI</code>
-的方式部署进集群，并把告警送达飞书群，所有做法都是生产环境的通用玩法</p>
-<h2 id="监控栈的-ci-部署">监控栈的 <code>CI</code> 部署</h2>
-<h3 id="整体形态">整体形态</h3>
-<ul>
-<li><p>监控栈是一个 <code>umbrella chart</code>：聚合
-<code>kube-prometheus-stack</code>(含
-<code>Prometheus</code>/<code>Alertmanager</code>)+ <code>loki</code> +
-<code>promtail</code> + <code>grafana</code> 依赖，环境差异全部放在
-<code>values-*.yaml</code> 中</p></li>
-<li><p>部署不走手工命令，而是 <code>GitHub Actions</code> 在
-<code>push</code> 到 <code>main</code>
-时按路径触发，路径过滤保证只有监控配置变更才触发部署：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">main</span></span><br><span class="line">    <span class="attr">paths:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/monitoring/**</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/istio/**</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">charts/ingress/**</span></span><br></pre></td></tr></table></figure></li>
-<li><p>多集群、多产品通过 <code>matrix</code> 展开，每个条目指定
-<code>chart</code>、命名空间、<code>values</code> 文件与
-<code>kubeconfig</code> 上下文：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">strategy:</span></span><br><span class="line">  <span class="attr">matrix:</span></span><br><span class="line">    <span class="attr">product:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">monitoring</span></span><br><span class="line">        <span class="attr">namespace:</span> <span class="string">monitoring</span></span><br><span class="line">        <span class="attr">values:</span> <span class="string">values-example-prod.yaml</span></span><br><span class="line">    <span class="attr">cluster:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">example-prod</span></span><br><span class="line">        <span class="attr">runner:</span> <span class="string">example-runner</span> <span class="comment"># 自托管 runner，持有集群访问权</span></span><br><span class="line">        <span class="attr">context:</span> <span class="string">example-prod</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="密钥注入">密钥注入</h3>
-<ul>
-<li><p>密钥永远不进 <code>git</code>：<code>values</code>
-文件里写占位符，<code>CI</code> 用 <code>envsubst</code>
-在发布时替换</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># values 文件中的占位</span></span><br><span class="line"><span class="attr">grafana:</span></span><br><span class="line">  <span class="attr">env:</span></span><br><span class="line">    <span class="attr">BOT_GRAFANA_WEBHOOK_TOKEN:</span> <span class="string">$BOT_GRAFANA_WEBHOOK_TOKEN</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">envsubst <span class="string">&#x27;$FEISHU_APP_ID $FEISHU_APP_SECRET $BOT_GRAFANA_WEBHOOK_TOKEN&#x27;</span> \</span><br><span class="line">  &lt; charts/monitoring/values-example-prod.yaml &gt; <span class="variable">$values_file</span></span><br></pre></td></tr></table></figure></li>
-<li><p>简单值直接用 <code>--set</code> 注入(如 <code>Cloudflare</code>
-<code>Token</code>)，不必经过 <code>values</code> 文件</p></li>
-</ul>
-<h3 id="发布与自愈">发布与自愈</h3>
-<ul>
-<li><p>统一使用
-<code>helm upgrade --install --create-namespace</code>，并对”上一个操作未完成”的常见冲突做<strong>自动回滚
-+ 重试</strong>：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> retry <span class="keyword">in</span> &#123;1..3&#125;; <span class="keyword">do</span></span><br><span class="line">  res=$(helm -n monitoring upgrade --install --create-namespace monitoring \</span><br><span class="line">    ./charts/monitoring -f <span class="string">&quot;<span class="variable">$values_file</span>&quot;</span> \</span><br><span class="line">    --<span class="built_in">set</span> cloudflare.apiToken=<span class="variable">$CF_TOKEN</span> 2&gt;&amp;1)</span><br><span class="line">  [[ $? -eq 0 ]] &amp;&amp; <span class="built_in">exit</span> 0</span><br><span class="line">  <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$res</span>&quot;</span> = *<span class="string">&quot;another operation (install/upgrade/rollback) is in progress&quot;</span>* ]]; <span class="keyword">then</span></span><br><span class="line">    helm -n monitoring rollback monitoring <span class="comment"># 卡住的发布先回滚再重试</span></span><br><span class="line">    <span class="built_in">continue</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line">  <span class="built_in">sleep</span> 10</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">exit</span> 1</span><br></pre></td></tr></table></figure></li>
-<li><p><code>runner</code> 通过 <code>kubeconfig</code>
-<code>secret</code> 切换目标集群上下文，一个 <code>runner</code>
-可以发布多个集群</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">uses:</span> <span class="string">azure/k8s-set-context@v4</span></span><br><span class="line">  <span class="attr">with:</span></span><br><span class="line">    <span class="attr">method:</span> <span class="string">kubeconfig</span></span><br><span class="line">    <span class="attr">kubeconfig:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.KUBECONFIG</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">context:</span> <span class="string">$&#123;&#123;</span> <span class="string">matrix.cluster.context</span> <span class="string">&#125;&#125;</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="告警即代码">告警即代码</h2>
-<h3 id="grafana-统一告警"><code>Grafana</code> 统一告警</h3>
-<ul>
-<li><p>选择 <code>Grafana</code>
-统一告警(<code>Unified Alerting</code>)而非 <code>Alertmanager</code>
-作为告警出口：规则、联系点、通知策略都住在 <code>Grafana</code>
-里，与仪表盘共享数据源与标签体系，<code>Alertmanager</code> 仅作为
-<code>kube-prometheus-stack</code> 的兜底保留</p></li>
-<li><p>告警规则不进 <code>Grafana</code> 界面手点，而是写成
-<code>ConfigMap</code>，打上约定标签，由 <code>Grafana sidecar</code>
-全命名空间监听并同步进 <code>Grafana</code>，改动走 <code>git</code>
-评审：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod-status-alert</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">monitoring</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">grafana_alert:</span> <span class="string">&quot;1&quot;</span> <span class="comment"># sidecar 按该标签发现告警资源</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="attr">pod-status-alert.yaml:</span> <span class="string">|</span></span><br><span class="line"><span class="string">    apiVersion: 1</span></span><br><span class="line"><span class="string">    ...</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="comment"># values 中开启 sidecar 的告警同步，搜索全命名空间</span></span><br><span class="line"><span class="attr">grafana:</span></span><br><span class="line">  <span class="attr">sidecar:</span></span><br><span class="line">    <span class="attr">alerts:</span></span><br><span class="line">      <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">searchNamespace:</span> <span class="string">ALL</span></span><br></pre></td></tr></table></figure></li>
-<li><p>同一文件描述四类资源：<code>groups</code>(规则)、<code>contactPoints</code>(联系点)、<code>policies</code>(通知策略)、<code>templates</code>(通知模板)</p></li>
-</ul>
-<h3 id="告警规则的结构">告警规则的结构</h3>
-<ul>
-<li><p>规则按 <code>group</code> 组织，<code>folder</code> 决定在
-<code>Grafana</code> 中的目录归属，<code>interval</code>
-是评估周期：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">groups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">Kubernetes</span></span><br><span class="line">    <span class="attr">folder:</span> <span class="string">Infra</span></span><br><span class="line">    <span class="attr">interval:</span> <span class="string">1m</span> <span class="comment"># 每分钟评估一次</span></span><br><span class="line">    <span class="attr">rules:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uid:</span> <span class="string">a9a96a82-f6f5-4bfe-a18e-6f1ac6c9e72f</span></span><br><span class="line">        <span class="attr">title:</span> <span class="string">服务健康状态</span></span><br><span class="line">        <span class="attr">condition:</span> <span class="string">不健康服务增多</span> <span class="comment"># 指向起决定作用的表达式 refId</span></span><br><span class="line">        <span class="attr">data:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">refId:</span> <span class="string">不健康服务</span></span><br><span class="line">            <span class="attr">datasourceUid:</span> <span class="string">prometheus</span> <span class="comment"># 查询 Prometheus</span></span><br><span class="line">            <span class="attr">model:</span></span><br><span class="line">              <span class="attr">expr:</span> <span class="string">|</span></span><br><span class="line"><span class="string">                sum by (namespace, pod, phase) (</span></span><br><span class="line"><span class="string">                  kube_pod_status_phase&#123;namespace !~ &#x27;staging|dev-.*&#x27;, phase=~&quot;Pending|Unknown|Failed&quot;&#125; == 1</span></span><br><span class="line"><span class="string">                  and on (namespace, pod) ((time() - kube_pod_created) &gt; 180)</span></span><br><span class="line"><span class="string">                )</span></span><br><span class="line"><span class="string"></span>          <span class="bullet">-</span> <span class="attr">refId:</span> <span class="string">不健康服务增多</span></span><br><span class="line">            <span class="attr">datasourceUid:</span> <span class="string">__expr__</span> <span class="comment"># 表达式阶段做阈值判断</span></span><br><span class="line">            <span class="attr">model:</span></span><br><span class="line">              <span class="attr">type:</span> <span class="string">threshold</span></span><br><span class="line">              <span class="attr">expression:</span> <span class="string">不健康服务</span></span><br><span class="line">              <span class="attr">conditions:</span></span><br><span class="line">                <span class="bullet">-</span> <span class="attr">evaluator:</span></span><br><span class="line">                    <span class="attr">params:</span> [<span class="number">0</span>]</span><br><span class="line">                    <span class="attr">type:</span> <span class="string">gt</span> <span class="comment"># 结果 &gt; 0 即触发</span></span><br><span class="line">        <span class="attr">for:</span> <span class="string">5m</span> <span class="comment"># 持续满足 5 分钟才真正触发，抑制抖动</span></span><br><span class="line">        <span class="attr">noDataState:</span> <span class="string">OK</span> <span class="comment"># 无数据视为正常</span></span><br><span class="line">        <span class="attr">annotations:</span></span><br><span class="line">          <span class="attr">summary:</span> <span class="string">命名空间</span> &#123;&#123; <span class="string">$labels.namespace</span> &#125;&#125; <span class="string">下</span> <span class="string">Pod</span> &#123;&#123; <span class="string">$labels.pod</span> &#125;&#125; <span class="string">处于</span> &#123;&#123; <span class="string">$labels.phase</span> &#125;&#125; <span class="string">状态</span></span><br><span class="line">        <span class="attr">labels:</span></span><br><span class="line">          <span class="attr">product:</span> <span class="string">infra</span> <span class="comment"># 供通知模板与策略路由使用</span></span><br></pre></td></tr></table></figure></li>
-<li><p>注意三个工程细节：</p>
-<ul>
-<li><code>PromQL</code> 里先做过滤与降噪：排除 <code>staging</code>
-等低价值命名空间、只看存活超过 <code>3</code> 分钟的
-<code>Pod</code></li>
-<li><code>for: 5m</code> + <code>noDataState: OK</code>
-是防告警风暴的两道闸</li>
-<li><code>labels.product</code> 是整条告警链路的路由键，从
-<code>values</code>
-按产品开关(<code>alerts.&lt;product&gt;.enabled</code>)决定渲染哪些规则</li>
-</ul></li>
-</ul>
-<h2 id="飞书告警链路">飞书告警链路</h2>
-<h3 id="联系点webhook-自建机器人">联系点：<code>webhook</code> +
-自建机器人</h3>
-<ul>
-<li><p><code>Grafana</code>
-原生不支持飞书，与其等官方支持，不如加一层<strong>自建转发服务</strong>：联系点配置为普通
-<code>webhook</code>，指向自建的机器人服务，由它把 <code>Grafana</code>
-的告警 payload 转成飞书群消息</p></li>
-<li><p>好处是格式完全自主、鉴权自己掌控、以后接任何新 <code>IM</code>
-都只改这一个服务：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">contactPoints:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">服务端告警群</span></span><br><span class="line">    <span class="attr">receivers:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">uid:</span> <span class="string">80192ad5-0865-4075-a69a-eeccccbf82d8</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">webhook</span></span><br><span class="line">        <span class="attr">settings:</span></span><br><span class="line">          <span class="attr">url:</span> <span class="string">https://bot.example.com/grafana/webhook</span> <span class="comment"># 自建机器人</span></span><br><span class="line">          <span class="attr">httpMethod:</span> <span class="string">POST</span></span><br><span class="line">          <span class="attr">authorization_scheme:</span> <span class="string">Bearer</span> <span class="comment"># 出口鉴权，防止伪造告警</span></span><br><span class="line">          <span class="attr">authorization_credentials:</span> <span class="string">$BOT_GRAFANA_WEBHOOK_TOKEN</span></span><br></pre></td></tr></table></figure></li>
-<li><p><code>Bearer Token</code> 通过环境变量注入
-<code>Grafana</code>(<code>grafana.env</code>)，再由
-<code>envsubst</code> 在 <code>CI</code> 阶段填充，全程不落
-<code>git</code></p></li>
-</ul>
-<h3 id="通知策略">通知策略</h3>
-<ul>
-<li><p>策略决定”谁收到什么、多久提醒一次”，<code>repeat_interval</code>
-是防轰炸的关键参数：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">policies:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">receiver:</span> <span class="string">grafana-default-email</span> <span class="comment"># 兜底接收器</span></span><br><span class="line">    <span class="attr">group_by:</span> [<span class="string">&#x27;...&#x27;</span>]</span><br><span class="line">    <span class="attr">repeat_interval:</span> <span class="string">5m</span> <span class="comment"># 未恢复告警每 5 分钟重复提醒</span></span><br><span class="line">    <span class="attr">routes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">receiver:</span> <span class="string">服务端告警群</span> <span class="comment"># 全部告警转发到飞书群</span></span><br><span class="line">        <span class="attr">continue:</span> <span class="literal">true</span> <span class="comment"># 继续匹配后续路由，便于后续按产品分流</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="通知模板">通知模板</h3>
-<ul>
-<li><p>模板用 <code>Grafana</code> 的 <code>Go template</code>
-语法，自定义标题与正文，把关键信息(<code>product</code>/<code>application</code>
-标签、当前数值、图表与静默链接)组织成飞书消息卡片的字段：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">templates:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;example.title&quot;</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      &#123;&#123;- if len .Alerts.Firing -&#125;&#125;</span></span><br><span class="line"><span class="string">        🚨🚨🚨 有 &#123;&#123; len .Alerts.Firing &#125;&#125; 条告警规则正在触发</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if and (len .Alerts.Firing) (len .Alerts.Resolved) -&#125;&#125;; &#123;&#123; end -&#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if len .Alerts.Resolved -&#125;&#125;</span></span><br><span class="line"><span class="string">        ✅✅✅ 有 &#123;&#123; len .Alerts.Resolved &#125;&#125; 条告警规则已经恢复</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string"></span>  <span class="bullet">-</span> <span class="attr">orgId:</span> <span class="number">1</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">&quot;example.message&quot;</span></span><br><span class="line">    <span class="attr">template:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      - 产品名称: &#123;&#123; .Labels.product &#125;&#125;</span></span><br><span class="line"><span class="string">      - 产品应用: &#123;&#123; or (or .Labels.application .Labels.pod) &quot;没有数据&quot; &#125;&#125;</span></span><br><span class="line"><span class="string">      - 告警规则: &#123;&#123; .Labels.alertname &#125;&#125;</span></span><br><span class="line"><span class="string">      - 当前数值: &#123;&#123; range $k, $v := .Values &#125;&#125;&#123;&#123; $k &#125;&#125;=&#123;&#123; $v &#125;&#125; &#123;&#123; end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if .DashboardURL &#125;&#125;</span></span><br><span class="line"><span class="string">      - 查看图表: [点击查看](&#123;&#123; .DashboardURL &#125;&#125;)</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br><span class="line"><span class="string">      &#123;&#123;- if .SilenceURL &#125;&#125;</span></span><br><span class="line"><span class="string">      - 抑制告警: [点击抑制](&#123;&#123; .SilenceURL &#125;&#125;)</span></span><br><span class="line"><span class="string">      &#123;&#123;- end &#125;&#125;</span></span><br></pre></td></tr></table></figure></li>
-<li><p><code>.Labels.application</code> 正是 <code>Prometheus</code>
-抓取配置里 <code>relabel</code>
-出来的服务名标签——<strong>采集端打的标签决定通知端的信息量</strong>，这是整条链路设计的一体性所在</p></li>
-</ul>
-<h2 id="飞书登录oauth">飞书登录(<code>OAuth</code>)</h2>
-<ul>
-<li><p><code>Grafana</code> 的登录同样接入飞书，用
-<code>generic_oauth</code> 对接飞书开放平台的 <code>OAuth</code>
-端点，账号体系与公司 <code>IM</code> 统一：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">grafana.ini:</span></span><br><span class="line">  <span class="attr">auth.generic_oauth:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">飞书</span></span><br><span class="line">    <span class="attr">client_id:</span> <span class="string">$FEISHU_APP_ID</span> <span class="comment"># CI 注入</span></span><br><span class="line">    <span class="attr">client_secret:</span> <span class="string">$FEISHU_APP_SECRET</span></span><br><span class="line">    <span class="attr">auth_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/authorize</span></span><br><span class="line">    <span class="attr">token_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/token</span></span><br><span class="line">    <span class="attr">api_url:</span> <span class="string">https://passport.feishu.cn/suite/passport/oauth/userinfo</span></span><br><span class="line">    <span class="attr">login_attribute_path:</span> <span class="string">name</span></span><br><span class="line">    <span class="attr">role_attribute_path:</span> <span class="string">name</span> <span class="string">==</span> <span class="string">&#x27;someone&#x27;</span> <span class="string">&amp;&amp;</span> <span class="string">&#x27;Admin&#x27;</span> <span class="string">||</span> <span class="string">&#x27;Viewer&#x27;</span> <span class="comment"># 按用户名映射角色</span></span><br></pre></td></tr></table></figure></li>
-<li><p><code>role_attribute_path</code>
-实现”白名单管理员、其余只读”，避免给全员开编辑权限</p></li>
-</ul>
-<h2 id="链路总结">链路总结</h2>
-<p><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">Pod/Envoy 指标 ──&gt; Prometheus(注解发现/relabel 打标) ──┐</span><br><span class="line">容器日志 ──&gt; Promtail(CRI 解析) ──&gt; Loki(S3/分级保留) ──┤</span><br><span class="line">                                                      v</span><br><span class="line">                                   Grafana(数据源/仪表盘/告警，全部 ConfigMap + sidecar 供给)</span><br><span class="line">                                                      |</span><br><span class="line">                            告警规则(interval/for/labels.product)</span><br><span class="line">                                                      v</span><br><span class="line">                            通知策略(repeat_interval) ─&gt; 联系点(webhook + Bearer)</span><br><span class="line">                                                      v</span><br><span class="line">                                   自建机器人 ──&gt; 飞书群卡片(title/message 模板)</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <categories>
-        <category>Tools &amp; Utilities</category>
-        <category>Observability</category>
-      </categories>
-      <tags>
-        <tag>grafana</tag>
-        <tag>observability</tag>
-        <tag>alerting</tag>
       </tags>
   </entry>
   <entry>
@@ -2811,8 +3033,8 @@ href="https://github.com/golang/protobuf"><code>github.com/golang/protobuf/proto
       </categories>
       <tags>
         <tag>Go</tag>
-        <tag>middleware</tag>
         <tag>webapp</tag>
+        <tag>middleware</tag>
       </tags>
   </entry>
   <entry>
@@ -2857,8 +3079,8 @@ href="https://github.com/golang/protobuf"><code>github.com/golang/protobuf/proto
       </categories>
       <tags>
         <tag>Go</tag>
-        <tag>webapp</tag>
         <tag>net</tag>
+        <tag>webapp</tag>
       </tags>
   </entry>
   <entry>
@@ -3085,8 +3307,8 @@ href="https://github.com/gin-contrib/cors"><code>github.com/gin-contrib/cors</co
       </categories>
       <tags>
         <tag>Go</tag>
-        <tag>webapp</tag>
         <tag>net</tag>
+        <tag>webapp</tag>
       </tags>
   </entry>
   <entry>
@@ -3217,8 +3439,8 @@ href="https://github.com/gin-contrib/cors"><code>github.com/gin-contrib/cors</co
       </categories>
       <tags>
         <tag>Go</tag>
-        <tag>webapp</tag>
         <tag>net</tag>
+        <tag>webapp</tag>
       </tags>
   </entry>
   <entry>
@@ -6760,8 +6982,8 @@ class="math inline">$\begin{align}\frac{1}{1-p}\end{align}$</span></p>
         <category>ML/DL</category>
       </categories>
       <tags>
-        <tag>DL</tag>
         <tag>ML</tag>
+        <tag>DL</tag>
         <tag>regularization</tag>
       </tags>
   </entry>
@@ -9033,136 +9255,6 @@ class="math inline">$\begin{align}\frac1{1+5d_{prop}/d_{trans}}\end{align}$</spa
       </tags>
   </entry>
   <entry>
-    <title>计算机网络: 传输层协议</title>
-    <url>/2025/05/01/comp-networking-trsflayer/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-<h2 id="传输层协议">传输层协议</h2>
-<h3 id="可靠数据传输的组成">可靠数据传输的组成</h3>
-<ul>
-<li><p>处理比特差错：比特差错指，分组能运输到主机，但具有比特位丢失或错误；又分为非响应分组错误和响应分组错误</p>
-<ul>
-<li>通过<strong>重传分组</strong>解决，又因为重传会导致<strong>分组冗余</strong>，故需要给分组添加<strong>编号</strong></li>
-<li>完备的解决方案：
-发送方：发送分组后进入阻塞态，若收到有错误的响应报文，则重传；否则完成委托，等待下一个来自应用层的调用
-接收方：有比特差错或无比特差错但序号错，则响应上一个序号的报文，并丢弃当前收到的报文；否则响应当前序号的报文，并增加确认序号</li>
-</ul></li>
-<li><p>处理丢包：通过<strong>超时重传</strong>解决，超时即一段时间内未收到正确的响应报文，若超时则响应上一个序号的报文；在此处，发送方接收到有错响应报文时，不立刻重传，而是超时再重传
-丢包大概率因为中间路由缓存满而丢弃分组，小概率因为链路中断</p></li>
-<li><p>上述是一次只传输一个分组的情况，称为<strong>停等协议</strong>(发送方在收到响应前进入阻塞)；为了效率，需要实现流水线传输，有以下方案：</p>
-<ul>
-<li><p>回退<code>N</code>步(<code>GBN</code>)协议：只要一切正常，效率就可以大幅提高
-发送方：维护基序号<code>b</code>，发送方可以<strong>一次性发送序号为<code>[b,b+N]</code></strong>内的分组，直到<strong>收到<code>ACK_b</code></strong>，才将<code>b</code>右移，并将新的窗口中未发送的分组发送；否则，一旦<strong>超时，就将窗口内的分组全部重传</strong>
-接收方：接收窗口长度只为<code>1</code>，即接收方<strong>只接收序号为<code>b</code>的分组</strong>，响应策略和停等协议一致(分组出错时响应<code>ACK_b-1</code>)
-即，<strong><code>GBN</code>协议是发送方可以发送多个分组的停等协议</strong>，当<code>N=1</code>时退化为停等协议，其始终等待<code>b</code>号响应报文的策略使其具有自然有序、且每一时刻序号小于<code>b</code>的报文均已可靠传输的性质</p></li>
-<li><p>选择重传(<code>SR</code>)协议：上述接收方的策略可以优化，接收方可以选择<strong>缓存</strong>并自行排序而非丢弃序号错误的分组，相当于将接收方窗口长度拉长，使接收方可以确认所有正确的报文(无论其序号是多少)
-对于发送方的好处是，发送方下次<strong>超时重传时就不需要重传已经确认的分组</strong>，而不是像<code>GBN</code>那样全部重传，发送方的具体策略为：</p>
-<ul>
-<li>一开始全部发送后，对<strong>每个分组都设置定时器</strong>，一次超时事件<strong>只会重传一个分组</strong>(“选择重传”的来历)</li>
-<li>接收到的<code>ACK</code>确认号不是<code>b</code>(一定会落在窗口内)，则进行标记</li>
-<li>接收到的<code>ACK</code>确认号是<code>b</code>，则移动<code>b</code>到下一个没被标记的分组，发送新窗口的未被标记分组</li>
-</ul>
-<p>接收方的具体策略为：</p>
-<ul>
-<li>收到序号不为<code>b</code>的报文：缓存，响应<code>ACK_b</code></li>
-<li>收到序号为<code>b</code>的报文：立刻交付它以及窗口内所有已缓存的报文，移动窗口到下一个没有收到过的序号</li>
-</ul>
-<p>基于序号有限的现实问题，<strong>发送方窗口<span
-class="math inline">=</span>接收方窗口<span
-class="math inline">≤</span>序号数量的一半</strong>，因为响应报文完整/丢失可能导致同步问题：如果接收方窗口长度超过序号数量的一半，那么在一次完美的传输后，<strong>接收方</strong>窗口会<strong>第二次使用相同的序号</strong>，此时若响应报文完整，则发送方会第二次使用相同的序号，此次分组实际是新分组；若<strong>响应报文丢失，则发送方会重传</strong>，此次分组<strong>实际是已确认分组</strong>，但接收方会<strong>误以为是新分组</strong>(因为序号相同)
-长度不超过序号数量的一半就不会有这样的问题</p></li>
-</ul></li>
-</ul>
-<h3 id="tcp性质及功能"><code>TCP</code>性质及功能</h3>
-<ul>
-<li>全双工协议，即双方都可作为发送方或接收方</li>
-<li>面向连接的协议，即双方真正传输数据前需要建立连接、后需要关闭连接</li>
-<li>支持百分百的可靠数据传输，同时有一定的拥塞控制、流量控制、检错功能</li>
-<li>通过端口号来标识进程，为了支持全双工，双方都需要提供<code>IP</code>和端口号</li>
-<li>协商<code>MSS</code>(<code>MSS=MTU+IP头部长+TCP头部长</code>，即<code>MSS</code>本身不包含<code>TCP</code>头部)，以避免<code>IP</code>分组
-<ul>
-<li>主机是边缘设备，在传输层<strong>控制一个<code>TCP</code>分组的长度</strong>可以<strong>避免在发送方被网络层分组</strong>，有效降低网络负载(因为<strong>网络层分组/重组</strong>并保证完整传输相比不分组，<strong>需要更多开销</strong>)</li>
-<li>现代路径发现<code>MSS</code>：为了防止在中途路由被分组，现代设备可以动态发现整个路径所有网段中的最小<code>MTU</code>而不仅仅是本地网段的<code>MTU</code>，进一步避免被网络层分组</li>
-</ul></li>
-</ul>
-<h3 id="tcp协议报文"><code>TCP</code>协议报文</h3>
-<ul>
-<li>第一行字段：源端口号、目的端口号
-<ul>
-<li>每个<strong>端口号共<code>16</code>位</strong>，端口号分为<strong>周知端口号(<code>0~1023</code>)</strong>和非周知端口号(<code>1024~65535</code>)</li>
-<li>周知端口号是给服务器使用的，这样客户端就可以默认向使用该端口号作为目的端口号</li>
-<li>常见的周知端口号：<code>HTTP~80、FTP传输数据~20、FTP传输控制信息~21、Telnet~23、DNS~53</code></li>
-</ul></li>
-<li>第二行字段：<code>32</code>位序号，表示本报文所承载数据段的<strong>首字节编号</strong></li>
-<li>第三行字段：<code>32</code>位确认号，表示本报文所希望的下一个数据段的首字节编号
-小于确认号的序号的报文均已被接收方完整接收</li>
-<li>第四行字段：
-<ul>
-<li><code>4</code>位首部长度：标记首部的字节数，<strong>单位为<code>4</code>个字节</strong></li>
-<li>标记位：<code>URG、ACK、PSH、RST、SYN、FIN</code></li>
-<li><code>16</code>位接收窗口：用于<strong>流量控制</strong>，流量控制用于解决发送方<strong>发送速率</strong>和接收方<strong>接收速率</strong>不匹配问题
-<strong>触发流量控制的事件不是超时</strong>，超时是触发拥塞控制的事件，而流量控制依赖于响应报文的接收窗口，当接收窗口为<code>0</code>时，表示接收方已经无法再接收，发送方随即停止发送，并试探性地发送一个没有数据的报文直到响应报文的接收窗口不为<code>0</code></li>
-</ul></li>
-</ul>
-<h3 id="tcp连接过程"><code>TCP</code>连接过程</h3>
-<ul>
-<li>假设发送方为<code>A</code>、接收方为<code>B</code>，发送方、接收方期望发送的第一个字节编号分别为<code>a、b</code>
-那么三次握手过程为：
-<ul>
-<li>发送方发送报文，其中<code>ACK=0、SYN=1、序列号=a-1</code></li>
-<li>接收方发送报文，其中<code>ACK=1、SYN=1、序列号=b-1、确认号=a</code></li>
-<li>发送方发送报文，其中<code>ACK=1、SYN=0、序列号=a、确认号=b</code>
-这里因为接收方不再发送响应报文，所以发送方下次发送的报文序号仍为<code>a</code></li>
-</ul></li>
-<li>四次挥手过程为：
-<ul>
-<li>主动结束方发送报文，其中<code>FIN=1、ACK=1、序列号=x(上次接收的确认号)、确认号=y(上次接收的序列号+字节数)</code>
-此后主动结束方不会再发送数据报文，但仍能接收数据报文</li>
-<li>被动结束方发送响应报文，其中<code>FIN=0、ACK=1、序列号=y、确认号=x+1</code></li>
-<li>被动结束方发送结束报文，其中<code>FIN=1、ACK=1、序列号=z(被动结束方上次接收报文的确认号)、确认号=x+1</code></li>
-<li>主动结束方发送响应报文，其中<code>FIN=0、ACK=1、序列号=x+1、确认号=z+1</code>
-防止响应报文丢失，主动结束方最后会进入<code>TIME_WAIT</code>，如果响应报文丢失，被动结束方会超时重传，主动结束方则在<code>TIME_WAIT</code>内受理该重传的<code>FIN</code>报文
-注意，这个<code>TIME_WAIT</code>和超时重传是两回事</li>
-</ul></li>
-</ul>
-<h3 id="tcp的附加功能"><code>TCP</code>的附加功能</h3>
-<ul>
-<li><p>流量控制：不再赘述</p></li>
-<li><p>基于序号和确认号在同一份报文内的机制，通常不单独发送响应报文，而是在要发送的数据中<strong>捎带</strong>上确认信息</p></li>
-<li><p>期望<code>RTT</code>(往返时间)：通过对最近<code>RTT</code>采样，并加权重(越近的样本权重越大)计算期望<code>RTT</code>
-方差<code>RTT</code>：测量期望<code>RTT</code>的变化
-重传计时器的时间通常设为：期望<code>RTT</code>+<code>4</code>方差<code>RTT</code>
-在超时事件未发生时，<code>TCP</code>通过它来指导计时器的时间</p></li>
-<li><p>快速重传：每次丢包都等超时后再重传效率过低，因为丢包后，有概率能接收到冗余<code>ACK</code>报文(确认号相同的报文)，发送方可以将这个事件视为丢包的暗示，进行快速重传</p></li>
-<li><p>拥塞起因：发送方的<strong>发送速率</strong>和中间路由<strong>转发速率</strong>不匹配导致数据分组冗余
-拥塞控制：当丢包事件(<strong>超时</strong>或接收到若干个<strong>冗余<code>ACK</code></strong>报文，被认为是丢包)发生时，触发拥塞控制机制，其中超时事件相比冗余<code>ACK</code>事件，更能说明链路拥塞(因为冗余<code>ACK</code>起码能接收到，丢包可能是因为物理链路出问题)
-<code>TCP</code>通过<strong>慢启动</strong>来控制发送速率：</p>
-<ul>
-<li>慢启动状态：初始发送窗口为一个<code>MSS</code>，但以指数增长
-超时事件发生时，重新进入慢启动状态，将触发超时时候的<strong>发送窗口大小的一半</strong>设置为<strong>慢启动阈值</strong>
-冗余<code>ACK</code>事件发生时，执行快速重传，进入快速恢复状态
-指数增长到慢启动阈值(从未发生过超时时，为无穷大)时，进入拥塞避免状态</li>
-<li>拥塞避免状态：谨慎地增加发送窗口长度，可能是线性地增加
-超时事件发生时，进入慢启动状态，并更新慢启动阈值
-冗余<code>ACK</code>事件发生时，需要作出反应但不应过于剧烈，因此将<strong>发送窗口减半</strong>而非重置(通常因为有<code>k</code>个冗余<code>ACK</code>，说明中间链路起码还有转发<code>k</code>个分组的能力，所以还要在减半后加上<code>k</code>个<code>MSS</code>)，并进入快速恢复状态</li>
-<li>快速恢复状态：快速重传后，仍可能收到冗余<code>ACK</code>，每接收一个冗余<code>ACK</code>，相应地增加一个<code>MSS</code>
-超时事件发生时，同上
-当接收到新的<code>ACK</code>而不是冗余<code>ACK</code>时，将发送窗口置为慢启动阈值，进入拥塞避免状态</li>
-</ul>
-<p>因此，进入慢启动状态一定是因为超时发生，且初始为<code>1</code>个<code>MSS</code>
-进入拥塞避免状态是因为在慢启动时超过了慢启动阈值、或在快速恢复时收到新<code>ACK</code>，<strong>初始为慢启动阈值</strong>
-进入快速恢复状态一定是因为收到冗余<code>ACK</code>，处于快速恢复状态的时间较短</p></li>
-</ul>
-]]></content>
-      <categories>
-        <category>SE Courses</category>
-        <category>Network</category>
-      </categories>
-      <tags>
-        <tag>TCP</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>计算机网络: 网络层协议</title>
     <url>/2025/05/01/comp-networking-iplayer/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -9319,6 +9411,136 @@ class="math inline">8|<em>L</em><sub><em>m</em><em>a</em><em>x</em></sub></span>
         <tag>IPv4</tag>
         <tag>NAT</tag>
         <tag>DHCP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机网络: 传输层协议</title>
+    <url>/2025/05/01/comp-networking-trsflayer/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h2 id="传输层协议">传输层协议</h2>
+<h3 id="可靠数据传输的组成">可靠数据传输的组成</h3>
+<ul>
+<li><p>处理比特差错：比特差错指，分组能运输到主机，但具有比特位丢失或错误；又分为非响应分组错误和响应分组错误</p>
+<ul>
+<li>通过<strong>重传分组</strong>解决，又因为重传会导致<strong>分组冗余</strong>，故需要给分组添加<strong>编号</strong></li>
+<li>完备的解决方案：
+发送方：发送分组后进入阻塞态，若收到有错误的响应报文，则重传；否则完成委托，等待下一个来自应用层的调用
+接收方：有比特差错或无比特差错但序号错，则响应上一个序号的报文，并丢弃当前收到的报文；否则响应当前序号的报文，并增加确认序号</li>
+</ul></li>
+<li><p>处理丢包：通过<strong>超时重传</strong>解决，超时即一段时间内未收到正确的响应报文，若超时则响应上一个序号的报文；在此处，发送方接收到有错响应报文时，不立刻重传，而是超时再重传
+丢包大概率因为中间路由缓存满而丢弃分组，小概率因为链路中断</p></li>
+<li><p>上述是一次只传输一个分组的情况，称为<strong>停等协议</strong>(发送方在收到响应前进入阻塞)；为了效率，需要实现流水线传输，有以下方案：</p>
+<ul>
+<li><p>回退<code>N</code>步(<code>GBN</code>)协议：只要一切正常，效率就可以大幅提高
+发送方：维护基序号<code>b</code>，发送方可以<strong>一次性发送序号为<code>[b,b+N]</code></strong>内的分组，直到<strong>收到<code>ACK_b</code></strong>，才将<code>b</code>右移，并将新的窗口中未发送的分组发送；否则，一旦<strong>超时，就将窗口内的分组全部重传</strong>
+接收方：接收窗口长度只为<code>1</code>，即接收方<strong>只接收序号为<code>b</code>的分组</strong>，响应策略和停等协议一致(分组出错时响应<code>ACK_b-1</code>)
+即，<strong><code>GBN</code>协议是发送方可以发送多个分组的停等协议</strong>，当<code>N=1</code>时退化为停等协议，其始终等待<code>b</code>号响应报文的策略使其具有自然有序、且每一时刻序号小于<code>b</code>的报文均已可靠传输的性质</p></li>
+<li><p>选择重传(<code>SR</code>)协议：上述接收方的策略可以优化，接收方可以选择<strong>缓存</strong>并自行排序而非丢弃序号错误的分组，相当于将接收方窗口长度拉长，使接收方可以确认所有正确的报文(无论其序号是多少)
+对于发送方的好处是，发送方下次<strong>超时重传时就不需要重传已经确认的分组</strong>，而不是像<code>GBN</code>那样全部重传，发送方的具体策略为：</p>
+<ul>
+<li>一开始全部发送后，对<strong>每个分组都设置定时器</strong>，一次超时事件<strong>只会重传一个分组</strong>(“选择重传”的来历)</li>
+<li>接收到的<code>ACK</code>确认号不是<code>b</code>(一定会落在窗口内)，则进行标记</li>
+<li>接收到的<code>ACK</code>确认号是<code>b</code>，则移动<code>b</code>到下一个没被标记的分组，发送新窗口的未被标记分组</li>
+</ul>
+<p>接收方的具体策略为：</p>
+<ul>
+<li>收到序号不为<code>b</code>的报文：缓存，响应<code>ACK_b</code></li>
+<li>收到序号为<code>b</code>的报文：立刻交付它以及窗口内所有已缓存的报文，移动窗口到下一个没有收到过的序号</li>
+</ul>
+<p>基于序号有限的现实问题，<strong>发送方窗口<span
+class="math inline">=</span>接收方窗口<span
+class="math inline">≤</span>序号数量的一半</strong>，因为响应报文完整/丢失可能导致同步问题：如果接收方窗口长度超过序号数量的一半，那么在一次完美的传输后，<strong>接收方</strong>窗口会<strong>第二次使用相同的序号</strong>，此时若响应报文完整，则发送方会第二次使用相同的序号，此次分组实际是新分组；若<strong>响应报文丢失，则发送方会重传</strong>，此次分组<strong>实际是已确认分组</strong>，但接收方会<strong>误以为是新分组</strong>(因为序号相同)
+长度不超过序号数量的一半就不会有这样的问题</p></li>
+</ul></li>
+</ul>
+<h3 id="tcp性质及功能"><code>TCP</code>性质及功能</h3>
+<ul>
+<li>全双工协议，即双方都可作为发送方或接收方</li>
+<li>面向连接的协议，即双方真正传输数据前需要建立连接、后需要关闭连接</li>
+<li>支持百分百的可靠数据传输，同时有一定的拥塞控制、流量控制、检错功能</li>
+<li>通过端口号来标识进程，为了支持全双工，双方都需要提供<code>IP</code>和端口号</li>
+<li>协商<code>MSS</code>(<code>MSS=MTU+IP头部长+TCP头部长</code>，即<code>MSS</code>本身不包含<code>TCP</code>头部)，以避免<code>IP</code>分组
+<ul>
+<li>主机是边缘设备，在传输层<strong>控制一个<code>TCP</code>分组的长度</strong>可以<strong>避免在发送方被网络层分组</strong>，有效降低网络负载(因为<strong>网络层分组/重组</strong>并保证完整传输相比不分组，<strong>需要更多开销</strong>)</li>
+<li>现代路径发现<code>MSS</code>：为了防止在中途路由被分组，现代设备可以动态发现整个路径所有网段中的最小<code>MTU</code>而不仅仅是本地网段的<code>MTU</code>，进一步避免被网络层分组</li>
+</ul></li>
+</ul>
+<h3 id="tcp协议报文"><code>TCP</code>协议报文</h3>
+<ul>
+<li>第一行字段：源端口号、目的端口号
+<ul>
+<li>每个<strong>端口号共<code>16</code>位</strong>，端口号分为<strong>周知端口号(<code>0~1023</code>)</strong>和非周知端口号(<code>1024~65535</code>)</li>
+<li>周知端口号是给服务器使用的，这样客户端就可以默认向使用该端口号作为目的端口号</li>
+<li>常见的周知端口号：<code>HTTP~80、FTP传输数据~20、FTP传输控制信息~21、Telnet~23、DNS~53</code></li>
+</ul></li>
+<li>第二行字段：<code>32</code>位序号，表示本报文所承载数据段的<strong>首字节编号</strong></li>
+<li>第三行字段：<code>32</code>位确认号，表示本报文所希望的下一个数据段的首字节编号
+小于确认号的序号的报文均已被接收方完整接收</li>
+<li>第四行字段：
+<ul>
+<li><code>4</code>位首部长度：标记首部的字节数，<strong>单位为<code>4</code>个字节</strong></li>
+<li>标记位：<code>URG、ACK、PSH、RST、SYN、FIN</code></li>
+<li><code>16</code>位接收窗口：用于<strong>流量控制</strong>，流量控制用于解决发送方<strong>发送速率</strong>和接收方<strong>接收速率</strong>不匹配问题
+<strong>触发流量控制的事件不是超时</strong>，超时是触发拥塞控制的事件，而流量控制依赖于响应报文的接收窗口，当接收窗口为<code>0</code>时，表示接收方已经无法再接收，发送方随即停止发送，并试探性地发送一个没有数据的报文直到响应报文的接收窗口不为<code>0</code></li>
+</ul></li>
+</ul>
+<h3 id="tcp连接过程"><code>TCP</code>连接过程</h3>
+<ul>
+<li>假设发送方为<code>A</code>、接收方为<code>B</code>，发送方、接收方期望发送的第一个字节编号分别为<code>a、b</code>
+那么三次握手过程为：
+<ul>
+<li>发送方发送报文，其中<code>ACK=0、SYN=1、序列号=a-1</code></li>
+<li>接收方发送报文，其中<code>ACK=1、SYN=1、序列号=b-1、确认号=a</code></li>
+<li>发送方发送报文，其中<code>ACK=1、SYN=0、序列号=a、确认号=b</code>
+这里因为接收方不再发送响应报文，所以发送方下次发送的报文序号仍为<code>a</code></li>
+</ul></li>
+<li>四次挥手过程为：
+<ul>
+<li>主动结束方发送报文，其中<code>FIN=1、ACK=1、序列号=x(上次接收的确认号)、确认号=y(上次接收的序列号+字节数)</code>
+此后主动结束方不会再发送数据报文，但仍能接收数据报文</li>
+<li>被动结束方发送响应报文，其中<code>FIN=0、ACK=1、序列号=y、确认号=x+1</code></li>
+<li>被动结束方发送结束报文，其中<code>FIN=1、ACK=1、序列号=z(被动结束方上次接收报文的确认号)、确认号=x+1</code></li>
+<li>主动结束方发送响应报文，其中<code>FIN=0、ACK=1、序列号=x+1、确认号=z+1</code>
+防止响应报文丢失，主动结束方最后会进入<code>TIME_WAIT</code>，如果响应报文丢失，被动结束方会超时重传，主动结束方则在<code>TIME_WAIT</code>内受理该重传的<code>FIN</code>报文
+注意，这个<code>TIME_WAIT</code>和超时重传是两回事</li>
+</ul></li>
+</ul>
+<h3 id="tcp的附加功能"><code>TCP</code>的附加功能</h3>
+<ul>
+<li><p>流量控制：不再赘述</p></li>
+<li><p>基于序号和确认号在同一份报文内的机制，通常不单独发送响应报文，而是在要发送的数据中<strong>捎带</strong>上确认信息</p></li>
+<li><p>期望<code>RTT</code>(往返时间)：通过对最近<code>RTT</code>采样，并加权重(越近的样本权重越大)计算期望<code>RTT</code>
+方差<code>RTT</code>：测量期望<code>RTT</code>的变化
+重传计时器的时间通常设为：期望<code>RTT</code>+<code>4</code>方差<code>RTT</code>
+在超时事件未发生时，<code>TCP</code>通过它来指导计时器的时间</p></li>
+<li><p>快速重传：每次丢包都等超时后再重传效率过低，因为丢包后，有概率能接收到冗余<code>ACK</code>报文(确认号相同的报文)，发送方可以将这个事件视为丢包的暗示，进行快速重传</p></li>
+<li><p>拥塞起因：发送方的<strong>发送速率</strong>和中间路由<strong>转发速率</strong>不匹配导致数据分组冗余
+拥塞控制：当丢包事件(<strong>超时</strong>或接收到若干个<strong>冗余<code>ACK</code></strong>报文，被认为是丢包)发生时，触发拥塞控制机制，其中超时事件相比冗余<code>ACK</code>事件，更能说明链路拥塞(因为冗余<code>ACK</code>起码能接收到，丢包可能是因为物理链路出问题)
+<code>TCP</code>通过<strong>慢启动</strong>来控制发送速率：</p>
+<ul>
+<li>慢启动状态：初始发送窗口为一个<code>MSS</code>，但以指数增长
+超时事件发生时，重新进入慢启动状态，将触发超时时候的<strong>发送窗口大小的一半</strong>设置为<strong>慢启动阈值</strong>
+冗余<code>ACK</code>事件发生时，执行快速重传，进入快速恢复状态
+指数增长到慢启动阈值(从未发生过超时时，为无穷大)时，进入拥塞避免状态</li>
+<li>拥塞避免状态：谨慎地增加发送窗口长度，可能是线性地增加
+超时事件发生时，进入慢启动状态，并更新慢启动阈值
+冗余<code>ACK</code>事件发生时，需要作出反应但不应过于剧烈，因此将<strong>发送窗口减半</strong>而非重置(通常因为有<code>k</code>个冗余<code>ACK</code>，说明中间链路起码还有转发<code>k</code>个分组的能力，所以还要在减半后加上<code>k</code>个<code>MSS</code>)，并进入快速恢复状态</li>
+<li>快速恢复状态：快速重传后，仍可能收到冗余<code>ACK</code>，每接收一个冗余<code>ACK</code>，相应地增加一个<code>MSS</code>
+超时事件发生时，同上
+当接收到新的<code>ACK</code>而不是冗余<code>ACK</code>时，将发送窗口置为慢启动阈值，进入拥塞避免状态</li>
+</ul>
+<p>因此，进入慢启动状态一定是因为超时发生，且初始为<code>1</code>个<code>MSS</code>
+进入拥塞避免状态是因为在慢启动时超过了慢启动阈值、或在快速恢复时收到新<code>ACK</code>，<strong>初始为慢启动阈值</strong>
+进入快速恢复状态一定是因为收到冗余<code>ACK</code>，处于快速恢复状态的时间较短</p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>SE Courses</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>TCP</tag>
       </tags>
   </entry>
   <entry>
@@ -10195,55 +10417,6 @@ id="java.nio.file.attribute"><code>java.nio.file.attribute</code></h3>
       </tags>
   </entry>
   <entry>
-    <title>数据结构: 对顶堆</title>
-    <url>/2025/04/10/algo-minmax-heap/</url>
-    <content><![CDATA[<!-- placeholder -->
-<span id="more"></span>
-<h3 id="对顶堆">对顶堆</h3>
-<ul>
-<li><p>对顶堆是用于解决<strong>寻找序列中第<span
-class="math inline"><em>k</em></span>小数</strong>的数据结构，其中序列可动态变化、<span
-class="math inline"><em>k</em></span>可动态变化
-对顶堆较易实现，比实现权值线段树、平衡树有码量上的优势</p></li>
-<li><p>基本组成：一个大顶堆和一个小顶堆(辅助堆)，大顶堆维护前<span
-class="math inline"><em>k</em></span>小的元素(包括<span
-class="math inline"><em>k</em></span>)，小顶堆维护其它元素(即比第<span
-class="math inline"><em>k</em></span>元素大的元素)</p>
-<p>这样，大顶堆的堆顶就是第<span
-class="math inline"><em>k</em></span>个元素、小顶堆的堆顶是第<span
-class="math inline"><em>k</em> + 1</span>个元素
-如果要求寻找序列中第<span
-class="math inline"><em>k</em></span>大的数，则反过来用小顶堆维护前<span
-class="math inline"><em>k</em></span>大的元素、用大顶堆作辅助堆即可</p></li>
-<li><p>每次涉及到动态修改(如插入、修改<span
-class="math inline"><em>k</em></span>值)，需要在操作结束后维护：
-若大顶堆元素超出<span
-class="math inline"><em>k</em></span>个，则将大顶堆的堆顶弹出后插入小顶堆中
-否则将小顶堆堆顶插入大顶堆中</p></li>
-<li><p>插入元素：若插入元素不小于大顶堆堆顶，则插入小顶堆中，否则插入大顶堆中</p></li>
-<li><p>查询第<span
-class="math inline"><em>k</em></span>小元素：返回大顶堆堆顶</p></li>
-<li><p>删除第<span
-class="math inline"><em>k</em></span>小元素：推出大顶堆堆顶和小顶堆堆顶，将后者插入大顶堆中</p></li>
-<li><p>动态修改<span
-class="math inline"><em>k</em></span>值：与维护操作描述一致，若<span
-class="math inline"><em>k</em></span>增大，则推出小顶堆堆顶插入大顶堆中；否则推出大顶堆堆顶插入小顶堆中</p></li>
-<li><p>时间复杂度：查询<span
-class="math inline"><em>O</em>(1)</span>，其余操作<span
-class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
-</ul>
-]]></content>
-      <categories>
-        <category>Algorithm</category>
-        <category>Data Structure</category>
-      </categories>
-      <tags>
-        <tag>algorithm</tag>
-        <tag>data structure</tag>
-        <tag>sort</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>图的遍历: 链式前向星</title>
     <url>/2025/04/10/algo-linked-forward-star/</url>
     <content><![CDATA[<!-- placeholder -->
@@ -10464,6 +10637,55 @@ query(rs[p], l, r, m + 1, R); return ans; }</p></li>
         <tag>algorithm</tag>
         <tag>tree</tag>
         <tag>data structure</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>数据结构: 对顶堆</title>
+    <url>/2025/04/10/algo-minmax-heap/</url>
+    <content><![CDATA[<!-- placeholder -->
+<span id="more"></span>
+<h3 id="对顶堆">对顶堆</h3>
+<ul>
+<li><p>对顶堆是用于解决<strong>寻找序列中第<span
+class="math inline"><em>k</em></span>小数</strong>的数据结构，其中序列可动态变化、<span
+class="math inline"><em>k</em></span>可动态变化
+对顶堆较易实现，比实现权值线段树、平衡树有码量上的优势</p></li>
+<li><p>基本组成：一个大顶堆和一个小顶堆(辅助堆)，大顶堆维护前<span
+class="math inline"><em>k</em></span>小的元素(包括<span
+class="math inline"><em>k</em></span>)，小顶堆维护其它元素(即比第<span
+class="math inline"><em>k</em></span>元素大的元素)</p>
+<p>这样，大顶堆的堆顶就是第<span
+class="math inline"><em>k</em></span>个元素、小顶堆的堆顶是第<span
+class="math inline"><em>k</em> + 1</span>个元素
+如果要求寻找序列中第<span
+class="math inline"><em>k</em></span>大的数，则反过来用小顶堆维护前<span
+class="math inline"><em>k</em></span>大的元素、用大顶堆作辅助堆即可</p></li>
+<li><p>每次涉及到动态修改(如插入、修改<span
+class="math inline"><em>k</em></span>值)，需要在操作结束后维护：
+若大顶堆元素超出<span
+class="math inline"><em>k</em></span>个，则将大顶堆的堆顶弹出后插入小顶堆中
+否则将小顶堆堆顶插入大顶堆中</p></li>
+<li><p>插入元素：若插入元素不小于大顶堆堆顶，则插入小顶堆中，否则插入大顶堆中</p></li>
+<li><p>查询第<span
+class="math inline"><em>k</em></span>小元素：返回大顶堆堆顶</p></li>
+<li><p>删除第<span
+class="math inline"><em>k</em></span>小元素：推出大顶堆堆顶和小顶堆堆顶，将后者插入大顶堆中</p></li>
+<li><p>动态修改<span
+class="math inline"><em>k</em></span>值：与维护操作描述一致，若<span
+class="math inline"><em>k</em></span>增大，则推出小顶堆堆顶插入大顶堆中；否则推出大顶堆堆顶插入小顶堆中</p></li>
+<li><p>时间复杂度：查询<span
+class="math inline"><em>O</em>(1)</span>，其余操作<span
+class="math inline"><em>O</em>(log<em>n</em>)</span></p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Algorithm</category>
+        <category>Data Structure</category>
+      </categories>
+      <tags>
+        <tag>algorithm</tag>
+        <tag>data structure</tag>
+        <tag>sort</tag>
       </tags>
   </entry>
   <entry>
@@ -15934,8 +16156,8 @@ class="math inline"><strong>y</strong></span></p>
       </categories>
       <tags>
         <tag>beginner</tag>
-        <tag>DL</tag>
         <tag>ML</tag>
+        <tag>DL</tag>
       </tags>
   </entry>
   <entry>
@@ -24072,8 +24294,8 @@ exp3
 <p>如图，使用<code>html</code>语法，写出一个四行两列的、边界值为2的、内容<code>'11'</code>被设置为占据四行且居中的表格</p>
 <h3 id="图片">图片</h3>
 通过<code>&lt;img /&gt;</code>标签可以定义并放缩图片：
-<style>.ssucslprvxda{zoom:33%;}</style>
-<img src="/2023/10/03/markdown-beginner/image_example.png" class="ssucslprvxda">
+<style>.pgnriyheqipg{zoom:33%;}</style>
+<img src="/2023/10/03/markdown-beginner/image_example.png" class="pgnriyheqipg">
 <p>图片可以缩放，即在前方的<code>html</code>标签内加上<code>style="zoom:num%"</code>，<code>num</code>为缩放比例</p>
 <h3 id="链接">链接</h3>
 <p><code>&lt;a id="111"&gt;&lt;/a&gt;</code>：这条元素定义了一个<code>id</code>为<code>'111'</code>的锚点，在文章内部可以通过<code>[点击](#111)</code>链接跳转到这个锚点，例如本文在目录处设定了一个<code>'HOME'</code>锚点，您可以<a
