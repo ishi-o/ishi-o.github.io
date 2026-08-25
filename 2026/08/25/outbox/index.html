@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="Outbox：把数据库事务可靠地接到消息队列">
+<meta property="og:url" content="https://ishi-o.github.io/2026/08/25/outbox/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-08-25T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-25T08:52:52.378Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="MQ">
+<meta property="article:tag" content="Outbox">
+<meta property="article:tag" content="consistency">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2026/08/25/outbox/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2026/08/25/outbox/","path":"2026/08/25/outbox/","title":"Outbox：把数据库事务可靠地接到消息队列"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Outbox：把数据库事务可靠地接到消息队列 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#outbox%E6%8A%8A%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E5%8F%AF%E9%9D%A0%E5%9C%B0%E6%8E%A5%E5%88%B0%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97"><span class="nav-number">1.</span> <span class="nav-text">Outbox：把数据库事务可靠地接到消息队列</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8C-mq-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%8F%8C%E5%86%99%E4%B8%8D%E4%B8%80%E8%87%B4"><span class="nav-number">1.1.</span> <span class="nav-text">数据库和 MQ
+为什么会双写不一致</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#outbox-%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">Outbox 的核心原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#outbox-%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%8A%B6%E6%80%81"><span class="nav-number">1.3.</span> <span class="nav-text">Outbox 事件的状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E6%95%B0%E6%8D%AE%E5%92%8C-outbox-%E7%9A%84%E4%BF%9D%E5%AD%98"><span class="nav-number">1.4.</span> <span class="nav-text">业务数据和 Outbox 的保存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E6%88%90%E5%8A%9F"><span class="nav-number">1.4.1.</span> <span class="nav-text">保存成功</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E6%A0%A1%E9%AA%8C%E5%A4%B1%E8%B4%A5"><span class="nav-number">1.4.2.</span> <span class="nav-text">业务校验失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%9B%9E%E6%BB%9A"><span class="nav-number">1.4.3.</span> <span class="nav-text">事务回滚</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8F%90%E4%BA%A4%E7%BB%93%E6%9E%9C%E6%9C%AA%E7%9F%A5"><span class="nav-number">1.4.4.</span> <span class="nav-text">数据库提交结果未知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#outbox-%E4%BF%9D%E5%AD%98%E5%A4%B1%E8%B4%A5"><span class="nav-number">1.4.5.</span> <span class="nav-text">Outbox 保存失败</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%95%E9%80%92%E7%A8%8B%E5%BA%8F%E5%A6%82%E4%BD%95%E9%A2%86%E5%8F%96%E4%BA%8B%E4%BB%B6"><span class="nav-number">1.5.</span> <span class="nav-text">投递程序如何领取事件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B2%A1%E6%9C%89%E5%8F%AF%E5%8F%91%E9%80%81%E4%BA%8B%E4%BB%B6"><span class="nav-number">1.5.1.</span> <span class="nav-text">没有可发送事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%86%E5%8F%96%E6%88%90%E5%8A%9F%E5%90%8E%E6%8A%95%E9%80%92%E7%A8%8B%E5%BA%8F%E5%AE%95%E6%9C%BA"><span class="nav-number">1.5.2.</span> <span class="nav-text">领取成功后投递程序宕机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E6%8A%95%E9%80%92%E7%A8%8B%E5%BA%8F%E9%87%8D%E5%A4%8D%E9%A2%86%E5%8F%96"><span class="nav-number">1.5.3.</span> <span class="nav-text">多个投递程序重复领取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E9%98%B6%E6%AE%B5"><span class="nav-number">1.6.</span> <span class="nav-text">消息发送阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E6%88%90%E5%8A%9F%E5%B9%B6%E6%94%B6%E5%88%B0-confirm"><span class="nav-number">1.6.1.</span> <span class="nav-text">发送成功并收到 Confirm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E7%AB%8B%E5%8D%B3%E5%A4%B1%E8%B4%A5"><span class="nav-number">1.6.2.</span> <span class="nav-text">发送立即失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E8%B6%85%E6%97%B6"><span class="nav-number">1.6.3.</span> <span class="nav-text">发送超时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#broker-%E5%B7%B2%E6%8E%A5%E6%94%B6%E6%8A%95%E9%80%92%E7%A8%8B%E5%BA%8F%E8%BF%98%E6%B2%A1%E6%9C%89%E6%A0%87%E8%AE%B0"><span class="nav-number">1.6.4.</span> <span class="nav-text">Broker
+已接收，投递程序还没有标记</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mq-%E4%B8%8D%E5%8F%AF%E7%94%A8%E6%88%96%E6%8C%81%E7%BB%AD%E8%BF%87%E8%BD%BD"><span class="nav-number">1.6.5.</span> <span class="nav-text">MQ 不可用或持续过载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%91%E9%80%81%E5%90%8E%E7%9A%84%E6%A0%87%E8%AE%B0%E9%98%B6%E6%AE%B5"><span class="nav-number">1.7.</span> <span class="nav-text">发送后的标记阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#confirm-%E6%88%90%E5%8A%9F%E6%A0%87%E8%AE%B0-sent-%E6%88%90%E5%8A%9F"><span class="nav-number">1.7.1.</span> <span class="nav-text">Confirm 成功，标记 SENT 成功</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#confirm-%E6%88%90%E5%8A%9F%E6%A0%87%E8%AE%B0-sent-%E5%A4%B1%E8%B4%A5"><span class="nav-number">1.7.2.</span> <span class="nav-text">Confirm 成功，标记 SENT 失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E8%AE%B0-sent-%E6%88%90%E5%8A%9F%E4%BD%86%E6%B6%88%E8%B4%B9%E8%80%85%E8%BF%98%E6%B2%A1%E6%9C%89%E5%A4%84%E7%90%86"><span class="nav-number">1.7.3.</span> <span class="nav-text">标记 SENT
+成功，但消费者还没有处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%97%A7%E6%8A%95%E9%80%92%E7%A8%8B%E5%BA%8F%E8%A6%86%E7%9B%96%E6%96%B0%E7%8A%B6%E6%80%81"><span class="nav-number">1.7.4.</span> <span class="nav-text">旧投递程序覆盖新状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%AF%E5%90%A6%E5%BA%94%E8%AF%A5%E7%AB%8B%E5%8D%B3%E5%88%A0%E9%99%A4-sent-%E8%AE%B0%E5%BD%95"><span class="nav-number">1.7.5.</span> <span class="nav-text">是否应该立即删除 SENT 记录</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E9%98%B6%E6%AE%B5"><span class="nav-number">1.8.</span> <span class="nav-text">消费阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E5%89%8D%E5%AE%95%E6%9C%BA"><span class="nav-number">1.8.1.</span> <span class="nav-text">消费前宕机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E4%BA%8B%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%A4%B1%E8%B4%A5"><span class="nav-number">1.8.2.</span> <span class="nav-text">业务事务执行失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%9A%E5%8A%A1%E4%BA%8B%E5%8A%A1%E6%8F%90%E4%BA%A4%E6%88%90%E5%8A%9F%E4%BD%86-ack-%E5%A4%B1%E8%B4%A5"><span class="nav-number">1.8.3.</span> <span class="nav-text">业务事务提交成功，但 ACK 失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E5%86%99-inbox%E5%90%8E%E5%86%99%E4%B8%9A%E5%8A%A1%E6%95%B0%E6%8D%AE"><span class="nav-number">1.8.4.</span> <span class="nav-text">先写 Inbox，后写业务数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E8%80%85%E8%B0%83%E7%94%A8%E5%A4%96%E9%83%A8%E6%9C%8D%E5%8A%A1%E6%88%90%E5%8A%9F%E4%BD%86%E6%9C%AC%E5%9C%B0%E4%BA%8B%E5%8A%A1%E5%A4%B1%E8%B4%A5"><span class="nav-number">1.8.5.</span> <span class="nav-text">消费者调用外部服务成功，但本地事务失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E6%80%A7%E4%B8%9A%E5%8A%A1%E5%A4%B1%E8%B4%A5"><span class="nav-number">1.8.6.</span> <span class="nav-text">确定性业务失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9A%82%E6%97%B6%E6%80%A7%E6%8A%80%E6%9C%AF%E5%A4%B1%E8%B4%A5"><span class="nav-number">1.8.7.</span> <span class="nav-text">暂时性技术失败</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%92%E6%B6%88%E6%81%AF%E5%92%8C%E6%AD%BB%E4%BF%A1"><span class="nav-number">1.8.8.</span> <span class="nav-text">毒消息和死信</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#outbox-%E8%A1%A8%E5%BA%94%E8%AF%A5%E4%BF%9D%E5%AD%98%E4%BB%80%E4%B9%88"><span class="nav-number">1.9.</span> <span class="nav-text">Outbox 表应该保存什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%BA%E5%BA%8F%E9%87%8D%E5%A4%8D%E5%92%8C%E5%B9%82%E7%AD%89"><span class="nav-number">1.10.</span> <span class="nav-text">顺序、重复和幂等</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#outbox-%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.11.</span> <span class="nav-text">Outbox 解决了什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#outbox-%E4%B8%8D%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.12.</span> <span class="nav-text">Outbox 不解决什么问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#publisher-confirm-%E5%92%8C-outbox-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.13.</span> <span class="nav-text">Publisher Confirm 和 Outbox
+的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#outbox-%E5%92%8C%E5%85%B6%E4%BB%96%E6%96%B9%E6%A1%88"><span class="nav-number">1.14.</span> <span class="nav-text">Outbox 和其他方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BD%AE%E8%AF%A2%E5%BC%8F-outbox"><span class="nav-number">1.14.1.</span> <span class="nav-text">轮询式 Outbox</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#outbox-%E5%8A%A0-cdc"><span class="nav-number">1.14.2.</span> <span class="nav-text">Outbox 加 CDC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mq-%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF"><span class="nav-number">1.14.3.</span> <span class="nav-text">MQ 事务消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#xa-%E6%88%96%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4"><span class="nav-number">1.14.4.</span> <span class="nav-text">XA 或两阶段提交</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mq-%E4%BD%9C%E4%B8%BA%E7%AC%AC%E4%B8%80%E4%BA%8B%E5%AE%9E%E6%9D%A5%E6%BA%90"><span class="nav-number">1.14.5.</span> <span class="nav-text">MQ 作为第一事实来源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E4%BD%BF%E7%94%A8-mq-%E7%9A%84%E5%90%8C%E6%AD%A5%E5%A4%84%E7%90%86"><span class="nav-number">1.14.6.</span> <span class="nav-text">不使用 MQ 的同步处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B5%E5%95%86%E8%AE%A2%E5%8D%95%E4%B8%AD%E7%9A%84%E5%85%B8%E5%9E%8B%E7%94%A8%E6%B3%95"><span class="nav-number">1.15.</span> <span class="nav-text">电商订单中的典型用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">1.16.</span> <span class="nav-text">生产环境的注意事项</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">164</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">137</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/06/27/cpp-qt-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2024-06-27</time>
+        <br>
+      Qt: 基本用法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/04/27/kingboat-practice/" rel="bookmark">
+        <time class="popular-posts-time">2026-04-27</time>
+        <br>
+      Note: 实习项目-游戏后端
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2026/08/25/outbox/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Outbox：把数据库事务可靠地接到消息队列 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Outbox：把数据库事务可靠地接到消息队列
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-08-25 00:00:00 / Modified: 08:52:52" itemprop="dateCreated datePublished" datetime="2026-08-25T00:00:00+00:00">2026-08-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Programming/Distributed-System/" itemprop="url" rel="index"><span itemprop="name">Distributed System</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>6.1k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>22 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1
+id="outbox把数据库事务可靠地接到消息队列">Outbox：把数据库事务可靠地接到消息队列</h1>
+<p>在电商订单、支付、库存、积分等系统中，经常需要在修改数据库之后通知另一个服务：</p>
+<ul>
+<li>创建订单后通知库存服务</li>
+<li>支付成功后通知履约服务</li>
+<li>扣减库存后通知营销服务</li>
+<li>修改用户状态后刷新搜索索引</li>
+</ul>
+<p>最直观的代码通常是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">createOrder</span><span class="params">(OrderCommand command)</span> &#123;</span><br><span class="line">    orderRepository.insert(createOrder(command));</span><br><span class="line">    messageBroker.publish(<span class="keyword">new</span> <span class="title class_">OrderCreated</span>(...));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但数据库事务只管理数据库，不能自动管理外部的消息队列。只要数据库提交和消息发送之间存在两个独立的操作，就存在双写不一致的故障窗口。</p>
+<p>Outbox 的核心做法是：</p>
+<blockquote>
+<p>在同一个数据库事务中保存业务数据和待发送的事件；事务提交后，再由独立的投递程序把事件发送到
+MQ；MQ 确认成功后，才把事件标记为已发送。</p>
+</blockquote>
+<p>它通常实现的是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">业务事务可靠提交 + 消息至少一次投递 + 消费端幂等</span><br></pre></td></tr></table></figure>
+<h2 id="数据库和-mq-为什么会双写不一致">数据库和 MQ
+为什么会双写不一致</h2>
+<p>假设代码按下面的顺序执行：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">保存订单</span><br><span class="line">提交数据库事务</span><br><span class="line">发送 OrderCreated 消息</span><br></pre></td></tr></table></figure>
+<p>可能出现以下情况：</p>
+<ul>
+<li>数据库提交成功，应用在发送消息前宕机：订单已经存在，但库存服务永远收不到消息</li>
+<li>MQ 发送失败：订单存在，但下游状态没有推进</li>
+<li>MQ
+实际已经接收消息，生产者因为网络超时认为发送失败：重试后出现重复消息</li>
+<li>MQ 发送成功，数据库事务随后回滚：下游收到一个不存在的订单事件</li>
+<li>数据库提交结果未知：客户端或应用超时，重试可能创建重复订单</li>
+</ul>
+<p>即使把发送消息放进带有事务注解的方法中，普通本地事务也不会自动覆盖
+MQ。Publisher Confirm 也只能告诉生产者 Broker
+是否接收了消息，不能保证数据库事务和消息发送是同一个原子操作。</p>
+<h2 id="outbox-的核心原理">Outbox 的核心原理</h2>
+<p>Outbox
+会在业务数据库中增加一张事件表。业务表和事件表必须参与同一个本地数据库事务：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT INTO</span> orders(order_id, status, total_amount)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="string">&#x27;O1001&#x27;</span>, <span class="string">&#x27;PENDING_PAY&#x27;</span>, <span class="number">199.00</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT INTO</span> outbox_events(</span><br><span class="line">    event_id,</span><br><span class="line">    event_type,</span><br><span class="line">    aggregate_id,</span><br><span class="line">    payload,</span><br><span class="line">    status,</span><br><span class="line">    attempts,</span><br><span class="line">    created_at</span><br><span class="line">)</span><br><span class="line"><span class="keyword">VALUES</span> (</span><br><span class="line">    <span class="string">&#x27;E9001&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;OrderCreated&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;O1001&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;&#123;...&#125;&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;PENDING&#x27;</span>,</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    <span class="built_in">CURRENT_TIMESTAMP</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+<p>提交后，订单和 Outbox 事件只有两种结果：</p>
+<ul>
+<li>两者一起提交成功</li>
+<li>两者一起回滚</li>
+</ul>
+<p>之后由后台投递程序读取 PENDING 事件：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">读取 PENDING 事件</span><br><span class="line">    ↓</span><br><span class="line">发送到 MQ</span><br><span class="line">    ↓</span><br><span class="line">等待 Publisher Confirm</span><br><span class="line">    ↓</span><br><span class="line">确认成功</span><br><span class="line">    ↓</span><br><span class="line">标记为 SENT</span><br></pre></td></tr></table></figure>
+<p>所以 Outbox 的顺序是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">先保存，后发送；发送确认后再标记。</span><br></pre></td></tr></table></figure>
+<p>不能先发送 MQ，再补写 Outbox。否则如果 MQ
+已经发送成功，而数据库保存失败，就会产生一个没有业务事实支撑的孤立事件。</p>
+<h2 id="outbox-事件的状态">Outbox 事件的状态</h2>
+<p>常见状态如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PENDING</span><br><span class="line">   ↓ 领取</span><br><span class="line">SENDING</span><br><span class="line">   ↓ Broker 确认</span><br><span class="line">SENT</span><br><span class="line"></span><br><span class="line">SENDING --租约超时--&gt; PENDING</span><br><span class="line">PENDING --确定性错误--&gt; FAILED 或 DEAD</span><br></pre></td></tr></table></figure>
+<p>状态的含义需要提前约定：</p>
+<ul>
+<li>PENDING：事件已经和业务数据一起提交，但还没有完成可靠投递</li>
+<li>SENDING：某个投递程序暂时领取了事件</li>
+<li>SENT：Broker 已经按配置确认接收，不代表消费者已经处理</li>
+<li>FAILED：本次投递失败，可以继续重试或等待人工处理</li>
+<li>DEAD：超过重试上限，进入死信或异常处理流程</li>
+</ul>
+<p>SENT
+不应该被理解成“订单已经扣库存”或“消息已经被业务消费”。如果需要知道消费结果，应由消费者更新自己的业务状态，或者发布新的成功/失败事件。</p>
+<h2 id="业务数据和-outbox-的保存">业务数据和 Outbox 的保存</h2>
+<h3 id="保存成功">保存成功</h3>
+<p>业务数据和 Outbox 事件在一个事务中提交成功：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">orders = 成功</span><br><span class="line">outbox_events = PENDING</span><br></pre></td></tr></table></figure>
+<p>此时即使 MQ
+完全不可用，事件也仍然保存在数据库中，投递程序恢复后可以继续发送。</p>
+<h3 id="业务校验失败">业务校验失败</h3>
+<p>例如商品不存在、金额不合法、用户没有权限：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">业务数据不保存</span><br><span class="line">Outbox 事件也不保存</span><br></pre></td></tr></table></figure>
+<p>这种情况不应该写一条需要重试的 Outbox
+事件。业务拒绝和基础设施故障要区分开。</p>
+<h3 id="事务回滚">事务回滚</h3>
+<p>数据库死锁、连接断开、唯一键冲突或业务主动抛出异常时，业务数据和
+Outbox 事件都应回滚。</p>
+<p>如果只保存了业务数据，之后再用 afterCommit
+回调发送消息，应用可能在回调执行前宕机。afterCommit
+只能降低一部分延迟，不能代替可靠持久化。</p>
+<h3 id="数据库提交结果未知">数据库提交结果未知</h3>
+<p>应用提交事务后，响应在网络中丢失，应用不知道数据库究竟成功还是失败。客户端重试时不能简单地重新插入一条订单。</p>
+<p>应使用请求幂等键或业务唯一键：</p>
+<ul>
+<li>同一个请求键只允许创建一笔订单</li>
+<li>重试时先查询已有订单和状态</li>
+<li>不能仅依赖订单号由客户端随机生成后直接插入</li>
+</ul>
+<h3 id="outbox-保存失败">Outbox 保存失败</h3>
+<p>如果业务数据和 Outbox 在同一个数据库事务中，Outbox
+写失败应该让整个事务回滚。不能接受“订单已经创建，但 Outbox
+写失败后继续返回成功”。</p>
+<p>如果业务库和 Outbox 表不在同一个事务边界内，Outbox
+就不能解决这两个存储之间的原子性问题。此时需要使用
+CDC、事务消息、事件溯源或重新划分事实来源。</p>
+<h2 id="投递程序如何领取事件">投递程序如何领取事件</h2>
+<p>投递程序可以定时轮询，也可以通过数据库 CDC
+发现新事件。最简单的轮询逻辑是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">查询 status = PENDING 且 available_at &lt;= 当前时间的事件</span><br><span class="line">领取事件</span><br><span class="line">提交领取状态</span><br><span class="line">发送 MQ</span><br><span class="line">根据结果更新状态</span><br></pre></td></tr></table></figure>
+<p>多个投递实例同时运行时，不能让它们无限制地读取同一批事件。常见做法有：</p>
+<ul>
+<li>数据库行锁和 SKIP LOCKED</li>
+<li>条件更新：只有 PENDING 才能改成 SENDING</li>
+<li>租约：记录 lease_until 和 worker_id</li>
+<li>分片扫描：按事件 ID、聚合 ID 或时间范围分配任务</li>
+</ul>
+<p>网络发送期间不建议一直持有数据库行锁。更常见的方式是先用短事务领取事件并提交，再在事务外发送；发送完后用带条件的更新标记结果。</p>
+<p>例如：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> outbox_events</span><br><span class="line"><span class="keyword">SET</span> status <span class="operator">=</span> <span class="string">&#x27;SENDING&#x27;</span>,</span><br><span class="line">    worker_id <span class="operator">=</span> <span class="string">&#x27;worker-a&#x27;</span>,</span><br><span class="line">    lease_until <span class="operator">=</span> <span class="built_in">CURRENT_TIMESTAMP</span> <span class="operator">+</span> <span class="type">INTERVAL</span> <span class="string">&#x27;1&#x27;</span> <span class="keyword">MINUTE</span></span><br><span class="line"><span class="keyword">WHERE</span> event_id <span class="operator">=</span> <span class="string">&#x27;E9001&#x27;</span></span><br><span class="line">  <span class="keyword">AND</span> status <span class="operator">=</span> <span class="string">&#x27;PENDING&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>更新成功的实例才有资格继续发送。</p>
+<h3 id="没有可发送事件">没有可发送事件</h3>
+<p>这是正常状态，不应该当成错误。投递程序可以等待下一次轮询或由 CDC
+触发。</p>
+<h3 id="领取成功后投递程序宕机">领取成功后投递程序宕机</h3>
+<p>事件可能停留在 SENDING。租约到期后，其他投递程序应把它重新放回
+PENDING：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SENDING + lease_until &lt; now → PENDING</span><br></pre></td></tr></table></figure>
+<p>不能依赖人工修改数据库，否则少量异常就会变成永久积压。</p>
+<h3 id="多个投递程序重复领取">多个投递程序重复领取</h3>
+<p>即使使用了锁或条件更新，租约过短、网络抖动、进程暂停等情况仍可能造成同一事件被多个实例处理。因此领取机制只能减少重复发送，不能从根本上消除重复，event_id
+幂等仍然需要存在。</p>
+<h2 id="消息发送阶段">消息发送阶段</h2>
+<h3 id="发送成功并收到-confirm">发送成功并收到 Confirm</h3>
+<p>流程如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">事件仍为 SENDING</span><br><span class="line">发送 MQ</span><br><span class="line">Broker 返回成功确认</span><br><span class="line">事件更新为 SENT</span><br></pre></td></tr></table></figure>
+<p>此时可以认为 MQ
+已经按照自己的持久化和副本配置接收了消息，但不能认为消费者已经完成业务处理。</p>
+<h3 id="发送立即失败">发送立即失败</h3>
+<p>例如 Topic 不存在、交换机不存在、权限错误、消息格式不合法：</p>
+<ul>
+<li>临时性错误：网络抖动、Broker 过载、连接断开，可以重试</li>
+<li>确定性错误：权限错误、序列化错误、配置错误，不应该无限重试</li>
+</ul>
+<p>确定性错误应记录详细错误，进入 FAILED 或 DEAD，并触发告警。</p>
+<h3 id="发送超时">发送超时</h3>
+<p>发送超时不等于 Broker 没有收到消息。可能是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">消息没有到达 Broker</span><br><span class="line">消息已经到达 Broker，但 Confirm 返回途中丢失</span><br><span class="line">Broker 已确认，但生产者连接断开</span><br></pre></td></tr></table></figure>
+<p>因此超时后不能直接认为发送失败。最安全的处理是使用同一个 event_id
+重试，并让消费者幂等。</p>
+<h3 id="broker-已接收投递程序还没有标记">Broker
+已接收，投递程序还没有标记</h3>
+<p>这是最典型的重复发送窗口：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">发送成功</span><br><span class="line">进程在更新 SENT 前宕机</span><br><span class="line">事件仍然是 SENDING 或 PENDING</span><br><span class="line">恢复后再次发送</span><br></pre></td></tr></table></figure>
+<p>结果是 MQ 中出现两条相同 event_id 的消息。这个结果是可接受的，因为
+Outbox 的设计目标是避免丢失，重复则交给消费者幂等处理。</p>
+<h3 id="mq-不可用或持续过载">MQ 不可用或持续过载</h3>
+<p>事件应继续保留在 PENDING 或进入带退避时间的状态：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">attempts = attempts + 1</span><br><span class="line">available_at = now + backoff(attempts)</span><br><span class="line">last_error = ...</span><br></pre></td></tr></table></figure>
+<p>重试应使用指数退避和随机抖动，避免所有投递程序同时重试形成重试风暴。还需要限制单次扫描数量，防止积压把业务数据库读压力打满。</p>
+<h2 id="发送后的标记阶段">发送后的标记阶段</h2>
+<h3 id="confirm-成功标记-sent-成功">Confirm 成功，标记 SENT 成功</h3>
+<p>这是理想路径：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PENDING → SENDING → SENT</span><br></pre></td></tr></table></figure>
+<p>可以记录 sent_at、broker_message_id
+和最后一次确认信息，方便排查。</p>
+<h3 id="confirm-成功标记-sent-失败">Confirm 成功，标记 SENT 失败</h3>
+<p>例如数据库暂时不可用，状态更新事务失败。下一轮会再次发送同一事件。</p>
+<p>这会产生重复，但不能为了避免重复而在没有 Confirm 时提前标记
+SENT，否则更容易造成消息丢失。</p>
+<h3 id="标记-sent-成功但消费者还没有处理">标记 SENT
+成功，但消费者还没有处理</h3>
+<p>这是正常的。SENT 只描述生产端和 Broker
+之间的关系，不描述消费者状态。</p>
+<p>消费者如果宕机，消息应留在 MQ 中等待重新投递；如果消费者已经 ACK
+但业务状态异常，则需要由消费者自己的幂等记录和补偿机制处理。</p>
+<h3 id="旧投递程序覆盖新状态">旧投递程序覆盖新状态</h3>
+<p>如果使用租约，旧实例可能在租约过期后恢复，并继续把事件标记为 SENT 或
+FAILED，覆盖新实例的结果。</p>
+<p>更新状态时应携带 worker_id 或 lease token：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> outbox_events</span><br><span class="line"><span class="keyword">SET</span> status <span class="operator">=</span> <span class="string">&#x27;SENT&#x27;</span>,</span><br><span class="line">    sent_at <span class="operator">=</span> <span class="built_in">CURRENT_TIMESTAMP</span></span><br><span class="line"><span class="keyword">WHERE</span> event_id <span class="operator">=</span> <span class="string">&#x27;E9001&#x27;</span></span><br><span class="line">  <span class="keyword">AND</span> status <span class="operator">=</span> <span class="string">&#x27;SENDING&#x27;</span></span><br><span class="line">  <span class="keyword">AND</span> worker_id <span class="operator">=</span> <span class="string">&#x27;worker-a&#x27;</span></span><br><span class="line">  <span class="keyword">AND</span> lease_token <span class="operator">=</span> <span class="string">&#x27;token-a&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>这样旧实例的过期操作不会覆盖新实例。</p>
+<h3 id="是否应该立即删除-sent-记录">是否应该立即删除 SENT 记录</h3>
+<p>通常不应该立即删除。Outbox 记录可以用于：</p>
+<ul>
+<li>审计某个业务事件是否生成</li>
+<li>排查消息发送延迟</li>
+<li>重放消息</li>
+<li>对账和补偿</li>
+<li>分析某段时间的故障</li>
+</ul>
+<p>可以在保留足够长的时间后归档或删除。删除前要确认消费者不再需要回放，也要避免清理任务和投递程序互相干扰。</p>
+<h2 id="消费阶段">消费阶段</h2>
+<p>消费者的正确顺序通常是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">收到消息</span><br><span class="line">    ↓</span><br><span class="line">校验消息和版本</span><br><span class="line">    ↓</span><br><span class="line">检查幂等记录</span><br><span class="line">    ↓</span><br><span class="line">开启本地业务事务</span><br><span class="line">    ↓</span><br><span class="line">写入消费记录并修改业务数据</span><br><span class="line">    ↓</span><br><span class="line">提交事务</span><br><span class="line">    ↓</span><br><span class="line">ACK</span><br></pre></td></tr></table></figure>
+<p>消费者的 Inbox 表可以记录：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">event_id</span><br><span class="line">consumer_name</span><br><span class="line">aggregate_id</span><br><span class="line">status</span><br><span class="line">processed_at</span><br><span class="line">last_error</span><br></pre></td></tr></table></figure>
+<p>event_id 和 consumer_name 通常建立唯一约束。</p>
+<h3 id="消费前宕机">消费前宕机</h3>
+<p>消息还没有执行业务逻辑，消费者宕机后重新收到消息。没有产生业务副作用，直接重试即可。</p>
+<h3 id="业务事务执行失败">业务事务执行失败</h3>
+<p>例如数据库死锁、连接超时，可以重新投递。消费者不要在失败时
+ACK，否则消息会被认为已经处理完成。</p>
+<h3 id="业务事务提交成功但-ack-失败">业务事务提交成功，但 ACK 失败</h3>
+<p>这是消费端最常见的重复窗口：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">业务数据已经提交</span><br><span class="line">消费者还没来得及 ACK 就宕机</span><br><span class="line">MQ 再次投递同一消息</span><br></pre></td></tr></table></figure>
+<p>消费者必须通过 event_id 或业务唯一键识别重复消息，然后直接返回成功并
+ACK，不能再次扣库存、发积分或创建订单。</p>
+<h3 id="先写-inbox后写业务数据">先写 Inbox，后写业务数据</h3>
+<p>这种顺序有风险：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Inbox 标记已处理</span><br><span class="line">业务数据写入失败</span><br><span class="line">消息再次到来时被 Inbox 拦截</span><br><span class="line">业务数据永远不会被处理</span><br></pre></td></tr></table></figure>
+<p>如果 Inbox 和业务数据在同一个数据库中，应让两者进入同一个事务：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">BEGIN</span><br><span class="line">  写入 Inbox</span><br><span class="line">  修改业务数据</span><br><span class="line">COMMIT</span><br><span class="line">ACK</span><br></pre></td></tr></table></figure>
+<p>如果两者不在同一个事务边界内，就需要状态机、补偿任务或另一个
+Outbox，不能只把 Inbox 当成简单的“已读标记”。</p>
+<h3
+id="消费者调用外部服务成功但本地事务失败">消费者调用外部服务成功，但本地事务失败</h3>
+<p>例如消费者已经调用支付、短信或发货服务成功，随后本地数据库提交失败。外部调用无法随着本地事务自动回滚。</p>
+<p>解决方式包括：</p>
+<ul>
+<li>外部接口使用业务幂等键</li>
+<li>记录调用状态并可查询</li>
+<li>用本地 Outbox 推进下一步</li>
+<li>使用 Saga 补偿，例如退款、释放库存</li>
+<li>使用定时对账发现并修复异常状态</li>
+</ul>
+<p>不要假设“数据库事务回滚后外部服务也会回滚”。</p>
+<h3 id="确定性业务失败">确定性业务失败</h3>
+<p>例如订单已关闭、库存不足、金额不一致，这类错误重试通常不会改变结果。可以：</p>
+<ul>
+<li>推进业务状态到失败</li>
+<li>发布失败事件</li>
+<li>进入人工处理或补偿流程</li>
+<li>ACK 原消息，避免无限重试</li>
+</ul>
+<h3 id="暂时性技术失败">暂时性技术失败</h3>
+<p>例如数据库短暂不可用、依赖服务超时，应该进行有限次重试。重试次数、退避间隔和最大延迟都要有上限。</p>
+<h3 id="毒消息和死信">毒消息和死信</h3>
+<p>如果一条消息无论如何都无法成功，持续重试会阻塞同一队列或分区。超过阈值后应进入
+DLQ，并保留：</p>
+<ul>
+<li>原始消息</li>
+<li>event_id</li>
+<li>失败原因</li>
+<li>重试次数</li>
+<li>最后一次异常堆栈</li>
+<li>首次失败时间和最后失败时间</li>
+</ul>
+<p>DLQ 不是丢弃区，而是需要告警、查询、修复和安全重放的异常队列。</p>
+<h2 id="outbox-表应该保存什么">Outbox 表应该保存什么</h2>
+<p>典型字段如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">event_id        全局唯一事件 ID</span><br><span class="line">event_type      事件类型</span><br><span class="line">aggregate_type  聚合类型，例如 Order</span><br><span class="line">aggregate_id    聚合 ID，例如 order_id</span><br><span class="line">aggregate_version 业务聚合版本</span><br><span class="line">payload         事件快照</span><br><span class="line">headers         trace_id、租户等元数据</span><br><span class="line">status          PENDING、SENDING、SENT、FAILED</span><br><span class="line">attempts        已尝试次数</span><br><span class="line">available_at    下次可投递时间</span><br><span class="line">worker_id       当前领取者</span><br><span class="line">lease_until     领取租约截止时间</span><br><span class="line">lease_token     防止旧实例覆盖状态</span><br><span class="line">last_error      最近一次错误</span><br><span class="line">created_at      创建时间</span><br><span class="line">sent_at         发送成功时间</span><br></pre></td></tr></table></figure>
+<p>payload 最好是不可变的事件快照。消费者不应该只拿
+order_id，再去读取一个已经变化的订单状态来猜测事件发生时的内容，否则重放时可能得到不同结果。</p>
+<p>事件格式还应包含 schema
+version。以后增加字段时尽量向后兼容，避免旧消费者因为新字段直接失败。</p>
+<h2 id="顺序重复和幂等">顺序、重复和幂等</h2>
+<p>Outbox 本身不自动保证顺序。</p>
+<p>如果同一个订单依次产生：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OrderCreated</span><br><span class="line">PaymentSucceeded</span><br><span class="line">OrderClosed</span><br></pre></td></tr></table></figure>
+<p>多个投递程序、不同事务提交时间和 MQ 分区策略都可能导致事件乱序。</p>
+<p>需要顺序时，通常采用：</p>
+<ul>
+<li>以 order_id、user_id 或 sku_id 作为消息 Key</li>
+<li>相同 Key 路由到同一队列或分区</li>
+<li>同一个 Key 同时只允许一个消费任务</li>
+<li>每个事件带 aggregate_version</li>
+<li>消费者拒绝旧版本，或等待缺失版本</li>
+<li>严格有序时，前一条失败要阻塞同一 Key 的后续事件</li>
+</ul>
+<p>如果业务只需要最终状态，不需要每一个中间事件，那么发送状态快照或使用版本号覆盖旧事件，可能比强行保证所有事件有序更简单。</p>
+<p>幂等也要区分范围：</p>
+<ul>
+<li>event_id 幂等：同一条逻辑消息重复投递不会重复处理</li>
+<li>业务键幂等：同一订单、支付单或库存操作不会重复执行</li>
+<li>外部调用幂等：重试外部 API 不会重复扣款或发货</li>
+</ul>
+<h2 id="outbox-解决了什么问题">Outbox 解决了什么问题</h2>
+<p>Outbox 主要解决以下问题：</p>
+<ul>
+<li>数据库事务提交和消息发布之间的双写不一致</li>
+<li>应用在发送消息前宕机造成的事件丢失</li>
+<li>MQ 暂时不可用时的可靠积压</li>
+<li>发送失败后的可控重试</li>
+<li>业务事件的审计、补偿和重放</li>
+<li>生产端消息发送与业务数据库之间的清晰事实边界</li>
+</ul>
+<p>它把“必须发送的事件”先变成数据库中的事实，再把“发布到
+MQ”变成一个可以重试的后台过程。</p>
+<h2 id="outbox-不解决什么问题">Outbox 不解决什么问题</h2>
+<p>Outbox 不是万能的分布式事务方案：</p>
+<ul>
+<li>不保证端到端 exactly-once</li>
+<li>不保证消息不重复</li>
+<li>不自动保证消费者顺序</li>
+<li>不自动保证多个服务最终状态一致</li>
+<li>不会回滚已经成功的外部 API 调用</li>
+<li>不会替代 MQ 的持久化、副本和确认配置</li>
+<li>不会自动处理库存、支付和订单之间的业务补偿</li>
+<li>不会消除数据库和投递程序本身的运维成本</li>
+</ul>
+<p>它提供的是可靠的事件出口，消费者仍然需要
+Inbox、幂等、重试、死信和对账。</p>
+<h2 id="publisher-confirm-和-outbox-的关系">Publisher Confirm 和 Outbox
+的关系</h2>
+<p>Publisher Confirm 只确认生产者到 Broker 的一段链路：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Producer → Broker</span><br></pre></td></tr></table></figure>
+<p>Outbox 解决的是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">业务数据库事务 → 待发布事件</span><br></pre></td></tr></table></figure>
+<p>两者应组合使用：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">业务数据 + Outbox：同一个数据库事务</span><br><span class="line">              ↓</span><br><span class="line">投递程序发送 MQ</span><br><span class="line">              ↓</span><br><span class="line">Publisher Confirm</span><br><span class="line">              ↓</span><br><span class="line">Outbox 标记 SENT</span><br></pre></td></tr></table></figure>
+<p>Publisher Confirm 不能代替 Outbox，因为它无法解决：</p>
+<ul>
+<li>数据库提交成功但还没有发送消息</li>
+<li>MQ 发送成功但数据库事务回滚</li>
+<li>应用在数据库提交和发送消息之间宕机</li>
+</ul>
+<p>如果 MQ
+本身就是系统的事实来源，数据库只是消费者生成的查询副本，才可以考虑不使用
+Outbox，而直接依赖 MQ 的持久化、确认、重放和消费者幂等。</p>
+<h2 id="outbox-和其他方案">Outbox 和其他方案</h2>
+<h3 id="轮询式-outbox">轮询式 Outbox</h3>
+<p>投递程序定期扫描数据库，是最容易理解和落地的方式。</p>
+<p>优点：</p>
+<ul>
+<li>实现简单</li>
+<li>依赖普通数据库和 MQ</li>
+<li>失败记录容易查询</li>
+<li>可以人工重放</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>轮询会产生额外数据库负载</li>
+<li>需要处理批量领取和并发投递</li>
+<li>高吞吐时数据库扫描可能成为瓶颈</li>
+<li>投递延迟受轮询周期影响</li>
+</ul>
+<p>中小规模订单系统通常从这种方式开始。</p>
+<h3 id="outbox-加-cdc">Outbox 加 CDC</h3>
+<p>业务事务仍然先写 Outbox，但不再由应用轮询，而是由数据库日志或 Change
+Stream 捕获新记录，再投递到 MQ。</p>
+<p>优点：</p>
+<ul>
+<li>减少轮询负载</li>
+<li>事件发现更及时</li>
+<li>更适合高吞吐系统</li>
+<li>发布器可以独立扩展</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>引入 CDC 组件和运维复杂度</li>
+<li>需要处理位点、断点恢复和重复投递</li>
+<li>需要维护数据库变更到业务事件的映射</li>
+<li>CDC 只能发现数据库变化，不能自动设计出正确的业务事件</li>
+</ul>
+<p>当 Outbox 记录量很大、轮询已经明显影响数据库时，Outbox 加 CDC
+往往比继续堆轮询线程更好。</p>
+<h3 id="mq-事务消息">MQ 事务消息</h3>
+<p>Kafka 事务、RocketMQ 事务消息等可以把消息发布和 MQ
+内部的事务协调起来。</p>
+<p>它们适合：</p>
+<ul>
+<li>MQ 本身是核心事实来源</li>
+<li>业务状态也在消息系统能够协调的事务范围内</li>
+<li>希望原子写入多个 Topic 或同时提交消费位点</li>
+</ul>
+<p>但外部数据库通常不自动参加这个事务。数据库仍然需要 Outbox、CDC
+或其他一致性方案。事务消息不是把任意数据库和任意 MQ 变成 XA 事务。</p>
+<h3 id="xa-或两阶段提交">XA 或两阶段提交</h3>
+<p>XA 可以尝试让数据库和消息中间件参加一个全局事务。</p>
+<p>优点：</p>
+<ul>
+<li>理论上的原子提交和回滚</li>
+<li>调用方不需要自己处理部分状态</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>持有资源时间长</li>
+<li>协调器和参与者故障时容易阻塞</li>
+<li>性能和可用性下降</li>
+<li>中间件支持和运维复杂</li>
+<li>网络分区时很难同时满足一致性和可用性</li>
+</ul>
+<p>互联网订单系统通常更倾向于本地事务加
+Outbox，再用幂等和补偿完成最终一致，而不是把所有操作放进长时间的 XA
+事务。</p>
+<h3 id="mq-作为第一事实来源">MQ 作为第一事实来源</h3>
+<p>也可以先把订单命令或业务事件可靠写入 MQ，再由消费者写数据库。</p>
+<p>这种模式适合事件流、日志采集和事件溯源系统，但它会改变系统的读取方式：</p>
+<ul>
+<li>数据库变成派生状态</li>
+<li>需要能够从消息重放构建数据库</li>
+<li>用户查询可能暂时读不到最新状态</li>
+<li>事件 schema、版本迁移和回放都变得重要</li>
+</ul>
+<p>它不是 Outbox 的简单替代，而是另一种系统架构。</p>
+<h3 id="不使用-mq-的同步处理">不使用 MQ 的同步处理</h3>
+<p>如果操作必须立即返回确定结果，且业务量并不需要削峰，直接在一个本地数据库事务中完成可能更简单：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">校验</span><br><span class="line">扣库存</span><br><span class="line">创建订单</span><br><span class="line">提交事务</span><br><span class="line">返回结果</span><br></pre></td></tr></table></figure>
+<p>没有必要为了“看起来分布式”而给一个本来可以同步完成的操作增加
+MQ、Outbox、重试和补偿。</p>
+<h2 id="电商订单中的典型用法">电商订单中的典型用法</h2>
+<p>一个常见的订单状态流转是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">PENDING</span><br><span class="line">   ↓ 库存锁定成功</span><br><span class="line">WAIT_PAY</span><br><span class="line">   ↓ 支付回调验签成功</span><br><span class="line">PAID</span><br><span class="line">   ↓</span><br><span class="line">FULFILLING</span><br><span class="line">   ↓</span><br><span class="line">COMPLETED</span><br><span class="line"></span><br><span class="line">WAIT_PAY --超时--&gt; CLOSED</span><br><span class="line">CLOSED   --补偿--&gt; 释放库存</span><br></pre></td></tr></table></figure>
+<p>订单服务可以在本地事务中保存订单和 OrderCreated Outbox 事件：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">订单 = PENDING</span><br><span class="line">Outbox = OrderCreated / PENDING</span><br></pre></td></tr></table></figure>
+<p>库存服务消费 OrderCreated：</p>
+<ul>
+<li>以 order_id 做幂等</li>
+<li>成功则锁定库存</li>
+<li>失败则发布库存不足事件或关闭订单</li>
+<li>只有库存锁定成功后，才允许用户进入支付，或者明确告诉用户订单仍在排队确认</li>
+</ul>
+<p>支付回调成功后，支付服务或订单服务在同一个本地事务中：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">更新订单为 PAID</span><br><span class="line">保存 OrderPaid Outbox 事件</span><br></pre></td></tr></table></figure>
+<p>履约、积分、优惠券等服务再分别消费
+OrderPaid。每个服务都有自己的本地事务和幂等边界。</p>
+<p>库存、订单、支付跨服务时，不能指望一个 Outbox
+把它们变成一个全局事务。需要 Saga
+状态机、超时关闭、库存释放、退款和定时对账。</p>
+<h2 id="生产环境的注意事项">生产环境的注意事项</h2>
+<ul>
+<li>业务数据和 Outbox 必须在同一个可提交事务中</li>
+<li>不要在业务事务提交后只依赖内存回调发送消息</li>
+<li>event_id 必须稳定且唯一，消费者必须幂等</li>
+<li>发送超时按“结果未知”处理，允许重复，不要贸然丢弃</li>
+<li>Publisher Confirm 成功后才能标记 SENT</li>
+<li>发送 MQ 时不要长时间持有数据库行锁</li>
+<li>使用租约避免 SENDING 永久卡住</li>
+<li>用条件更新防止旧投递程序覆盖新状态</li>
+<li>瞬时错误和确定性错误要分开处理</li>
+<li>重试应有上限、退避和随机抖动</li>
+<li>死信队列必须可查询、可告警、可安全重放</li>
+<li>ACK 必须在业务事务提交之后</li>
+<li>Inbox 记录和业务更新尽量放在同一个消费者事务中</li>
+<li>外部 API 必须使用幂等键，并准备查询和补偿</li>
+<li>事件 payload 要版本化，不要依赖随时变化的数据库记录重建历史</li>
+<li>对同一聚合需要顺序时，使用业务 Key 和版本号</li>
+<li>监控 Outbox 积压数量、最老事件年龄、发送延迟、失败次数、SENDING
+超时、消费者重复率、消费延迟和 DLQ 数量</li>
+<li>SENT 记录不要立即删除，保留足够时间用于审计、重放和对账</li>
+<li>对保存后、发送前、Confirm 后、标记前、消费提交后、ACK
+前等故障窗口做故障注入测试</li>
+</ul>
+<p>Outbox 最重要的理解可以压缩成一句话：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">把业务事件先作为数据库事实保存，再把发布消息变成可重试的异步动作；</span><br><span class="line">接受至少一次投递，用幂等和补偿处理重复与跨服务失败。</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2024/06/27/cpp-qt-beginner/" rel="bookmark">
+        <time class="popular-posts-time">2024-06-27</time>
+        <br>
+      Qt: 基本用法
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2026/04/27/kingboat-practice/" rel="bookmark">
+        <time class="popular-posts-time">2026-04-27</time>
+        <br>
+      Note: 实习项目-游戏后端
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/Outbox/" rel="tag"># Outbox</a>
+              <a href="/tags/MQ/" rel="tag"># MQ</a>
+              <a href="/tags/consistency/" rel="tag"># consistency</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/18/go-template/" rel="prev" title="Go: 模板">
+                  <i class="fa fa-angle-left"></i> Go: 模板
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">358k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">21:42</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
