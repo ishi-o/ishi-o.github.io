@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=consolas:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ishi-o.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":true,"version":"8.23.2","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"github","dark":"github-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":null},"fold":{"enable":false,"height":500},"language":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta property="og:type" content="article">
+<meta property="og:title" content="数据结构: B+树">
+<meta property="og:url" content="https://ishi-o.github.io/2026/08/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-B-%E6%A0%91/index.html">
+<meta property="og:site_name" content="Ishio">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-08-27T15:05:37.000Z">
+<meta property="article:modified_time" content="2026-08-27T08:18:01.555Z">
+<meta property="article:author" content="ishio">
+<meta property="article:tag" content="algorithm">
+<meta property="article:tag" content="data structure">
+<meta property="article:tag" content="database">
+<meta property="article:tag" content="tree">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://ishi-o.github.io/2026/08/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-B-%E6%A0%91/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://ishi-o.github.io/2026/08/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-B-%E6%A0%91/","path":"2026/08/27/数据结构-B-树/","title":"数据结构: B+树"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>数据结构: B+树 | Ishio</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.7.0/mermaid.min.js","integrity":"sha256-4+IKDqhZ/sXjc8Wtl2/MsxI4e0s1KpEVdbEP7V/Lz8U="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Ishio</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="Searching..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#b%E6%A0%91"><span class="nav-number">1.</span> <span class="nav-text">B+树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">基本结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E7%82%B9%E7%BB%84%E6%88%90"><span class="nav-number">1.2.1.</span> <span class="nav-text">结点组成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E8%B7%AF%E5%BE%84"><span class="nav-number">1.2.2.</span> <span class="nav-text">查找路径</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%89%B9%E6%80%A7"><span class="nav-number">1.3.</span> <span class="nav-text">数据结构特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E7%B4%A2%E5%BC%95%E9%80%9A%E5%B8%B8%E4%BD%BF%E7%94%A8-b%E6%A0%91"><span class="nav-number">1.4.</span> <span class="nav-text">为什么索引通常使用 B+树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E9%A1%B5%E8%AE%BF%E9%97%AE%E6%AF%94%E6%AF%94%E8%BE%83%E6%AC%A1%E6%95%B0%E6%9B%B4%E9%87%8D%E8%A6%81"><span class="nav-number">1.4.1.</span> <span class="nav-text">磁盘页访问比比较次数更重要</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E5%BA%8F%E7%BB%93%E6%9E%84%E9%80%82%E5%90%88%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.4.2.</span> <span class="nav-text">有序结构适合范围查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E8%A7%84%E5%88%99%E7%A8%B3%E5%AE%9A"><span class="nav-number">1.4.3.</span> <span class="nav-text">结构规则稳定</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E4%BD%BF%E7%94%A8-b%E6%A0%91"><span class="nav-number">1.5.</span> <span class="nav-text">为什么不使用 B树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E4%BD%BF%E7%94%A8%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="nav-number">1.6.</span> <span class="nav-text">为什么不使用红黑树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#b%E6%A0%91%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-number">1.7.</span> <span class="nav-text">B+树的缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%B7%A6%E5%89%8D%E7%BC%80%E5%8E%9F%E5%88%99"><span class="nav-number">1.8.</span> <span class="nav-text">最左前缀原则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95%E7%9A%84%E6%8E%92%E5%BA%8F%E6%96%B9%E5%BC%8F"><span class="nav-number">1.8.1.</span> <span class="nav-text">联合索引的排序方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E8%8C%83%E5%9B%B4%E6%9F%A5%E8%AF%A2%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%9A%E5%B8%B8%E4%B8%8D%E8%83%BD%E7%BB%A7%E7%BB%AD"><span class="nav-number">1.8.2.</span> <span class="nav-text">遇到范围查询为什么通常不能继续</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-between-%E5%92%8C%E5%89%8D%E7%BC%80-like-%E5%8F%AF%E4%BB%A5%E7%BB%A7%E7%BB%AD%E5%8C%B9%E9%85%8D"><span class="nav-number">1.8.3.</span> <span class="nav-text">为什么
+&gt;&#x3D;、&lt;&#x3D;、BETWEEN 和前缀
+LIKE 可以继续匹配</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">ishio</p>
+  <div class="site-description" itemprop="description">Just for fun!</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">165</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">137</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ishi-o" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ishi-o" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+        <div class="sidebar-inner sidebar-post-related">
+          <div class="animated">
+              <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/30/algo-descartes-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-30</time>
+        <br>
+      数据结构: 笛卡尔树
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/19/algo-fenwick-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-19</time>
+        <br>
+      数据结构: 树状数组
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/10/algo-linked-forward-star/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-10</time>
+        <br>
+      图的遍历: 链式前向星
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/10/algo-recursive-segment-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-10</time>
+        <br>
+      数据结构: 递归式线段树
+      </a>
+    </li>
+  </ul>
+
+          </div>
+        </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://ishi-o.github.io/2026/08/27/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-B-%E6%A0%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="ishio">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ishio">
+      <meta itemprop="description" content="Just for fun!">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="数据结构: B+树 | Ishio">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          数据结构: B+树
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2026-08-27 15:05:37 / Modified: 08:18:01" itemprop="dateCreated datePublished" datetime="2026-08-27T15:05:37+00:00">2026-08-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/" itemprop="url" rel="index"><span itemprop="name">Algorithm</span></a>
+        </span>
+          , 
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Algorithm/Data-Structure/" itemprop="url" rel="index"><span itemprop="name">Data Structure</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="Word count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Word count in article: </span>
+      <span>3.7k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>14 mins.</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><!-- placeholder -->
+<span id="more"></span>
+<h1 id="b树">B+树</h1>
+<h2 id="概述">概述</h2>
+<ul>
+<li><code>B+树</code>
+是一种多路平衡搜索树，主要面向磁盘、固态硬盘等外部存储场景</li>
+<li>与普通二叉搜索树每个结点只保存一个键不同，<code>B+树</code>
+的一个结点可以保存很多个键和子指针，因此树的分支数很大</li>
+<li><code>B+树</code>
+将索引导航信息放在内部结点，将记录指针或记录本身统一放在叶子结点，并把所有叶子结点连接成有序链表</li>
+<li>数据库索引使用 <code>B+树</code>
+的核心原因，是在较少的页访问次数下完成有序查找和范围扫描</li>
+</ul>
+<h2 id="基本结构">基本结构</h2>
+<h3 id="结点组成">结点组成</h3>
+<ul>
+<li><p><code>B+树</code> 是一棵多路搜索树，常用 <code>m</code>
+阶表示内部结点最多拥有 <code>m</code> 个子指针和 <code>m-1</code>
+个分隔键，不同教材对阶的定义可能略有差异</p>
+<ul>
+<li>根结点可以是叶子结点，也可以拥有较少的子结点</li>
+<li>非根内部结点通常至少半满，以避免树的空间利用率过低，具体下限由实现的页布局决定</li>
+<li>内部结点中的键用于划分子树的取值范围，键本身通常只是导航信息，不保存对应记录的完整内容</li>
+</ul></li>
+<li><p>叶子结点保存有序的键，以及与键对应的记录指针、主键值或记录内容</p>
+<ul>
+<li>在聚簇索引中，叶子结点可能直接保存整行记录</li>
+<li>在二级索引中，叶子结点通常保存索引键和主键值，再通过主键定位整行记录</li>
+</ul></li>
+<li><p>所有叶子结点位于同一层，因此从根到任意叶子的路径长度相同</p></li>
+<li><p>内部结点中的分隔键可能在叶子结点中再次出现，这种重复是为了让内部结点承担路由职责</p></li>
+<li><p>下面的示意图中，<code>20</code> 和 <code>40</code>
+只是根结点的分隔键，真正的记录都在叶子结点中</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">                  [20 | 40]</span><br><span class="line">               +-------+-------+</span><br><span class="line">               |       |       |</span><br><span class="line">[5, 10, 15] &lt;-&gt; [20, 25, 35] &lt;-&gt; [40, 50, 60]</span><br><span class="line">   records          records           records</span><br></pre></td></tr></table></figure>
+<ul>
+<li>小于 <code>20</code> 的键进入最左子树，大于等于 <code>20</code>
+且小于 <code>40</code> 的键进入中间子树，大于等于 <code>40</code>
+的键进入最右子树</li>
+<li>叶子之间的双向连接不是树的父子关系，而是为了支持按键的顺序向后扫描</li>
+</ul></li>
+</ul>
+<h3 id="查找路径">查找路径</h3>
+<ul>
+<li>查找一个键时，从根结点开始比较分隔键，选择可能包含目标键的子指针，重复这个过程直到叶子结点</li>
+<li>内部结点只承担导航职责，使单个内部页可以容纳更多分隔键和子页指针</li>
+<li>到达叶子结点后，在叶子页内查找目标键，再根据记录指针或主键值访问记录</li>
+<li><code>B+树</code> 的高度通常接近 <code>log_m n</code>，其中
+<code>m</code> 是较大的扇出，<code>n</code> 是索引项数量</li>
+</ul>
+<h2 id="数据结构特性">数据结构特性</h2>
+<ul>
+<li>高扇出：一个结点可以连接很多子树，树的高度远小于同样数据量的二叉树</li>
+<li>平衡：所有叶子处于同一层，不会像未平衡的二叉搜索树一样因为插入顺序退化成链表</li>
+<li>有序：叶子中的键按照索引键排序，父结点的分隔键也按照从小到大的顺序排列</li>
+<li>适合范围访问：定位到范围起点后，可以沿叶子链表依次访问后续叶子，不需要反复从根结点开始查找</li>
+<li>适合页式存储：一个内部结点通常可以设计成一个或几个存储页，访问结点时可以批量读取多个键和指针</li>
+<li>查询成本可以拆成两部分：先沿树高定位起点，再沿叶子链表读取结果，点查询接近
+<code>O(log_m n)</code>，返回 <code>k</code> 条连续结果的范围查询接近
+<code>O(log_m n + k)</code></li>
+</ul>
+<h2 id="为什么索引通常使用-b树">为什么索引通常使用 B+树</h2>
+<h3 id="磁盘页访问比比较次数更重要">磁盘页访问比比较次数更重要</h3>
+<ul>
+<li>数据库索引通常持久化在存储设备上，执行查询时真正昂贵的部分往往是随机页访问，而不是在一个页内比较几个整数</li>
+<li><code>B+树</code>
+通过较大的扇出降低树高，点查询通常只需要访问根页、若干内部页和一个叶子页</li>
+<li>内部结点不保存完整记录，单页可以放下更多分隔键和子指针，因此在相同数据量下往往比保存记录指针的树更矮</li>
+<li>根页和上层内部页还容易被缓存在内存中，后续查询可能只需要访问较少的叶子页</li>
+</ul>
+<h3 id="有序结构适合范围查询">有序结构适合范围查询</h3>
+<ul>
+<li><code>&gt;</code>、<code>&lt;</code>、<code>BETWEEN</code>
+等范围条件可以先在树中定位第一个叶子位置，再沿叶子链表顺序读取后续键</li>
+<li><code>ORDER BY</code>、按时间区间读取、前缀匹配等需求都能利用索引键的全局有序性</li>
+<li>如果记录按键在叶子中连续排列，范围扫描可以沿兄弟指针顺序访问，并有机会被存储引擎预取，这比在大量分散结点之间跳转更适合存储设备</li>
+</ul>
+<h3 id="结构规则稳定">结构规则稳定</h3>
+<ul>
+<li><code>B+树</code>
+始终保持平衡，索引规模增长时树高只会缓慢增加，查询延迟更容易预测</li>
+<li>结点的分裂、合并和页回收会维护每个结点的容量约束，因此不会因为数据输入顺序而出现普通二叉搜索树的极端退化</li>
+<li>这并不表示所有数据库索引都必须使用
+<code>B+树</code>，只是它同时满足低树高、有序访问和范围扫描，覆盖了关系型数据库最常见的索引需求</li>
+</ul>
+<h2 id="为什么不使用-b树">为什么不使用 B树</h2>
+<ul>
+<li><code>B树</code> 和 <code>B+树</code>
+都是多路平衡搜索树，主要差异在于 <code>B树</code>
+可以在内部结点和叶子结点保存记录，而 <code>B+树</code>
+将记录统一放到叶子结点</li>
+<li><code>B树</code>
+的点查询有机会在内部结点提前命中记录，这是它的一个局部优势，但数据库查询的主要成本通常是页访问</li>
+<li><code>B树</code>
+的内部结点带有更多记录信息，单个页能容纳的路由键和子指针更少，扇出可能降低，树高和页访问次数可能增加</li>
+<li><code>B树</code>
+没有要求所有叶子通过一条统一的有序链表连接，范围查询需要在树的多个层级之间进行中序遍历，访问模式不如
+<code>B+树</code> 直接</li>
+<li><code>B+树</code>
+可能重复保存分隔键，换取内部结点更轻、叶子范围扫描更简单，这种空间上的重复通常值得</li>
+<li><code>B树</code>
+并不是错误的选择，在数据完全位于内存、点查询占绝大多数且记录较小时，它仍然可以有合适的实现，只是通常不是关系型数据库磁盘索引的优先方案</li>
+</ul>
+<h2 id="为什么不使用红黑树">为什么不使用红黑树</h2>
+<ul>
+<li>红黑树是二叉平衡搜索树，每个结点通常只有一个键和少量指针，<code>B+树</code>
+则把大量键和指针放进一个面向页的结点</li>
+<li>两者在内存模型下都可以达到 <code>O(log n)</code>
+的查找复杂度，但这个记号没有体现存储设备上的页访问次数</li>
+<li>红黑树沿查找路径一次跳转一个结点，结点可能分散在内存或磁盘中，容易产生大量指针跳转和缓存未命中</li>
+<li><code>B+树</code>
+每次读取一个内部页就能获得大量比较对象，并且相邻叶子可以沿兄弟指针访问并有机会预取，更适合批量读取，物理页是否连续则取决于存储布局</li>
+<li>红黑树的中序遍历也能完成范围查询，但结果结点之间通常通过树指针连接，不能天然转化为叶子页的顺序扫描</li>
+<li>红黑树更适合进程内的有序映射、集合等数据结构，数据库磁盘索引更关心页布局和范围访问，因此通常选择
+<code>B+树</code></li>
+</ul>
+<h2 id="b树的缺点">B+树的缺点</h2>
+<ul>
+<li>维护成本：索引规模变化时可能发生页分裂、页合并和父结点更新，这些结构调整会带来额外的写入和日志开销</li>
+<li>空间成本：分隔键可能在内部结点和叶子结点中重复出现，叶子链表还需要额外的兄弟指针</li>
+<li>宽键问题：联合索引包含的列越多、键值越长，单页能容纳的索引项越少，扇出下降后树高和存储空间可能增加</li>
+<li>低选择性问题：如果范围覆盖了大部分叶子，扫描索引后再回表可能比直接扫描数据表更慢，优化器可能放弃使用索引</li>
+<li>不适合所有查询：纯等值查询在具体引擎支持哈希索引时可能更适合哈希结构，而
+<code>B+树</code> 的主要优势是有序性和范围访问</li>
+</ul>
+<h2 id="最左前缀原则">最左前缀原则</h2>
+<h3 id="联合索引的排序方式">联合索引的排序方式</h3>
+<ul>
+<li>假设联合索引的列顺序为
+<code>(a, b, c)</code>，叶子中的索引键按照字典序比较，先比较
+<code>a</code>，<code>a</code> 相同时再比较
+<code>b</code>，前两列都相同时才比较 <code>c</code> <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1, 1, 1) -&gt; (1, 1, 2) -&gt; (1, 2, 1) -&gt; (1, 3, 1) -&gt; (2, 1, 1)</span><br></pre></td></tr></table></figure></li>
+<li>可以把联合索引理解为两个方向同时发生
+<ul>
+<li>创建索引时，列顺序从左到右固定为
+<code>a</code>、<code>b</code>、<code>c</code>，组合键的比较也从左到右进行</li>
+<li>查找时，B+树从根页向下导航，先依据 <code>a</code>
+划分较大的子树范围，再在确定的 <code>a</code> 范围内依据 <code>b</code>
+细分，最后依据 <code>c</code> 定位</li>
+<li>这里的“从树顶向下”描述的是搜索过程，不是说树的每一层只存一列，实际内部结点保存的通常仍是完整的联合键</li>
+<li>只有前面的列已经相等或确定边界，后面的列才有机会继续参与比较和计算</li>
+</ul></li>
+<li>联合索引不是先为 <code>a</code>、再为 <code>b</code>、再为
+<code>c</code>
+各建一棵独立的树，而是把它们组合成一个有序键，在自上而下的搜索中逐步确定范围</li>
+<li>固定 <code>a=1</code> 可以得到一段连续的叶子区间，固定
+<code>a=1,b=2</code> 可以在这段区间中继续得到更小的连续区间</li>
+<li>如果只给出 <code>b=2</code>，满足条件的键会分散在 <code>a</code>
+的每个取值区间中，根结点无法仅凭 <code>b</code>
+选择一条连续的子树范围</li>
+<li>如果给出 <code>a=1,c=3</code> 而没有固定 <code>b</code>，可以先利用
+<code>a=1</code> 定位较大的区间，但 <code>c=3</code> 会分散在不同的
+<code>b</code> 分组中，通常只能在扫描时过滤</li>
+<li>因此，最左前缀原则不是语法限制，而是联合键的物理排序决定了只有连续的前导列才能构成一次连续的树搜索范围</li>
+</ul>
+<h3
+id="遇到范围查询为什么通常不能继续">遇到范围查询为什么通常不能继续</h3>
+<ul>
+<li>在 <code>(a,b,c)</code> 上，如果 <code>a=1</code> 且
+<code>b&gt;3</code>，可以定位到 <code>a=1</code> 分组中 <code>b</code>
+大于 <code>3</code> 的连续后缀</li>
+<li>但在这个后缀中，<code>c</code> 的排序会在每个新的 <code>b</code>
+值下重新开始，叶子顺序可能是 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(1, 4, 1) -&gt; (1, 4, 3) -&gt; (1, 4, 5) -&gt; (1, 5, 1) -&gt; (1, 5, 3) -&gt; ...</span><br></pre></td></tr></table></figure></li>
+<li>条件 <code>a=1 AND b&gt;3 AND c=3</code> 需要从每个 <code>b</code>
+分组中挑出 <code>c=3</code>，这些键之间夹着其它 <code>c</code>
+值，不再是一个连续区间</li>
+<li><code>B+树</code>
+的一次范围扫描只能从某个位置开始向后读取连续叶子，不能在同一条树路径上跳过每个
+<code>b</code> 分组中的其它 <code>c</code> 值</li>
+<li>因此通常把 <code>a</code> 和 <code>b</code> 用于确定索引扫描范围，把
+<code>c=3</code> 作为扫描过程中的索引条件或回表后的过滤条件</li>
+<li><code>b&gt;3</code> 对应的不是一个具体 <code>b</code> 分组，而是多个
+<code>b</code> 分组及其子页，每个子页内部都重新按照 <code>c</code>
+排序</li>
+<li>如果还要让 <code>c=3</code>
+参与树上的定位，就必须对这些子页分别搜索，搜索过程中反复回到父页选择其它子页，或者沿叶子链表扫描后再过滤，这已经不是一条连续的
+<code>(a,b,c)</code> 范围</li>
+<li>从 B+树连续扫描范围的角度，通常会停止继续利用后续列的是
+<code>&gt;</code>、<code>&lt;</code> 这类开放范围</li>
+</ul>
+<h3 id="为什么-between-和前缀-like-可以继续匹配">为什么
+<code>&gt;=</code>、<code>&lt;=</code>、<code>BETWEEN</code> 和前缀
+<code>LIKE</code> 可以继续匹配</h3>
+<ul>
+<li>这里的“继续匹配”是指后续列可以参与某个扫描边界的计算，不等于后续列在整个范围内都保持全局有序</li>
+<li><code>&gt;=</code> 可以拆成 <code>a=10 OR a&gt;10</code>，其中
+<code>a=10</code> 这一段仍然按照 <code>b</code>、<code>c</code>
+排序，因此 <code>a&gt;=10 AND b=20</code> 可以从接近
+<code>(10,20)</code> 的位置开始扫描，跳过 <code>a=10,b&lt;20</code>
+的无关键
+<ul>
+<li>进入 <code>a&gt;10</code> 的部分后，<code>b</code> 值仍然分散在每个
+<code>a</code> 分组中，<code>b=20</code>
+主要用于扫描过程中的继续匹配或过滤</li>
+</ul></li>
+<li><code>&lt;=</code> 可以拆成 <code>a&lt;10 OR a=10</code>，其中
+<code>a=10</code> 是包含在结果中的等值端点，因此
+<code>a&lt;=10 AND b=20</code> 可以用接近 <code>(10,20)</code>
+的位置作为上界</li>
+<li><code>BETWEEN 10 AND 20</code> 等价于
+<code>a&gt;=10 AND a&lt;=20</code>，左右端点都包含，后续列可以帮助收紧两个端点，例如用
+<code>(10,20)</code> 和 <code>(20,20)</code> 作为边界
+<ul>
+<li>在 <code>a</code> 位于 <code>10</code> 和 <code>20</code>
+之间的部分，<code>b</code> 仍会随着不同的 <code>a</code>
+分组重新排序，因此后续列并不是把整个内部区间都变成等值查找</li>
+</ul></li>
+<li>前缀 <code>LIKE 'abc%'</code> 可以转换为从 <code>abc</code>
+到下一个字典前缀之间的连续区间，左端点相当于包含了 <code>a=abc</code>
+的等值边界，所以 <code>LIKE 'j%' AND b=22</code> 可以从接近
+<code>(j,22)</code> 的位置开始扫描
+<ul>
+<li>扫描到 <code>name</code> 大于 <code>j</code>
+的其它前缀值后，<code>age</code>
+不再全局有序，仍需要沿叶子链表继续读取并过滤</li>
+<li><code>LIKE '%abc'</code>
+没有固定的起始前缀，不能用同样的方式定位</li>
+</ul></li>
+<li>与之相对，<code>a&gt;10</code> 和 <code>a&lt;10</code>
+没有包含在结果中的等值端点，开放范围内部的后续列会在多个子页或分组中反复出现，通常只能由前面的列确定扫描范围</li>
+<li>因此，执行计划中的 <code>key_len</code>
+或后续索引条件表示后续列参与了边界计算、索引条件下推或扫描过滤，不应直接理解为后续列在整段范围内都能继续二分定位</li>
+<li>判断最左前缀是否真正继续时，应区分两件事：索引是否用于定位扫描边界，以及扫描到索引项后是否还用索引键做过滤</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="sidebar-inner sidebar-post-related">
+            <div class="animated">
+                <div class="links-of-blogroll-title"><i class="fa fa-signs-post fa-fw"></i>
+    Related Posts
+  </div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/05/30/algo-descartes-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-05-30</time>
+        <br>
+      数据结构: 笛卡尔树
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/03/19/algo-fenwick-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-03-19</time>
+        <br>
+      数据结构: 树状数组
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/10/algo-linked-forward-star/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-10</time>
+        <br>
+      图的遍历: 链式前向星
+      </a>
+    </li>
+    <li class="popular-posts-item">
+      <a class="popular-posts-link" href="/2025/04/10/algo-recursive-segment-tree/" rel="bookmark">
+        <time class="popular-posts-time">2025-04-10</time>
+        <br>
+      数据结构: 递归式线段树
+      </a>
+    </li>
+  </ul>
+
+            </div>
+          </div>
+
+          <div class="post-tags">
+              <a href="/tags/algorithm/" rel="tag"># algorithm</a>
+              <a href="/tags/data-structure/" rel="tag"># data structure</a>
+              <a href="/tags/tree/" rel="tag"># tree</a>
+              <a href="/tags/database/" rel="tag"># database</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/08/25/outbox/" rel="prev" title="Outbox：把数据库事务可靠地接到消息队列">
+                  <i class="fa fa-angle-left"></i> Outbox：把数据库事务可靠地接到消息队列
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ishio</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Word count total">362k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">21:56</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+<script>
+(function() {
+    if (document.readyState !== 'loading') {
+        initCategoryCollapse();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCategoryCollapse);
+    }
+
+    function initCategoryCollapse() {
+        var categoryItems = document.querySelectorAll('.category-all-page .category-list-item');
+        
+        categoryItems.forEach(function(item) {
+            var childList = item.querySelector('.category-list-child');
+            
+            if (childList) {
+                var titleLink = item.querySelector('.category-list-link');
+                if (!titleLink) return;
+                
+                item.classList.add('has-child');
+                
+                var toggleIcon = document.createElement('span');
+                toggleIcon.className = 'collapse-icon';
+                toggleIcon.innerHTML = ' ▸';
+                titleLink.parentNode.insertBefore(toggleIcon, titleLink.nextSibling);
+                
+                childList.style.display = 'none';
+                item.classList.add('collapsed');
+                
+                titleLink.style.cursor = 'pointer';
+                titleLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    item.classList.toggle('collapsed');
+                    if (item.classList.contains('collapsed')) {
+                        childList.style.display = 'none';
+                        toggleIcon.innerHTML = ' ▸';
+                    } else {
+                        childList.style.display = 'block';
+                        toggleIcon.innerHTML = ' ▾';
+                    }
+                });
+                
+                toggleIcon.style.cursor = 'pointer';
+                toggleIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    titleLink.click();
+                });
+            }
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
